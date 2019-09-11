@@ -3,23 +3,22 @@
     <PublicNavbar />
     <div class="container-fluid body-content">
       <Banner />
-      <img alt="Vue logo" src="./assets/logo.png" />
-      <HelloWorld msg="Welcome to Your Vue.js App" />
+      <Features />
     </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
 import PublicNavbar from "./components/PublicNavbar";
 import Banner from "./components/Banner";
+import Features from "./components/Features";
 
 export default {
   name: "app",
   components: {
-    HelloWorld,
     PublicNavbar,
-    Banner
+    Banner,
+    Features
   }
 };
 </script>
