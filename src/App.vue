@@ -4,6 +4,7 @@
     <div class="container-fluid body-content">
       <Banner />
       <Features />
+      <ContactUs />
     </div>
   </div>
 </template>
@@ -12,13 +13,15 @@
 import PublicNavbar from "./components/PublicNavbar";
 import Banner from "./components/Banner";
 import Features from "./components/Features";
+import ContactUs from "./components/ContactUs";
 
 export default {
   name: "app",
   components: {
     PublicNavbar,
     Banner,
-    Features
+    Features,
+    ContactUs
   }
 };
 </script>

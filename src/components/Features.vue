@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row" style="background-color:#f9f9f9; padding: 40px 0 40px 0;">
+    <div class="row section-container">
       <div class="col-sm-12">
         <h1 class="display-2 text-center feature-section-header">
           <a name="features">Features</a>
@@ -75,6 +75,10 @@ export default {};
 </script>
 
 <style scoped>
+.section-container {
+  background-color: #f9f9f9;
+  padding: 40px 0 40px 0;
+}
 .feature-section-header {
   color: #404040;
 }
