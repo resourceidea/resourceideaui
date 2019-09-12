@@ -34,7 +34,7 @@
           </div>
           <div class="card-footer text-muted">
             <input type="submit" class="btn btn-danger" value="Send message" />
-          </div>
+          </div> 
         </div>
       </form>
     </div>
