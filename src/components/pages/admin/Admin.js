@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import AdminMenu from "./AdminMenu";
 import { Route } from "react-router-dom";
-import People from "./People";
+import Employee from "./Employee";
 import Departments from "./Departments";
 import Clients from "./Clients";
 import Engagements from "./Engagements";
@@ -17,7 +17,7 @@ class Admin extends Component {
                         <AdminMenu />
                     </div>
                     <div className='col-10'>
-                        <Route path='/admin/people' component={People} />
+                        <Route path='/admin/employees' component={Employee} />
                         <Route path='/admin/departments' component={Departments} />
                         <Route path='/admin/clients' component={Clients} />
                         <Route path='/admin/engagements' component={Engagements} />

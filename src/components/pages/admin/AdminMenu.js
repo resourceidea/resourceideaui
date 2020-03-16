@@ -12,7 +12,7 @@ class AdminMenu extends Component{
                 <ul className="list-group">
                     <li style={adminMenuStyle} className="list-group-item active">Menu</li>
                     <li style={adminMenuStyle} className="list-group-item">
-                        <Link to='/admin/people'>People</Link>
+                        <Link to='/admin/employees'>Employees</Link>
                     </li>
                     <li style={adminMenuStyle} className="list-group-item">
                         <Link to='/admin/departments'>Departments</Link>
