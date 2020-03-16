@@ -10,8 +10,8 @@ class Employee extends Component{
                     Employees
                 </div>
                 <div className="card-body">
-                    <Link to='/admin/employee/add' className='btn btn-primary'>Add employee</Link>
-                    <Route path='/admin/employee/add' component={AddEmployee} />
+                    <Link to='/admin/employees/add' className='btn btn-primary'>Add employee</Link>
+                    <Route path='/admin/employees/add' component={AddEmployee} />
                 </div>
             </div>
         );
