@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import Home from './components/pages/home/Home';
+import Home from './components/home/Home';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Nav from './components/common/nav/Nav';
-import Dashboard from "./components/pages/dashboard/Dashboard";
-import Admin from './components/pages/admin/Admin';
-import ProfileDetail from './components/pages/profile/ProfileDetail';
+import Dashboard from "./components/dashboard/Dashboard";
+import Admin from './components/admin/Admin';
+import ProfileDetail from './components/profile/ProfileDetail';
 
 const App = () => {
   return (
