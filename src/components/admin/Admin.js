@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import AdminMenu from "./AdminMenu";
 import { Route } from "react-router-dom";
-import Employee from "./Employee";
-import Departments from "./Departments";
-import Clients from "./Clients";
-import Engagements from "./Engagements";
-import ClientIndustries from "./ClientIndustries";
+import Employee from "./employee/Employee";
+import Departments from "./department/Departments";
+import Clients from "./client/Clients";
+import Engagements from "./engagement/Engagements";
+import ClientIndustries from "./clientIndustry/ClientIndustries";
 
 class Admin extends Component {
     render() {
