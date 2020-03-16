@@ -7,6 +7,7 @@ import Clients from "./client/Clients";
 import Engagements from "./engagement/Engagements";
 import ClientIndustries from "./clientIndustry/ClientIndustries";
 import JobPosition from "./jobPosition/JobPosition";
+import LinesOfService from './linesOfService/LinesOfService';
 
 class Admin extends Component {
     render() {
@@ -24,6 +25,7 @@ class Admin extends Component {
                         <Route path='/admin/engagements' component={Engagements} />
                         <Route path='/admin/client-industries' component={ClientIndustries} />
                         <Route path='/admin/job-positions' component={JobPosition} />
+                        <Route path='/admin/lines-of-service' component={LinesOfService} />
                     </div>
                 </div>
             </div>

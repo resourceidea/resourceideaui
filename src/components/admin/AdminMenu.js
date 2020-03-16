@@ -29,9 +29,9 @@ class AdminMenu extends Component{
                     <li style={adminMenuStyle} className="list-group-item">
                         <Link to='/admin/job-positions'>Job Positions</Link>
                     </li>
-                    {/* <li style={adminMenuStyle} className="list-group-item">
+                    <li style={adminMenuStyle} className="list-group-item">
                         <Link to='/admin/lines-of-service'>Lines of service</Link>
-                    </li> */}
+                    </li>
                 </ul>
             </nav>
         );
