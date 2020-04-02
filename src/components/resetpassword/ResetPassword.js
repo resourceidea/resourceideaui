@@ -49,7 +49,7 @@ class Reset extends Component {
                                                 <Input type="text" onChange={this.Email} placeholder="Enter Email" />  
                                             </InputGroup>  
                                             {this.renderRedirect()}
-                                            <Button onClick={this.setRedirect} color="success" block>Send Code</Button>  
+                                            <Button onClick={this.setRedirect} color="warning" block>Send Code</Button>  
                                            
                                         </Form>  
                                     </CardBody>  
