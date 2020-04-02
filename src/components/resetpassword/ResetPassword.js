@@ -1,26 +1,17 @@
 import React, { Component } from "react";
-import { Link,Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap'; 
-class Login extends Component {  
+class Reset extends Component {  
   constructor() {  
       super();  
 
-      this.state = {  
-          Email: '',
-          redirect: false,   
-          Password: ''  
+      this.state = {
+        redirect: false,  
+          Email: ''  
       }  
-
-      this.Password = this.Password.bind(this);  
+ 
       this.Email = this.Email.bind(this);  
   }  
-
-  Email(event) {  
-      this.setState({ Email: event.target.value })  
-  }  
-  Password(event) {  
-      this.setState({ Password: event.target.value })  
-  } 
   setRedirect = () => {
     this.setState({
       redirect: true
@@ -28,15 +19,19 @@ class Login extends Component {
   }
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to='/' />
+      return <Redirect to='/login' />
     }
-  }   
-
+  }
+  Email(event) {  
+      this.setState({ Email: event.target.value })  
+  }  
+  
+  
   render() {  
 
 
   return (
-    <div className="Login flex-row align-items-center">
+    <div className="Reset flex-row align-items-center">
                 <Container>  
                     <Row className="justify-content-center">  
                         <Col md="9" lg="7" xl="6"> 
@@ -45,24 +40,17 @@ class Login extends Component {
                                     <CardBody>
                                     <Form>  
                                             <div class="row" className="mb-2 pageheading">  
-                                                <div class="col-sm-12 btn btn-primary">  
-                                                    Login  
+                                                <div class="col-sm-12 btn btn-info">  
+                                                    Reset Password 
                              </div> 
                              </div>  
                                             <InputGroup className="mb-3">  
   
                                                 <Input type="text" onChange={this.Email} placeholder="Enter Email" />  
                                             </InputGroup>  
-                                            <InputGroup className="mb-4">  
-  
-                                                <Input type="password" onChange={this.Password} placeholder="Enter Password" />  
-                                            </InputGroup>
-                                            
                                             {this.renderRedirect()}
-                                            <Button onClick={this.setRedirect} color="success" block>Login</Button>  
-                                            
-
-                                            <Link to="/login/reset" className="nav-link">Forgot password?</Link>
+                                            <Button onClick={this.setRedirect} color="success" block>Send Code</Button>  
+                                           
                                         </Form>  
                                     </CardBody>  
                                 </Card>  
@@ -74,4 +62,4 @@ class Login extends Component {
         );  
     }  
 } 
-export default Login; 
+export default Reset; 
