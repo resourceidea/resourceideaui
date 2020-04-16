@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-class AdminMenu extends Component{
+class AdminMenu extends Component {
     render() {
         const adminMenuStyle = {
             textAlign: 'left'
