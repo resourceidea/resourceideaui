@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import AdminMenu from "./AdminMenu";
 import { Route } from "react-router-dom";
-import People from "./People";
-import Departments from "./Departments";
-import Clients from "./Clients";
-import Engagements from "./Engagements";
-import ClientIndustries from "./ClientIndustries";
+import Employee from "./employee/Employee";
+import Departments from "./department/Departments";
+import Clients from "./client/Clients";
+import Engagements from "./engagement/Engagements";
+import ClientIndustries from "./clientIndustry/ClientIndustries";
+import JobPosition from "./jobPosition/JobPosition";
+import LinesOfService from './linesOfService/LinesOfService';
 
 class Admin extends Component {
     render() {
@@ -17,11 +19,13 @@ class Admin extends Component {
                         <AdminMenu />
                     </div>
                     <div className='col-10'>
-                        <Route path='/admin/people' component={People} />
+                        <Route path='/admin/employees' component={Employee} />
                         <Route path='/admin/departments' component={Departments} />
                         <Route path='/admin/clients' component={Clients} />
                         <Route path='/admin/engagements' component={Engagements} />
                         <Route path='/admin/client-industries' component={ClientIndustries} />
+                        <Route path='/admin/job-positions' component={JobPosition} />
+                        <Route path='/admin/lines-of-service' component={LinesOfService} />
                     </div>
                 </div>
             </div>

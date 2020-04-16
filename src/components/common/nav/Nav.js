@@ -11,7 +11,7 @@ class Nav extends Component{
             </button>
             <div className="collapse navbar-collapse" id="navbarText">
               <ul className="navbar-nav mr-auto">
-                <li className="nav-item">
+<li className="nav-item">
                   <Link className="nav-link" to='/dashboard'>Dashboard</Link>
                 </li>
                 <li className="nav-item">
@@ -20,6 +20,9 @@ class Nav extends Component{
               </ul>
               <span className="navbar-text">
                 <ul className="navbar-nav">
+ <li className="nav-item">
+                  <Link className="nav-link" to='/login'>Login</Link>
+                </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/profile">My Profile</Link>
                     </li>
