@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import AdminMenu from "./AdminMenu";
 import { Route } from "react-router-dom";
 import EmployeeDashboard from "./employee/EmployeeDashboard";
-import Engagements from "./engagement/Engagements";
 import ClientIndustries from "./clientIndustry/ClientIndustries";
 import JobPosition from "./jobPosition/JobPosition";
 import LinesOfService from './linesOfService/LinesOfService';
@@ -14,6 +13,9 @@ import AddClient from "./client/AddClient";
 import DepartmentDashboard from "./department/DepartmentDashboard";
 import DepartmentsList from "./department/DepartmentList";
 import AddDepartment from "./department/AddDepartment";
+import AddEngagement from "./engagement/AddEngagement";
+import EngagementsList from "./engagement/EngagementsList";
+import EngagementsDashboard from "./engagement/EngagementsDashboard";
 
 class Admin extends Component {
     render() {
@@ -25,7 +27,6 @@ class Admin extends Component {
                         <AdminMenu />
                     </div>
                     <div className='col-10'>
-                        <Route path='/admin/engagements' component={Engagements} />
                         <Route path='/admin/client-industries' component={ClientIndustries} />
                         <Route path='/admin/job-positions' component={JobPosition} />
                         <Route path='/admin/lines-of-service' component={LinesOfService} />
@@ -44,6 +45,11 @@ class Admin extends Component {
                         <Route exact path='/admin/departments' component={DepartmentDashboard} />
                         <Route path='/admin/departments/list' component={DepartmentsList} />
                         <Route path='/admin/departments/add' component={AddDepartment} />
+
+                        {/* Engagements admin components */}
+                        <Route exact path='/admin/engagements' component={EngagementsDashboard} />
+                        <Route path='/admin/engagements/list' component={EngagementsList} />
+                        <Route path='/admin/engagements/add' component={AddEngagement} />
 
                     </div>
                 </div>
