@@ -12,6 +12,9 @@ import AddEmployee from "./employee/AddEmployee";
 import ClientDashboard from "./client/ClientDashboard";
 import ClientsList from "./client/ClientList";
 import AddClient from "./client/AddClient";
+import DepartmentDashboard from "./department/DepartmentDashboard";
+import DepartmentsList from "./department/DepartmentList";
+import AddDepartment from "./department/AddDepartment";
 
 class Admin extends Component {
     render() {
@@ -23,7 +26,6 @@ class Admin extends Component {
                         <AdminMenu />
                     </div>
                     <div className='col-10'>
-                        <Route path='/admin/departments' component={Departments} />
                         <Route path='/admin/engagements' component={Engagements} />
                         <Route path='/admin/client-industries' component={ClientIndustries} />
                         <Route path='/admin/job-positions' component={JobPosition} />
@@ -38,6 +40,11 @@ class Admin extends Component {
                         <Route exact path='/admin/clients' component={ClientDashboard} />
                         <Route path='/admin/clients/list' component={ClientsList} />
                         <Route path='/admin/clients/add' component={AddClient} />
+
+                        {/* Department admin components */}
+                        <Route exact path='/admin/departments' component={DepartmentDashboard} />
+                        <Route path='/admin/departments/list' component={DepartmentsList} />
+                        <Route path='/admin/departments/add' component={AddDepartment} />
 
                     </div>
                 </div>
