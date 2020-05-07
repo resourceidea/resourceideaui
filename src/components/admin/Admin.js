@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import AdminMenu from "./AdminMenu";
 import { Route } from "react-router-dom";
 import EmployeeDashboard from "./employee/EmployeeDashboard";
-import Departments from "./department/Departments";
 import Engagements from "./engagement/Engagements";
 import ClientIndustries from "./clientIndustry/ClientIndustries";
 import JobPosition from "./jobPosition/JobPosition";
