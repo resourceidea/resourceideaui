@@ -1,19 +1,14 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import AdminAddNewActionBar from "../../common/actionbar/AdminAddNewActionBard";
 
 class AddDepartment extends Component {
     render() {
         return (
             <div className="text-left">
-                <Link
-                    to='/admin/departments'
-                    className='btn btn-light btn-sm text-left'>Dashboard</Link>
-                <Link
-                    to='/admin/departments/list'
-                    className='btn btn-light btn-sm text-left'>Departments list</Link>
-                <br /><br />
-                <h5>New department</h5>
-                <hr />
+                <AdminAddNewActionBar
+                    page='department'
+                    dashboardLink='/admin/departments'
+                    listLink='/admin/departments/list' />
                 <form>
                     <div className='card'>
                         <div className='card-body bg-light'>

@@ -1,19 +1,14 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import AdminAddNewActionBar from "../../common/actionbar/AdminAddNewActionBard";
 
 class AddEngagement extends Component {
     render() {
         return (
-            <div className="text-left">
-                <Link
-                    to='/admin/engagements'
-                    className='btn btn-light btn-sm text-left'>Dashboard</Link>
-                <Link
-                    to='/admin/engagements/list'
-                    className='btn btn-light btn-sm text-left'>Engagements list</Link>
-                <br /><br />
-                <h5>New engagement</h5>
-                <hr />
+            <div className="text-justify">
+                <AdminAddNewActionBar
+                    page='engagement'
+                    dashboardLink='/admin/engagements'
+                    listLink='/admin/engagements/list' />
                 <form>
                     <div className='card'>
                         <div className='card-body bg-light'>

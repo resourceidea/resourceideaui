@@ -1,19 +1,14 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import AdminAddNewActionBar from "../../common/actionbar/AdminAddNewActionBard";
 
 class AddClient extends Component {
     render() {
         return (
             <div className="text-left">
-                <Link
-                    to='/admin/clients'
-                    className='btn btn-light btn-sm text-left'>Dashboard</Link>
-                <Link
-                    to='/admin/clients/list'
-                    className='btn btn-light btn-sm text-left'>Clients list</Link>
-                <br /><br />
-                <h5>New client</h5>
-                <hr />
+                <AdminAddNewActionBar
+                    page='client'
+                    dashboardLink='/admin/clients'
+                    listLink='/admin/clients/list' />
                 <form>
                     <div className='card'>
                         <div className='card-body bg-light'>
