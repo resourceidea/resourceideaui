@@ -5,12 +5,12 @@ import AddClientIndustry from "./AddClientIndustry";
 class ClientIndustries extends Component{
     render() {
         return(
-            <div className='card text-justify'>
+            <div className="card text-justify">
                 <div className='card-header'>
-                    Client industries
+                    Client Industries
                 </div>
-                <div className='card-body'>
-                    <Link to='/admin/client-industries/add' className='btn btn-primary'>Add client industry</Link>
+                <div className="card-body">
+                    <Link to='/admin/client-industries/add' className='btn btn-primary'>Add department</Link>
                     <Route path='/admin/client-industries/add' component={AddClientIndustry} />
                 </div>
             </div>

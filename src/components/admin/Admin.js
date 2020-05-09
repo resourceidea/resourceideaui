@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import AdminMenu from "./AdminMenu";
 import { Route } from "react-router-dom";
 import EmployeeDashboard from "./employee/EmployeeDashboard";
-import ClientIndustries from "./clientIndustry/ClientIndustries";
-import JobPosition from "./jobPosition/JobPosition";
 import LinesOfService from './linesOfService/LinesOfService';
 import EmployeeList from "./employee/EmployeeList";
 import AddEmployee from "./employee/AddEmployee";
@@ -16,6 +14,12 @@ import AddDepartment from "./department/AddDepartment";
 import AddEngagement from "./engagement/AddEngagement";
 import EngagementsList from "./engagement/EngagementsList";
 import EngagementsDashboard from "./engagement/EngagementsDashboard";
+import ClientIndustriesDashboard from "./clientIndustry/ClientIndustriesDashboard";
+import ClientIndustriesList from "./clientIndustry/ClientIndustriesList";
+import AddClientIndustry from "./clientIndustry/AddClientIndustry";
+import JobPositionsDashboard from "./jobPosition/JobPositionsDashboard";
+import JobPositionsList from "./jobPosition/JobPositionsList";
+import AddJobPosition from "./jobPosition/AddJobPosition";
 
 class Admin extends Component {
     render() {
@@ -27,8 +31,6 @@ class Admin extends Component {
                         <AdminMenu />
                     </div>
                     <div className='col-10'>
-                        <Route path='/admin/client-industries' component={ClientIndustries} />
-                        <Route path='/admin/job-positions' component={JobPosition} />
                         <Route path='/admin/lines-of-service' component={LinesOfService} />
 
                         {/* Employee admin components */}
@@ -50,6 +52,16 @@ class Admin extends Component {
                         <Route exact path='/admin/engagements' component={EngagementsDashboard} />
                         <Route path='/admin/engagements/list' component={EngagementsList} />
                         <Route path='/admin/engagements/add' component={AddEngagement} />
+
+                        {/* Client industries admin components */}
+                        <Route exact path='/admin/client-industries' component={ClientIndustriesDashboard} />
+                        <Route path='/admin/client-industries/list' component={ClientIndustriesList} />
+                        <Route path='/admin/client-industries/add' component={AddClientIndustry} />
+
+                        {/* Job positions admin components */}
+                        <Route exact path='/admin/job-positions' component={JobPositionsDashboard} />
+                        <Route path='/admin/job-positions/list' component={JobPositionsList} />
+                        <Route path='/admin/job-positions/add' component={AddJobPosition} />
 
                     </div>
                 </div>

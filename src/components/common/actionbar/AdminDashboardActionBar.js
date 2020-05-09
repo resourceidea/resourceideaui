@@ -6,14 +6,14 @@ class AdminDashboardActionBar extends Component{
     render(){
         return(
             <div>
-                <h5>{capitalizeFirstLetter(this.props.page)}s Dashboard</h5>
+                <h5>{capitalizeFirstLetter(this.props.page)} Dashboard</h5>
                 <nav className='navbar navbar-expand-sm navbar-light bg-light border border-secondary'>
                     <ul className='navbar-nav mr-auto'>
                         <li className='nav-item'>
                             <Link to={this.props.dashboardLink} className='btn btn-light btn-sm text-left'>Dashboard</Link>&nbsp;
                         </li>
                         <li className='nav-item'>
-                            <Link to={this.props.listLink} className='btn btn-light btn-sm text-left'>{capitalizeFirstLetter(this.props.page)}s list</Link>&nbsp;
+                            <Link to={this.props.listLink} className='btn btn-light btn-sm text-left'>{capitalizeFirstLetter(this.props.page)} List</Link>&nbsp;
                         </li>
                         <li className='nav-item'>
                             <Link to={this.props.addNewLink} className='btn btn-light btn-sm text-left'>Add New {capitalizeFirstLetter(this.props.page)}</Link>
