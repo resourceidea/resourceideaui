@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import { Link, Route } from "react-router-dom";
-import AddLineOfService from "./AddLineOfService";
+import AddLinesOfService from "./AddLinesOfService"
 
 class LinesOfService extends Component{
-    render(){
+    render() {
         return(
-            <div className='card text-justify'>
+            <div className="card text-justify">
                 <div className='card-header'>
-                    Lines of service
+                    Lines Of Service
                 </div>
-                <div className='card-body'>
-                    <Link to='/admin/lines-of-service/add' className='btn btn-primary'>New line of service</Link>
-                    <Route path='/admin/lines-of-service/add' component={AddLineOfService} />
+                <div className="card-body">
+                    <Link to='/admin/lines-of-service/add' className='btn btn-primary'>Add Lines Of Service</Link>
+                    <Route path='/admin/lines-of-service/add' component={AddLinesOfService} />
                 </div>
             </div>
         );
