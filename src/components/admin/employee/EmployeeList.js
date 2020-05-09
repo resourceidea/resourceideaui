@@ -1,16 +1,16 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import AdminListActionBar from "../../common/actionbar/AdminListActionBar";
 
 class EmployeesList extends Component {
     render() {
         return (
             <div className='text-left'>
-                <Link to='/admin/employees' className='btn btn-light btn-sm text-left'>Dashboard</Link>&nbsp;&nbsp;
-                <Link to='/admin/employees/add' className='btn btn-light btn-sm'>Add new employee</Link>
-                <br /><br />
-                <h3>Employees list</h3>
+                <AdminListActionBar
+                    page='employee'
+                    dashboardLink='/admin/employees'
+                    addNewLink='/admin/employees/add' />
                 <table className='table table-striped table-bordered table-sm'>
-                    <thead className='thead-dark'>
+                    <thead className='thead-light'>
                         <tr>
                             <th scope='row'>First name</th>
                             <th scope='row'>Last name</th>

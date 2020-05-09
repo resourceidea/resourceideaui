@@ -1,17 +1,16 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import AdminListActionBar from "../../common/actionbar/AdminListActionBar";
 
 class ClientsList extends Component {
     render() {
         return (
             <div className='text-left'>
-                <Link to='/admin/clients' className='btn btn-light btn-sm text-left'>Dashboard</Link>&nbsp;&nbsp;
-                <Link to='/admin/clients/add' className='btn btn-light btn-sm'>Add new client</Link>
-                <br /><br />
-                <h5>Clients list</h5>
-                <hr />
+                <AdminListActionBar
+                    page='client'
+                    dashboardLink='/admin/clients'
+                    addNewLink='/admin/clients/add' />
                 <table className='table table-striped table-bordered table-sm'>
-                    <thead className='thead-dark'>
+                    <thead className='thead-light'>
                         <tr>
                             <th scope='row'>Name</th>
                             <th scope='row'>Address</th>

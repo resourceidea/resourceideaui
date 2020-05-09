@@ -1,17 +1,16 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import AdminListActionBar from "../../common/actionbar/AdminListActionBar";
 
 class EngagementsList extends Component {
     render() {
         return (
             <div className='text-left'>
-                <Link to='/admin/engagements' className='btn btn-light btn-sm text-left'>Dashboard</Link>&nbsp;&nbsp;
-                <Link to='/admin/engagements/add' className='btn btn-light btn-sm'>Add new engagement</Link>
-                <br /><br />
-                <h5>Engagements list</h5>
-                <hr />
-                <table className='table table-striped table-bordered table-sm'>
-                    <thead className='thead-dark'>
+                <AdminListActionBar
+                    page='engagement'
+                    dashboardLink='/admin/engagements'
+                    addNewLink='/admin/engagements/add' />
+                <table className='table table-striped table-bordered table-sm bg-light'>
+                    <thead className='thead-light'>
                         <tr>
                             <th scope='row'>Engagement</th>
                             <th scope='row'>Planned start date</th>
