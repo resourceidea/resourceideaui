@@ -18,14 +18,6 @@ class AddEmployee extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className='row'>
-                        <div className='col-6'>
-                            <div className='form-group'>
-                                <label for='password'>Password</label>
-                                <input type='password' className='form-control' id='password' placeholder='Password' />
-                            </div>
-                        </div>
-                    </div>
                     <hr />
                     <div className='card'>
                         <div className='card-body bg-light'>
