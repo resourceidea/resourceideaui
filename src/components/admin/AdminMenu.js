@@ -24,13 +24,13 @@ class AdminMenu extends Component {
                         <Link to='/admin/engagements'>Engagements</Link>
                     </li>
                     <li style={adminMenuStyle} className="list-group-item">
-                        <Link to='/admin/client-industries'>Client industries</Link>
+                        <Link to='/admin/client-industries'>Client Industries</Link>
                     </li>
                     <li style={adminMenuStyle} className="list-group-item">
                         <Link to='/admin/job-positions'>Job Positions</Link>
                     </li>
                     <li style={adminMenuStyle} className="list-group-item">
-                        <Link to='/admin/lines-of-service'>Lines of service</Link>
+                        <Link to='/admin/lines-of-service'>Lines Of Service</Link>
                     </li>
                 </ul>
             </nav>

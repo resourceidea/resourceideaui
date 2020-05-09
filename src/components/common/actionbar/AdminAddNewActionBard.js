@@ -13,7 +13,7 @@ class AdminAddNewActionBar extends Component{
                             <Link to={this.props.dashboardLink} className='btn btn-light btn-sm text-left'>Dashboard</Link>&nbsp;
                         </li>
                         <li className='nav-item'>
-                            <Link to={this.props.listLink} className='btn btn-light btn-sm text-left'>{capitalizeFirstLetter(this.props.page)}s list</Link>
+                            <Link to={this.props.listLink} className='btn btn-light btn-sm text-left'>{capitalizeFirstLetter(this.props.page)} List</Link>
                         </li>
                     </ul>
                 </nav>
