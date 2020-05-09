@@ -66,8 +66,8 @@ class Admin extends Component {
 
                         {/* Lines of service admin components */}
                         <Route exact path='/admin/lines-of-service' component={LinesOfServiceDashboard} />
-                        <Route path='/admin/lines-of-service' component={LinesOfServiceList} />
-                        <Route path='/admin/lines-of-service' component={AddLinesOfService} />
+                        <Route path='/admin/lines-of-service/list' component={LinesOfServiceList} />
+                        <Route path='/admin/lines-of-service/add' component={AddLinesOfService} />
 
                     </div>
                 </div>
