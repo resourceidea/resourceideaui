@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import AdminMenu from "./AdminMenu";
 import { Route } from "react-router-dom";
 import EmployeeDashboard from "./employee/EmployeeDashboard";
-import LinesOfService from './linesOfService/LinesOfService';
 import EmployeeList from "./employee/EmployeeList";
 import AddEmployee from "./employee/AddEmployee";
 import ClientDashboard from "./client/ClientDashboard";
@@ -20,6 +19,9 @@ import AddClientIndustry from "./clientIndustry/AddClientIndustry";
 import JobPositionsDashboard from "./jobPosition/JobPositionsDashboard";
 import JobPositionsList from "./jobPosition/JobPositionsList";
 import AddJobPosition from "./jobPosition/AddJobPosition";
+import LinesOfServiceDashboard from "./linesOfService/LinesOfServiceDashboard";
+import LinesOfServiceList from "./linesOfService/LinesOfServiceList";
+import AddLinesOfService from "./linesOfService/AddLinesOfService";
 
 class Admin extends Component {
     render() {
@@ -31,7 +33,6 @@ class Admin extends Component {
                         <AdminMenu />
                     </div>
                     <div className='col-10'>
-                        <Route path='/admin/lines-of-service' component={LinesOfService} />
 
                         {/* Employee admin components */}
                         <Route exact path='/admin/employees' component={EmployeeDashboard} />
@@ -62,6 +63,11 @@ class Admin extends Component {
                         <Route exact path='/admin/job-positions' component={JobPositionsDashboard} />
                         <Route path='/admin/job-positions/list' component={JobPositionsList} />
                         <Route path='/admin/job-positions/add' component={AddJobPosition} />
+
+                        {/* Lines of service admin components */}
+                        <Route exact path='/admin/lines-of-service' component={LinesOfServiceDashboard} />
+                        <Route path='/admin/lines-of-service' component={LinesOfServiceList} />
+                        <Route path='/admin/lines-of-service' component={AddLinesOfService} />
 
                     </div>
                 </div>
