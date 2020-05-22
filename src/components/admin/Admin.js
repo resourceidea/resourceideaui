@@ -22,6 +22,7 @@ import AddJobPosition from "./jobPosition/AddJobPosition";
 import LinesOfServiceDashboard from "./linesOfService/LinesOfServiceDashboard";
 import LinesOfServiceList from "./linesOfService/LinesOfServiceList";
 import AddLinesOfService from "./linesOfService/AddLinesOfService";
+import AdminDashboard from "./AdminDashboard";
 
 class Admin extends Component {
     render() {
@@ -33,6 +34,9 @@ class Admin extends Component {
                         <AdminMenu />
                     </div>
                     <div className='col-10'>
+
+                        {/* Admin dashboard */}
+                        <Route path='/admin/dashboard' component={AdminDashboard} />
 
                         {/* Employee admin components */}
                         <Route exact path='/admin/employees' component={EmployeeDashboard} />
