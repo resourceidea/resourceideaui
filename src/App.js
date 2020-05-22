@@ -8,6 +8,7 @@ import Login from "./components/login/Login";
 import Dashboard from "./components/dashboard/Dashboard";
 import Admin from './components/admin/Admin';
 import ProfileDetail from './components/profile/ProfileDetail';
+import Footer from "./components/common/nav/Footer";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
           <Route path='/admin' component={Admin} />
           <Route path='/profile' component={ProfileDetail} />
         </Switch>
+        <Footer />
       </div>
     </Router>
   );
