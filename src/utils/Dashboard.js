@@ -3,5 +3,5 @@ export function getDashboardHeight() {
 }
 
 export function getDashboardWidth(){
-    return window.innerWidth - 30;
+    return window.innerWidth - (280 + 16 + 72);
 }

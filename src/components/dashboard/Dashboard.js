@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import {useSticky} from "react-table-sticky";
+import { useSticky } from "react-table-sticky";
 import {getDashboardColumns, getDashboardData} from "../../data/DashboardRepo";
 import {getDashboardHeight, getDashboardWidth} from "../../utils/Dashboard";
 import { useTable, useBlockLayout, useResizeColumns } from "react-table";
