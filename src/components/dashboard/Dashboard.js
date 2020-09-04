@@ -64,7 +64,7 @@ const Table = ({ columns, data }) => {
       .header,
       .footer {
         position: sticky;
-        z-index: 1;
+        z-index: 3;
         width: fit-content;
       }
       .header {
@@ -77,7 +77,7 @@ const Table = ({ columns, data }) => {
       }
       .body {
         position: relative;
-        z-index: 0;
+        z-index: 3;
       }
       [data-sticky-td] {
         position: sticky;

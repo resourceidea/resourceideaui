@@ -11,7 +11,7 @@ const StyledButton = styled(Button)(
     fontSize: '0.75rem !important',
     fontWeight: '600',
     padding: '0.625rem 1.5rem !important',
-    fontFamily: `"HK Grotesk", san-serif !important`,
+    fontFamily: `"DM Sans", san-serif !important`,
   },
   variant({
     variants: {

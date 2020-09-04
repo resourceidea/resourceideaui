@@ -6,7 +6,9 @@ export const LeftPane  = styled(Box)``;
 export const RightPane  = styled(Box)``;
 export const TitleSection  = styled(Box)``;
 export const SearchSection  = styled(Box)``;
-export const LinkWrapper  = styled(Box)``;
+export const LinkWrapper  = styled(Box)`
+  margin-top: 1rem;
+`;
 export const NavSectionWrapper  = styled(Box)``;
 export const NavTitle  = styled(Box)``;
 
@@ -22,8 +24,9 @@ export const NavLink  = styled(Box)`
     &>div {
       padding: 0.5rem;
       border-radius: 0.25rem;
+      background-color: ${props => props.isSelected ? 'rgba(255, 255, 255, 0.18)' : 'transparent'};
       &:hover {
-        background-color: rgba(255, 255, 255, 0.05)
+        background-color: ${props => props.isSelected ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.05)'};
       }
     }
     text-decoration: none;

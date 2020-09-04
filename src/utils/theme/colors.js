@@ -8,6 +8,16 @@ export const navy = {
   7: '#2C3D6D'
 }
 
+export const maroon = {
+  1: '#F9F0F5',
+  2: '#F1DAE7',
+  3: '#C76BA1',
+  4: '#94386E',
+  5: '#7A2E5B',
+  6: '#5D2345',
+  7: '#4A1C37',
+}
+
 export const teal = {
   1: '#EBFCFF',
   2: '#CCF8FF',

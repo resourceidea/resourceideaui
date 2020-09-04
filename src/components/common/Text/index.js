@@ -6,7 +6,7 @@ const StyledText = styled(Text)(
   {
     appearance: 'none',
     margin: '0',
-    fontFamily: `"HK Grotesk", san-serif !important`,
+    fontFamily: `"DM Sans", san-serif !important`,
   },
   variant({
     variants: {

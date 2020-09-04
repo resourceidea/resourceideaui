@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo, Fragment, useRef, useState } from 'react'
 import { Box } from '@chakra-ui/core'
 import Text from '../common/Text'
 import Search from '../common/Search'
@@ -7,12 +7,30 @@ import { useSticky } from "react-table-sticky";
 import { useTable, useBlockLayout, useResizeColumns } from "react-table";
 import {getDashboardColumns, getDashboardData} from "../../data/DashboardRepo";
 import Shell from '../layout/Shell'
-import { TableWrapper, TopHeaderRow, BottomHeaderRow, StickyCell, OtherCell } from './Wrappers'
+import { TableWrapper, TopHeaderRow, BottomHeaderRow, StickyCell, OtherCell, DateBox } from './Wrappers'
 
 const data = getDashboardData();
 const columns = getDashboardColumns()
 
 const Table = ({ columns, data }) => {
+  const pickAMonth = useRef(null)
+  const rangeValue = useState({ from: { year: 2020, month: 8 }, to: { year: 2020, month: 9 }})
+
+  const handleAMonthChange = (value) => {
+    console.log('value', value)
+  }
+  const handleAMonthDissmis = (value) => {
+    console.log('value', value)
+  }
+  const handleClickMonthBox = (value) => {
+    console.log('value', value)
+  }
+  const pickerLang = {
+    months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    from: 'From', to: 'To',
+  }
+  const tableColumns = useMemo(() => columns, [columns])
+  const tableData = useMemo(() => data, [data])
   const {
     getTableProps,
     getTableBodyProps,
@@ -20,14 +38,17 @@ const Table = ({ columns, data }) => {
     rows,
     prepareRow
 } = useTable({
-        columns,
-        data
+      columns: tableColumns,
+      data: tableData
     },
     useBlockLayout,
     useResizeColumns,
     useSticky
     );
     const [topHeaderGroup, bottomHeaderGroup] = headerGroups
+    console.log(topHeaderGroup.headers.slice(1))
+    const endOfMonthColor = 'maroon.4'
+    const endOfMonthBorderWidth = '1px solid'
   return (
     <TableWrapper ml="12px" borderLeft="1px solid" borderLeftColor="primary.2">
       <Box {...getTableProps()} className='table sticky' maxWidth="100%" height="calc(100vh - (208px))">
@@ -36,25 +57,65 @@ const Table = ({ columns, data }) => {
               <Box
                 {...topHeaderGroup.headers[0].getHeaderProps()}
                 className='th'
-                minWidth="196px"
+                position="relative"
+                minWidth="210px"
                 flexShrink="0"
               >
+                <Box
+                  height="38px"
+                  backgroundColor="white"
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  paddingX="8px"
+                  fontSize="13px"
+                  position="absolute"
+                  top="0"
+                  width="100%"
+                  zIndex="4"
+                  left="0"
+                >
                   {topHeaderGroup.headers[0].render("Header")}
+                  <Box
+                    borderRadius="4px"
+                    backgroundColor="navy.1"
+                    fontWeight="bold"
+                    fontSize="12px"
+                    padding="4px 10px"
+                    display="flex"
+                    alignItems="center"
+                  > - 
+                  </Box>
+                </Box>
               </Box>
-              <Box
-                {...topHeaderGroup.headers[1].getHeaderProps()}
-                className='th'
-                flexShrink="0"
-              >
-              {topHeaderGroup.headers[1].render("Header")}
-              </Box>
+              {topHeaderGroup.headers.slice(1).map((column) => (
+                <Box
+                  {...column.getHeaderProps()}
+                  className='th'
+                  paddingLeft="8px"
+                  flexShrink="0"
+                  paddingTop="4px"
+                  fontSize="11px"
+                  textTransform="uppercase"
+                  fontWeight="bold"
+                  color="maroon.4"
+                  borderRight={endOfMonthBorderWidth}
+                  borderRightColor={endOfMonthColor}
+                >
+                {column.render("Header")}
+                </Box>
+              ))}
             </TopHeaderRow>
             <BottomHeaderRow {...bottomHeaderGroup.getHeaderGroupProps()} className='tr'>
                 {bottomHeaderGroup.headers.slice(0,1).map((column) => (
                   <Box
                     {...column.getHeaderProps()}
                     className='th'
-                    minWidth="196px"
+                    background="transparent"
+                    zIndex="0"
+                    backgroundColor="transparent !important"
+                    pointerEvents="none"
+                    minWidth="210px"
                     flexShrink="0"
                   />
                 ))}
@@ -62,18 +123,25 @@ const Table = ({ columns, data }) => {
                   <Box
                     {...column.getHeaderProps()}
                     className='th'
+                    paddingTop="4px"
                     fontSize="9px"
-                    width="24px"
-                    flexBasis="24px"
+                    textAlign="center"
+                    color={column.isWeekend ? "teal.5" : "primary.7" }
+                    width="28px"
+                    fontWeight="700"
+                    flexBasis="28px"
                     flexShrink="0"
+                    height="20px"
+                    borderRight={column.isLastDayOfMonth ? endOfMonthBorderWidth : 'none'}
+                    borderRightColor={column.isLastDayOfMonth ? endOfMonthColor : 'unset'}
                   >
-                    {column.render("Header")}
+                    <div>{column.render("Header")}</div>
                   </Box>
                 ))}
             </BottomHeaderRow>
           </Box>
           <div {...getTableBodyProps()} className='body'>
-            {rows.map((row) => {
+            {rows.map((row, ri) => {
               prepareRow(row);
               return (
                 <Box {...row.getRowProps()} className='tr' left="0">
@@ -82,7 +150,7 @@ const Table = ({ columns, data }) => {
                       {...cell.getCellProps()}
                       className='td'
                       bg="neutral.1"
-                      minWidth="196px"
+                      minWidth="210px"
                       paddingY="8px"
                       height="50px"
                       flexShrink="0"
@@ -92,35 +160,43 @@ const Table = ({ columns, data }) => {
                       paddingX="14px"
                       paddingY="7px"
                       height="34px"
+                      fontSize="13px"
                       bg="rgba(53, 71, 126, 0.05);"
                       >
                         {cell.render("Cell")}
                       </Box>
                     </StickyCell>
                   ))}
-                  {row.cells.slice(1).map((cell) => (
+                  {console.log('??', row)}
+                  {row.cells.slice(1).map((cell, i) => (
+                    <Fragment key={cell.column.id}>
                     <OtherCell
                       {...cell.getCellProps()}
                       className='td'
+                      isWeekend={cell.column.isWeekend}
+                      borderRight={cell.column.isLastDayOfMonth ? endOfMonthBorderWidth : 'none'}
+                      borderRightColor={cell.column.isLastDayOfMonth ? endOfMonthColor : 'unset'}
                       d="flex"
                       paddingY="8px"
                       height="50px"
                       flexBasis="24px"
                       flexShrink="0"
+                      width="24px"
+                      overflow="visible"
                     >
                       <Box
-                        minWidth="24px"
-                        position="absolute"
-                        top="8px"
+                        width="24px"
                         left="0"
                         height="34px"
                         bg="rgba(53, 71, 126, 0.1)"
                         paddingX="14px"
                         paddingY="7px"
+                        position="relative"
                       >
-                        {/* {cell.render("Cell")} */}
+                      {cell.render("Cell")}
                       </Box>
                     </OtherCell>
+                    </Fragment>
                   ))}
                 </Box>
               );

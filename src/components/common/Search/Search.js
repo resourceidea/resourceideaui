@@ -4,6 +4,7 @@ import { InputGroup, InputLeftElement, Input, Icon } from '@chakra-ui/core'
 const Search = ({
   bg="rgba(255,255,255, 0.13)",
   color="primary.2",
+  placeholderColor="primary.3",
   searchColor="primary.3",
   focus= {
     borderColor: 'primary.3',
@@ -24,6 +25,9 @@ const Search = ({
       placeholder="Search"
       bg={bg}
       border="none"
+      _placeholder={{
+        color: placeholderColor
+      }}
       color={color}
       borderRadius="512px"
       height="2rem"

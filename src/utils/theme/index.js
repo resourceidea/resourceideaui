@@ -6,7 +6,7 @@ export const customTheme = {
   ...theme,
   breakpoints: ["30em", "48em", "62em", "80em"],
   fonts: {
-    heading: '"HK Grotesk", sans-serif',
+    heading: '"DM Sans", sans-serif',
     body: "system-ui, sans-serif",
     mono: "Menlo, monospace",
   },

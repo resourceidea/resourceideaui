@@ -23,9 +23,9 @@ export const OtherCell = styled(Box)`
     position: absolute;
     top: 0;
     left: 0;
-    width: 22px;
+    width: 24px;
     height: 50px;
-    background-color: ${props => props.theme.colors.primary[1]};
+    background-color: ${props => props.isWeekend ? props.theme.colors.primary[1] : props.theme.colors.primary[2]};
     opacity: 0.5;
   }
 `;
@@ -42,7 +42,8 @@ export const TableWrapper = styled(Box)`
     .th,
     .td {
       background-color: #fff;
-      overflow: hidden;
+      /* overflow: hidden; */
+      width: 24px;
       :last-child {
         border-right: 0;
       }
@@ -61,6 +62,7 @@ export const TableWrapper = styled(Box)`
       }
     }
     &.sticky {
+      touch-action: none;
       overflow: scroll;
       -ms-overflow-style: none;
       scrollbar-width: none;

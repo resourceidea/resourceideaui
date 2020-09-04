@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Icon } from "@chakra-ui/core";
 import { Box } from "@chakra-ui/core";
 import {
@@ -19,27 +19,31 @@ import Search from '../../common/Search'
 const NavSection = ({
   links = [],
   title=''
-}) => (
-  <NavSectionWrapper padding="1.25rem 1.5rem 1.25rem 1.5rem">
-    <NavTitle marginBottom="0.375rem" d="flex" justifyContent="space-between">
-      <Text variant="heading6" color="primary.2">{title}</Text>
-      <Icon name="arrow" color="primary.3"/>
-    </NavTitle>
-    <LinkWrapper>
-    {links.map(link => (
-      <NavLink>
-        <Link to={link.url}>
-          <Box d="flex" alignItems="center">
-            <Icon name={link.icon} color="primary.3" mr="10px"/>
-            <Text variant="subtitle1" color="primary.3" key={link.name}>{link.name}</Text>
-          </Box>
-        </Link>
-      </NavLink>
-    ))}
-    </LinkWrapper>
-  </NavSectionWrapper>
-)
-const Sidebar = () => {
+}) => {
+  let { pathname } = useLocation();
+  return (
+    <NavSectionWrapper padding="1.25rem 1.5rem 1.25rem 1.5rem">
+      <NavTitle marginBottom="0.375rem" d="flex" justifyContent="space-between">
+        <Text variant="heading6" color="primary.2">{title}</Text>
+        <Icon name="arrow" color="primary.3"/>
+      </NavTitle>
+      <LinkWrapper>
+      {links.map(link => (
+        <NavLink key={link.name} isSelected={pathname.startsWith(link.url)}>
+          <Link to={link.url}>
+            {console.log('route', link.url)}
+            <Box d="flex" alignItems="center">
+              <Icon name={link.icon} color={pathname.startsWith(link.url) ? "white" : "primary.3"} mr="10px"/>
+              <Text variant="subtitle1" color={pathname.startsWith(link.url) ? "white" : "primary.3"} key={link.name}>{link.name}</Text>
+            </Box>
+          </Link>
+        </NavLink>
+      ))}
+      </LinkWrapper>
+    </NavSectionWrapper>
+  )
+}
+const Sidebar = ({ sections }) => {
   return (
     <Wrapper d="flex" alignItems="stretch" width="280px" flexShrink="0">
       <LeftPane
@@ -78,24 +82,16 @@ const Sidebar = () => {
           d="flex"
           alignItems="center"
         >
-          <Search />
+          <Search color="primary.3"/>
         </SearchSection>
         <div>
-          <NavSection
-            title="Views" 
-            links={[
-              { url: '#', name: 'Resources Timeline ', icon: 'resources' },
-              { url: '#', name: 'Service Lines Timeline ', icon: 'serviceLines' },
-              { url: '#', name: 'Job Managers Timeline', icon: 'jobs' },
-            ]}/>
-          <NavSection
-            title="Control Panel" 
-            links={[
-              { url: '#', name: 'Resources', icon: 'resources' },
-              { url: '#', name: 'Clients', icon: 'clients' },
-              { url: '#', name: 'Lines of Service', icon: 'serviceLines' },
-              { url: '#', name: 'Job Positions', icon: 'jobs' },
-            ]}/>
+          {sections.map(section => (
+            <NavSection
+              key={section.title}
+              title={section.title}
+              links={section.links}
+            />
+          ))}
         </div>
       </RightPane>
       
