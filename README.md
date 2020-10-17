@@ -1,0 +1,2 @@
+# ResourceIdea Frontend
+ResourceIdea UI
