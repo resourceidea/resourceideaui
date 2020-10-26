@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceIdeaUI", "ResourceIdeaUI\ResourceIdeaUI.csproj", "{C5E4F07A-BD81-4597-83D1-7B9FB201B69B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceIdeaUI", "ResourceIdeaUI\ResourceIdeaUI.csproj", "{C5E4F07A-BD81-4597-83D1-7B9FB201B69B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceIdeaUI.Shared", "ResourceIdeaUI.Shared\ResourceIdeaUI.Shared.csproj", "{D77647CA-0E30-4CC0-93F6-213C0DCB4CE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceIdeaUI.Shared", "ResourceIdeaUI.Shared\ResourceIdeaUI.Shared.csproj", "{D77647CA-0E30-4CC0-93F6-213C0DCB4CE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

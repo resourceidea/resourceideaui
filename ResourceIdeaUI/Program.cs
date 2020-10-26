@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ResourceIdeaUI.Services;
+using System.Text.Json;
 
 namespace ResourceIdeaUI
 {
@@ -17,9 +19,18 @@ namespace ResourceIdeaUI
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services
+                .AddScoped<ILocalStorageService, LocalStorageService>()
+                .AddScoped<IAuthenticationService, AuthenticationService>();
 
-            await builder.Build().RunAsync();
+            builder.Services.AddHttpClient<IAuthenticationService, AuthenticationService>(client => client.BaseAddress = new Uri("https://dev-resourceideaapi.azurewebsites.net/"));
+
+            var host = builder.Build();
+
+            var authenticationService = host.Services.GetRequiredService<IAuthenticationService>();
+            await authenticationService.Initialize();
+
+            await host.RunAsync();
         }
     }
 }
