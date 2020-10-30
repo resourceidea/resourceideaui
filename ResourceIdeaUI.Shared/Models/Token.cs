@@ -6,8 +6,8 @@ namespace ResourceIdeaUI.Shared.Models
 {
     public class Token
     {
-        public string Access { get; set; }
+        public string access { get; set; }
 
-        public string Refresh { get; set; }
+        public string refresh { get; set; }
     }
 }

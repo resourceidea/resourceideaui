@@ -20,8 +20,7 @@ namespace ResourceIdeaUI
             builder.RootComponents.Add<App>("app");
 
             builder.Services
-                .AddScoped<ILocalStorageService, LocalStorageService>()
-                .AddScoped<IAuthenticationService, AuthenticationService>();
+                .AddScoped<ILocalStorageService, LocalStorageService>();
 
             builder.Services.AddHttpClient<IAuthenticationService, AuthenticationService>(client => client.BaseAddress = new Uri("https://dev-resourceideaapi.azurewebsites.net/"));
 

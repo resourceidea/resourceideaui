@@ -30,21 +30,24 @@ namespace ResourceIdeaUI.Services
 
         public async Task Login(string username, string password)
         {
-            var user = new User { Username = username, Password = password };
+            var user = new User { username = username, password = password };
             var loginJson = new StringContent(JsonSerializer.Serialize(user), Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync("api/token", loginJson);
+            var response = await _httpClient.PostAsync("api/token/", loginJson);
 
             if (response.IsSuccessStatusCode)
             {
                 var token = await JsonSerializer.DeserializeAsync<Token>(await response.Content.ReadAsStreamAsync());
                 await _localStorageService.SetItem("token", token);
+
+                await Initialize();
             }
         }
 
-        public Task Logout()
+        public async Task Logout()
         {
-            throw new NotImplementedException();
+            await _localStorageService.RemoveItem("token");
+            await Initialize();
         }
     }
 }
