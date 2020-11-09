@@ -1,0 +1,29 @@
+﻿@page "/departments"
+@attribute [Authorize]
+
+<h2>Departments</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Organization</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (loading)
+        {
+            <tr><td><div class="spinner-border spinner-border-sm" /></td></tr>
+        }
+        @if (departments != null)
+        {
+            @foreach (var department in departments)
+            {
+                <tr>
+                    <td>@department.Name</td>
+                    <td>@department.Organization</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
