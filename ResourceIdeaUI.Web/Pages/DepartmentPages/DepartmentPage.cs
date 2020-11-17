@@ -9,17 +9,17 @@ namespace ResourceIdeaUI.Web.Pages.DepartmentPages
 {
     public partial class DepartmentPage
     {
-        private bool loading;
-        private IEnumerable<Department> departments;
+        private Guid? departmentId;
 
         [Inject]
         public IDepartmentService DepartmentService { get; set; }
 
+        [Parameter]
+        public string Id { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            loading = true;
-            departments = await DepartmentService.GetDepartments();
-            loading = false;
+            departmentId = await Task.Run((Guid?)(() => { string.IsNullOrEmpty(Id) ? null : Guid.Parse(Id)}));
         }
     }
 }
