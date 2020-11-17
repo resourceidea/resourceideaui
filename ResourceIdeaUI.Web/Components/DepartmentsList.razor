@@ -1,0 +1,24 @@
+﻿<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Job Positions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (loading)
+        {
+            <tr><td><div class="spinner-border spinner-border-sm" /></td></tr>
+        }
+        @if (departments != null)
+        {
+            @foreach (var department in departments)
+            {
+                <tr>
+                    <td>@department.Name</td>
+                    <td>&nbsp;</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
