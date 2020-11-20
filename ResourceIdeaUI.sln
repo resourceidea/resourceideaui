@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceIdeaUI.Shared", "ResourceIdeaUI.Shared\ResourceIdeaUI.Shared.csproj", "{D77647CA-0E30-4CC0-93F6-213C0DCB4CE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceIdeaUI.Web", "ResourceIdeaUI.Web\ResourceIdeaUI.Web.csproj", "{BB11F217-914E-4E12-BA20-BC0815056D3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceIdeaUI.Web", "ResourceIdeaUI.Web\ResourceIdeaUI.Web.csproj", "{BB11F217-914E-4E12-BA20-BC0815056D3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

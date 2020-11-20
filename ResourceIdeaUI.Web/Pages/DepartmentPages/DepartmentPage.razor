@@ -3,13 +3,15 @@
 @page "/departments/{id}"
 @attribute [Authorize]
 
-<h2>Departments</h2>
-
-@if (departmentId != null)
+@if (Id != null)
 {
     <DepartmentDetail />
 }
 else
 {
+    <h2>Departments</h2>
+
+    <AddDepartment />
+    <br />
     <DepartmentsList />
 }
