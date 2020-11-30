@@ -1,4 +1,4 @@
-﻿<EditForm Model="@department" OnValidSubmit="@HandleValidSubmit">
+﻿<EditForm EditContext="@editContext" @onreset="HandleReset" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator />
     <div class="card border-info">
         <div class="card-header">

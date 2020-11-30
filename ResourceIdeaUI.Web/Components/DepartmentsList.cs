@@ -7,22 +7,42 @@ using ResourceIdeaUI.Web.Services;
 
 namespace ResourceIdeaUI.Web.Components
 {
-    public partial class DepartmentsList
+    public partial class DepartmentsList : IDisposable
     {
         private bool loading;
-        private IEnumerable<Department> departments;
+        private List<Department> departments = new List<Department>();
 
         [Inject]
         public IDepartmentService DepartmentService { get; set; }
 
+        [Inject]
+        public NewDepartmentNotifierService NewDepartmentNotifier { get; set; }
+
         [Parameter]
         public string Id { get; set; }
+
+        public async Task OnNotify()
+        {
+            await InvokeAsync(() =>
+            {
+                departments.AddRange(NewDepartmentNotifier.DepartmentsList);
+                departments.Sort((x, y) => string.Compare(x.Name, y.Name));
+                StateHasChanged();
+            });
+        }
+
+        public void Dispose()
+        {
+            NewDepartmentNotifier.Notify -= OnNotify;
+        }
 
         protected override async Task OnInitializedAsync()
         {
             loading = true;
-            departments = await DepartmentService.GetDepartmentsAsync();
+            departments.AddRange((await DepartmentService.GetDepartmentsAsync()));
+            departments.Sort((x, y) => string.Compare(x.Name, y.Name));
             loading = false;
+            NewDepartmentNotifier.Notify += OnNotify;
         }
     }
 }
