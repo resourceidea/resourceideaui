@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using ResourceIdeaUI.Shared.Models;
+using ResourceIdeaUI.Web.Pages.DepartmentPages;
 using ResourceIdeaUI.Web.Services;
 
 namespace ResourceIdeaUI.Web.Components
@@ -14,17 +15,25 @@ namespace ResourceIdeaUI.Web.Components
         private Token token;
 
         [Inject]
+        public IDepartmentService DepartmentService { get; set; }
+
+        [Inject]
         public ILocalStorageService LocalStorageService { get; set; }
 
-        protected override async Task OnInitializedAsync()
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
+
+        [Parameter]
+        public EventCallback OnDepartmentAdded { get; set; }
+
+        protected override async void OnInitialized()
         {
             token = await LocalStorageService.GetItem<Token>("token");
-            department.Organization = Guid.Empty;
         }
 
         private void HandleValidSubmit()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

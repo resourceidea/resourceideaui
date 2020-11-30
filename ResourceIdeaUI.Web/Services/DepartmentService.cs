@@ -8,7 +8,8 @@ namespace ResourceIdeaUI.Web.Services
 {
     public interface IDepartmentService
     {
-        Task<IEnumerable<Department>> GetDepartments();
+        Task<IEnumerable<Department>> GetDepartmentsAsync();
+        Task<Department> AddDepartmentAsync(Department department);
     }
 
     public class DepartmentService : IDepartmentService
@@ -20,9 +21,14 @@ namespace ResourceIdeaUI.Web.Services
             _httpService = httpService;
         }
 
-        public async Task<IEnumerable<Department>> GetDepartments()
+        public async Task<IEnumerable<Department>> GetDepartmentsAsync()
         {
             return await _httpService.Get<IEnumerable<Department>>("/api/v0.1/departments/");
+        }
+
+        public async Task<Department> AddDepartmentAsync(Department department)
+        {
+            return await _httpService.Post<Department>("/api/v0.1/departments/", department);
         }
     }
 }
