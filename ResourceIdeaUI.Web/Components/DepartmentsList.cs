@@ -21,7 +21,7 @@ namespace ResourceIdeaUI.Web.Components
         protected override async Task OnInitializedAsync()
         {
             loading = true;
-            departments = await DepartmentService.GetDepartments();
+            departments = await DepartmentService.GetDepartmentsAsync();
             loading = false;
         }
     }
