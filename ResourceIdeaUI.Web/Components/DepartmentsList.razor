@@ -8,7 +8,7 @@
     <tbody>
         @if (loading)
         {
-            <tr><td><div class="spinner-border spinner-border-sm" /></td></tr>
+            <tr><td colspan="2" class="text-center"><div class="spinner-border spinner-border-sm" /></td></tr>
         }
         @if (departments != null)
         {
@@ -22,3 +22,10 @@
         }
     </tbody>
 </table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item @(disablePrevious ? "disabled": "")"><a class="page-link" @onclick="HandlePreviousPage">&laquo;</a></li>
+        <li class="page-item @(disableNext ? "disabled": "")"><a class="page-link" disabled="@disablePrevious" @onclick="HandleNextPage">&raquo;</a></li>
+    </ul>
+</nav>

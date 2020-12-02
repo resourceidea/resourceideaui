@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ResourceIdeaUI.Shared.Models;
+using ResourceIdeaUI.Shared.ResponseModels;
 
 namespace ResourceIdeaUI.Web.Services
 {
     public interface IDepartmentService
     {
-        Task<IEnumerable<Department>> GetDepartmentsAsync();
+        Task<DepartmentsListResponse> GetDepartmentsAsync();
         Task<Department> AddDepartmentAsync(Department department);
     }
 
@@ -21,9 +22,9 @@ namespace ResourceIdeaUI.Web.Services
             _httpService = httpService;
         }
 
-        public async Task<IEnumerable<Department>> GetDepartmentsAsync()
+        public async Task<DepartmentsListResponse> GetDepartmentsAsync()
         {
-            return await _httpService.Get<IEnumerable<Department>>("/api/v0.1/departments/");
+            return await _httpService.Get<DepartmentsListResponse>("/api/v0.1/departments/");
         }
 
         public async Task<Department> AddDepartmentAsync(Department department)
