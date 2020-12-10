@@ -1,15 +1,12 @@
-﻿<EditForm EditContext="@editContext" @onreset="HandleReset" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <div class="card border-info">
-        <div class="card-header">
-            Add department
-        </div>
-        <div class="card-body">
-            <label>
-                Name:
-                <InputText @bind-Value="department.Name" class="form-control" />
-            </label>
-            <button type="submit" class="btn btn-primary">Save</button>
-        </div>
+﻿<div class="card border-info">
+    <div class="card-header">
+        Add department
     </div>
-</EditForm>
+    <div class="card-body">
+        <label>
+            Name:
+            <input @bind="@DepartmentName" class="form-control" />
+        </label>
+        <button class="btn btn-primary" @onclick="@HandleValidSubmit">Save</button>
+    </div>
+</div>

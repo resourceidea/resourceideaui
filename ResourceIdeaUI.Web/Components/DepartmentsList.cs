@@ -21,7 +21,7 @@ namespace ResourceIdeaUI.Web.Components
         public IDepartmentService DepartmentService { get; set; }
 
         [Inject]
-        public NewDepartmentNotifierService NewDepartmentNotifier { get; set; }
+        public NewDepartmentNotifierService Notifier { get; set; }
 
         [Parameter]
         public string Id { get; set; }
@@ -30,34 +30,35 @@ namespace ResourceIdeaUI.Web.Components
         {
             await InvokeAsync(() =>
             {
-                departments.AddRange(NewDepartmentNotifier.DepartmentsList);
-                departments.Sort((x, y) => string.Compare(x.Name, y.Name));
                 StateHasChanged();
             });
         }
 
         public void Dispose()
         {
-            NewDepartmentNotifier.Notify -= OnNotify;
+            Notifier.Notify -= OnNotify;
         }
 
         protected override async Task OnInitializedAsync()
         {
             loading = true;
+            await Notifier.ClearListAsync();
             DepartmentsListResponse departmentsQueryResponse = await DepartmentService.GetDepartmentsAsync();
-            
+
             previousPage = departmentsQueryResponse.Previous;
             nextPage = departmentsQueryResponse.Next;
 
             DisableOrEnablePreviousPageLink(previousPage);
             DisableOrEnableNextPageLink(nextPage);
 
-            departments.AddRange(departmentsQueryResponse.Results);
-            
-            departments.Sort((x, y) => string.Compare(x.Name, y.Name));
+            foreach (var department in departmentsQueryResponse.Results)
+            {
+                await Notifier.AddToListAsync(department);
+            }
+
             loading = false;
-            
-            NewDepartmentNotifier.Notify += OnNotify;
+
+            Notifier.Notify += OnNotify;
         }
 
         private void DisableOrEnablePreviousPageLink(string previousPage)

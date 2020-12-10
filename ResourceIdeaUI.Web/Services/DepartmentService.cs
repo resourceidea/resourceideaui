@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ResourceIdeaUI.Shared.Models;
 using ResourceIdeaUI.Shared.ResponseModels;
 
@@ -24,12 +21,12 @@ namespace ResourceIdeaUI.Web.Services
 
         public async Task<DepartmentsListResponse> GetDepartmentsAsync()
         {
-            return await _httpService.Get<DepartmentsListResponse>("/api/v0.1/departments/");
+            return await _httpService.Get<DepartmentsListResponse>("/departments/");
         }
 
         public async Task<Department> AddDepartmentAsync(Department department)
         {
-            return await _httpService.Post<Department>("/api/v0.1/departments/", department);
+            return await _httpService.Post<Department>("/departments/", department);
         }
     }
 }

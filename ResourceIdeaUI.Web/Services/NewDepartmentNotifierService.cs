@@ -12,15 +12,24 @@ namespace ResourceIdeaUI.Web.Services
         private readonly List<Department> departments = new List<Department>();
         public IReadOnlyList<Department> DepartmentsList => departments;
 
-        public event Func<Task> Notify;
-
         public NewDepartmentNotifierService()
         {
         }
 
-        public async Task AddToList(Department department)
+        public event Func<Task> Notify;
+
+        public async Task AddToListAsync(Department department)
         {
             departments.Add(department);
+            if (Notify != null)
+            {
+                await Notify?.Invoke();
+            }
+        }
+
+        public async Task ClearListAsync()
+        {
+            departments.Clear();
             if (Notify != null)
             {
                 await Notify?.Invoke();

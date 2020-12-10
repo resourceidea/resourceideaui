@@ -1,0 +1,15 @@
+﻿@inject NotifierService Notifier
+
+<h1>Displays value from service and lets user put in new value</h1>
+
+<input type="text" @bind="@value" />
+
+<button @onclick="@AddValue">Set Value</button>
+
+@code {
+    private string value { get; set; }
+    public async Task AddValue()
+    {
+        await Notifier.AddToList(value);
+    }
+}

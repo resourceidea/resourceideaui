@@ -12,7 +12,7 @@
         }
         @if (departments != null)
         {
-            @foreach (var department in departments)
+            @foreach (var department in Notifier.DepartmentsList)
             {
                 <tr>
                     <td>@department.Name</td>

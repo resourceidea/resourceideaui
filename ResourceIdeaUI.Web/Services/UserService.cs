@@ -22,7 +22,7 @@ namespace ResourceIdeaUI.Web.Services
 
         public async Task<IEnumerable<Organization>> GetAll()
         {
-            return await _httpService.Get<IEnumerable<Organization>>("/api/v0.1/organizations/");
+            return await _httpService.Get<IEnumerable<Organization>>("/organizations/");
         }
     }
 }

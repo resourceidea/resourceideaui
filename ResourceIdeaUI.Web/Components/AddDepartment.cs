@@ -12,32 +12,19 @@ namespace ResourceIdeaUI.Web.Components
 {
     public partial class AddDepartment
     {
-        private Department department = new Department();
-        private EditContext editContext;
+        private string DepartmentName { get; set; }
 
         [Inject]
         public IDepartmentService DepartmentService { get; set; }
 
         [Inject]
-        public NewDepartmentNotifierService NewDepartmentNotifier { get; set; }
-
-        protected override void OnInitialized()
-        {
-            editContext = new EditContext(department);
-        }
-
-        private void HandleReset()
-        {
-            department = new Department();
-            editContext = new EditContext(department);
-        }
+        public NewDepartmentNotifierService Notifier { get; set; }
 
         private async void HandleValidSubmit()
         {
+            var department = new Department { Name = DepartmentName };
             var newDepartment = await DepartmentService.AddDepartmentAsync(department);
-            await NewDepartmentNotifier.AddToList(newDepartment);
-            department = new Department();
-            StateHasChanged();
+            await Notifier.AddToListAsync(newDepartment);
         }
     }
 }
