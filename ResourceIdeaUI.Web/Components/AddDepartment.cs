@@ -14,14 +14,18 @@ namespace ResourceIdeaUI.Web.Components
         [Inject]
         public NewDepartmentNotifierService Notifier { get; set; }
 
+        [Inject]
+        public ToastService ToastService { get; set; }
+
         private async void HandleValidSubmit()
         {
             if (!string.IsNullOrEmpty(DepartmentName))
             {
                 var department = new Department { Name = DepartmentName };
-                DepartmentName = string.Empty;
+                DepartmentName = null;
                 await DepartmentService.AddDepartmentAsync(department);
                 await Notifier.UpdateListAsync();
+                ToastService.ShowToast($"{department.Name} added successfully", ToastLevel.Success);
             }
         }
     }

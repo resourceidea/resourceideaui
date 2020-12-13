@@ -15,8 +15,6 @@ namespace ResourceIdeaUI.Web.Components
         private List<Department> departments = new List<Department>();
         private bool disablePrevious;
         private bool disableNext;
-        private string previousPage;
-        private string nextPage;
 
         [Inject]
         public IDepartmentService DepartmentService { get; set; }
@@ -49,11 +47,9 @@ namespace ResourceIdeaUI.Web.Components
 
             await Notifier.ClearListAsync();
             DepartmentsListResponse departmentsQueryResponse = await DepartmentService.GetDepartmentsAsync();
-            previousPage = departmentsQueryResponse.Previous.GetPageNumber();
-            nextPage = departmentsQueryResponse.Next.GetPageNumber();
-            DisableOrEnablePreviousPageLink(previousPage);
-            DisableOrEnableNextPageLink(nextPage);
             await Notifier.UpdateListAsync();
+            DisableOrEnablePreviousPageLink(Notifier.PreviousPage);
+            DisableOrEnableNextPageLink(Notifier.NextPage);
 
             loading = false;
 
@@ -78,16 +74,16 @@ namespace ResourceIdeaUI.Web.Components
 
         private async Task HandlePreviousPage()
         {
-            await Notifier.UpdateListAsync(page: previousPage);
             DisableOrEnablePreviousPageLink(Notifier.PreviousPage);
             DisableOrEnableNextPageLink(Notifier.NextPage);
+            await Notifier.UpdateListAsync(page: Notifier.PreviousPage);
         }
 
         private async Task HandleNextPage()
         {
-            await Notifier.UpdateListAsync(page: nextPage);
             DisableOrEnablePreviousPageLink(Notifier.PreviousPage);
             DisableOrEnableNextPageLink(Notifier.NextPage);
+            await Notifier.UpdateListAsync(page: Notifier.NextPage);
         }
     }
 }
