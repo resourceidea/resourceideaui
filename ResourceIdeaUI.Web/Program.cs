@@ -24,8 +24,7 @@ namespace ResourceIdeaUI.Web
                 .AddScoped<ILocalStorageService, LocalStorageService>()
                 .AddScoped<IHttpService, HttpService>()
                 .AddScoped<IDepartmentService, DepartmentService>()
-                .AddScoped<NewDepartmentNotifierService>()
-                .AddScoped<NotifierService>();
+                .AddScoped<NewDepartmentNotifierService>();
 
             builder.Services
                 .AddHttpClient<IHttpService, HttpService>(client => client.BaseAddress = new Uri("http://127.0.0.1:8000/"));

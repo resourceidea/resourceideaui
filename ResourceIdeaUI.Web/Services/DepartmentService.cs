@@ -6,7 +6,7 @@ namespace ResourceIdeaUI.Web.Services
 {
     public interface IDepartmentService
     {
-        Task<DepartmentsListResponse> GetDepartmentsAsync();
+        Task<DepartmentsListResponse> GetDepartmentsAsync(string page=null);
         Task<Department> AddDepartmentAsync(Department department);
     }
 
@@ -14,14 +14,24 @@ namespace ResourceIdeaUI.Web.Services
     {
         private IHttpService _httpService;
 
+        private bool IsANumber(string numberString)
+        {
+            return int.TryParse(numberString, out int numberValue) && numberValue > 0;
+        }
+
         public DepartmentService(IHttpService httpService)
         {
             _httpService = httpService;
         }
 
-        public async Task<DepartmentsListResponse> GetDepartmentsAsync()
+        public async Task<DepartmentsListResponse> GetDepartmentsAsync(string page=null)
         {
-            return await _httpService.Get<DepartmentsListResponse>("/departments/");
+            string queryPage = string.Empty;
+            if (page != null && !string.IsNullOrEmpty(page) && IsANumber(page))
+            {
+                queryPage = $"?page={page}";
+            }
+            return await _httpService.Get<DepartmentsListResponse>($"/departments/{queryPage}");
         }
 
         public async Task<Department> AddDepartmentAsync(Department department)

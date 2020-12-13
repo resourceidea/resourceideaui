@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using ResourceIdeaUI.Shared.ExtensionMethods;
 using ResourceIdeaUI.Shared.Models;
 using ResourceIdeaUI.Shared.ResponseModels;
 using ResourceIdeaUI.Web.Services;
@@ -30,6 +31,9 @@ namespace ResourceIdeaUI.Web.Components
         {
             await InvokeAsync(() =>
             {
+                DisableOrEnablePreviousPageLink(Notifier.PreviousPage);
+                DisableOrEnableNextPageLink(Notifier.NextPage);
+
                 StateHasChanged();
             });
         }
@@ -42,19 +46,14 @@ namespace ResourceIdeaUI.Web.Components
         protected override async Task OnInitializedAsync()
         {
             loading = true;
+
             await Notifier.ClearListAsync();
             DepartmentsListResponse departmentsQueryResponse = await DepartmentService.GetDepartmentsAsync();
-
-            previousPage = departmentsQueryResponse.Previous;
-            nextPage = departmentsQueryResponse.Next;
-
+            previousPage = departmentsQueryResponse.Previous.GetPageNumber();
+            nextPage = departmentsQueryResponse.Next.GetPageNumber();
             DisableOrEnablePreviousPageLink(previousPage);
             DisableOrEnableNextPageLink(nextPage);
-
-            foreach (var department in departmentsQueryResponse.Results)
-            {
-                await Notifier.AddToListAsync(department);
-            }
+            await Notifier.UpdateListAsync();
 
             loading = false;
 
@@ -77,14 +76,18 @@ namespace ResourceIdeaUI.Web.Components
                 disableNext = false;
         }
 
-        private void HandlePreviousPage()
+        private async Task HandlePreviousPage()
         {
-            throw new NotImplementedException();
+            await Notifier.UpdateListAsync(page: previousPage);
+            DisableOrEnablePreviousPageLink(Notifier.PreviousPage);
+            DisableOrEnableNextPageLink(Notifier.NextPage);
         }
 
-        private void HandleNextPage()
+        private async Task HandleNextPage()
         {
-            throw new NotImplementedException();
+            await Notifier.UpdateListAsync(page: nextPage);
+            DisableOrEnablePreviousPageLink(Notifier.PreviousPage);
+            DisableOrEnableNextPageLink(Notifier.NextPage);
         }
     }
 }

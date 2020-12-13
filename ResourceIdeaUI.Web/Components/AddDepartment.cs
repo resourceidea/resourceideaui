@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
+﻿using Microsoft.AspNetCore.Components;
 using ResourceIdeaUI.Shared.Models;
-using ResourceIdeaUI.Web.Pages.DepartmentPages;
 using ResourceIdeaUI.Web.Services;
 
 namespace ResourceIdeaUI.Web.Components
@@ -22,9 +16,13 @@ namespace ResourceIdeaUI.Web.Components
 
         private async void HandleValidSubmit()
         {
-            var department = new Department { Name = DepartmentName };
-            var newDepartment = await DepartmentService.AddDepartmentAsync(department);
-            await Notifier.AddToListAsync(newDepartment);
+            if (!string.IsNullOrEmpty(DepartmentName))
+            {
+                var department = new Department { Name = DepartmentName };
+                DepartmentName = string.Empty;
+                await DepartmentService.AddDepartmentAsync(department);
+                await Notifier.UpdateListAsync();
+            }
         }
     }
 }
