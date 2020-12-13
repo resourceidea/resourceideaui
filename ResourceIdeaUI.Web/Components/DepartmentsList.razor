@@ -25,7 +25,7 @@
 
 <nav aria-label="Page navigation example">
     <ul class="pagination">
-        <li class="page-item @(disablePrevious ? "disabled": "")"><a class="page-link" @onclick="HandlePreviousPage">&laquo;</a></li>
-        <li class="page-item @(disableNext ? "disabled": "")"><a class="page-link" disabled="@disablePrevious" @onclick="HandleNextPage">&raquo;</a></li>
+        <li class="page-item @(disablePrevious ? "disabled": "")"><a class="page-link" @onclick="HandlePreviousPage">&laquo;&nbsp;&nbsp;Previous</a></li>
+        <li class="page-item @(disableNext ? "disabled": "")"><a class="page-link" disabled="@disablePrevious" @onclick="HandleNextPage">Next&nbsp;&nbsp;&raquo;</a></li>
     </ul>
 </nav>
