@@ -26,7 +26,7 @@ namespace ResourceIdeaUI.Web.Services
 
         public async Task UpdateListAsync(string page=null)
         {
-            var departmentsQuery = await _departmentService.GetDepartmentsAsync(page);
+            var departmentsQuery = await _departmentService.GetDepartments(page);
             PreviousPage = departmentsQuery.Previous.GetPageNumber();
             NextPage = departmentsQuery.Next.GetPageNumber() ;
             departments.Clear();

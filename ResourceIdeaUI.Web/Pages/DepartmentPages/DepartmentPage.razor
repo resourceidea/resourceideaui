@@ -7,7 +7,14 @@
 
 @if (Id != null)
 {
-    <DepartmentDetail />
+    if (Guid.TryParse(Id, out Guid departmentId))
+    {
+        <DepartmentDetail DepartmentId="@departmentId" />
+    }
+    else
+    {
+        <h3>Department not found</h3>
+    }
 }
 else
 {

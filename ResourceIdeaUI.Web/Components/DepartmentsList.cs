@@ -46,7 +46,7 @@ namespace ResourceIdeaUI.Web.Components
             loading = true;
 
             await Notifier.ClearListAsync();
-            DepartmentsListResponse departmentsQueryResponse = await DepartmentService.GetDepartmentsAsync();
+            DepartmentsListResponse departmentsQueryResponse = await DepartmentService.GetDepartments();
             await Notifier.UpdateListAsync();
             DisableOrEnablePreviousPageLink(Notifier.PreviousPage);
             DisableOrEnableNextPageLink(Notifier.NextPage);
