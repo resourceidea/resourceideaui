@@ -9,18 +9,7 @@ namespace ResourceIdeaUI.Web.Pages.DepartmentPages
 {
     public partial class DepartmentPage
     {
-        private Guid departmentId;
-
-        [Inject]
-        public IDepartmentService DepartmentService { get; set; }
-
         [Parameter]
         public string Id { get; set; }
-
-        protected override async Task OnInitializedAsync()
-        {
-            if (!string.IsNullOrEmpty(Id))
-                departmentId = await Task.Run(() => Guid.Parse(Id));
-        }
     }
 }

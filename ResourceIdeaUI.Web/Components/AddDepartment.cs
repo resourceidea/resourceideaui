@@ -23,7 +23,7 @@ namespace ResourceIdeaUI.Web.Components
             {
                 var department = new Department { Name = DepartmentName };
                 DepartmentName = null;
-                await DepartmentService.AddDepartmentAsync(department);
+                await DepartmentService.AddDepartment(department);
                 await Notifier.UpdateListAsync();
                 ToastService.ShowToast($"{department.Name} added successfully", ToastLevel.Success);
             }

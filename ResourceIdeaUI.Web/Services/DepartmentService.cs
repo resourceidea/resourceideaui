@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ResourceIdeaUI.Shared.Models;
 using ResourceIdeaUI.Shared.ResponseModels;
 
@@ -6,8 +7,9 @@ namespace ResourceIdeaUI.Web.Services
 {
     public interface IDepartmentService
     {
-        Task<DepartmentsListResponse> GetDepartmentsAsync(string page=null);
-        Task<Department> AddDepartmentAsync(Department department);
+        Task<DepartmentsListResponse> GetDepartments(string page=null);
+        Task<Department> AddDepartment(Department department);
+        Task<Department> GetDepartmentById(Guid id);
     }
 
     public class DepartmentService : IDepartmentService
@@ -24,7 +26,7 @@ namespace ResourceIdeaUI.Web.Services
             _httpService = httpService;
         }
 
-        public async Task<DepartmentsListResponse> GetDepartmentsAsync(string page=null)
+        public async Task<DepartmentsListResponse> GetDepartments(string page=null)
         {
             string queryPage = string.Empty;
             if (page != null && !string.IsNullOrEmpty(page) && IsANumber(page))
@@ -34,9 +36,14 @@ namespace ResourceIdeaUI.Web.Services
             return await _httpService.Get<DepartmentsListResponse>($"/departments/{queryPage}");
         }
 
-        public async Task<Department> AddDepartmentAsync(Department department)
+        public async Task<Department> AddDepartment(Department department)
         {
             return await _httpService.Post<Department>("/departments/", department);
+        }
+
+        public async Task<Department> GetDepartmentById(Guid id)
+        {
+            return await _httpService.Get<Department>($"/departments/{id}");
         }
     }
 }

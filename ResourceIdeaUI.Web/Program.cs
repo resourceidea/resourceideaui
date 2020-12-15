@@ -28,7 +28,7 @@ namespace ResourceIdeaUI.Web
                 .AddScoped<ToastService>();
 
             builder.Services
-                .AddHttpClient<IHttpService, HttpService>(client => client.BaseAddress = new Uri("http://127.0.0.1:8000/"));
+                .AddHttpClient<IHttpService, HttpService>(client => client.BaseAddress = new Uri("http://localhost:8000/"));
 
             var host = builder.Build();
 
