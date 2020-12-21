@@ -18,16 +18,4 @@
     <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.9" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-    <Folder Include="Models\" />
-    <Folder Include="Services\" />
-    <Folder Include="Pages\SettingsPages\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ResourceIdeaUI.Shared\ResourceIdeaUI.Shared.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-  </ItemGroup>
 </Project>
