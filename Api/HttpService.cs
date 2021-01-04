@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Net.Http.Headers;
 
 namespace Api
 {
@@ -13,6 +14,7 @@ namespace Api
     {
         private HttpClient httpClient;
         private string baseAddress;
+        private HttpServiceResponse serviceResponse;
 
         public HttpService()
         {
@@ -28,7 +30,7 @@ namespace Api
             }
         }
 
-        public async Task<string> Post(string uri, object body)
+        public async Task<HttpServiceResponse> Post(string uri, object body, string token = null)
         {
             if (string.IsNullOrEmpty(baseAddress))
             {
@@ -39,20 +41,33 @@ namespace Api
             {
                 Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
             };
-            return await SendRequest(request);
+            return await SendRequest(request, token);
         }
 
-        public async Task<string> SendRequest(HttpRequestMessage httpRequest)
+        public async Task<HttpServiceResponse> Get(string uri, string token)
         {
-            using var response = await httpClient.SendAsync(httpRequest);
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{baseAddress}{uri}");
+            return await SendRequest(request, token);
+        }
 
-            if (!response.IsSuccessStatusCode)
+        public async Task<HttpServiceResponse> SendRequest(HttpRequestMessage request, string token = null)
+        {
+            if (!string.IsNullOrEmpty(token))
             {
-                var error = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
-                throw new Exception(error["message"]);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            using var response = await httpClient.SendAsync(request);
+            serviceResponse.StatusCode = response.StatusCode;
+            if (response.IsSuccessStatusCode)
+            {
+                serviceResponse.Content = await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                serviceResponse.Content = await response.Content?.ReadAsStringAsync();
             }
 
-            return await response.Content.ReadAsStringAsync();
+            return serviceResponse;
         }
     }
 }

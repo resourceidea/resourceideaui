@@ -21,14 +21,15 @@ namespace Api
             string refresh,
             ILogger log)
         {
-            log.LogInformation("Authentication token request.");
+            log.LogInformation("INFO: Initiating authentication token request");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
 
+            HttpResponseMessage responseMessage;
             try
             {
-                string tokenResponse = string.Empty;
+                HttpServiceResponse tokenResponse;
                 if (string.IsNullOrEmpty(refresh))
                 {
                     tokenResponse = await GetToken(data);
@@ -38,41 +39,57 @@ namespace Api
                     tokenResponse = await RefreshToken(data);
                 }
 
-                return new HttpResponseMessage(HttpStatusCode.OK)
+                responseMessage = new HttpResponseMessage(tokenResponse.StatusCode);
+
+                if (tokenResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    Content = new StringContent(tokenResponse,
+                    responseMessage.Content = new StringContent(tokenResponse.Content,
+                                                                Encoding.UTF8,
+                                                                "application/json");
+
+                    log.LogInformation($"INFO: Authentication token request successful");
+                }
+                else
+                {
+                    responseMessage.Content = new StringContent("Authentication token request failed",
+                                                                Encoding.UTF8,
+                                                                "application/json");
+
+                    log.LogError($"ERROR: Authentication token request FAILED with response {tokenResponse.Content}");
+                }
+            }
+            catch (HttpRequestException error)
+            {
+                log.LogError($"Authentication token request failed with error: {error.Message}");
+                responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent("Authentication token request failed",
                                                 Encoding.UTF8,
                                                 "application/json")
                 };
             }
-            catch (HttpRequestException error)
-            {
-                log.LogError(error.Message);
-                throw;
-            }
+
+            return responseMessage;
 
         }
 
-        private static async Task<string> GetToken(dynamic data)
+        private static async Task<HttpServiceResponse> GetToken(dynamic data)
         {
             string username = data?.username;
             string password = data?.password;
-            var refreshTokenResponse = await HandlePostRequest("/api/token/", new { username, password });
-            return refreshTokenResponse;
+            return await HandlePostRequest("/api/token/", new { username, password });
         }
 
-        private static async Task<string> RefreshToken(dynamic data)
+        private static async Task<HttpServiceResponse> RefreshToken(dynamic data)
         {
             string refresh = data?.refresh;
-            var tokenResponse = await HandlePostRequest("/api/token/refresh/", new { refresh });
-            return tokenResponse;
+            return await HandlePostRequest("/api/token/refresh/", new { refresh });
         }
 
-        private static async Task<string> HandlePostRequest(string uri, object body)
+        private static async Task<HttpServiceResponse> HandlePostRequest(string uri, object body)
         {
             var _httpService = new HttpService();
-            var responseMessage = await _httpService.Post(uri, body);
-            return responseMessage;
+            return await _httpService.Post(uri, body);
         }
     }
 }

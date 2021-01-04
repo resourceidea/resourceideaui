@@ -42,17 +42,20 @@ namespace Client.Services
         public async Task<T> Get<T>(string uri)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
-            return await sendRequest<T>(request);
+            var response = await SendRequest<T>(request);
+            return response;
         }
 
         public async Task<T> Post<T>(string uri, object value)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, uri);
-            request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
-            return await sendRequest<T>(request);
+            var request = new HttpRequestMessage(HttpMethod.Post, uri)
+            {
+                Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json")
+            };
+            return await SendRequest<T>(request);
         }
 
-        private async Task<T> sendRequest<T>(HttpRequestMessage request)
+        private async Task<T> SendRequest<T>(HttpRequestMessage request)
         {
             var token = await _localStorageService.GetItem<Token>("token");
             var isApiUrl = !request.RequestUri.IsAbsoluteUri;
