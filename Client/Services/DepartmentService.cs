@@ -45,7 +45,7 @@ namespace Client.Services
 
         public async Task<Department> GetDepartmentById(Guid id)
         {
-            return await _httpService.Get<Department>($"/departments/{id}");
+            return await _httpService.Get<Department>($"/api/departments/{id}");
         }
     }
 }

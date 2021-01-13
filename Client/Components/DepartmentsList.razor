@@ -14,8 +14,9 @@
         {
             @foreach (var department in Notifier.DepartmentsList)
             {
+                var departmentUrl = $"departments/{department.Id}";
                 <tr>
-                    <td>@department.Name</td>
+                    <td><NavLink href="@departmentUrl" >@department.Name</NavLink></td>
                     <td>&nbsp;</td>
                 </tr>
             }
