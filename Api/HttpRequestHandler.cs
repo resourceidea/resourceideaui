@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Api.Factories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -15,23 +15,17 @@ namespace Api
     {
         public static async Task<HttpResponseMessage> Process(HttpRequest request, ILogger logger, string id)
         {
-            request.Headers.TryGetValue("Authorization", out StringValues authorizationHeaderValues);
-            string authToken = authorizationHeaderValues.ToString().Split(' ')[1];
-
             try
             {
-                if (request.Method == HttpMethod.Post.Method)
-                {
-                    return await HandlePostRequest(request, authToken, logger);
-                }
-                else if (request.Method == HttpMethod.Put.Method)
-                {
-                    return await HandlePutRequest(request, authToken, logger, id);
-                }
-                else
-                {
-                    return await HandleGetRequest(request, authToken, logger, id);
-                }
+                request.Headers.TryGetValue("Authorization", out StringValues authorizationHeaderValues);
+                string authenticationToken = authorizationHeaderValues.ToString().Split(' ')[1];
+
+                var httpMethodHandler = $"Api.Factories.Http{request.Method}MethodHandler, Api";
+                var httpMethodHandlerFactory = Activator.CreateInstance(
+                                                            Type.GetType(httpMethodHandler) ?? throw new InvalidOperationException()
+                                                        ) as IHttpMethodHandlerFactory;
+
+                return await httpMethodHandlerFactory?.HandleRequest(request, authenticationToken, logger, id);
             }
             catch (HttpRequestException error)
             {
@@ -44,37 +38,6 @@ namespace Api
                                                 "application/json")
                 };
             }
-        }
-
-        private static async Task<HttpResponseMessage> HandleGetRequest(HttpRequest request, string token, ILogger log, string id)
-        {
-            string page = request.Query["page"];
-            var queryPage = string.IsNullOrEmpty(page) ? string.Empty : $"?page={page}";
-            var uri = string.IsNullOrEmpty(id) ? $"/jobpositions/{queryPage}" : $"/jobpositions/{id}/";
-
-            var _httpService = new HttpService();
-            var serviceResponse = await _httpService.Get(uri, token);
-
-            HttpResponseMessage responseMessage = new HttpResponseMessage(serviceResponse.StatusCode);
-
-            if (serviceResponse.StatusCode == HttpStatusCode.OK)
-            {
-                responseMessage.Content = new StringContent(serviceResponse.Content,
-                                                            Encoding.UTF8,
-                                                            "application/json");
-
-                log.LogInformation($"INFO: Job position(s) resource request successful");
-            }
-            else
-            {
-                log.LogError($"ERROR: Job position(s) resource request FAILED with response {serviceResponse.Content}");
-
-                responseMessage.Content = new StringContent(JsonConvert.SerializeObject(new { message =  ConstantValues.JOB_POSITIONS_REQUEST_FAILED }),
-                                                            Encoding.UTF8,
-                                                            "application/json");
-            }
-
-            return responseMessage;
         }
 
         private static Task<HttpResponseMessage> HandlePutRequest(HttpRequest request, string token, ILogger log, string id)
