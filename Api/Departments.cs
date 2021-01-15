@@ -98,7 +98,7 @@ namespace Api
                 string organization = data?.organization;
 
                 var httpService = new HttpService();
-                var serviceResponse = await httpService.Put($"/departments/{departmentId}", new { name, organization }, token);
+                var serviceResponse = await httpService.Put($"/departments/{departmentId}/", new { name, organization }, token);
 
                 var responseMessage = new HttpResponseMessage(serviceResponse.StatusCode);
                 if (serviceResponse.StatusCode == HttpStatusCode.OK)

@@ -17,7 +17,8 @@ namespace Client.Services
     public interface IHttpService
     {
         Task<T> Get<T>(string uri);
-        Task<T> Post<T>(string uri, object value);
+        Task<T> Post<T>(string uri, object body);
+        Task<T> Put<T>(string uri, object body);
     }
 
     public class HttpService : IHttpService
@@ -46,11 +47,20 @@ namespace Client.Services
             return response;
         }
 
-        public async Task<T> Post<T>(string uri, object value)
+        public async Task<T> Post<T>(string uri, object body)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, uri)
             {
-                Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json")
+                Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
+            };
+            return await SendRequest<T>(request);
+        }
+
+        public async Task<T> Put<T>(string uri, object body)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Put, uri)
+            {
+                Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
             };
             return await SendRequest<T>(request);
         }

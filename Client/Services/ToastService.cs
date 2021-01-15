@@ -37,7 +37,7 @@ namespace Client.Services
         {
             if (Countdown == null)
             {
-                Countdown = new Timer(5000);
+                Countdown = new Timer(10000);
                 Countdown.Elapsed += HideToast;
                 Countdown.AutoReset = false;
             }
