@@ -11,16 +11,10 @@ namespace Client.Models.DataModels
         [JsonPropertyName("title")]
         public string Title { get; set; }
 
-        [JsonPropertyName("organization")]
-        public Guid Organization { get; set; }
-
-        [JsonPropertyName("id")]
-        public Guid? Id { get; set; }
-
         [JsonPropertyName("hierarchy_order")]
-        public int HierarchyOrder { get; set; }
+        public int HierarchyOrder { get; set; } = 0;
 
-        [JsonPropertyName("department")]
-        public Guid Department { get; set; }
+        [JsonPropertyName("department_id")]
+        public Guid DepartmentId { get; set; }
     }
 }
