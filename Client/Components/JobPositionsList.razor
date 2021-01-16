@@ -1,0 +1,20 @@
+﻿<h4>Job Positions</h4>
+@{ var newJobsUrl = $"/departments/{DepartmentId}/jobpositions/new"; }
+<NavLink class="btn btn-primary btn-sm" href="@newJobsUrl">Add Job Position</NavLink>
+<br />
+<br />
+<table class="table">
+    <tbody>
+        @if (jobPositions != null)
+        {
+            @foreach (var jobPosition in jobPositions)
+            {
+                var jobPositionUrl = $"/departments/{DepartmentId}/jobpositions/{jobPosition.Id}";
+
+                <tr>
+                    <td><NavLink href="@jobPositionUrl">@jobPosition.Title</NavLink></td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
