@@ -1,9 +1,7 @@
 ﻿<h4>Job Positions</h4>
 @{ var newJobsUrl = $"/departments/{DepartmentId}/jobpositions/new"; }
 <NavLink class="btn btn-primary btn-sm" href="@newJobsUrl">Add Job Position</NavLink>
-<br />
-<br />
-<table class="table">
+<table class="table" style="margin-top: 10px;">
     <tbody>
         @if (jobPositions != null)
         {
