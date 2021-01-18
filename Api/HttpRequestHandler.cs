@@ -39,15 +39,5 @@ namespace Api
                 };
             }
         }
-
-        private static Task<HttpResponseMessage> HandlePutRequest(HttpRequest request, string token, ILogger log, string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static Task<HttpResponseMessage> HandlePostRequest(HttpRequest request, string token, ILogger log)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
