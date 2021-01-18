@@ -12,6 +12,7 @@ namespace Client.Services
         Task<DepartmentsListResponse> GetDepartments(string page = null);
         Task<Department> AddDepartment(Department department);
         Task<Department> GetDepartmentById(Guid id);
+        Task<Department> UpdateDepartment(Department department);
     }
 
     public class DepartmentService : IDepartmentService
@@ -45,7 +46,12 @@ namespace Client.Services
 
         public async Task<Department> GetDepartmentById(Guid id)
         {
-            return await _httpService.Get<Department>($"/departments/{id}");
+            return await _httpService.Get<Department>($"/api/departments/{id}");
+        }
+
+        public async Task<Department> UpdateDepartment(Department department)
+        {
+            return await _httpService.Put<Department>($"/api/departments/{department.Id}/", department);
         }
     }
 }

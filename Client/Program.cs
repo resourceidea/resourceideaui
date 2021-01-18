@@ -26,6 +26,7 @@ namespace Client
                 .AddScoped<ILocalStorageService, LocalStorageService>()
                 .AddScoped<IHttpService, HttpService>()
                 .AddScoped<IDepartmentService, DepartmentService>()
+                .AddScoped<IJobPositionService, JobPositionService>()
                 .AddScoped<NewDepartmentNotifierService>()
                 .AddScoped<ToastService>()
                 .AddHttpClient<IHttpService, HttpService>(client => client.BaseAddress = new Uri(baseAddress));

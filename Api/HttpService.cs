@@ -32,11 +32,7 @@ namespace Api
 
         public async Task<HttpServiceResponse> Post(string uri, object body, string token = null)
         {
-            if (string.IsNullOrEmpty(baseAddress))
-            {
-                throw new ArgumentNullException("Base address has not been set in the environment");
-            }
-
+            IsBaseAddressConfigurationSet();
             var request = new HttpRequestMessage(HttpMethod.Post, $"{baseAddress}{uri}")
             {
                 Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
@@ -46,8 +42,27 @@ namespace Api
 
         public async Task<HttpServiceResponse> Get(string uri, string token)
         {
+            IsBaseAddressConfigurationSet();
             var request = new HttpRequestMessage(HttpMethod.Get, $"{baseAddress}{uri}");
             return await SendRequest(request, token);
+        }
+
+        public async Task<HttpServiceResponse> Put(string uri, object body, string token)
+        {
+            IsBaseAddressConfigurationSet();
+            var request = new HttpRequestMessage(HttpMethod.Put, $"{baseAddress}{uri}")
+            {
+                Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
+            };
+            return await SendRequest(request, token);
+        }
+
+        private void IsBaseAddressConfigurationSet()
+        {
+            if (string.IsNullOrEmpty(baseAddress))
+            {
+                throw new ArgumentNullException("BaseAddress has not been set in the environment");
+            }
         }
 
         public async Task<HttpServiceResponse> SendRequest(HttpRequestMessage request, string token = null)
@@ -56,7 +71,9 @@ namespace Api
             {
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
+
             using var response = await httpClient.SendAsync(request);
+            
             serviceResponse.StatusCode = response.StatusCode;
             if (response.IsSuccessStatusCode)
             {
