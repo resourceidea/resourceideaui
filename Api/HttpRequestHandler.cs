@@ -29,13 +29,16 @@ namespace Api
             }
             catch (HttpRequestException error)
             {
-                logger.LogError($"ERROR: Departments request failed with error {error.Message}");
+                logger.LogError($"ERROR: Request failed with error {error.Message}");
 
                 return new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
-                    Content = new StringContent(JsonConvert.SerializeObject(new { message = ConstantValues.DEPARTMENTS_REQUEST_FAILED }),
-                                                Encoding.UTF8,
-                                                "application/json")
+                    Content = new StringContent(
+                        JsonConvert.SerializeObject(new { 
+                            message = ConstantValues.DEPARTMENTS_REQUEST_FAILED 
+                        }),
+                        Encoding.UTF8,
+                        "application/json")
                 };
             }
         }
