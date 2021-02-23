@@ -9,5 +9,6 @@ namespace Api
         public const string DEPARTMENTS_REQUEST_FAILED = "Department(s) resource request failed";
         public const string JOB_POSITIONS_REQUEST_FAILED = "Job position(s) resource request failed";
         public const string JOB_POSITIONS_CREATE_FAILED = "Job position(s) resource create request failed";
+        public const string JOB_POSITIONS_UPDATE_FAILED = "Job position(s) resource update request failed";
     }
 }

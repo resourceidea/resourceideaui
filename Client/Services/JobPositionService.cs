@@ -9,7 +9,7 @@ namespace Client.Services
 {
     public interface IJobPositionService
     {
-        Task<List<JobPositionResponse>> GetJobPositions(string page = null);
+        Task<List<JobPosition>> GetJobPositions(string page = null);
         Task<JobPositionResponse> AddJobPosition(JobPosition jobPosition);
         Task<JobPosition> GetJobPositionById(Guid id);
         Task<JobPosition> UpdateJobPosition(JobPosition jobPosition);
@@ -17,7 +17,7 @@ namespace Client.Services
 
     public class JobPositionService : IJobPositionService
     {
-        private IHttpService httpService;
+        private readonly IHttpService httpService;
 
         public JobPositionService(IHttpService httpService)
         {
@@ -29,19 +29,19 @@ namespace Client.Services
             return await httpService.Post<JobPositionResponse>($"/api/jobpositions/", jobPosition);
         }
 
-        public Task<JobPosition> GetJobPositionById(Guid id)
+        public async Task<JobPosition> GetJobPositionById(Guid id)
         {
-            throw new NotImplementedException();
+            return await httpService.Get<JobPosition>($"/api/jobpositions/{id}");
         }
 
-        public async Task<List<JobPositionResponse>> GetJobPositions(string page = null)
+        public async Task<List<JobPosition>> GetJobPositions(string page = null)
         {
-            return await httpService.Get<List<JobPositionResponse>>($"/api/jobpositions/");
+            return await httpService.Get<List<JobPosition>>($"/api/jobpositions/");
         }
 
-        public Task<JobPosition> UpdateJobPosition(JobPosition jobPosition)
+        public async Task<JobPosition> UpdateJobPosition(JobPosition jobPosition)
         {
-            throw new NotImplementedException();
+            return await httpService.Put<JobPosition>($"/api/jobpositions/{jobPosition.Id}", jobPosition);
         }
     }
 }
