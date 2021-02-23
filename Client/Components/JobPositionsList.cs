@@ -10,7 +10,7 @@ namespace Client.Components
 {
     public partial class JobPositionsList
     {
-        private List<JobPositionResponse> jobPositions = new List<JobPositionResponse>();
+        private List<JobPosition> jobPositions = new List<JobPosition>();
 
         [Inject]
         public IJobPositionService JobPositionService { get; set; }
