@@ -26,7 +26,13 @@ namespace Api
             baseAddress = Environment.GetEnvironmentVariable("BaseAddress", EnvironmentVariableTarget.Process) ?? string.Empty;
             if (httpClient == null)
             {
-                httpClient = new HttpClient();
+                var handler = new HttpClientHandler()
+                {
+                    UseDefaultCredentials = false,
+                    Credentials = CredentialCache.DefaultCredentials,
+                    AllowAutoRedirect = true
+                };
+                httpClient = new HttpClient(handler);
             }
         }
 
@@ -73,7 +79,7 @@ namespace Api
             }
 
             using var response = await httpClient.SendAsync(request);
-            
+
             serviceResponse.StatusCode = response.StatusCode;
             if (response.IsSuccessStatusCode)
             {
