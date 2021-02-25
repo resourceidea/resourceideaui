@@ -10,7 +10,7 @@ namespace Client.Services
     public interface IJobPositionService
     {
         Task<List<JobPosition>> GetJobPositions(string page = null);
-        Task<JobPositionResponse> AddJobPosition(JobPosition jobPosition);
+        Task<JobPosition> AddJobPosition(JobPosition jobPosition);
         Task<JobPosition> GetJobPositionById(Guid id);
         Task<JobPosition> UpdateJobPosition(JobPosition jobPosition);
     }
@@ -24,9 +24,9 @@ namespace Client.Services
             this.httpService = httpService;
         }
 
-        public async Task<JobPositionResponse> AddJobPosition(JobPosition jobPosition)
+        public async Task<JobPosition> AddJobPosition(JobPosition jobPosition)
         {
-            return await httpService.Post<JobPositionResponse>($"/api/jobpositions/", jobPosition);
+            return await httpService.Post<JobPosition>($"/api/jobpositions/", jobPosition);
         }
 
         public async Task<JobPosition> GetJobPositionById(Guid id)

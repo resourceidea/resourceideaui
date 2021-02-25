@@ -18,6 +18,6 @@ namespace Client.Models.DataModels
         public int HierarchyOrder { get; set; } = 0;
 
         [JsonPropertyName("department")]
-        public Guid DepartmentId { get; set; }
+        public Guid Department { get; set; }
     }
 }

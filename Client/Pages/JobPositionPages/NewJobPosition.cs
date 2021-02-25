@@ -23,16 +23,16 @@ namespace Client.Pages.JobPositionPages
 
         private async void Save()
         {
-
+            JobPosition newJobPosition = new JobPosition();
             if (Guid.TryParse(DepartmentId, out Guid id))
             {
-                await JobPositionService.AddJobPosition(new JobPosition
+                newJobPosition = await JobPositionService.AddJobPosition(new JobPosition
                 {
-                    DepartmentId = id,
+                    Department = id,
                     Title = Title
                 });
             }
-            NavigationManager.NavigateTo($"/departments/{DepartmentId}");
+            NavigationManager.NavigateTo($"/departments/{newJobPosition.Department}");
         }
     }
 }

@@ -27,11 +27,11 @@ namespace Api.Factories
 
             dynamic data = await request.GetRequestBody();
 
-            string department_id = data?.department_id;
+            string department = data?.department;
             string title = data?.title;
             int hierarchy_order = data?.hierarchy_order;
 
-            var serviceResponse = await httpService.Post(uri, new { department_id, title, hierarchy_order}, authenticationToken);
+            var serviceResponse = await httpService.Post(uri, new { department, title, hierarchy_order}, authenticationToken);
 
             HttpResponseMessage responseMessage = new HttpResponseMessage(serviceResponse.StatusCode);
 
