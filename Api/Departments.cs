@@ -34,7 +34,7 @@ namespace Api
                 logger.LogError($"ERROR: Departments request failed with error {error.Message}");
                 return new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
-                    Content = new StringContent(JsonConvert.SerializeObject(new { message = "Department(s) resource request failed" }),
+                    Content = new StringContent(JsonConvert.SerializeObject(new { message = $"Department(s) resource request failed {error.Message}" }),
                                                  Encoding.UTF8,
                                                  "application/json")
                 };
