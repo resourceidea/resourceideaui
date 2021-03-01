@@ -53,6 +53,7 @@ namespace Api
             }
             else
             {
+                log.LogTrace($"AM I HERE {req}, {authToken}, {id}");
                 return await HandleGetRequest(req, authToken, log, id);
             }
         }
