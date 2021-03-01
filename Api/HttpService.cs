@@ -75,7 +75,7 @@ namespace Api
         {
             if (!string.IsNullOrEmpty(token))
             {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
             }
 
             using var response = await httpClient.SendAsync(request);
