@@ -18,7 +18,7 @@ namespace Api
     {
         [FunctionName("JobPositions")]
         public static async Task<HttpResponseMessage> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", "put", Route = "jobpositions/{id?}")] HttpRequest request,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", "put", Route = "jobpositions/{id?}")] HttpRequest request,
             string id,
             ILogger logger)
         {
