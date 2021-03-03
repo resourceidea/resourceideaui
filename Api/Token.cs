@@ -17,7 +17,7 @@ namespace Api
     {
         [FunctionName("Token")]
         public static async Task<HttpResponseMessage> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "token/{refresh?}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "token/{refresh?}")] HttpRequest req,
             string refresh,
             ILogger log)
         {
