@@ -60,3 +60,4 @@ packages/react-devtools-shell/dist
 db.json
 routes.json
 cra/
+.next/
