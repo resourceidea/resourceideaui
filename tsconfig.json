@@ -6,6 +6,12 @@
       "dom.iterable",
       "esnext"
     ],
+    "baseUrl": "./src",
+    "paths": {
+      "@/common/*": ["components/common/*"],
+      "@/layout/*": ["components/layout/*"],
+      "@/lib/*": ["lib/*"]
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -16,9 +22,12 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "allowSyntheticDefaultImports": true
   },
   "include": [
+    "src",
+    "src/**/*.tsx",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
