@@ -1,8 +1,8 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 export const Wrapper = styled.div`
   height: calc(100vh - 57px);
-  background-color:  #F9F9F9;
+  background-color: #f9f9f9;
   min-height: 100%;
   padding: 28px 20px;
 `;
@@ -20,7 +20,7 @@ export const Container = styled.div`
 
 export const TopSection = styled.div`
   padding: 24px;
-  border-bottom: 1px solid #F1F3F9;
+  border-bottom: 1px solid #f1f3f9;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -29,7 +29,7 @@ export const TopSection = styled.div`
 export const ContentSection = styled.div`
   flex-grow: 1;
   overflow: scroll;
-    /* width */
+  /* width */
   ::-webkit-scrollbar {
     display: none;
   }

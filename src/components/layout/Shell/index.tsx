@@ -1,14 +1,14 @@
-import React from 'react';
-import Navbar from '@/common/Navbar'
-import { Wrapper, Sidebar, SidePanel, Mainbar, ContentBar } from './Wrappers'
-import SideNav from './SideNav'
+import React from "react";
+import Navbar from "@/common/Navbar";
+import { Wrapper, Sidebar, SidePanel, Mainbar, ContentBar } from "./Wrappers";
+import SideNav from "./SideNav";
 
 type ShellProps = {
-  children?: React.ReactNode
-}
+  children?: React.ReactNode;
+};
 
 const Shell = ({ children }: ShellProps) => {
-  const [open, setOpen] = React.useState(true)
+  const [open, setOpen] = React.useState(true);
   return (
     <Wrapper>
       <Sidebar open={open}>
@@ -17,12 +17,10 @@ const Shell = ({ children }: ShellProps) => {
       </Sidebar>
       <Mainbar>
         <Navbar setOpen={setOpen} />
-        <ContentBar>
-          {children}
-        </ContentBar>
+        <ContentBar>{children}</ContentBar>
       </Mainbar>
     </Wrapper>
-  )
+  );
 };
 
 export default Shell;

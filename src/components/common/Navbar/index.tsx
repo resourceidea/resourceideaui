@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from "react";
+import styled from "styled-components";
 
 const Wrapper = styled.div`
   z-index: 2000;
@@ -14,20 +14,20 @@ const Wrapper = styled.div`
 `;
 
 type NavProps = {
-  isOpen?: boolean,
-  setOpen?: Function
-}
+  isOpen?: boolean;
+  setOpen?: Function;
+};
 const Navbar = ({ setOpen }: NavProps) => {
   const toggleSidebar = (e) => {
-    e.preventDefault()
-    setOpen(open => !open)
-  }
+    e.preventDefault();
+    setOpen((open) => !open);
+  };
   return (
     <Wrapper>
       <button onClick={toggleSidebar}>Toggle</button>
       Navbar
     </Wrapper>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

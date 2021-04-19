@@ -1,4 +1,4 @@
-import * as colors from './colors'
+import * as colors from "./colors";
 
 export const defaultTheme = {
   colors: {
@@ -6,6 +6,6 @@ export const defaultTheme = {
     primary: colors.navy,
     neutral: colors.neutral,
     text: colors.grey,
-  }
+  },
 };
 export default defaultTheme;

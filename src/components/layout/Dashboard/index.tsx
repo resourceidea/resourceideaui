@@ -1,8 +1,8 @@
-import React from 'react';
-import Shell from '@/layout/Shell'
-import { Wrapper, Container, TopSection, ContentSection } from './Wrappers'
-import Button from '@/common/Button'
-import Text from '@/common/Text';
+import React from "react";
+import Shell from "@/layout/Shell";
+import { Wrapper, Container, TopSection, ContentSection } from "./Wrappers";
+import Button from "@/common/Button";
+import Text from "@/common/Text";
 
 const Dashboard = () => (
   <Shell>
@@ -12,9 +12,7 @@ const Dashboard = () => (
           <Text>Resources</Text>
           <Button variant="primary">Assign Job</Button>
         </TopSection>
-        <ContentSection>
-          content
-        </ContentSection>
+        <ContentSection>content</ContentSection>
       </Container>
     </Wrapper>
   </Shell>
