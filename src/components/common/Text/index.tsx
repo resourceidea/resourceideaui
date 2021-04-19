@@ -1,13 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import { variant } from "styled-system";
+import { variant as systemVariant } from "styled-system";
 
-const StyledText = styled("p")(
+const StyledText = styled('p')(
   {
-    fontFamily: "DM Sans, , sans-serif",
+    fontFamily: "DM Sans, sans-serif",
+    margin: 0,
     color: "neutral.black1",
   },
-  variant({
+  systemVariant({
     variants: {
       h1: {
         fontWeight: "800",
@@ -53,22 +54,41 @@ const StyledText = styled("p")(
     },
   })
 );
+let tags = {
+  h1: "h1",
+  h2: "h2",
+  h3: "h3",
+  h4: "h4",
+  h5: "h5",
+  h6: "h6",
+  body1: "p",
+  body2: "p",
+  caption: "p",
+  button: "p",
+};
 
-function Text(props) {
-  let tags = {
-    h1: "h1",
-    h2: "h2",
-    h3: "h3",
-    h4: "h4",
-    h5: "h5",
-    h6: "h6",
-    body1: "p",
-    body2: "p",
-    caption: "p",
-    button: "p",
-  };
-  let tag = tags[props.variant] || "p";
-  return <StyledText as={tag} {...props} />;
+interface TagTypes {
+  h1: "h1"
+  h2: "h2"
+  h3: "h3"
+  h4: "h4"
+  h5: "h5"
+  h6: "h6"
+  body1: "p"
+  body2: "p"
+  caption: "p"
+  button: "p"
+};
+interface TextProps {
+  variant?: keyof TagTypes;
+  className?: string;
+  children: React.ReactChild;
+}
+function Text(props: TextProps): React.ReactElement {
+  let { variant = 'body1', children, ...rest } = props
+  let tag = tags[variant] as keyof JSX.IntrinsicElements
+
+  return <StyledText as={tag} {...rest}>{children}</StyledText>;
 }
 
 export default Text;

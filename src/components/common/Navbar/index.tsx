@@ -1,5 +1,14 @@
 import React from "react";
 import styled from "styled-components";
+import useTheme from '@/lib/hooks/useTheme'
+import { MenuIcon, ProfileIcon, ChevronIcon } from '@/common/icons'
+import IconButton from '@/common/Button/IconButton'
+
+type NavProps = {
+  isOpen?: boolean;
+  setOpen: Function;
+};
+
 
 const Wrapper = styled.div`
   z-index: 2000;
@@ -11,21 +20,43 @@ const Wrapper = styled.div`
   align-items: center;
   padding-left: 24px;
   padding-right: 24px;
+  display:flex;
+  justify-content: space-between;
+`;
+const RightPane = styled.div``;
+
+const ProfileButton = styled.button`
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: ${(props) => props.theme.colors.navy[2]};
+  padding: 7px 9px;
+  border-radius: 200px;
+  width: 60px;
+  position: relative;
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  &:hover {
+    filter: brightness(0.95)
+  }
 `;
 
-type NavProps = {
-  isOpen?: boolean;
-  setOpen?: Function;
-};
 const Navbar = ({ setOpen }: NavProps) => {
-  const toggleSidebar = (e) => {
+  const theme = useTheme()
+  const toggleSidebar = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    setOpen((open) => !open);
+    setOpen((open: boolean) => !open);
   };
   return (
     <Wrapper>
-      <button onClick={toggleSidebar}>Toggle</button>
-      Navbar
+      <IconButton onClick={toggleSidebar} title="Menu button"><MenuIcon /></IconButton>
+      <RightPane>
+        <ProfileButton>
+          <ProfileIcon fill={theme.colors.navy[5]} />
+          <ChevronIcon width={9} height={6} fill={theme.colors.navy[5]} />
+        </ProfileButton>
+      </RightPane>
     </Wrapper>
   );
 };

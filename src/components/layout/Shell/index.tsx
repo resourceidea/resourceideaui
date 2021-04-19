@@ -13,7 +13,7 @@ const Shell = ({ children }: ShellProps) => {
     <Wrapper>
       <Sidebar open={open}>
         <SidePanel />
-        <SideNav />
+        <SideNav open={open}/>
       </Sidebar>
       <Mainbar>
         <Navbar setOpen={setOpen} />
