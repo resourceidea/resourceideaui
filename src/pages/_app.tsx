@@ -4,9 +4,10 @@ import { ThemeProvider } from "styled-components";
 import theme from "@/lib/theme";
 
 function MyApp({ Component, pageProps }) {
+  const getLayout = Component.getLayout || (page => page)
   return (
     <ThemeProvider theme={theme}>
-      <Component {...pageProps} />
+      {getLayout(<Component {...pageProps} />)}
     </ThemeProvider>
   );
 }

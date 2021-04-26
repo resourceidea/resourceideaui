@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { variant } from "styled-system";
 
-const StyledButton = styled("button")(
+const StyledButton = styled("button")<{ variant: string }>(
   {
     appearance: "none",
     margin: "0",

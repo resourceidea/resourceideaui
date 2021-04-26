@@ -8,7 +8,7 @@
       "@/layout/*": ["components/layout/*"],
       "@/lib/*": ["lib/*"]
     },
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,

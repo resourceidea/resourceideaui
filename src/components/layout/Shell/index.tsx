@@ -23,4 +23,6 @@ const Shell = ({ children }: ShellProps) => {
   );
 };
 
+export const getLayout = page => (<Shell>{page}</Shell>)
+
 export default Shell;

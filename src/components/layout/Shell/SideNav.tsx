@@ -1,12 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import Link from "next/link";
+import { useRouter } from 'next/router'
 import Text from "@/common/Text";
 import { ResourceIcon, ServiceIcon, JobIcon, ClientIcon } from '@/common/icons'
 import useTheme from '@/lib/hooks/useTheme'
 
 interface SideNavProps {
   open: boolean;
+  selected?: boolean;
 }
 interface NavlinkProps extends SideNavProps {
   href: string;
@@ -41,7 +43,10 @@ const NavPanel = styled.div`
     text-align: ${(props: SideNavProps) => props.open ? 'unset' : 'center'};
   }
 `;
-
+const NavItem = styled.li`
+  margin-top: 5px;
+  margin-bottom: 5px;
+`;
 
 const AnchorLink = styled.a`
   cursor: pointer;
@@ -61,27 +66,30 @@ const AnchorLink = styled.a`
     }
   }
   &.selected {
-  background-color:${props => props.theme.colors.teal[6]};
+    color: ${props => props.theme.colors.neutral[1]};
+    background-color:${props => props.theme.colors.teal[6]};
   }
   .navlink-text {
     margin-left: 10px;
   }
 `;
 
-const Navlink: React.FunctionComponent<NavlinkProps> = ({ href, text, icon, open }) => {
+const Navlink: React.FC<NavlinkProps> = ({ href, text, icon, open }) => {
+  const { asPath } = useRouter();
+  const selected = asPath === href;
   return (
-    <li style={{ paddingLeft: open ? '0px' : '6px', paddingRight: open ? '0px' : '6px' }}>
+    <NavItem style={{ paddingLeft: open ? '0px' : '6px', paddingRight: open ? '0px' : '6px' }}>
       <Link href={href}>
-        <AnchorLink open={open}>
+        <AnchorLink open={open} className={selected ? "selected" : ""}>
           {icon}
           {open && <Text variant="body1" className="navlink-text">{text}</Text>}
         </AnchorLink>
       </Link>
-    </li>
+    </NavItem>
   )
 }
 
-const SideNav: React.FunctionComponent<SideNavProps> = ({ open }) => {
+const SideNav: React.FC<SideNavProps> = ({ open }) => {
   const theme = useTheme()
   const iconColor = theme.colors.teal[2]
   return (
@@ -91,18 +99,18 @@ const SideNav: React.FunctionComponent<SideNavProps> = ({ open }) => {
       <NavPanel open={open}>
         <Text variant="h4" className="title-text">{open ? 'Timeline Views' : 'T V'}</Text>
         <ul>
-          <Navlink open={open} text="Resources" href="#" icon={<ResourceIcon size={13} fill={iconColor} />} />
-          <Navlink open={open} text="Service Lines" href="#" icon={<ServiceIcon width={13} height={12} fill={iconColor} />} />
-          <Navlink open={open} text="Job Managers" href="#" icon={<JobIcon width={14} height={13} fill={iconColor} />} />
+          <Navlink open={open} text="Resources" href="/" icon={<ResourceIcon size={13} fill={iconColor} />} />
+          <Navlink open={open} text="Service Lines" href="/timeline/service-lines" icon={<ServiceIcon width={13} height={12} fill={iconColor} />} />
+          <Navlink open={open} text="Job Managers" href="/timeline/job-managers" icon={<JobIcon width={14} height={13} fill={iconColor} />} />
         </ul>
       </NavPanel>
       <NavPanel open={open}>
         <Text variant="h4" className="title-text">{open ? 'Control Panel' : 'C P'}</Text>
         <ul>
-          <Navlink open={open} text="Resources" href="#" icon={<ResourceIcon size={13} fill={iconColor} />} />
-          <Navlink open={open} text="Service Lines" href="#" icon={<ClientIcon width={13} height={14} fill={iconColor} />} />
-          <Navlink open={open} text="Lines of Service" href="#" icon={<ServiceIcon width={13} height={12} fill={iconColor} />} />
-          <Navlink open={open} text="Job Positions" href="#" icon={<JobIcon width={14} height={13} fill={iconColor} />} />
+          <Navlink open={open} text="Resources" href="/control-panel/resources" icon={<ResourceIcon size={13} fill={iconColor} />} />
+          <Navlink open={open} text="Clients" href="/control-panel/clients" icon={<ClientIcon width={13} height={14} fill={iconColor} />} />
+          <Navlink open={open} text="Lines of Service" href="/control-panel/service-lines" icon={<ServiceIcon width={13} height={12} fill={iconColor} />} />
+          <Navlink open={open} text="Job Positions" href="/control-panel/job-positions" icon={<JobIcon width={14} height={13} fill={iconColor} />} />
         </ul>
       </NavPanel>
     </Wrapper>
