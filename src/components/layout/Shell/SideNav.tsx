@@ -80,7 +80,7 @@ const Navlink: React.FC<NavlinkProps> = ({ href, text, icon, open }) => {
   return (
     <NavItem style={{ paddingLeft: open ? '0px' : '6px', paddingRight: open ? '0px' : '6px' }}>
       <Link href={href}>
-        <AnchorLink open={open} className={selected ? "selected" : ""}>
+        <AnchorLink open={open} className={selected ? "selected" : ""} title={text}>
           {icon}
           {open && <Text variant="body1" className="navlink-text">{text}</Text>}
         </AnchorLink>
@@ -97,7 +97,7 @@ const SideNav: React.FC<SideNavProps> = ({ open }) => {
       <TopPanel>{open ? 'Resource Idea' : 'R'}</TopPanel>
       <SearchPanel>{open ? 'Search' : 'S'}</SearchPanel>
       <NavPanel open={open}>
-        <Text variant="h4" className="title-text">{open ? 'Timeline Views' : 'T V'}</Text>
+        <Text variant="h4" className="title-text">{open ? 'Timeline Views' : 'TV'}</Text>
         <ul>
           <Navlink open={open} text="Resources" href="/" icon={<ResourceIcon size={13} fill={iconColor} />} />
           <Navlink open={open} text="Service Lines" href="/timeline/service-lines" icon={<ServiceIcon width={13} height={12} fill={iconColor} />} />
@@ -105,7 +105,7 @@ const SideNav: React.FC<SideNavProps> = ({ open }) => {
         </ul>
       </NavPanel>
       <NavPanel open={open}>
-        <Text variant="h4" className="title-text">{open ? 'Control Panel' : 'C P'}</Text>
+        <Text variant="h4" className="title-text">{open ? 'Control Panel' : 'CP'}</Text>
         <ul>
           <Navlink open={open} text="Resources" href="/control-panel/resources" icon={<ResourceIcon size={13} fill={iconColor} />} />
           <Navlink open={open} text="Clients" href="/control-panel/clients" icon={<ClientIcon width={13} height={14} fill={iconColor} />} />

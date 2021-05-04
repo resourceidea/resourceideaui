@@ -4,16 +4,16 @@ import { variant as systemVariant } from "styled-system";
 
 const StyledText = styled('p')(
   {
-    fontFamily: "DM Sans, sans-serif",
+    fontFamily: "Poppins, sans-serif",
     margin: 0,
-    color: "neutral.black1",
+    color: "neutral.black[1]",
   },
   systemVariant({
     variants: {
       h1: {
         fontWeight: "800",
-        fontSize: "24px",
-        lineHeight: "32px",
+        fontSize: "48px",
+        lineHeight: "72px",
       },
       h2: {
         fontWeight: "600",
@@ -45,6 +45,11 @@ const StyledText = styled('p')(
         fontSize: "14px",
         lineHeight: "22px",
       },
+      caption: {
+        fontWeight: 500,
+        fontSize: "14px",
+        lineHeight: "21px",
+      },
       button: {
         textTransform: "uppercase",
         fontWeight: "600",
@@ -63,7 +68,7 @@ let tags = {
   h6: "h6",
   body1: "p",
   body2: "p",
-  caption: "p",
+  caption: "span",
   button: "p",
 };
 
@@ -76,7 +81,7 @@ interface TagTypes {
   h6: "h6"
   body1: "p"
   body2: "p"
-  caption: "p"
+  caption: "span"
   button: "p"
 };
 interface TextProps {

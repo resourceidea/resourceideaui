@@ -10,7 +10,7 @@ const StyledButton = styled("button")<{ variant: string }>(
     fontSize: "0.75rem !important",
     fontWeight: 600,
     padding: "0.625rem 1.5rem !important",
-    fontFamily: `"DM Sans", san-serif !important`,
+    fontFamily: `"Poppins", san-serif !important`,
     borderRadius: "4px",
     textTransform: "uppercase",
   },

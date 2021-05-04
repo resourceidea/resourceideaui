@@ -86,3 +86,19 @@ export const ClientIcon = (props: IconProps) => (
       fill={props.fill ?? '#333'}
     />
   </SVGShell>)
+
+export const PasswordIcon = (props: IconProps) => (
+  <SVGShell {...props}>
+    <path
+      d="M15 5h5v10h-5v2a1 1 0 001 1h2v2h-2.5c-.55 0-1.5-.45-1.5-1 0 .55-.95 1-1.5 1H10v-2h2a1 1 0 001-1V3a1 1 0 00-1-1h-2V0h2.5c.55 0 1.5.45 1.5 1 0-.55.95-1 1.5-1H18v2h-2a1 1 0 00-1 1v2zM0 5h11v2H2v6h9v2H0V5zm18 8V7h-3v6h3zM6.5 10a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0zM11 8.89c-.61-.56-1.56-.51-2.12.11-.56.6-.51 1.55.12 2.11.55.52 1.43.52 2 0V8.89z"
+      fill={props.fill ?? '#333'}
+    />
+  </SVGShell>)
+
+export const EmailIcon = (props: IconProps) => (
+  <SVGShell {...props}>
+    <path
+      d="M17 0H3a3 3 0 00-3 3v10a3 3 0 003 3h14a3 3 0 003-3V3a3 3 0 00-3-3zm-.67 2L10 6.75 3.67 2h12.66zM17 14H3a1 1 0 01-1-1V3.25L9.4 8.8a1 1 0 001.2 0L18 3.25V13a1 1 0 01-1 1z"
+      fill={props.fill ?? '#333'}
+    />
+  </SVGShell>)

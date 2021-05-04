@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "@/common/Navbar";
+import Navbar from "@/layout/Navbar";
 import { Wrapper, Sidebar, SidePanel, Mainbar, ContentBar } from "./Wrappers";
 import SideNav from "./SideNav";
 

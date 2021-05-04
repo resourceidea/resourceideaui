@@ -3,6 +3,7 @@ import styled from "styled-components";
 import useTheme from '@/lib/hooks/useTheme'
 import { MenuIcon, ProfileIcon, ChevronIcon } from '@/common/icons'
 import IconButton from '@/common/Button/IconButton'
+import Dropdown from '@/common/Dropdown'
 
 type NavProps = {
   isOpen?: boolean;
@@ -52,10 +53,16 @@ const Navbar = ({ setOpen }: NavProps) => {
     <Wrapper>
       <IconButton onClick={toggleSidebar} title="Menu button"><MenuIcon /></IconButton>
       <RightPane>
-        <ProfileButton>
-          <ProfileIcon fill={theme.colors.navy[5]} />
-          <ChevronIcon width={9} height={6} fill={theme.colors.navy[5]} />
-        </ProfileButton>
+        <Dropdown
+          target={
+            <ProfileButton>
+              <ProfileIcon fill={theme.colors.navy[5]} />
+              <ChevronIcon width={9} height={6} fill={theme.colors.navy[5]} />
+            </ProfileButton>
+          }
+        >
+          child
+        </Dropdown>
       </RightPane>
     </Wrapper>
   );

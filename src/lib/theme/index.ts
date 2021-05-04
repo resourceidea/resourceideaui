@@ -3,7 +3,7 @@ import * as colors from "./colors";
 export const defaultTheme = {
   colors: {
     ...colors,
-    primary: colors.navy,
+    primary: colors.teal,
     neutral: colors.neutral,
     text: colors.grey,
   },
