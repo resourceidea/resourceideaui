@@ -1,7 +1,8 @@
 import React from "react";
 import Navbar from "@/layout/Navbar";
-import { Wrapper, Sidebar, SidePanel, Mainbar, ContentBar } from "./Wrappers";
+import { Wrapper, Sidebar, Mainbar, ContentBar } from "./Wrappers";
 import SideNav from "./SideNav";
+import SidePanel from "./SidePanel";
 
 type ShellProps = {
   children?: React.ReactNode;
@@ -13,7 +14,7 @@ const Shell = ({ children }: ShellProps) => {
     <Wrapper>
       <Sidebar open={open}>
         <SidePanel />
-        <SideNav open={open}/>
+        <SideNav open={open} />
       </Sidebar>
       <Mainbar>
         <Navbar setOpen={setOpen} />

@@ -118,7 +118,7 @@ const Signup: React.FC = () => {
       </Nav>
       <Content>
         <Form action="post" onSubmit={e => e.preventDefault()}>
-          <Text variant="h1" className="title">Log in to your account</Text>
+          <Text variant="h1" className="title">Create your account</Text>
           <div className="half-section">
             <InputGroup>
               <label htmlFor="firstName">First Name</label>
