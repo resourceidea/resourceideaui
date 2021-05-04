@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Text from '@/common/Text'
-import { PasswordIcon, EmailIcon } from '@/common/icons'
+import { IdIcon, CompanyIcon, PasswordIcon, EmailIcon } from '@/common/icons'
 import Button from '@/common/Button'
 import Link from 'next/link'
 
@@ -10,7 +10,7 @@ const Wrapper = styled.div`
 
 const Nav = styled.div`
   padding: 22px 120px;
-  margin-bottom: 110px;
+  margin-bottom: 50px;
 `;
 
 const Content = styled.div`
@@ -22,11 +22,21 @@ const Content = styled.div`
 
 const Form = styled.form`
   width: 50%;
+  .half-section {
+    width: 420px;
+    display: flex;
+    &>div{
+      &:first-of-type {
+        margin-right: 12px;
+      }
+      width: 50%;
+    }
+  }
   .title {
     margin-bottom: 32px;
   }
   ${Button} {
-    width: 390px;
+    width: 420px;
   }
   .sign-up {
     margin-top: 22px;
@@ -64,7 +74,7 @@ const Preview = styled.div`
   }
 `;
 const InputGroup = styled.div`
-  width: 390px;
+  width: 420px;
   position: relative;
   margin-bottom: 22px;
   display: flex;
@@ -100,15 +110,31 @@ const InputGroup = styled.div`
 `;
 
 
-const LoginPage: React.FC = () => {
+const Signup: React.FC = () => {
   return (
     <Wrapper>
       <Nav>
-      <Link href="/"><img src="/images/logo.svg" alt="logo" /></Link>
+        <Link href="/"><img src="/images/logo.svg" alt="logo" /></Link>
       </Nav>
       <Content>
         <Form action="post" onSubmit={e => e.preventDefault()}>
           <Text variant="h1" className="title">Log in to your account</Text>
+          <div className="half-section">
+            <InputGroup>
+              <label htmlFor="firstName">First Name</label>
+              <div className="input-wrapper">
+                <IdIcon size={20} />
+                <input type="text" name="firstName" id="first-name" placeholder="First name" />
+              </div>
+            </InputGroup>
+            <InputGroup>
+              <label htmlFor="lastName">Last Name</label>
+              <div className="input-wrapper">
+                <IdIcon size={20} />
+                <input type="text" name="lastName" id="last-name" placeholder="Last name" />
+              </div>
+            </InputGroup>
+          </div>
           <InputGroup>
             <label htmlFor="email">Email</label>
             <div className="input-wrapper">
@@ -117,25 +143,40 @@ const LoginPage: React.FC = () => {
             </div>
           </InputGroup>
           <InputGroup>
-            <label htmlFor="password">Password</label>
+            <label htmlFor="companyName">Company name</label>
             <div className="input-wrapper">
-              <PasswordIcon />
-              <input type="password" name="password" id="password" placeholder="Enter password" />
+              <CompanyIcon />
+              <input type="text" name="companyName" id="company-name" placeholder="Enter company name" />
             </div>
-            <Link href="/forgot-password" ><a className="forgot-link"><Text variant="caption">Forgot password?</Text></a></Link>
           </InputGroup>
-          <Button variant="primary" type="submit">login</Button>
+          <div className="half-section">
+            <InputGroup>
+              <label htmlFor="password">Password</label>
+              <div className="input-wrapper">
+                <PasswordIcon />
+                <input type="password" name="password" id="password" placeholder="Enter password" />
+              </div>
+            </InputGroup>
+            <InputGroup>
+              <label htmlFor="confirmPassword">Confirm Password</label>
+              <div className="input-wrapper">
+                <PasswordIcon />
+                <input type="password" name="confirmPassword" id="confirm-password" placeholder="Confirm password" />
+              </div>
+            </InputGroup>
+          </div>
+          <Button variant="primary" type="submit">get started</Button>
           <div className="sign-up">
-            <Text variant="caption">Don’t have an account yet?</Text>
-            <Link href="/signup"><a><Text variant="caption">Sign up</Text></a></Link>
+            <Text variant="caption">Already have an account?</Text>
+            <Link href="/login"><a><Text variant="caption">Login</Text></a></Link>
           </div>
         </Form>
         <Preview className="preview-img">
-          <img src="/images/login-img.png" alt="login-preview" />
+          <img src="/images/signup-img.png" alt="login-preview" />
         </Preview>
       </Content>
     </Wrapper>
   )
 }
 
-export default LoginPage
+export default Signup

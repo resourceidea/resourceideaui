@@ -102,3 +102,39 @@ export const EmailIcon = (props: IconProps) => (
       fill={props.fill ?? '#333'}
     />
   </SVGShell>)
+
+export const IdIcon = (props: IconProps) => (
+  <SVGShell {...props}>
+    <>
+      <path d="M0 10v6h6v-2H2v-4H0z" fill={props.fill ?? '#333'} />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M5 5v6h6V5H5zm4 2H7v2h2V7z"
+        fill={props.fill ?? '#333'}
+      />
+      <path
+        d="M0 6V0h6v2H2v4H0zM16 6V0h-6v2h4v4h2zM16 10v6h-6v-2h4v-4h2z"
+        fill={props.fill ?? '#333'}
+      />
+    </>
+  </SVGShell>)
+
+export const PhoneIcon = (props: IconProps) => (
+  <SVGShell {...props}>
+    <path
+      d="M17.11 13.086v2.43a1.62 1.62 0 01-1.765 1.62 16.033 16.033 0 01-6.991-2.486 15.797 15.797 0 01-4.86-4.86 16.031 16.031 0 01-2.487-7.024A1.62 1.62 0 012.619 1h2.43a1.62 1.62 0 011.62 1.393c.103.778.293 1.542.567 2.277a1.62 1.62 0 01-.365 1.709L5.843 7.408a12.961 12.961 0 004.86 4.86l1.029-1.029a1.62 1.62 0 011.71-.364c.734.274 1.498.464 2.275.567a1.62 1.62 0 011.394 1.644z"
+      stroke={props.fill ?? '#333'}
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </SVGShell>)
+
+export const CompanyIcon = (props: IconProps) => (
+  <SVGShell {...props}>
+    <path
+      d="M20 16h2v2H0v-2h2V1a1 1 0 011-1h10a1 1 0 011 1v15h4V8h-2V6h3a1 1 0 011 1v9zM4 2v14h8V2H4zm2 6h4v2H6V8zm0-4h4v2H6V4z"
+      fill={props.fill ?? '#333'}
+    />
+  </SVGShell>)
