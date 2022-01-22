@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Api": {
-      "commandName": "Project",
-      "commandLineArgs": "host start --cors \"https://localhost:44365,http://localhost:4226\""
-    }
-  }
-}

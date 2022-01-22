@@ -1,2 +1,0 @@
-# ResourceIdea Frontend
-ResourceIdea UI
