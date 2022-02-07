@@ -1,4 +1,4 @@
-namespace ResourceIdea.Areasbuilder.Identity.Pages.Account;
+namespace ResourceIdea.Areas.Identity.Pages.Account;
 
 public class LogoutModel : PageModel
 {

@@ -5,3 +5,7 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.RazorPages;
 global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Identity;
+global using ResourceIdea.Infrastructure.Auth;
+global using System;
+global using System.Collections.Generic;

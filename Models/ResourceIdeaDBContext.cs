@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ResourceIdea.Models
 {
-    public partial class ResourceIdeaDBContext : IdentityDbContext<IdentityUser, IdentityRole, string>
+    public partial class ResourceIdeaDBContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
         public ResourceIdeaDBContext()
         {
@@ -49,7 +49,7 @@ namespace ResourceIdea.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<IdentityUserLogin<string>>(entity => entity.HasNoKey());
-            modelBuilder.Entity<IdentityUserRole<string>>(entity => entity.HasNoKey());
+            modelBuilder.Entity<IdentityUserRole<string>>(entity => entity.HasKey(x => new {x.UserId, x.RoleId}));
             modelBuilder.Entity<IdentityUserToken<string>>(entity => entity.HasNoKey());
             
             modelBuilder.Entity<Client>(entity =>
