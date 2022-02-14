@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿namespace ResourceIdea.Pages;
 
-namespace ResourceIdea.Pages;
-
+// [Authorize]
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;

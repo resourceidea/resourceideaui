@@ -1,11 +1,10 @@
-using Microsoft.AspNetCore.Identity;
-
 EnvironmentConfiguration.ConfigureEnvironmentVariables();
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 builder.Services.AddSqlServerService();
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
     options.SignIn.RequireConfirmedAccount = false;
     options.SignIn.RequireConfirmedEmail = true;
@@ -25,6 +24,7 @@ builder.Services.ConfigureApplicationCookie(options => {
 });
 
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
+builder.Services.AddTransient<IClientsHandler, ClientsHandler>();
 
 var app = builder.Build();
 
@@ -32,6 +32,11 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
+}
+else
+{
+    app.UseDeveloperExceptionPage();
+    app.UseMigrationsEndPoint();
 }
 
 app.UseHttpsRedirection();
@@ -47,6 +52,6 @@ using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 var userManager = services.GetService<UserManager<ApplicationUser>>();
 var roleManager = services.GetService<RoleManager<IdentityRole>>();
-app.SeedAdminUser(userManager, roleManager);
+app.SeedAdminUser(userManager!, roleManager!);
 
 app.Run();

@@ -9,3 +9,5 @@ global using Microsoft.AspNetCore.Identity;
 global using ResourceIdea.Infrastructure.Auth;
 global using System;
 global using System.Collections.Generic;
+global using ResourceIdea.Core.ViewModels.Clients;
+global using ResourceIdea.Core.Handlers.Clients;

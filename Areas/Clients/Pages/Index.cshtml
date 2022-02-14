@@ -1,0 +1,100 @@
+@page "~/subscriptions/{subscriptionCode}/clients"
+@model ResourceIdea.Areas.Clients.Pages.IndexModel
+
+@{
+    ViewData["Title"] = "Clients";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+<div class="card">
+    <div class="card-body">
+        &nbsp;
+    </div>
+</div>
+<hr />
+<div>
+    <ul class="pagination">
+        <li class="page-item @(!Model.ShowFirst ? "disabled" : "")">
+            <a href="~/subscriptions/@("ZUNDJID07")/clients?page=1" class="page-link">
+                <i class="fas fa-fast-backward"></i>
+            </a>
+        </li>
+
+        <li class="page-item @(!Model.ShowPrevious ? "disabled" : "")">
+            <a href="~/subscriptions/@("ZUNDJID07")/clients?page=@(Model.CurrentPage - 1)" class="page-link">
+                <i class="fas fa-step-backward"></i>
+            </a>
+        </li>
+
+        <li class="page-item  @(!Model.ShowNext ? "disabled" : "")">
+            <a href="~/subscriptions/@("ZUNDJID07")/clients?page=@(Model.CurrentPage + 1)" class="page-link">
+                <i class="fas fa-step-forward"></i>
+            </a>
+        </li>
+
+        <li class="page-item  @(!Model.ShowLast ? "disabled" : "")">
+            <a href="~/subscriptions/@("ZUNDJID07")/clients?page=@(Model.TotalPages)" class="page-link">
+                <i class="fas fa-fast-forward"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<table class="table table-bordered">
+    <thead class="bg-dark text-white">
+    <tr>
+        <th class="col-6">Name</th>
+        <th class="col-4">Address</th>
+        <th class="col-2">Industry</th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model.Clients is not null)
+    {
+        foreach (var (name, address, industry) in Model.Clients)
+        {
+            <tr>
+                <td class="col-6">@Html.DisplayFor(modelItem => name)</td>
+                <td class="col-4">@Html.DisplayFor(modelItem => address)</td>
+                <td class="col-2">@Html.DisplayFor(modelItem => industry)</td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td class="col-12" colspan="3">No client data</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<div>
+    <ul class="pagination">
+        <li class="page-item @(!Model.ShowFirst ? "disabled" : "")">
+            <a href="~/subscriptions/@("ZUNDJID07")/clients?page=1" class="page-link">
+                <i class="fas fa-fast-backward"></i>
+            </a>
+        </li>
+
+        <li class="page-item @(!Model.ShowPrevious ? "disabled" : "")">
+            <a href="~/subscriptions/@("ZUNDJID07")/clients?page=@(Model.CurrentPage - 1)" class="page-link">
+                <i class="fas fa-step-backward"></i>
+            </a>
+        </li>
+
+        <li class="page-item  @(!Model.ShowNext ? "disabled" : "")">
+            <a href="~/subscriptions/@("ZUNDJID07")/clients?page=@(Model.CurrentPage + 1)" class="page-link">
+                <i class="fas fa-step-forward"></i>
+            </a>
+        </li>
+
+        <li class="page-item  @(!Model.ShowLast ? "disabled" : "")">
+            <a href="~/subscriptions/@("ZUNDJID07")/clients?page=@(Model.TotalPages)" class="page-link">
+                <i class="fas fa-fast-forward"></i>
+            </a>
+        </li>
+    </ul>
+</div>

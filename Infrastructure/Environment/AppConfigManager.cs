@@ -4,7 +4,7 @@ namespace ResourceIdea.Infrastructure.Environment;
 
 public static class AppConfigManager
 {
-    public static async void SeedAdminUser(this WebApplication app, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole>? roleManager)
+    public static async void SeedAdminUser(this WebApplication app, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
     {
         // Get the credentials to setup the admin user.
         var adminCredentials = EnvironmentConfiguration.GetAdminUserCredentials();
@@ -26,7 +26,7 @@ public static class AppConfigManager
         await AssignUserToAdminRole(userManager, adminUser, adminRole);
 
         // Assign admin permission claims to the admin roles.
-        var adminRoleClaims = await roleManager.GetClaimsAsync(adminRole);
+        var adminRoleClaims = await roleManager!.GetClaimsAsync(adminRole);
         await AssignClaimsToAdminRole(roleManager, adminRoleClaims, adminRole);
     }
 
