@@ -9,9 +9,11 @@ public class ClientsHandler : IClientsHandler
         _dbContext = dbContext;
     }
 
-    public async Task<IList<ClientViewModel>> GetPaginatedResultAsync(string subscriptionCode, int currentPage,
+    public async Task<IList<ClientViewModel>> GetPaginatedResultAsync(string? subscriptionCode, int currentPage,
         int pageSize = 10)
     {
+        ArgumentNullException.ThrowIfNull(subscriptionCode);
+        
         var data = await GetDataAsync(subscriptionCode);
         return data.OrderBy(d => d.Name)
             .Skip((currentPage - 1) * pageSize)

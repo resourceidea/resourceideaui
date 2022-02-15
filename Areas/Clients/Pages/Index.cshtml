@@ -7,13 +7,18 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-<hr />
 <div class="card">
-    <div class="card-body">
-        &nbsp;
+    <div class="card-body bg-light">
+        <p class="lead">
+          Search clients
+        </p>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-addon2">
+            <button class="btn btn-outline-primary" type="button" id="button-addon2">Search</button>
+        </div>
     </div>
 </div>
-<hr />
+<br />
 <div>
     <ul class="pagination">
         <li class="page-item @(!Model.ShowFirst ? "disabled" : "")">
