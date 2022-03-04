@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Razor.TagHelpers;
+
 namespace ResourceIdea.Areas.Clients.Pages;
 
 // [Authorize]
@@ -26,13 +28,20 @@ public class IndexModel : PageModel
         _logger = logger;
     }
 
-    public async Task<IActionResult> OnGet([FromRoute] string? subscriptionCode, [FromQuery] int? page = 1)
+    public async Task<IActionResult> OnGet([FromRoute] string? subscriptionCode, [FromQuery] int? page = 1, string? search = null)
     {
         SubscriptionCode = subscriptionCode;
         CurrentPage = page ?? 1;
-        Clients = await _clientsHandler.GetPaginatedResultAsync(SubscriptionCode, CurrentPage);
-        Count = await _clientsHandler.GetCountAsync(SubscriptionCode);
+        Clients = await _clientsHandler.GetPaginatedResultAsync(SubscriptionCode, CurrentPage, 10, search);
+        Count = await _clientsHandler.GetCountAsync(SubscriptionCode, search);
 
         return Page();
+    }
+    
+    public IActionResult OnPostSearch(string? search)
+    {
+        var subscriptionCode = SubscriptionCode;
+        var page = CurrentPage;
+        return RedirectToPage("/Clients/Index", new {subscriptionCode, page, search});
     }
 }

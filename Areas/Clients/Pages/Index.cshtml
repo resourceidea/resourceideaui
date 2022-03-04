@@ -10,15 +10,20 @@
 <div class="card">
     <div class="card-body bg-light">
         <p class="lead">
-          Search clients
+            Search clients
         </p>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-addon2">
-            <button class="btn btn-outline-primary" type="button" id="button-addon2">Search</button>
-        </div>
+        <form method="post" class="input-group mb-3">
+            <input name="search" type="text" class="form-control" placeholder="Search">
+            <input 
+                type="submit" 
+                class="btn btn-outline-primary" 
+                value="Search"
+                asp-page-handler="Search"
+                asp-route-subscriptioncode="ZUNDJID07">
+        </form>
     </div>
 </div>
-<br />
+<br/>
 <div>
     <ul class="pagination">
         <li class="page-item @(!Model.ShowFirst ? "disabled" : "")">
