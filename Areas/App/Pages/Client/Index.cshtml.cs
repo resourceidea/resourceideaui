@@ -1,14 +1,12 @@
-using Microsoft.AspNetCore.Razor.TagHelpers;
+namespace ResourceIdea.Areas.App.Pages.Client;
 
-namespace ResourceIdea.Areas.Clients.Pages;
-
-// [Authorize]
-public class IndexModel : PageModel
+public class ClientIndexModel : PageModel
 {
     private readonly IClientsHandler _clientsHandler;
-    private readonly ILogger<IndexModel> _logger;
+    private readonly ILogger<ClientIndexModel> _logger;
 
-    [BindProperty(SupportsGet = true)] public int CurrentPage { get; set; } = 1;
+    [BindProperty(SupportsGet = true)] 
+    public int CurrentPage { get; set; } = 1;
     public decimal? Count { get; private set; }
     public decimal? PageSize { get; private set; } = 10;
 
@@ -22,7 +20,7 @@ public class IndexModel : PageModel
     public bool ShowFirst => CurrentPage != 1;
     public bool ShowLast => CurrentPage != TotalPages;
 
-    public IndexModel(IClientsHandler clientsHandler, ILogger<IndexModel> logger)
+    public ClientIndexModel(IClientsHandler clientsHandler, ILogger<ClientIndexModel> logger)
     {
         _clientsHandler = clientsHandler;
         _logger = logger;
@@ -38,7 +36,7 @@ public class IndexModel : PageModel
         return Page();
     }
     
-    public IActionResult OnPostSearch(string? search)
+    public IActionResult OnPost([FromForm]string? search)
     {
         var subscriptionCode = SubscriptionCode;
         var page = CurrentPage;

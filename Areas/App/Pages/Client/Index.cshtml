@@ -1,5 +1,5 @@
 @page "~/subscriptions/{subscriptionCode}/clients"
-@model ResourceIdea.Areas.Clients.Pages.IndexModel
+@model ClientIndexModel
 
 @{
     ViewData["Title"] = "Clients";
@@ -12,15 +12,22 @@
         <p class="lead">
             Search clients
         </p>
-        <form method="post" class="input-group mb-3">
-            <input name="search" type="text" class="form-control" placeholder="Search">
-            <input 
-                type="submit" 
-                class="btn btn-outline-primary" 
-                value="Search"
-                asp-page-handler="Search"
-                asp-route-subscriptioncode="ZUNDJID07">
+        <form
+            method="post">
+            <input type="text" name="search"/>
+            <button type="submit">Search</button>
         </form>
+        @* <form method="post" class="input-group mb-3"> *@
+        @*     <input name="search" type="text" class="form-control" placeholder="Search"> *@
+        @*     <input  *@
+        @*         type="submit"  *@
+        @*         class="btn btn-outline-primary"  *@
+        @*         value="Search" *@
+        @*         asp-area="Clients"  *@
+        @*         asp-page="/Index" *@
+        @*         asp-page-handler="Search" *@
+        @*         asp-route-subscriptioncode="ZUNDJID07"> *@
+        @* </form> *@
     </div>
 </div>
 <br/>
