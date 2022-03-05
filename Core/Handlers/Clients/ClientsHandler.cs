@@ -34,7 +34,7 @@ public class ClientsHandler : IClientsHandler
     private async Task<IList<ClientViewModel>> GetDataAsync(string? subscriptionCode, string? search)
     {
         ArgumentNullException.ThrowIfNull(subscriptionCode);
-
+        
         var data = _dbContext.Clients
             .Where(c => c.CompanyCode == subscriptionCode);
         

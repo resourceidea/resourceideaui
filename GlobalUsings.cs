@@ -10,3 +10,5 @@ global using System;
 global using System.Collections.Generic;
 global using ResourceIdea.Core.ViewModels.Clients;
 global using ResourceIdea.Core.Handlers.Clients;
+global using System.ComponentModel.DataAnnotations;
+global using Microsoft.AspNetCore.Authentication;

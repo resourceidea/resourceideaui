@@ -4,33 +4,42 @@ namespace ResourceIdea.Infrastructure.Environment;
 
 public static class AppConfigManager
 {
-    public static async void SeedAdminUser(this WebApplication app, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+    public static async void SeedAdminUser(this WebApplication app, UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager)
     {
-        // Get the credentials to setup the admin user.
-        var adminCredentials = EnvironmentConfiguration.GetAdminUserCredentials();
-        if (adminCredentials.username is null || adminCredentials.email is null ||
-            adminCredentials.password is null) return;
+        var adminCredentials = (
+            username: app.Configuration["Admin:Username"],
+            email: app.Configuration["Admin:Email"],
+            password: app.Configuration["Admin:Password"],
+            firstname: app.Configuration["Admin:Firstname"],
+            lastname: app.Configuration["Admin:Lastname"],
+            companyCode: app.Configuration["Admin:CompanyCode"]
+        );
+        if (adminCredentials.username is null ||
+            adminCredentials.email is null ||
+            adminCredentials.password is null)
+        {
+            return;
+        }
 
         // Create admin role.
-        var adminRoleName = EnvironmentConfiguration.GetAdminRole() ?? "Admin";
+        var adminRoleName = app.Configuration["Admin:Role"] ?? "Admin";
         var adminRole = await CreatAdminRoleIfDoesNotExist(roleManager, adminRoleName);
 
         // Create admin user.
-        var adminUser = await userManager.FindByEmailAsync(adminCredentials.email);
-        if (adminUser is null)
-        {
-            adminUser = await CreateAdminUser(userManager, adminCredentials);
-        }
+        var adminUser = await userManager.FindByEmailAsync(adminCredentials.email) ??
+                        await CreateAdminUser(userManager, adminCredentials);
 
         // Assign admin user to the admin role.
         await AssignUserToAdminRole(userManager, adminUser, adminRole);
 
         // Assign admin permission claims to the admin roles.
-        var adminRoleClaims = await roleManager!.GetClaimsAsync(adminRole);
+        var adminRoleClaims = await roleManager.GetClaimsAsync(adminRole);
         await AssignClaimsToAdminRole(roleManager, adminRoleClaims, adminRole);
     }
 
-    private static async Task AssignClaimsToAdminRole(RoleManager<IdentityRole> roleManager, IList<Claim> adminRoleClaims,
+    private static async Task AssignClaimsToAdminRole(RoleManager<IdentityRole> roleManager,
+        IList<Claim> adminRoleClaims,
         IdentityRole adminRole)
     {
         if (!adminRoleClaims.Any(c => c.Type == "Permission" && c.Value == "company.archive"))
@@ -72,8 +81,6 @@ public static class AppConfigManager
     private static async Task AssignUserToAdminRole(UserManager<ApplicationUser> userManager, ApplicationUser adminUser,
         IdentityRole adminRole)
     {
-        if (adminUser is null || adminRole is null) return;
-        
         var isUserAssignedToAdminRole = await userManager.IsInRoleAsync(adminUser, adminRole.Name);
         if (!isUserAssignedToAdminRole)
         {
@@ -81,7 +88,8 @@ public static class AppConfigManager
         }
     }
 
-    private static async Task<IdentityRole> CreatAdminRoleIfDoesNotExist(RoleManager<IdentityRole>? roleManager, string adminRoleName)
+    private static async Task<IdentityRole> CreatAdminRoleIfDoesNotExist(RoleManager<IdentityRole>? roleManager,
+        string adminRoleName)
     {
         var adminRole = await roleManager!.FindByNameAsync(adminRoleName);
         if (adminRole is not null) return adminRole;
@@ -92,16 +100,17 @@ public static class AppConfigManager
     }
 
     private static async Task<ApplicationUser> CreateAdminUser(UserManager<ApplicationUser> userManager,
-        (string? username, string? email, string? password, string? firstname, string? lastname) adminCredentials)
+        (string? username, string? email, string? password, string? firstname, string? lastname, string? companyCode)
+            adminCredentials)
     {
-        ApplicationUser adminUser;
-        adminUser = new ApplicationUser
+        var adminUser = new ApplicationUser
         {
             Email = adminCredentials.email,
             UserName = adminCredentials.username,
             FirstName = adminCredentials.firstname,
             LastName = adminCredentials.lastname,
-            EmailConfirmed = true
+            EmailConfirmed = true,
+            CompanyCode = adminCredentials.companyCode
         };
         await userManager.CreateAsync(adminUser, adminCredentials.password);
         return adminUser;

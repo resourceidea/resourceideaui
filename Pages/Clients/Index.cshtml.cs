@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
 namespace ResourceIdea.Pages.Clients;
 
+[Authorize]
 public class ClientIndexModel : PageModel
 {
     private readonly IClientsHandler _clientsHandler;
@@ -12,7 +11,7 @@ public class ClientIndexModel : PageModel
     private decimal? Count { get; set; }
     private decimal? PageSize { get; set; } = 10;
     public int? TotalPages => (int) Math.Ceiling(decimal.Divide(Count ?? 0m, PageSize ?? 0m));
-    [BindProperty(SupportsGet = true)] public string? SubscriptionCode { get; set; }
+    private string? SubscriptionCode { get; set; }
     public IList<ClientViewModel>? Clients { get; private set; }
     public bool ShowPrevious => CurrentPage > 1;
     public bool ShowNext => CurrentPage < TotalPages;
@@ -28,6 +27,8 @@ public class ClientIndexModel : PageModel
     public async Task<IActionResult> OnGet([FromQuery] int? page = 1, string? search = null)
     {
         CurrentPage = page ?? 1;
+        
+        SubscriptionCode = Request.Cookies["CompanyCode"];
         Clients = await _clientsHandler.GetPaginatedResultAsync(SubscriptionCode, CurrentPage, 10, search);
         Count = await _clientsHandler.GetCountAsync(SubscriptionCode, search);
 
@@ -36,8 +37,7 @@ public class ClientIndexModel : PageModel
 
     public IActionResult OnPostSearch()
     {
-        var subscriptionCode = SubscriptionCode;
         var page = CurrentPage;
-        return RedirectToPage("Index", new {subscriptionCode, page, Search});
+        return RedirectToPage("Index", new {page, Search});
     }
 }
