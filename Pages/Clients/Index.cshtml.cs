@@ -1,20 +1,19 @@
-namespace ResourceIdea.Areas.App.Pages.Client;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace ResourceIdea.Pages.Clients;
 
 public class ClientIndexModel : PageModel
 {
     private readonly IClientsHandler _clientsHandler;
     private readonly ILogger<ClientIndexModel> _logger;
 
-    [BindProperty(SupportsGet = true)] 
-    public int CurrentPage { get; set; } = 1;
-    public decimal? Count { get; private set; }
-    public decimal? PageSize { get; private set; } = 10;
-
+    [BindProperty(SupportsGet = true)] public int CurrentPage { get; private set; } = 1;
+    [BindProperty] public string? Search { get; set; }
+    private decimal? Count { get; set; }
+    private decimal? PageSize { get; set; } = 10;
     public int? TotalPages => (int) Math.Ceiling(decimal.Divide(Count ?? 0m, PageSize ?? 0m));
-
-    public string? SubscriptionCode { get; private set; }
+    [BindProperty(SupportsGet = true)] public string? SubscriptionCode { get; set; }
     public IList<ClientViewModel>? Clients { get; private set; }
-
     public bool ShowPrevious => CurrentPage > 1;
     public bool ShowNext => CurrentPage < TotalPages;
     public bool ShowFirst => CurrentPage != 1;
@@ -26,20 +25,19 @@ public class ClientIndexModel : PageModel
         _logger = logger;
     }
 
-    public async Task<IActionResult> OnGet([FromRoute] string? subscriptionCode, [FromQuery] int? page = 1, string? search = null)
+    public async Task<IActionResult> OnGet([FromQuery] int? page = 1, string? search = null)
     {
-        SubscriptionCode = subscriptionCode;
         CurrentPage = page ?? 1;
         Clients = await _clientsHandler.GetPaginatedResultAsync(SubscriptionCode, CurrentPage, 10, search);
         Count = await _clientsHandler.GetCountAsync(SubscriptionCode, search);
 
         return Page();
     }
-    
-    public IActionResult OnPost([FromForm]string? search)
+
+    public IActionResult OnPostSearch()
     {
         var subscriptionCode = SubscriptionCode;
         var page = CurrentPage;
-        return RedirectToPage("/Clients/Index", new {subscriptionCode, page, search});
+        return RedirectToPage("Index", new {subscriptionCode, page, Search});
     }
 }

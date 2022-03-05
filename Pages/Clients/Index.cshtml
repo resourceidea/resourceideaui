@@ -14,20 +14,9 @@
         </p>
         <form
             method="post">
-            <input type="text" name="search"/>
-            <button type="submit">Search</button>
+            <input type="text" class="form-control form-control-sm" value="@Model.Search" name="search" placeholder="Enter search keywords...">
+            <button asp-page-handler="search" class="btn btn-primary btn-sm">Search</button>
         </form>
-        @* <form method="post" class="input-group mb-3"> *@
-        @*     <input name="search" type="text" class="form-control" placeholder="Search"> *@
-        @*     <input  *@
-        @*         type="submit"  *@
-        @*         class="btn btn-outline-primary"  *@
-        @*         value="Search" *@
-        @*         asp-area="Clients"  *@
-        @*         asp-page="/Index" *@
-        @*         asp-page-handler="Search" *@
-        @*         asp-route-subscriptioncode="ZUNDJID07"> *@
-        @* </form> *@
     </div>
 </div>
 <br/>

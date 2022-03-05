@@ -9,13 +9,16 @@ namespace ResourceIdea.Models
 {
     public partial class ResourceIdeaDBContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
-        public ResourceIdeaDBContext()
+        private readonly IConfiguration _configuration;
+        public ResourceIdeaDBContext(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
-        public ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> options)
+        public ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> options, IConfiguration configuration)
             : base(options)
         {
+            _configuration = configuration;
         }
 
         public virtual DbSet<Client> Clients { get; set; } = null!;
@@ -36,15 +39,15 @@ namespace ResourceIdea.Models
         public virtual DbSet<RoleGroupingMember> RoleGroupingMembers { get; set; } = null!;
         public virtual DbSet<Skill> Skills { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                var connectionString = SqlServerConfiguration.GetConnectionString();
-                ArgumentNullException.ThrowIfNull(connectionString);
-                optionsBuilder.UseSqlServer(connectionString!);
-            }
-        }
+        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        // {
+        //     if (!optionsBuilder.IsConfigured)
+        //     {
+        //         var connectionString = SqlServerConfiguration.GetConnectionString();
+        //         ArgumentNullException.ThrowIfNull(connectionString);
+        //         optionsBuilder.UseSqlServer(connectionString!);
+        //     }
+        // }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
