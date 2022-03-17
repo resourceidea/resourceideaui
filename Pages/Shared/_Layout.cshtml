@@ -16,23 +16,24 @@
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            @* @if (User.Identity.IsAuthenticated) *@
-            @* { *@
-            @*     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"> *@
-            @*         <ul class="navbar-nav flex-grow-1"> *@
-            @*             <li class="nav-item"> *@
-            @*                 <a class="nav-link text-dark" asp-area="Clients" asp-page="/Index" asp-route-subscriptioncode="ZUNDJID07">Clients</a> *@
-            @*             </li> *@
-            @*         </ul> *@
-            @*     </div> *@
-            @* } *@
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Clients/Index">Clients</a>
-                    </li>
-                </ul>
-            </div>
+            @if (User.Identity is {IsAuthenticated: true})
+            {
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/clients/index">Clients</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="">My Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/logout/index">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            }
         </div>
     </nav>
 </header>

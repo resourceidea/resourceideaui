@@ -10,10 +10,11 @@ public class LogoutIndexModel : PageModel
         _signInManager = signInManager;
     }
     
-    public void OnGet()
+    public IActionResult OnGet()
     {
-        if (User.Identity is not {IsAuthenticated: true}) return;
+        if (User.Identity is not {IsAuthenticated: true}) return RedirectToPage("/index");
         _signInManager.SignOutAsync();
         Response.Cookies.Delete("CompanyCode");
+        return RedirectToPage("/index");
     }
 }

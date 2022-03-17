@@ -58,32 +58,30 @@ public class LoginIndexModel : PageModel
         returnUrl ??= Url.Content("~/");
 
 
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid) return Page();
+        
+        // This doesn't count login failures towards account lockout
+        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+        var result = await _signInManager.PasswordSignInAsync(Input!.Email, Input!.Password, Input!.RememberMe, lockoutOnFailure: false);
+        if (result.Succeeded)
         {
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-            var result = await _signInManager.PasswordSignInAsync(Input!.Email, Input!.Password, Input!.RememberMe, lockoutOnFailure: false);
-            if (result.Succeeded)
+            _logger.LogInformation("User logged in");
+            var cookieOptions = new CookieOptions()
             {
-                _logger.LogInformation("User logged in.");
-                var cookieOptions = new CookieOptions()
-                {
-                    Expires = DateTime.Now.AddMinutes(20),
-                    SameSite = SameSiteMode.Strict,
-                    Secure = true
-                };
-                var signedInUser = await _userManager.FindByEmailAsync(Input!.Email);
-                Response.Cookies.Append("CompanyCode", signedInUser.CompanyCode ?? string.Empty, cookieOptions);
-                return LocalRedirect(returnUrl);
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                return Page();
-            }
+                Expires = DateTime.Now.AddMinutes(20),
+                SameSite = SameSiteMode.Strict,
+                Secure = true
+            };
+            var signedInUser = await _userManager.FindByEmailAsync(Input!.Email);
+            Response.Cookies.Append("CompanyCode", signedInUser.CompanyCode ?? string.Empty, cookieOptions);
+            return LocalRedirect(returnUrl);
+        }
+        else
+        {
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return Page();
         }
 
         // If we got this far, something failed, redisplay form
-        return Page();
     }
 }
