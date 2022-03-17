@@ -43,7 +43,7 @@ public class ClientsHandler : IClientsHandler
             data = data.Where(d => d.Name.Contains(search) || d.Address!.Contains(search));
         }
         
-        return await data.Select(c => new ClientViewModel(c.Name, c.Address, c.Industry))
+        return await data.Select(c => new ClientViewModel(c.ClientId, c.Name, c.Address, c.Industry))
                          .ToListAsync();
     }
 }

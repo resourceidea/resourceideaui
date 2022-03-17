@@ -51,27 +51,29 @@
 <table class="table table-bordered">
     <thead class="bg-dark text-white">
     <tr>
-        <th class="col-6">Name</th>
+        <th class="col-5">Name</th>
         <th class="col-4">Address</th>
         <th class="col-2">Industry</th>
+        <th class="col-1"></th>
     </tr>
     </thead>
     <tbody>
     @if (Model.Clients is not null)
     {
-        foreach (var (name, address, industry) in Model.Clients)
+        foreach (var (clientId, name, address, industry) in Model.Clients)
         {
             <tr>
-                <td class="col-6">@Html.DisplayFor(modelItem => name)</td>
+                <td class="col-5">@Html.DisplayFor(modelItem => name)</td>
                 <td class="col-4">@Html.DisplayFor(modelItem => address)</td>
                 <td class="col-2">@Html.DisplayFor(modelItem => industry)</td>
+                <td class="col-1"><a asp-page="./details" asp-route-id="@clientId" class="btn btn-outline-primary btn-sm">Details</a></td>
             </tr>
         }
     }
     else
     {
         <tr>
-            <td class="col-12" colspan="3">No client data</td>
+            <td class="col-12" colspan="4">No client data</td>
         </tr>
     }
     </tbody>
