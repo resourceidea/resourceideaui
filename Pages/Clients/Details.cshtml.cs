@@ -9,9 +9,15 @@ public class ClientDetailsModel : PageModel
         _clientsHandler = clientsHandler;
     }
     
-    [BindProperty(SupportsGet = true)] public Guid? Id { get; set; }
+    [BindProperty(SupportsGet = true)] public string? Id { get; set; }
+    public ClientViewModel? Client { get; set; }
+    public string? SubscriptionCode { get; set; }
 
-    public void OnGet()
+    public async Task<IActionResult> OnGet()
     {
+        SubscriptionCode = Request.Cookies["CompanyCode"];
+        Client = await _clientsHandler.GetClientByIdAsync(SubscriptionCode, Id);
+
+        return Page();
     }
 }
