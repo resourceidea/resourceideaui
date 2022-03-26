@@ -1,10 +1,9 @@
 namespace ResourceIdea.Pages.Clients;
 
 [Authorize]
-public class ClientIndexModel : PageModel
+public class ClientIndexModel : BasePageModel
 {
     private readonly IClientsHandler _clientsHandler;
-    private readonly ILogger<ClientIndexModel> _logger;
 
     [BindProperty(SupportsGet = true)] public int CurrentPage { get; private set; } = 1;
     [BindProperty] public string? Search { get; set; }
@@ -18,17 +17,22 @@ public class ClientIndexModel : PageModel
     public bool ShowFirst => CurrentPage != 1;
     public bool ShowLast => CurrentPage != TotalPages;
 
-    public ClientIndexModel(IClientsHandler clientsHandler, ILogger<ClientIndexModel> logger)
+    public ClientIndexModel(IClientsHandler clientsHandler)
     {
         _clientsHandler = clientsHandler;
-        _logger = logger;
     }
 
     public async Task<IActionResult> OnGet([FromQuery] int? page = 1, string? search = null)
     {
         CurrentPage = page ?? 1;
-        
-        SubscriptionCode = Request.Cookies["CompanyCode"];
+
+        var (isValidRequest, redirectLocation, subscriptionCode) = IsValidSubscriberRequest();
+        if (!isValidRequest)
+        {
+            return redirectLocation;
+        }
+
+        SubscriptionCode = subscriptionCode;
         Clients = await _clientsHandler.GetPaginatedResultAsync(SubscriptionCode, CurrentPage, 10, search);
         Count = await _clientsHandler.GetCountAsync(SubscriptionCode, search);
 

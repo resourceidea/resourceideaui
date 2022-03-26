@@ -25,7 +25,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Core\Handlers" />
     <Folder Include="Infrastructure\Data" />
   </ItemGroup>
   <ItemGroup>
