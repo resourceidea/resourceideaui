@@ -39,15 +39,19 @@ public class ClientsHandler : IClientsHandler
     /// <returns>Tuple with flag indicating success and client object, null if not found</returns>
     /// <exception cref="ArgumentNullException">Throws ArgumentNullException if subscriptionCode is null.</exception>
     /// <exception cref="ArgumentNullException">Throws ArgumentNullException if clientId is null.</exception>
-    public async Task<ClientViewModel?> GetClientByIdAsync(string? subscriptionCode, string? clientId)
+    public async Task<ClientViewModel?> GetClientByIdAsync(
+        string? subscriptionCode, 
+        string? clientId)
     {
         ArgumentNullException.ThrowIfNull(subscriptionCode);
         ArgumentNullException.ThrowIfNull(clientId);
 
+        ClientViewModel? result = null;
+
         var clientQuery = await _dbContext.Clients.SingleOrDefaultAsync(c => c.ClientId == clientId);
         if (clientQuery is not null)
         {
-            return new ClientViewModel(
+            result = new ClientViewModel(
                 clientQuery.ClientId,
                 clientQuery.Name,
                 clientQuery.Address,
@@ -55,7 +59,7 @@ public class ClientsHandler : IClientsHandler
             );
         }
 
-        return null;
+        return result;
     }
 
     private async Task<IList<ClientViewModel>> GetDataAsync(string? subscriptionCode, string? search)
