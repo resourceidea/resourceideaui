@@ -1,0 +1,17 @@
+﻿@model IEnumerable<ResourceIdea.Pages.Clients._ClientTasksModel>
+
+<div class="row">
+    <div class="col">
+        @if (Model is not null)
+        {
+            foreach (var item in Model)
+            {
+                <p>Client has engagement tasks setup.</p>
+            }
+        }
+        else
+        {
+            <p class="lead">Client has no engagement tasks</p>
+        }
+    </div>
+</div>

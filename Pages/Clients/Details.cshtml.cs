@@ -10,7 +10,8 @@ public class ClientDetailsModel : PageModel
     }
     
     [BindProperty(SupportsGet = true)] public string? Id { get; set; }
-    public ClientViewModel? Client { get; set; }
+    [BindProperty(SupportsGet = true)] public string? View { get; set; } = null;
+    [BindProperty]public ClientViewModel? Client { get; set; }
     public string? SubscriptionCode { get; set; }
 
     public async Task<IActionResult> OnGet()
@@ -19,5 +20,15 @@ public class ClientDetailsModel : PageModel
         Client = await _clientsHandler.GetClientByIdAsync(SubscriptionCode, Id);
 
         return Page();
+    }
+
+    public async Task<IActionResult> OnPost()
+    {
+        SubscriptionCode = Request.Cookies["CompanyCode"];
+        if (Client is not null)
+        {
+            await _clientsHandler.UpdateAsync(SubscriptionCode, Client); 
+        }
+        return RedirectToPage();
     }
 }

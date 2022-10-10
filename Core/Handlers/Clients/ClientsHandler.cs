@@ -62,6 +62,25 @@ public class ClientsHandler : IClientsHandler
         return result;
     }
 
+    public async Task UpdateAsync(string? subscriptionCode, ClientViewModel input)
+    {
+        ArgumentNullException.ThrowIfNull(subscriptionCode, nameof(subscriptionCode));
+
+        var clientForUpdate = await _dbContext.Clients
+            .SingleOrDefaultAsync(c => c.CompanyCode == subscriptionCode && c.ClientId == input.ClientId);
+
+        if (clientForUpdate is not null)
+        {
+            clientForUpdate.Address = input.Address;
+            clientForUpdate.Industry = input.Industry;
+            clientForUpdate.Name = input.Name??"N/A";
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        ArgumentNullException.ThrowIfNull(input.ClientId, nameof(input.ClientId));
+    }
+
     private async Task<IList<ClientViewModel>> GetDataAsync(string? subscriptionCode, string? search)
     {
         ArgumentNullException.ThrowIfNull(subscriptionCode);
