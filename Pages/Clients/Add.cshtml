@@ -1,0 +1,39 @@
+﻿@page
+@model ResourceIdea.Pages.Clients.AddClientModel
+@{
+    ViewData["Title"] = "Add Client";
+}
+
+<p>
+    <a asp-page="./index" class="btn btn-outline-primary"><i class="fa-solid fa-angles-left"></i> Clients List</a>
+</p>
+
+<div class="row">
+    <div class="col-9">
+        <form method="post">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input type="text" class="form-control" asp-for="Name">
+                    </div>
+                    <div class="mb-1 row">
+                        <div class="col-6">
+                            <label asp-for="Address" class="form-label"></label>
+                            <input type="text" class="form-control form-control-sm" asp-for="Address">
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="Industry" class="form-label"></label>
+                            <input type="text" class="form-control form-control-sm" asp-for="Industry">
+                        </div>
+                    </div>
+                    <div class="mb-0 row">
+                        <div class="col-12">
+                            <input type="submit" class="btn btn-danger" value="Save Changes">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

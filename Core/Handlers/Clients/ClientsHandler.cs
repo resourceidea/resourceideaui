@@ -4,12 +4,18 @@ public class ClientsHandler : IClientsHandler
 {
     private readonly ResourceIdeaDBContext _dbContext;
 
+    /// <summary>
+    /// Initializes <see cref="ClientsHandler"/>
+    /// </summary>
+    /// <param name="dbContext">Database context.</param>
     public ClientsHandler(ResourceIdeaDBContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<IList<ClientViewModel>> GetPaginatedResultAsync(string? subscriptionCode,
+    /// <inheritdoc />
+    public async Task<IList<ClientViewModel>> GetPaginatedResultAsync(
+        string? subscriptionCode,
         int currentPage,
         int pageSize = 10,
         string? search = null)
@@ -23,6 +29,7 @@ public class ClientsHandler : IClientsHandler
             .ToList();
     }
 
+    /// <inheritdoc />
     public async Task<int> GetCountAsync(string? subscriptionCode, string? search)
     {
         ArgumentNullException.ThrowIfNull(subscriptionCode);
@@ -30,15 +37,8 @@ public class ClientsHandler : IClientsHandler
         var data = await GetDataAsync(subscriptionCode, search);
         return data.Count;
     }
-
-    /// <summary>
-    /// Get the client by Id.
-    /// </summary>
-    /// <param name="subscriptionCode">Subscription code.</param>
-    /// <param name="clientId">Client Id.</param>
-    /// <returns>Tuple with flag indicating success and client object, null if not found</returns>
-    /// <exception cref="ArgumentNullException">Throws ArgumentNullException if subscriptionCode is null.</exception>
-    /// <exception cref="ArgumentNullException">Throws ArgumentNullException if clientId is null.</exception>
+    
+    /// <inheritdoc />
     public async Task<ClientViewModel?> GetClientByIdAsync(
         string? subscriptionCode, 
         string? clientId)
@@ -55,13 +55,15 @@ public class ClientsHandler : IClientsHandler
                 clientQuery.ClientId,
                 clientQuery.Name,
                 clientQuery.Address,
-                clientQuery.Industry
+                clientQuery.Industry,
+                clientQuery.Active
             );
         }
 
         return result;
     }
 
+    /// <inheritdoc />
     public async Task UpdateAsync(string? subscriptionCode, ClientViewModel input)
     {
         ArgumentNullException.ThrowIfNull(subscriptionCode, nameof(subscriptionCode));
@@ -81,6 +83,28 @@ public class ClientsHandler : IClientsHandler
         ArgumentNullException.ThrowIfNull(input.ClientId, nameof(input.ClientId));
     }
 
+    /// <inheritdoc />
+    public async Task<string> AddAsync(string? subscriptionCode, ClientViewModel client)
+    {
+        ArgumentNullException.ThrowIfNull(subscriptionCode, nameof(subscriptionCode));
+        ArgumentNullException.ThrowIfNull(client.ClientId, nameof(client.ClientId));
+        ArgumentNullException.ThrowIfNull(client.Name, nameof(client.Name));
+
+        var result = await _dbContext.Clients.AddAsync(
+            new Client()
+            {
+                Name = client.Name,
+                Address = client.Address,
+                Industry = client.Industry,
+                CompanyCode = subscriptionCode,
+                ClientId = client.ClientId,
+                Active = client.Active
+            });
+        await _dbContext.SaveChangesAsync();
+
+        return result.Entity.ClientId;
+    }
+
     private async Task<IList<ClientViewModel>> GetDataAsync(string? subscriptionCode, string? search)
     {
         ArgumentNullException.ThrowIfNull(subscriptionCode);
@@ -97,7 +121,8 @@ public class ClientsHandler : IClientsHandler
                 c.ClientId,
                 c.Name,
                 c.Address,
-                c.Industry))
+                c.Industry,
+                c.Active))
             .ToListAsync();
     }
 }

@@ -4,4 +4,5 @@ public record ClientViewModel(
     string? ClientId,
     string? Name, 
     string? Address, 
-    string? Industry);
+    string? Industry,
+    bool? Active);

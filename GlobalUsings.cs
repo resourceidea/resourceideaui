@@ -12,6 +12,3 @@ global using ResourceIdea.Core.ViewModels.Clients;
 global using ResourceIdea.Core.Handlers.Clients;
 global using System.ComponentModel.DataAnnotations;
 global using Microsoft.AspNetCore.Authentication;
-global using ResourceIdea.Middleware;
-global using ResourceIdea.Core.Handlers.Clients;
-global using ResourceIdea.Pages;

@@ -22,6 +22,11 @@
 <br/>
 <div>
     <ul class="pagination">
+        <li class="page-item">
+            <a asp-page="./add" class="page-link">
+                <i class="fas fa-plus"></i> Add Client
+            </a>
+        </li>
         <li class="page-item @(!Model.ShowFirst ? "disabled" : "")">
             <a href="~/clients?page=1" class="page-link">
                 <i class="fas fa-fast-backward"></i>
@@ -60,7 +65,7 @@
     <tbody>
     @if (Model.Clients is not null)
     {
-        foreach (var (clientId, name, address, industry) in Model.Clients)
+        foreach (var (clientId, name, address, industry, active) in Model.Clients)
         {
             <tr>
                 <td class="col-5">@Html.DisplayFor(modelItem => name)</td>
