@@ -24,4 +24,6 @@ public class BasePageModel : PageModel
 
         return (isValidRequest, redirectLocation, subscriptionCode);
     }
+
+    protected string? GetSubscriptionCode() => Request.Cookies["CompanyCode"];
 }

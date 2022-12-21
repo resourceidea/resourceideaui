@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ResourceIdea.Pages.Clients
 {
-    public class AddClientModel : PageModel
+    public class AddClientModel : BasePageModel
     {
-        private string? SubscriptionCode;
         private readonly IClientsHandler _clientsHandler;
 
         public AddClientModel(IClientsHandler clientsHandler)
@@ -49,7 +48,5 @@ namespace ResourceIdea.Pages.Clients
 
             return RedirectToPage("details", new { id = newClientId });
         }
-
-        private string? GetSubscriptionCode() => Request.Cookies["CompanyCode"];
     }
 }

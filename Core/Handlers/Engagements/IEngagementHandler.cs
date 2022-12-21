@@ -45,4 +45,12 @@ public interface IEngagementHandler
     /// <param name="input">Engagement update details.</param>
     /// <returns></returns>
     Task UpdateAsync(string? subscriptionCode, EngagementViewModel input);
+
+    /// <summary>
+    /// Add engagement to the store.
+    /// </summary>
+    /// <param name="subscriptionCode">Subscription code.</param>
+    /// <param name="engagement">Engagement to be stored.</param>
+    /// <returns>Engagement ID.</returns>
+    Task<string> AddAsync(string? subscriptionCode, EngagementViewModel engagement);
 }

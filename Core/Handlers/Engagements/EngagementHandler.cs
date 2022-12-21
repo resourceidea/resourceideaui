@@ -6,11 +6,11 @@ namespace ResourceIdea.Core.Handlers.Engagements;
 
 public class EngagementHandler : IEngagementHandler
 {
-    private readonly ResourceIdeaDBContext _dbContext;
+    private readonly ResourceIdeaDBContext dbContext;
 
     public EngagementHandler(ResourceIdeaDBContext dbContext)
     {
-        _dbContext = dbContext;
+        this.dbContext = dbContext;
     }
 
     /// <inheritdoc />
@@ -50,7 +50,7 @@ public class EngagementHandler : IEngagementHandler
 
         EngagementViewModel? result = null;
 
-        var engagementQuery = await _dbContext.Projects.SingleOrDefaultAsync(c => c.ClientId == engagementId && c.ClientId == clientId);
+        var engagementQuery = await dbContext.Projects.SingleOrDefaultAsync(c => c.ClientId == engagementId && c.ClientId == clientId);
         if (engagementQuery is not null)
         {
             result = new EngagementViewModel(
@@ -64,12 +64,13 @@ public class EngagementHandler : IEngagementHandler
         return result;
     }
 
+    /// <inheritdoc/>
     public async Task UpdateAsync(string? subscriptionCode, EngagementViewModel input)
     {
         ArgumentNullException.ThrowIfNull(subscriptionCode, nameof(subscriptionCode));
         ArgumentNullException.ThrowIfNull(input.ProjectId, nameof(input.ProjectId));
 
-        var engagementForUpdate = await _dbContext.Projects
+        var engagementForUpdate = await dbContext.Projects
             .SingleOrDefaultAsync(p => p.Client.CompanyCode == subscriptionCode
                                        && p.ProjectId == input.ProjectId
                                        && p.ClientId == input.ClientId);
@@ -77,9 +78,9 @@ public class EngagementHandler : IEngagementHandler
         if (engagementForUpdate is not null)
         {
             engagementForUpdate.Color = input.Color;
-            engagementForUpdate.Name = input.Name ?? "N/A";
+            engagementForUpdate.Name = input.Name ?? "NA";
 
-            await _dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
     }
 
@@ -88,7 +89,7 @@ public class EngagementHandler : IEngagementHandler
         ArgumentNullException.ThrowIfNull(subscriptionCode);
         ArgumentNullException.ThrowIfNull(clientId);
 
-        var data = _dbContext.Projects
+        var data = dbContext.Projects
             .Where(p => p.Client.CompanyCode == subscriptionCode
                             && p.ClientId == clientId);
 
@@ -98,10 +99,28 @@ public class EngagementHandler : IEngagementHandler
         }
 
         return await data.Select(p => new EngagementViewModel(
-                p.ClientId,
+                p.ProjectId,
                 p.Name,
                 p.ClientId,
                 p.Color))
             .ToListAsync();
+    }
+
+    /// <inheritdoc/>
+    public async Task<string> AddAsync(string? subscriptionCode, EngagementViewModel engagement)
+    {
+        ArgumentNullException.ThrowIfNull(subscriptionCode);
+        ArgumentNullException.ThrowIfNull(engagement);
+
+        var result = await dbContext.Projects
+            .AddAsync(new Project
+            {
+                ProjectId = engagement.ProjectId ?? Guid.NewGuid().ToString(),
+                Name = engagement.Name ?? "NA",
+                ClientId = engagement.ClientId ?? "NA"
+            });
+        await dbContext.SaveChangesAsync();
+
+        return result.Entity.ProjectId;
     }
 }
