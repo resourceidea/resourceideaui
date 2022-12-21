@@ -12,37 +12,45 @@ public class EngagementHandler : IEngagementHandler
     {
         _dbContext = dbContext;
     }
+
+    /// <inheritdoc />
     public async Task<IList<EngagementViewModel>> GetPaginatedResultAsync(
-        string? subscriptionCode, 
+        string? subscriptionCode,
+        string? clientId,
         int currentPage, 
         int pageSize = 10, 
         string? search = null)
     {
         ArgumentNullException.ThrowIfNull(subscriptionCode);
+        ArgumentNullException.ThrowIfNull(clientId);
 
-        var data = await GetDataAsync(subscriptionCode, search);
+        var data = await GetDataAsync(subscriptionCode, clientId, search);
         return data.OrderBy(d => d.Name)
             .Skip((currentPage - 1) * pageSize)
             .Take(pageSize)
             .ToList();
     }
 
-    public async Task<int> GetCountAsync(string? subscriptionCode, string? search)
+    /// <inheritdoc />
+    public async Task<int> GetCountAsync(string? subscriptionCode, string? clientId, string? search)
     {
         ArgumentNullException.ThrowIfNull(subscriptionCode);
+        ArgumentNullException.ThrowIfNull(clientId);
 
-        var data = await GetDataAsync(subscriptionCode, search);
+        var data = await GetDataAsync(subscriptionCode, clientId, search);
         return data.Count;
     }
 
-    public async Task<EngagementViewModel?> GetEngagementByIdAsync(string? subscriptionCode, string? engagementId)
+    /// <inheritdoc />
+    public async Task<EngagementViewModel?> GetEngagementByIdAsync(string? subscriptionCode, string? clientId, string? engagementId)
     {
         ArgumentNullException.ThrowIfNull(subscriptionCode);
+        ArgumentNullException.ThrowIfNull(clientId);
         ArgumentNullException.ThrowIfNull(engagementId);
 
         EngagementViewModel? result = null;
 
-        var engagementQuery = await _dbContext.Projects.SingleOrDefaultAsync(c => c.ClientId == engagementId);
+        var engagementQuery = await _dbContext.Projects.SingleOrDefaultAsync(c => c.ClientId == engagementId && c.ClientId == clientId);
         if (engagementQuery is not null)
         {
             result = new EngagementViewModel(
@@ -59,9 +67,12 @@ public class EngagementHandler : IEngagementHandler
     public async Task UpdateAsync(string? subscriptionCode, EngagementViewModel input)
     {
         ArgumentNullException.ThrowIfNull(subscriptionCode, nameof(subscriptionCode));
+        ArgumentNullException.ThrowIfNull(input.ProjectId, nameof(input.ProjectId));
 
         var engagementForUpdate = await _dbContext.Projects
-            .SingleOrDefaultAsync(p => p.Client.CompanyCode == subscriptionCode && p.ProjectId == input.ProjectId);
+            .SingleOrDefaultAsync(p => p.Client.CompanyCode == subscriptionCode
+                                       && p.ProjectId == input.ProjectId
+                                       && p.ClientId == input.ClientId);
 
         if (engagementForUpdate is not null)
         {
@@ -70,16 +81,16 @@ public class EngagementHandler : IEngagementHandler
 
             await _dbContext.SaveChangesAsync();
         }
-
-        ArgumentNullException.ThrowIfNull(input.ProjectId, nameof(input.ProjectId));
     }
 
-    private async Task<IList<EngagementViewModel>> GetDataAsync(string? subscriptionCode, string? search)
+    private async Task<IList<EngagementViewModel>> GetDataAsync(string? subscriptionCode, string? clientId, string? search)
     {
         ArgumentNullException.ThrowIfNull(subscriptionCode);
+        ArgumentNullException.ThrowIfNull(clientId);
 
         var data = _dbContext.Projects
-            .Where(p => p.Client.CompanyCode == subscriptionCode);
+            .Where(p => p.Client.CompanyCode == subscriptionCode
+                            && p.ClientId == clientId);
 
         if (search != null)
         {

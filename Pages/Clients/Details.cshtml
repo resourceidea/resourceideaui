@@ -6,7 +6,7 @@
 }
 
 <p>
-    <a asp-page="./index" class="btn btn-outline-primary"><i class="fa-solid fa-angles-left"></i> Clients List</a>
+    <a asp-page="./index" class="btn btn-outline-primary"><i class="fa-solid fa-angles-left"></i> Clients</a>
 </p>
 @if (Model.Client is not null)
 {
@@ -41,7 +41,10 @@
         </div>
         <div class="col-3">
             <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action">Engagements</a>
+                <a asp-page="/engagements/index"
+                   asp-route-client="@Model.Client.ClientId"
+                   class="list-group-item list-group-item-action">Engagements
+                </a>
                 <a href="#" class="list-group-item list-group-item-action">Tasks</a>
                 <a href="#" class="list-group-item list-group-item-action">Assignments</a>
                 <a href="#" class="list-group-item list-group-item-action">Resources</a>

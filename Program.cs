@@ -1,3 +1,5 @@
+using ResourceIdea.Core.Handlers.Engagements;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
@@ -26,6 +28,7 @@ builder.Services.ConfigureApplicationCookie(options => {
 
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
 builder.Services.AddTransient<IClientsHandler, ClientsHandler>();
+builder.Services.AddTransient<IEngagementHandler, EngagementHandler>();
 
 var app = builder.Build();
 
