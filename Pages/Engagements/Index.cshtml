@@ -22,14 +22,13 @@
 <div>
     <ul class="pagination">
         <li class="page-item">
-            <a
-               asp-page="/clients/details"
+            <a asp-page="/clients/details"
                asp-route-id="@Model.EngagementClient?.ClientId" class="page-link">
                 <i class="fa-solid fa-angles-left"></i> Back
             </a>
         </li>
         <li class="page-item">
-            <a asp-page="./add" class="page-link">
+            <a asp-page="./add" asp-route-client="@Model.EngagementClient?.ClientId" class="page-link">
                 <i class="fas fa-plus"></i> Add Engagement
             </a>
         </li>
@@ -73,7 +72,14 @@
             {
                 <tr>
                     <td class="col-11">@Html.DisplayFor(modelItem => name)</td>
-                    <td class="col-1"><a asp-page="./details" asp-route-id="@projectId?client=@clientId" class="btn btn-outline-primary btn-sm">Details</a></td>
+                    <td class="col-1">
+                        <a asp-page="./details"
+                           asp-route-id="@projectId"
+                           asp-route-client="@clientId"
+                           class="btn btn-outline-primary btn-sm">
+                            Details
+                        </a>
+                    </td>
                 </tr>
             }
         }
