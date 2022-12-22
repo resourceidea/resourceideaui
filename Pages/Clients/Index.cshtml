@@ -1,4 +1,4 @@
-@page
+@page "/clients"
 @model ClientIndexModel
 
 @{
@@ -62,7 +62,7 @@
     </tr>
     </thead>
     <tbody>
-    @if (Model.Clients is not null)
+    @if (Model.Clients is not null && Model.Clients?.Count > 0)
     {
         foreach (var (clientId, name, address, industry, active) in Model.Clients)
         {
