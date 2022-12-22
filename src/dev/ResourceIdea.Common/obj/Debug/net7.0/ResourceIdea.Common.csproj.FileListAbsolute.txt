@@ -1,0 +1,12 @@
+E:\repos\resourceidea\resourceideaui\src\dev\ResourceIdea.Common\bin\Debug\net7.0\ResourceIdea.Common.deps.json
+E:\repos\resourceidea\resourceideaui\src\dev\ResourceIdea.Common\bin\Debug\net7.0\ResourceIdea.Common.dll
+E:\repos\resourceidea\resourceideaui\src\dev\ResourceIdea.Common\bin\Debug\net7.0\ResourceIdea.Common.pdb
+E:\repos\resourceidea\resourceideaui\src\dev\ResourceIdea.Common\obj\Debug\net7.0\ResourceIdea.Common.csproj.AssemblyReference.cache
+E:\repos\resourceidea\resourceideaui\src\dev\ResourceIdea.Common\obj\Debug\net7.0\ResourceIdea.Common.GeneratedMSBuildEditorConfig.editorconfig
+E:\repos\resourceidea\resourceideaui\src\dev\ResourceIdea.Common\obj\Debug\net7.0\ResourceIdea.Common.AssemblyInfoInputs.cache
+E:\repos\resourceidea\resourceideaui\src\dev\ResourceIdea.Common\obj\Debug\net7.0\ResourceIdea.Common.AssemblyInfo.cs
+E:\repos\resourceidea\resourceideaui\src\dev\ResourceIdea.Common\obj\Debug\net7.0\ResourceIdea.Common.csproj.CoreCompileInputs.cache
+E:\repos\resourceidea\resourceideaui\src\dev\ResourceIdea.Common\obj\Debug\net7.0\ResourceIdea.Common.dll
+E:\repos\resourceidea\resourceideaui\src\dev\ResourceIdea.Common\obj\Debug\net7.0\refint\ResourceIdea.Common.dll
+E:\repos\resourceidea\resourceideaui\src\dev\ResourceIdea.Common\obj\Debug\net7.0\ResourceIdea.Common.pdb
+E:\repos\resourceidea\resourceideaui\src\dev\ResourceIdea.Common\obj\Debug\net7.0\ref\ResourceIdea.Common.dll

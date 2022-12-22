@@ -1,0 +1,61 @@
+﻿@page "/engagements/{id}"
+@model ResourceIdea.Pages.Engagements.ClientDetailsModel
+@{
+    ViewData["Title"] = $"Engagement: {Model.Engagement?.Name}";
+}
+
+<h3>@ViewData["Title"]</h3>
+
+<div>
+    <ul class="pagination">
+        <li class="page-item">
+            <a asp-page="./index"
+               asp-route-client="@Model.Engagement?.ClientId"
+               class="page-link">
+                <i class="fa-solid fa-angles-left"></i> Back
+            </a>
+        </li>
+    </ul>
+</div>
+
+@if (Model.Engagement is not null)
+{
+    <div class="row">
+        <div class="col-9">
+            <form method="post">
+                <input type="hidden" asp-for="Engagement!.ClientId" />
+                <input type="hidden" asp-for="Engagement!.ProjectId" />
+                <input type="hidden" asp-for="Engagement!.Color" />
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="Engagement!.Name" class="form-label"></label>
+                            <input type="text" class="form-control" asp-for="Engagement!.Name">
+                        </div>
+                        <div class="mb-0 row">
+                            <div class="col-12">
+                                <input type="submit" class="btn btn-danger" value="Save Changes">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-3">
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action">Tasks</a>
+                <a href="#" class="list-group-item list-group-item-action">Assignments</a>
+                <a href="#" class="list-group-item list-group-item-action">Resources</a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-primary d-flex align-items-center" role="alert">
+        <div>
+            Engagement was not found. Go back to the <a asp-page="./index"
+                                                        asp-route-client="@Model.Engagement?.ClientId" class="alert-link">engagements list</a>.
+        </div>
+    </div>
+}
