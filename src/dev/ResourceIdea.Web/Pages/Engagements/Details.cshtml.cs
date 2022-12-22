@@ -40,5 +40,17 @@ namespace ResourceIdea.Pages.Engagements
 
             return Page();
         }
+
+        public async Task<IActionResult> OnPost()
+        {
+            var subscriptionCode = GetSubscriptionCode();
+
+            if (Engagement is not null)
+            {
+                await engagementHandler.UpdateAsync(subscriptionCode, Engagement);
+            }
+
+            return RedirectToPage(new { client = Engagement?.ClientId });
+        }
     }
 }
