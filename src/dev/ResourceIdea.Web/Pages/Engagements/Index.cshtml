@@ -1,0 +1,122 @@
+﻿@page "/engagements"
+@model ResourceIdea.Pages.Engagements.IndexModel
+
+@{
+    ViewData["Title"] = $"{Model.EngagementClient?.Name} Engagements";
+}
+
+<h3>@ViewData["Title"]</h3>
+
+<div class="card">
+    <div class="card-body bg-light">
+        <p class="lead">
+            Search @ViewData["Title"]
+        </p>
+        <form method="post">
+            <input type="hidden" value="@Model.EngagementClient?.ClientId" name="client" id="client" />
+            <input type="text" class="form-control form-control-sm" value="@Model.Search" name="search" placeholder="Enter search keywords...">
+            <button asp-page-handler="search" class="btn btn-primary btn-sm">Search</button>
+        </form>
+    </div>
+</div>
+<br />
+<div>
+    <ul class="pagination">
+        <li class="page-item">
+            <a asp-page="/clients/details"
+               asp-route-id="@Model.EngagementClient?.ClientId" class="page-link">
+                <i class="fa-solid fa-angles-left"></i> Back
+            </a>
+        </li>
+        <li class="page-item">
+            <a asp-page="./add" asp-route-client="@Model.EngagementClient?.ClientId" class="page-link">
+                <i class="fas fa-plus"></i> Add Engagement
+            </a>
+        </li>
+        <li class="page-item @(!Model.ShowFirst ? "disabled" : "")">
+            <a href="~/engagements?client=@Model.Client&page=1" class="page-link">
+                <i class="fas fa-fast-backward"></i>
+            </a>
+        </li>
+
+        <li class="page-item @(!Model.ShowPrevious ? "disabled" : "")">
+            <a href="~/engagements?client=@Model.Client&page=@(Model.CurrentPage - 1)" class="page-link">
+                <i class="fas fa-step-backward"></i>
+            </a>
+        </li>
+
+        <li class="page-item  @(!Model.ShowNext ? "disabled" : "")">
+            <a href="~/engagements?client=@Model.Client&page=@(Model.CurrentPage + 1)" class="page-link">
+                <i class="fas fa-step-forward"></i>
+            </a>
+        </li>
+
+        <li class="page-item  @(!Model.ShowLast ? "disabled" : "")">
+            <a href="~/engagements?client=@Model.Client&page=@(Model.TotalPages)" class="page-link">
+                <i class="fas fa-fast-forward"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<table class="table table-bordered">
+    <thead class="bg-dark text-white">
+        <tr>
+            <th class="col-11">Name</th>
+            <th class="col-1"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Engagements is not null && Model.Engagements?.Count > 0)
+        {
+            foreach (var (projectId, name, clientId, color) in Model.Engagements)
+            {
+                <tr>
+                    <td class="col-11">@Html.DisplayFor(modelItem => name)</td>
+                    <td class="col-1">
+                        <a asp-page="./details"
+                           asp-route-id="@projectId"
+                           asp-route-client="@clientId"
+                           class="btn btn-outline-primary btn-sm">
+                            Details
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td class="col-12" colspan="2">No engagements data</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <ul class="pagination">
+        <li class="page-item @(!Model.ShowFirst ? "disabled" : "")">
+            <a href="~/engagements?page=1" class="page-link">
+                <i class="fas fa-fast-backward"></i>
+            </a>
+        </li>
+
+        <li class="page-item @(!Model.ShowPrevious ? "disabled" : "")">
+            <a href="~/enagements?page=@(Model.CurrentPage - 1)" class="page-link">
+                <i class="fas fa-step-backward"></i>
+            </a>
+        </li>
+
+        <li class="page-item  @(!Model.ShowNext ? "disabled" : "")">
+            <a href="~/engagements?page=@(Model.CurrentPage + 1)" class="page-link">
+                <i class="fas fa-step-forward"></i>
+            </a>
+        </li>
+
+        <li class="page-item  @(!Model.ShowLast ? "disabled" : "")">
+            <a href="~/engagements?page=@(Model.TotalPages)" class="page-link">
+                <i class="fas fa-fast-forward"></i>
+            </a>
+        </li>
+    </ul>
+</div>
