@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceIdea.Web", "src\dev\ResourceIdea.Web\ResourceIdea.Web.csproj", "{D051E451-4347-4945-91F5-C451F9B76FCB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceIdea.Common", "src\dev\ResourceIdea.Common\ResourceIdea.Common.csproj", "{90DA673D-97AA-43EC-B81C-E061A5711D15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceIdea.Common", "src\dev\ResourceIdea.Common\ResourceIdea.Common.csproj", "{90DA673D-97AA-43EC-B81C-E061A5711D15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
