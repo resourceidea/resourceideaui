@@ -38,8 +38,5 @@
     <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ValidationScriptsPartial.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ViewImports.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ResourceIdea.Common\ResourceIdea.Common.csproj" />
-  </ItemGroup>
 
 </Project>
