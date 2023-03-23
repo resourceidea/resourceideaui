@@ -1,6 +1,4 @@
-using ResourceIdea.Common.Exceptions;
-
-namespace ResourceIdea.Core.Handlers.Clients;
+namespace ResourceIdea.Web.Core.Handlers.Clients;
 
 public class ClientsHandler : IClientsHandler
 {
@@ -24,7 +22,7 @@ public class ClientsHandler : IClientsHandler
     {
         if (subscriptionCode is null)
         {
-            throw new SubscriptionCodeMissingException();
+            throw new MissingSubscriptionCodeException();
         }
 
         var data = await GetDataAsync(subscriptionCode, search);
@@ -39,7 +37,7 @@ public class ClientsHandler : IClientsHandler
     {
         if (subscriptionCode is null)
         {
-            throw new SubscriptionCodeMissingException();
+            throw new MissingSubscriptionCodeException();
         }
 
         var data = await GetDataAsync(subscriptionCode, search);
@@ -53,7 +51,7 @@ public class ClientsHandler : IClientsHandler
     {
         if (subscriptionCode is null)
         {
-            throw new SubscriptionCodeMissingException();
+            throw new MissingSubscriptionCodeException();
         }
 
         ArgumentNullException.ThrowIfNull(clientId);
@@ -80,7 +78,7 @@ public class ClientsHandler : IClientsHandler
     {
         if (subscriptionCode is null)
         {
-            throw new SubscriptionCodeMissingException();
+            throw new MissingSubscriptionCodeException();
         }
 
         var clientForUpdate = await _dbContext.Clients
@@ -103,7 +101,7 @@ public class ClientsHandler : IClientsHandler
     {
         if (subscriptionCode is null)
         {
-            throw new SubscriptionCodeMissingException();
+            throw new MissingSubscriptionCodeException();
         }
 
         ArgumentNullException.ThrowIfNull(client.ClientId, nameof(client.ClientId));
@@ -128,7 +126,7 @@ public class ClientsHandler : IClientsHandler
     {
         if (subscriptionCode is null)
         {
-            throw new SubscriptionCodeMissingException();
+            throw new MissingSubscriptionCodeException();
         }
 
         var data = _dbContext.Clients

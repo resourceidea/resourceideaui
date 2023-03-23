@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace ResourceIdea.Infrastructure.Environment;
+namespace ResourceIdea.Web.Infrastructure.Environment;
 
 public static class AppConfigManager
 {
@@ -81,10 +81,10 @@ public static class AppConfigManager
     private static async Task AssignUserToAdminRole(UserManager<ApplicationUser> userManager, ApplicationUser adminUser,
         IdentityRole adminRole)
     {
-        var isUserAssignedToAdminRole = await userManager.IsInRoleAsync(adminUser, adminRole.Name);
+        var isUserAssignedToAdminRole = await userManager.IsInRoleAsync(adminUser, adminRole.Name ?? "User");
         if (!isUserAssignedToAdminRole)
         {
-            await userManager.AddToRoleAsync(adminUser, adminRole.Name);
+            await userManager.AddToRoleAsync(adminUser, adminRole.Name ?? "User");
         }
     }
 
@@ -112,7 +112,7 @@ public static class AppConfigManager
             EmailConfirmed = true,
             CompanyCode = adminCredentials.companyCode
         };
-        await userManager.CreateAsync(adminUser, adminCredentials.password);
+        await userManager.CreateAsync(adminUser, adminCredentials.password!);
         return adminUser;
     }
 }

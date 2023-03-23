@@ -1,6 +1,3 @@
-using ResourceIdea.Core.Handlers.Engagements;
-using ResourceIdea.Core.ViewModels;
-
 namespace ResourceIdea.Pages.Engagements
 {
     public class IndexModel : BasePageModel

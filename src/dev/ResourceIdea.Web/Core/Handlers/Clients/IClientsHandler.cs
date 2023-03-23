@@ -1,4 +1,4 @@
-namespace ResourceIdea.Core.Handlers.Clients;
+namespace ResourceIdea.Web.Core.Handlers.Clients;
 
 /// <summary>
 /// Clients handling interface.

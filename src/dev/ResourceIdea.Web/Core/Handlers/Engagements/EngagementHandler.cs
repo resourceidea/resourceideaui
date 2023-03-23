@@ -1,9 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-using ResourceIdea.Common.Exceptions;
-using ResourceIdea.Core.ViewModels;
-
-namespace ResourceIdea.Core.Handlers.Engagements;
+﻿namespace ResourceIdea.Web.Core.Handlers.Engagements;
 
 public class EngagementHandler : IEngagementHandler
 {
@@ -24,7 +19,7 @@ public class EngagementHandler : IEngagementHandler
     {
         if (subscriptionCode is null)
         {
-            throw new SubscriptionCodeMissingException();
+            throw new MissingSubscriptionCodeException();
         }
 
         ArgumentNullException.ThrowIfNull(clientId);
@@ -41,7 +36,7 @@ public class EngagementHandler : IEngagementHandler
     {
         if (subscriptionCode is null)
         {
-            throw new SubscriptionCodeMissingException();
+            throw new MissingSubscriptionCodeException();
         }
 
         ArgumentNullException.ThrowIfNull(clientId);
@@ -55,7 +50,7 @@ public class EngagementHandler : IEngagementHandler
     {
         if (subscriptionCode is null)
         {
-            throw new SubscriptionCodeMissingException();
+            throw new MissingSubscriptionCodeException();
         }
 
         ArgumentNullException.ThrowIfNull(clientId);
@@ -82,7 +77,7 @@ public class EngagementHandler : IEngagementHandler
     {
         if (subscriptionCode is null)
         {
-            throw new SubscriptionCodeMissingException();
+            throw new MissingSubscriptionCodeException();
         }
 
         ArgumentNullException.ThrowIfNull(input.ProjectId, nameof(input.ProjectId));
@@ -105,7 +100,7 @@ public class EngagementHandler : IEngagementHandler
     {
         if (subscriptionCode is null)
         {
-            throw new SubscriptionCodeMissingException();
+            throw new MissingSubscriptionCodeException();
         }
 
         ArgumentNullException.ThrowIfNull(clientId);
@@ -132,7 +127,7 @@ public class EngagementHandler : IEngagementHandler
     {
         if (subscriptionCode is null)
         {
-            throw new SubscriptionCodeMissingException();
+            throw new MissingSubscriptionCodeException();
         }
 
         ArgumentNullException.ThrowIfNull(engagement);

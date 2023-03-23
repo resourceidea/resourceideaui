@@ -57,12 +57,14 @@ public class LoginIndexModel : PageModel
     {
         returnUrl ??= Url.Content("~/");
 
+        var signInEmail = Input?.Email;
+        var signInPassword = Input?.Password;
 
-        if (!ModelState.IsValid) return Page();
-        
+        if (!ModelState.IsValid || signInEmail is null || signInPassword is null) return Page();
+
         // This doesn't count login failures towards account lockout
         // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await _signInManager.PasswordSignInAsync(Input!.Email, Input!.Password, Input!.RememberMe, lockoutOnFailure: false);
+        var result = await _signInManager.PasswordSignInAsync(signInEmail, signInPassword, Input?.RememberMe ?? false, lockoutOnFailure: false);
         if (result.Succeeded)
         {
             _logger.LogInformation("User logged in");
@@ -72,8 +74,8 @@ public class LoginIndexModel : PageModel
                 SameSite = SameSiteMode.Strict,
                 Secure = true
             };
-            var signedInUser = await _userManager.FindByEmailAsync(Input!.Email);
-            Response.Cookies.Append("CompanyCode", signedInUser.CompanyCode ?? string.Empty, cookieOptions);
+            var signedInUser = await _userManager.FindByEmailAsync(signInEmail);
+            Response.Cookies.Append("CompanyCode", signedInUser?.CompanyCode ?? string.Empty, cookieOptions);
             return LocalRedirect(returnUrl);
         }
         else

@@ -1,11 +1,3 @@
-using System.Net;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
-using ResourceIdea.Core.Handlers.Engagements;
-using ResourceIdea.Core.ViewModels;
-
 namespace ResourceIdea.Pages.Engagements
 {
     public class AddEngagementModel : BasePageModel

@@ -1,9 +1,3 @@
-using Microsoft.AspNetCore.Diagnostics;
-
-using ResourceIdea.Common.Exceptions;
-using ResourceIdea.Core.Handlers.Engagements;
-using ResourceIdea.Middleware;
-
 using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,10 +50,10 @@ app.UseExceptionHandler(exceptionHandlerApp =>
         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
         context.Response.ContentType = Text.Html;
 
-        await context.Response.WriteAsync("<h1 class=\"text-danger\">Error.</h1>\r\n<h2 class=\"text-danger\">An error occurred while processing your request.</h2>");
+        await context.Response.WriteAsync(StringConstants.HTML_ERROR);
 
         var feature = context.Features.Get<IExceptionHandlerPathFeature>();
-        if (feature?.Error is SubscriptionCodeMissingException)
+        if (feature?.Error is MissingSubscriptionCodeException)
         {
             context.Response.Redirect("/logout");
         }

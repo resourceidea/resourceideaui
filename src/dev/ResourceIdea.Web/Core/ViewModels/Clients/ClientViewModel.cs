@@ -1,4 +1,4 @@
-namespace ResourceIdea.Core.ViewModels.Clients;
+namespace ResourceIdea.Web.Core.ViewModels.Clients;
 
 public record ClientViewModel(
     string? ClientId,

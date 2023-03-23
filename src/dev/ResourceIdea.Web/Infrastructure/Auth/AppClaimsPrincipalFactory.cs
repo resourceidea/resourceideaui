@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 
-namespace ResourceIdea.Infrastructure.Auth;
+namespace ResourceIdea.Web.Infrastructure.Auth;
 
 public class AppClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, IdentityRole>
 {

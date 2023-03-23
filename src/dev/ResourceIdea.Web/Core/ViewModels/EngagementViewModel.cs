@@ -1,4 +1,4 @@
-﻿namespace ResourceIdea.Core.ViewModels;
+﻿namespace ResourceIdea.Web.Core.ViewModels;
 
 public record EngagementViewModel(
     string? ProjectId,
