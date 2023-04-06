@@ -34,7 +34,7 @@ public interface IEngagementHandler
     /// <param name="clientId">Engagement client Id</param>
     /// <param name="engagementId">Engagement Id</param>
     /// <returns>Engagement</returns>
-    Task<EngagementViewModel?> GetEngagementByIdAsync(string? subscriptionCode, string? clientId, string? engagementId);
+    Task<EngagementViewModel?> GetEngagementByIdAsync(string? subscriptionCode, string? engagementId);
 
     /// <summary>
     /// Update engagement details.
@@ -42,7 +42,7 @@ public interface IEngagementHandler
     /// <param name="subscriptionCode">Company subscription code.</param>
     /// <param name="input">Engagement update details.</param>
     /// <returns></returns>
-    Task UpdateAsync(string? subscriptionCode, EngagementViewModel input);
+    System.Threading.Tasks.Task UpdateAsync(string? subscriptionCode, EngagementViewModel input);
 
     /// <summary>
     /// Add engagement to the store.

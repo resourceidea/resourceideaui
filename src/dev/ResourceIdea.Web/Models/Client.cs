@@ -7,7 +7,7 @@ namespace ResourceIdea.Models
     {
         public Client()
         {
-            Projects = new HashSet<Project>();
+            Projects = new HashSet<Engagement>();
         }
 
         public string ClientId { get; set; } = null!;
@@ -18,6 +18,6 @@ namespace ResourceIdea.Models
         public bool? Active { get; set; }
 
         public virtual Company CompanyCodeNavigation { get; set; } = null!;
-        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<Engagement> Projects { get; set; }
     }
 }

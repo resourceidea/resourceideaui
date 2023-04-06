@@ -38,7 +38,7 @@ public static class AppConfigManager
         await AssignClaimsToAdminRole(roleManager, adminRoleClaims, adminRole);
     }
 
-    private static async Task AssignClaimsToAdminRole(RoleManager<IdentityRole> roleManager,
+    private static async System.Threading.Tasks.Task AssignClaimsToAdminRole(RoleManager<IdentityRole> roleManager,
         IList<Claim> adminRoleClaims,
         IdentityRole adminRole)
     {
@@ -78,7 +78,7 @@ public static class AppConfigManager
         }
     }
 
-    private static async Task AssignUserToAdminRole(UserManager<ApplicationUser> userManager, ApplicationUser adminUser,
+    private static async System.Threading.Tasks.Task AssignUserToAdminRole(UserManager<ApplicationUser> userManager, ApplicationUser adminUser,
         IdentityRole adminRole)
     {
         var isUserAssignedToAdminRole = await userManager.IsInRoleAsync(adminUser, adminRole.Name ?? "User");

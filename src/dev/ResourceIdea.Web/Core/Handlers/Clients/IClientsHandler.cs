@@ -37,7 +37,7 @@ public interface IClientsHandler
     /// <param name="subscriptionCode">Company subscription code.</param>
     /// <param name="clientViewModel">Client update details.</param>
     /// <returns></returns>
-    Task UpdateAsync(string? subscriptionCode, ClientViewModel clientViewModel);
+    System.Threading.Tasks.Task UpdateAsync(string? subscriptionCode, ClientViewModel clientViewModel);
     
     /// <summary>
     /// Add client.

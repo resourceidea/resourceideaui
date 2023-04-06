@@ -37,7 +37,7 @@ namespace ResourceIdea.Pages.Engagements
             var subscriptionCode = GetSubscriptionCode();
             var engagementId = await engagementHandler.AddAsync(subscriptionCode, new EngagementViewModel
             (
-                ProjectId: Guid.NewGuid().ToString(),
+                EngagementId: Guid.NewGuid().ToString(),
                 Name: Name,
                 ClientId: ClientId,
                 Color: null  // We are not setting the color

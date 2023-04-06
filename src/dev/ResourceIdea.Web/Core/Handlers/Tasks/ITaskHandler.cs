@@ -13,6 +13,7 @@ public interface ITaskHandler
     /// <returns>List of engagements</returns>
     Task<IList<TaskViewModel>> GetPaginatedListAsync(
         string? subscriptionCode,
+        string? engagementId,
         int currentPage,
         int pageSize = 10,
         Dictionary<string, string>? filters = null,
@@ -28,12 +29,12 @@ public interface ITaskHandler
     Task<int> GetCountAsync(string? subscriptionCode, Dictionary<string, string>? filters, string? search);
 
     /// <summary>
-    /// Get an engagement by Id.
+    /// Get a task by Id.
     /// </summary>
     /// <param name="subscriptionCode">Company subscription code.</param>
     /// <param name="taskId">Task Id</param>
-    /// <returns>Engagement</returns>
-    Task<TaskViewModel?> GetEngagementByIdAsync(string? subscriptionCode, string? taskId);
+    /// <returns>Task</returns>
+    Task<TaskViewModel?> GetTaskById(string? subscriptionCode, string? taskId);
 
     /// <summary>
     /// Update engagement details.
@@ -41,7 +42,7 @@ public interface ITaskHandler
     /// <param name="subscriptionCode">Company subscription code.</param>
     /// <param name="input">Engagement update details.</param>
     /// <returns></returns>
-    Task UpdateAsync(string? subscriptionCode, TaskViewModel input);
+    System.Threading.Tasks.Task UpdateAsync(string? subscriptionCode, TaskViewModel input);
 
     /// <summary>
     /// Add engagement to the store.

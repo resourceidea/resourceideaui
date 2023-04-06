@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ResourceIdea.Models;
 
@@ -11,9 +12,11 @@ using ResourceIdea.Models;
 namespace resourceideaui.Migrations
 {
     [DbContext(typeof(ResourceIdeaDBContext))]
-    partial class ResourceIdeaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230406081146_TableRename")]
+    partial class TableRename
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -285,54 +288,6 @@ namespace resourceideaui.Migrations
                     b.HasIndex("ClientId");
 
                     b.ToTable("Project", (string)null);
-                });
-
-            modelBuilder.Entity("ResourceIdea.Models.EngagementTask", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(40)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(40)");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<string>("EngagementId")
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(40)");
-
-                    b.Property<string>("Manager")
-                        .HasMaxLength(40)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(40)");
-
-                    b.Property<string>("Partner")
-                        .HasMaxLength(40)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(40)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EngagementId");
-
-                    b.ToTable("Job", (string)null);
                 });
 
             modelBuilder.Entity("ResourceIdea.Models.JobPosition", b =>
@@ -694,6 +649,54 @@ namespace resourceideaui.Migrations
                     b.ToTable("Skill", (string)null);
                 });
 
+            modelBuilder.Entity("ResourceIdea.Models.Task", b =>
+                {
+                    b.Property<string>("TaskId")
+                        .HasMaxLength(40)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(40)");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("EngagementId")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(40)");
+
+                    b.Property<string>("Manager")
+                        .HasMaxLength(40)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(40)");
+
+                    b.Property<string>("Partner")
+                        .HasMaxLength(40)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(40)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
+                    b.HasKey("TaskId");
+
+                    b.HasIndex("EngagementId");
+
+                    b.ToTable("Job", (string)null);
+                });
+
             modelBuilder.Entity("ResourceIdea.Models.TaskAssignment", b =>
                 {
                     b.Property<int>("Id")
@@ -756,17 +759,6 @@ namespace resourceideaui.Migrations
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("ResourceIdea.Models.EngagementTask", b =>
-                {
-                    b.HasOne("ResourceIdea.Models.Engagement", "Engagement")
-                        .WithMany("Jobs")
-                        .HasForeignKey("EngagementId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Job_Project");
-
-                    b.Navigation("Engagement");
-                });
-
             modelBuilder.Entity("ResourceIdea.Models.JobPosition", b =>
                 {
                     b.HasOne("ResourceIdea.Models.Company", "CompanyCodeNavigation")
@@ -780,7 +772,7 @@ namespace resourceideaui.Migrations
 
             modelBuilder.Entity("ResourceIdea.Models.JobSkill", b =>
                 {
-                    b.HasOne("ResourceIdea.Models.EngagementTask", "Job")
+                    b.HasOne("ResourceIdea.Models.Task", "Job")
                         .WithMany("JobSkills")
                         .HasForeignKey("JobId")
                         .IsRequired()
@@ -829,7 +821,7 @@ namespace resourceideaui.Migrations
 
             modelBuilder.Entity("ResourceIdea.Models.LineOfServiceJob", b =>
                 {
-                    b.HasOne("ResourceIdea.Models.EngagementTask", "Job")
+                    b.HasOne("ResourceIdea.Models.Task", "Job")
                         .WithMany("LineOfServiceJobs")
                         .HasForeignKey("JobId")
                         .IsRequired()
@@ -905,6 +897,17 @@ namespace resourceideaui.Migrations
                     b.Navigation("RoleGrouping");
                 });
 
+            modelBuilder.Entity("ResourceIdea.Models.Task", b =>
+                {
+                    b.HasOne("ResourceIdea.Models.Engagement", "Engagement")
+                        .WithMany("Jobs")
+                        .HasForeignKey("EngagementId")
+                        .IsRequired()
+                        .HasConstraintName("FK_Job_Project");
+
+                    b.Navigation("Engagement");
+                });
+
             modelBuilder.Entity("ResourceIdea.Models.TaskAssignment", b =>
                 {
                     b.HasOne("ResourceIdea.Models.Resource", "Resource")
@@ -913,7 +916,7 @@ namespace resourceideaui.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_JobResource_Resource");
 
-                    b.HasOne("ResourceIdea.Models.EngagementTask", "Task")
+                    b.HasOne("ResourceIdea.Models.Task", "Task")
                         .WithMany("JobResources")
                         .HasForeignKey("TaskId")
                         .IsRequired()
@@ -949,15 +952,6 @@ namespace resourceideaui.Migrations
                     b.Navigation("Jobs");
                 });
 
-            modelBuilder.Entity("ResourceIdea.Models.EngagementTask", b =>
-                {
-                    b.Navigation("JobResources");
-
-                    b.Navigation("JobSkills");
-
-                    b.Navigation("LineOfServiceJobs");
-                });
-
             modelBuilder.Entity("ResourceIdea.Models.JobPosition", b =>
                 {
                     b.Navigation("Resources");
@@ -990,6 +984,15 @@ namespace resourceideaui.Migrations
                     b.Navigation("JobSkills");
 
                     b.Navigation("ResourceSkills");
+                });
+
+            modelBuilder.Entity("ResourceIdea.Models.Task", b =>
+                {
+                    b.Navigation("JobResources");
+
+                    b.Navigation("JobSkills");
+
+                    b.Navigation("LineOfServiceJobs");
                 });
 #pragma warning restore 612, 618
         }

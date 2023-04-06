@@ -7,7 +7,7 @@ namespace ResourceIdea.Models
     {
         public Resource()
         {
-            JobResources = new HashSet<JobResource>();
+            JobResources = new HashSet<TaskAssignment>();
             ResourceSkills = new HashSet<ResourceSkill>();
         }
 
@@ -22,7 +22,7 @@ namespace ResourceIdea.Models
 
         public virtual Company CompanyCodeNavigation { get; set; } = null!;
         public virtual JobPosition? JobPosition { get; set; }
-        public virtual ICollection<JobResource> JobResources { get; set; }
+        public virtual ICollection<TaskAssignment> JobResources { get; set; }
         public virtual ICollection<ResourceSkill> ResourceSkills { get; set; }
     }
 }

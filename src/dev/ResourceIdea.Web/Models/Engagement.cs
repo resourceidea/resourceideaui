@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 namespace ResourceIdea.Models
 {
-    public partial class Project
+    public partial class Engagement
     {
-        public Project()
+        public Engagement()
         {
-            Jobs = new HashSet<Job>();
+            Jobs = new HashSet<EngagementTask>();
         }
 
-        public string ProjectId { get; set; } = null!;
+        public string EngagementId { get; set; } = null!;
         public string Name { get; set; } = null!;
         public string ClientId { get; set; } = null!;
         public string? Color { get; set; }
 
         public virtual Client Client { get; set; } = null!;
-        public virtual ICollection<Job> Jobs { get; set; }
+        public virtual ICollection<EngagementTask> Jobs { get; set; }
     }
 }

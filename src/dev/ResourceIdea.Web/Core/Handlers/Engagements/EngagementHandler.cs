@@ -46,30 +46,28 @@ public class EngagementHandler : IEngagementHandler
     }
 
     /// <inheritdoc />
-    public async Task<EngagementViewModel?> GetEngagementByIdAsync(string? subscriptionCode, string? clientId, string? engagementId)
+    public async Task<EngagementViewModel?> GetEngagementByIdAsync(string? subscriptionCode, string? engagementId)
     {
         if (subscriptionCode is null)
         {
             throw new MissingSubscriptionCodeException();
         }
 
-        ArgumentNullException.ThrowIfNull(clientId);
         ArgumentNullException.ThrowIfNull(engagementId);
-
-        EngagementViewModel? result = null;
-
-        var engagementQuery = await dbContext.Projects.SingleOrDefaultAsync(c => c.ProjectId == engagementId && c.ClientId == clientId);
+        EngagementViewModel? engagementView = null;
+        var engagementQuery = await dbContext.Engagements.SingleOrDefaultAsync(engagement => engagement.EngagementId == engagementId
+                                                                                          && engagement.Client.CompanyCode == subscriptionCode);
         if (engagementQuery is not null)
         {
-            result = new EngagementViewModel(
-                engagementQuery.ProjectId,
-                engagementQuery.Name,
-                engagementQuery.ClientId,
-                engagementQuery.Color
+            engagementView = new EngagementViewModel(
+                EngagementId: engagementQuery.EngagementId,
+                Name: engagementQuery.Name,
+                ClientId: engagementQuery.ClientId,
+                Color: engagementQuery.Color
             );
         }
 
-        return result;
+        return engagementView;
     }
 
     /// <inheritdoc/>
@@ -80,12 +78,11 @@ public class EngagementHandler : IEngagementHandler
             throw new MissingSubscriptionCodeException();
         }
 
-        ArgumentNullException.ThrowIfNull(input.ProjectId, nameof(input.ProjectId));
-
-        var engagementForUpdate = await dbContext.Projects
-            .SingleOrDefaultAsync(p => p.Client.CompanyCode == subscriptionCode
-                                       && p.ProjectId == input.ProjectId
-                                       && p.ClientId == input.ClientId);
+        ArgumentNullException.ThrowIfNull(input.EngagementId, nameof(input.EngagementId));
+        var engagementForUpdate = await dbContext.Engagements
+            .SingleOrDefaultAsync(engagement => engagement.Client.CompanyCode == subscriptionCode
+                                             && engagement.EngagementId == input.EngagementId
+                                             && engagement.ClientId == input.ClientId);
 
         if (engagementForUpdate is not null)
         {
@@ -105,7 +102,7 @@ public class EngagementHandler : IEngagementHandler
 
         ArgumentNullException.ThrowIfNull(clientId);
 
-        var data = dbContext.Projects
+        var data = dbContext.Engagements
             .Where(p => p.Client.CompanyCode == subscriptionCode
                             && p.ClientId == clientId);
 
@@ -115,7 +112,7 @@ public class EngagementHandler : IEngagementHandler
         }
 
         return await data.Select(p => new EngagementViewModel(
-                p.ProjectId,
+                p.EngagementId,
                 p.Name,
                 p.ClientId,
                 p.Color))
@@ -132,15 +129,15 @@ public class EngagementHandler : IEngagementHandler
 
         ArgumentNullException.ThrowIfNull(engagement);
 
-        var result = await dbContext.Projects
-            .AddAsync(new Project
+        var result = await dbContext.Engagements
+            .AddAsync(new Engagement
             {
-                ProjectId = engagement.ProjectId ?? Guid.NewGuid().ToString(),
+                EngagementId = engagement.EngagementId ?? Guid.NewGuid().ToString(),
                 Name = engagement.Name ?? "NA",
                 ClientId = engagement.ClientId ?? "NA"
             });
         await dbContext.SaveChangesAsync();
 
-        return result.Entity.ProjectId;
+        return result.Entity.EngagementId;
     }
 }

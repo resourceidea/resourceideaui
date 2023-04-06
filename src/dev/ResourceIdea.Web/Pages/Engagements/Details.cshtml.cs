@@ -30,7 +30,7 @@ namespace ResourceIdea.Pages.Engagements
         public async Task<IActionResult> OnGet()
         {
             var subscriptionCode = GetSubscriptionCode();
-            Engagement = await engagementHandler.GetEngagementByIdAsync(subscriptionCode, Client, Id);
+            Engagement = await engagementHandler.GetEngagementByIdAsync(subscriptionCode, Id);
 
             return Page();
         }

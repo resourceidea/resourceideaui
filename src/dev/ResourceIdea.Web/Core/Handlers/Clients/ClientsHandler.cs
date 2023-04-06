@@ -74,7 +74,7 @@ public class ClientsHandler : IClientsHandler
     }
 
     /// <inheritdoc />
-    public async Task UpdateAsync(string? subscriptionCode, ClientViewModel input)
+    public async System.Threading.Tasks.Task UpdateAsync(string? subscriptionCode, ClientViewModel input)
     {
         if (subscriptionCode is null)
         {

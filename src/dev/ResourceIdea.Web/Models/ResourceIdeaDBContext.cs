@@ -23,16 +23,16 @@ namespace ResourceIdea.Models
 
         public virtual DbSet<Client> Clients { get; set; } = null!;
         public virtual DbSet<Company> Companies { get; set; } = null!;
-        public virtual DbSet<Job> Jobs { get; set; } = null!;
+        public virtual DbSet<EngagementTask> Tasks { get; set; } = null!;
         public virtual DbSet<JobPosition> JobPositions { get; set; } = null!;
-        public virtual DbSet<JobResource> JobResources { get; set; } = null!;
+        public virtual DbSet<TaskAssignment> TaskAssignments { get; set; } = null!;
         public virtual DbSet<JobSkill> JobSkills { get; set; } = null!;
         public virtual DbSet<License> Licenses { get; set; } = null!;
         public virtual DbSet<LicenseType> LicenseTypes { get; set; } = null!;
         public virtual DbSet<LineOfService> LineOfServices { get; set; } = null!;
         public virtual DbSet<LineOfServiceJob> LineOfServiceJobs { get; set; } = null!;
         public virtual DbSet<MigrationHistory> MigrationHistories { get; set; } = null!;
-        public virtual DbSet<Project> Projects { get; set; } = null!;
+        public virtual DbSet<Engagement> Engagements { get; set; } = null!;
         public virtual DbSet<Resource> Resources { get; set; } = null!;
         public virtual DbSet<ResourceSkill> ResourceSkills { get; set; } = null!;
         public virtual DbSet<RoleGrouping> RoleGroupings { get; set; } = null!;
@@ -103,11 +103,11 @@ namespace ResourceIdea.Models
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Job>(entity =>
+            modelBuilder.Entity<EngagementTask>(entity =>
             {
                 entity.ToTable("Job");
 
-                entity.Property(e => e.JobId)
+                entity.Property(e => e.Id)
                     .HasMaxLength(40)
                     .IsUnicode(false);
 
@@ -127,7 +127,7 @@ namespace ResourceIdea.Models
                     .HasMaxLength(40)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ProjectId)
+                entity.Property(e => e.EngagementId)
                     .HasMaxLength(40)
                     .IsUnicode(false);
 
@@ -135,9 +135,9 @@ namespace ResourceIdea.Models
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Project)
+                entity.HasOne(d => d.Engagement)
                     .WithMany(p => p.Jobs)
-                    .HasForeignKey(d => d.ProjectId)
+                    .HasForeignKey(d => d.EngagementId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Job_Project");
             });
@@ -161,7 +161,7 @@ namespace ResourceIdea.Models
                     .HasConstraintName("FK_JobPosition_CompanyCode");
             });
 
-            modelBuilder.Entity<JobResource>(entity =>
+            modelBuilder.Entity<TaskAssignment>(entity =>
             {
                 entity.ToTable("JobResource");
 
@@ -171,7 +171,7 @@ namespace ResourceIdea.Models
 
                 entity.Property(e => e.EndDateTime).HasColumnType("datetime");
 
-                entity.Property(e => e.JobId)
+                entity.Property(e => e.TaskId)
                     .HasMaxLength(40)
                     .IsUnicode(false);
 
@@ -181,9 +181,9 @@ namespace ResourceIdea.Models
 
                 entity.Property(e => e.StartDateTime).HasColumnType("datetime");
 
-                entity.HasOne(d => d.Job)
+                entity.HasOne(d => d.Task)
                     .WithMany(p => p.JobResources)
-                    .HasForeignKey(d => d.JobId)
+                    .HasForeignKey(d => d.TaskId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_JobResource_Job");
 
@@ -330,11 +330,11 @@ namespace ResourceIdea.Models
                 entity.Property(e => e.ProductVersion).HasMaxLength(32);
             });
 
-            modelBuilder.Entity<Project>(entity =>
+            modelBuilder.Entity<Engagement>(entity =>
             {
                 entity.ToTable("Project");
 
-                entity.Property(e => e.ProjectId)
+                entity.Property(e => e.EngagementId)
                     .HasMaxLength(40)
                     .IsUnicode(false);
 

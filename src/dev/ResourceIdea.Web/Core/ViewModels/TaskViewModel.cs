@@ -1,8 +1,8 @@
 ﻿namespace ResourceIdea.Web.Core.ViewModels;
 
 public record TaskViewModel(
-    string? JobId,
-    string? ProjectId,
+    string? TaskId,
+    string? EngagementId,
     string? Description,
     string? Status,
     string? Color,

@@ -1,3 +1,5 @@
+using ResourceIdea.Web.Core.Handlers.Tasks;
+
 using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +31,7 @@ builder.Services.ConfigureApplicationCookie(options => {
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
 builder.Services.AddTransient<IClientsHandler, ClientsHandler>();
 builder.Services.AddTransient<IEngagementHandler, EngagementHandler>();
+builder.Services.AddTransient<ITaskHandler, TaskHandler>();
 
 var app = builder.Build();
 
