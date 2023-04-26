@@ -26,7 +26,7 @@
             <form method="post">
                 <input type="hidden" asp-for="EngagementTask!.ClientId" />
                 <input type="hidden" asp-for="EngagementTask!.EngagementId" />
-                <input type="hidden" asp-for="EngagementTask!.TaskId" />
+                <input type="hidden" asp-for="EngagementTask!.Id" />
                 <input type="hidden" asp-for="EngagementTask!.Engagement" />
                 <input type="hidden" asp-for="EngagementTask!.Client" />
                 <input type="hidden" asp-for="EngagementTask!.Color" />
@@ -52,7 +52,7 @@
                 <a asp-page="/assignments/index"
                     asp-route-client="@Model.EngagementTask.ClientId"
                     asp-route-engagement="@Model.EngagementTask.EngagementId"
-                    asp-route-task="@Model.EngagementTask.TaskId"
+                    asp-route-task="@Model.EngagementTask.Id"
                     class="list-group-item list-group-item-action">Assignments</a>
                 <a href="#" class="list-group-item list-group-item-action">Resources</a>
             </div>

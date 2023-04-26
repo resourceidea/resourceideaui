@@ -24,5 +24,15 @@ namespace ResourceIdea.Web.Pages.Tasks
 
             return Page();
         }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            string subscriptionCode = GetSubscriptionCode();
+            if (EngagementTask is not null)
+            {
+                await taskHandler.UpdateAsync(subscriptionCode, EngagementTask);
+            }
+            return RedirectToPage(new { engagement = EngagementTask?.EngagementId, id = EngagementTask?.Id });
+        }
     }
 }

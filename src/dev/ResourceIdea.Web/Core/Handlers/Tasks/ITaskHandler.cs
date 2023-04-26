@@ -60,7 +60,7 @@ public interface ITaskHandler
     /// <param name="subscriptionCode">Company subscription code.</param>
     /// <param name="input">Engagement update details.</param>
     /// <returns></returns>
-    System.Threading.Tasks.Task UpdateAsync(string subscriptionCode, TaskViewModel input);
+    Task UpdateAsync(string subscriptionCode, TaskViewModel input);
 
     /// <summary>
     /// Add engagement to the store.

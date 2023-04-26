@@ -44,7 +44,7 @@ namespace ResourceIdea.Web.Core.Handlers.Tasks
             {
                 taskView = new TaskViewModel
                 {
-                    TaskId = queryResult.Id,
+                    Id = queryResult.Id,
                     ClientId = queryResult.Engagement.ClientId,
                     Client = queryResult.Engagement.Client.Name,
                     EngagementId = queryResult.EngagementId,
@@ -82,7 +82,7 @@ namespace ResourceIdea.Web.Core.Handlers.Tasks
                                         .Take(pageSize)
                                         .Select(task => new TaskViewModel
                                         {
-                                            TaskId = task.Id,
+                                            Id = task.Id,
                                             Client = task.Engagement.Client.Name,
                                             ClientId = task.Engagement.ClientId,
                                             Color = task.Color,
