@@ -23,7 +23,7 @@ namespace ResourceIdea.Models
 
         public virtual DbSet<Client> Clients { get; set; } = null!;
         public virtual DbSet<Company> Companies { get; set; } = null!;
-        public virtual DbSet<EngagementTask> Tasks { get; set; } = null!;
+        public virtual DbSet<EngagementTask> EngagementTasks { get; set; } = null!;
         public virtual DbSet<JobPosition> JobPositions { get; set; } = null!;
         public virtual DbSet<TaskAssignment> TaskAssignments { get; set; } = null!;
         public virtual DbSet<JobSkill> JobSkills { get; set; } = null!;
@@ -182,7 +182,7 @@ namespace ResourceIdea.Models
                 entity.Property(e => e.StartDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Task)
-                    .WithMany(p => p.JobResources)
+                    .WithMany(p => p.TaskAssignments)
                     .HasForeignKey(d => d.TaskId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_JobResource_Job");

@@ -1,6 +1,6 @@
 namespace ResourceIdea.Pages.Engagements
 {
-    public class ClientDetailsModel : BasePageModel
+    public class EngagementDetailsModel : BasePageModel
     {
         private readonly IEngagementHandler engagementHandler;
 
@@ -22,7 +22,7 @@ namespace ResourceIdea.Pages.Engagements
         [BindProperty]
         public EngagementViewModel? Engagement { get; set; }
 
-        public ClientDetailsModel(IEngagementHandler engagementHandler)
+        public EngagementDetailsModel(IEngagementHandler engagementHandler)
         {
             this.engagementHandler = engagementHandler;
         }
@@ -37,7 +37,7 @@ namespace ResourceIdea.Pages.Engagements
 
         public async Task<IActionResult> OnPost()
         {
-            var subscriptionCode = GetSubscriptionCode();
+            string subscriptionCode = GetSubscriptionCode();
 
             if (Engagement is not null)
             {

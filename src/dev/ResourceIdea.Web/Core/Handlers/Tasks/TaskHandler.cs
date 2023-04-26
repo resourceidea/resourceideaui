@@ -8,36 +8,29 @@ namespace ResourceIdea.Web.Core.Handlers.Tasks
     {
         private readonly ResourceIdeaDBContext dbContext;
 
+        /// <summary>
+        /// Initializes <see cref="TaskHandler"/>
+        /// </summary>
+        /// <param name="dBContext"></param>
         public TaskHandler(ResourceIdeaDBContext dBContext)
         {
             this.dbContext = dBContext;
         }
 
-        /// <summary>
-        /// Add task.
-        /// </summary>
-        /// <param name="subscriptionCode"></param>
-        /// <param name="engagement"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public Task<string> AddAsync(string? subscriptionCode, TaskViewModel engagement)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Get count of tasks in query.
-        /// </summary>
-        /// <param name="subscriptionCode"></param>
-        /// <param name="filters"></param>
-        /// <param name="search"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public Task<int> GetCountAsync(string? subscriptionCode, Dictionary<string, string>? filters, string? search)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public async Task<TaskViewModel?> GetTaskById(string? subscriptionCode, string? taskId)
+        public async Task<TaskViewModel?> GetTaskByIdAsync(string subscriptionCode, string? taskId)
         {
             if (subscriptionCode is null)
             {
@@ -46,26 +39,29 @@ namespace ResourceIdea.Web.Core.Handlers.Tasks
 
             ArgumentNullException.ThrowIfNull(taskId);
             TaskViewModel? taskView = null;
-            var taskQuery = await dbContext.Tasks.SingleOrDefaultAsync(task => task.Engagement.Client.CompanyCode == subscriptionCode
-                                                                       && task.Id == taskId);
-            if (taskQuery is not null)
+            var queryResult = await CommonEngagementTasksQuery(subscriptionCode).FirstOrDefaultAsync(task => task.Id == taskId);
+            if (queryResult is not null)
             {
-                taskView = new TaskViewModel(
-                    TaskId: taskQuery.Id,
-                    EngagementId: taskQuery.EngagementId,
-                    Description: taskQuery.Description,
-                    Status: taskQuery.Status,
-                    Color: taskQuery.Color,
-                    Manager: taskQuery.Manager,
-                    Partner: taskQuery.Partner
-                );
+                taskView = new TaskViewModel
+                {
+                    TaskId = queryResult.Id,
+                    ClientId = queryResult.Engagement.ClientId,
+                    Client = queryResult.Engagement.Client.Name,
+                    EngagementId = queryResult.EngagementId,
+                    Engagement = queryResult.Engagement.Name,
+                    Description = queryResult.Description,
+                    Status = queryResult.Status,
+                    Color = queryResult.Color,
+                    Manager = queryResult.Manager,
+                    Partner = queryResult.Partner
+                };
             }
 
             return taskView;
         }
 
         /// <inheritdoc/>
-        public async Task<IList<TaskViewModel>> GetPaginatedListAsync(
+        public async Task<IList<TaskViewModel>> GetPaginatedListByEngagementAsync(
             string? subscriptionCode,
             string? engagementId,
             int currentPage,
@@ -80,46 +76,76 @@ namespace ResourceIdea.Web.Core.Handlers.Tasks
 
             ArgumentNullException.ThrowIfNull(engagementId);
 
-            var data = await GetDataAsync(subscriptionCode, engagementId, search);
-            return data.OrderBy(d => d.Description)
-                .Skip((currentPage - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+            var engagementTasks = GetEngagementTasks(subscriptionCode, engagementId, search).ApplyCustomFilters(filters);
+            return await engagementTasks.OrderBy(d => d.Description)
+                                        .Skip((currentPage - 1) * pageSize)
+                                        .Take(pageSize)
+                                        .Select(task => new TaskViewModel
+                                        {
+                                            TaskId = task.Id,
+                                            Client = task.Engagement.Client.Name,
+                                            ClientId = task.Engagement.ClientId,
+                                            Color = task.Color,
+                                            Description = task.Description,
+                                            Engagement = task.Engagement.Name,
+                                            EngagementId = task.EngagementId,
+                                            Manager = task.Manager,
+                                            Partner = task.Partner,
+                                            Status = task.Status
+                                        })
+                                        .ToListAsync();
         }
 
         /// <inheritdoc/>
-        public System.Threading.Tasks.Task UpdateAsync(string? subscriptionCode, TaskViewModel input)
+        public async Task UpdateAsync(string subscriptionCode, TaskViewModel input)
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(input.EngagementId, nameof(input.EngagementId));
+            var engagementForUpdate = await dbContext.EngagementTasks
+                                                     .FirstOrDefaultAsync(task => task.Engagement.Client.CompanyCode == subscriptionCode
+                                                                               && task.EngagementId == input.EngagementId
+                                                                               && task.Engagement.ClientId == input.ClientId);
+
+            if (engagementForUpdate is not null)
+            {
+                engagementForUpdate.Color = input.Color ?? string.Empty;
+                engagementForUpdate.Description = input.Description ?? "NA";
+
+                await dbContext.SaveChangesAsync();
+            }
         }
 
-        private async Task<IList<TaskViewModel>> GetDataAsync(string? subscriptionCode, string? engagementId, string? search)
+        private IQueryable<EngagementTask> GetEngagementTasks(string? subscriptionCode, string? engagementId, string? search)
+        {
+
+            ArgumentNullException.ThrowIfNull(engagementId);
+
+            var tasks = CommonEngagementTasksQuery(subscriptionCode).Where(task => task.EngagementId == engagementId);
+
+            if (search != null)
+            {
+                tasks = tasks.Where(d => d.Description.Contains(search));
+            }
+
+            return tasks;
+        }
+
+        private IQueryable<EngagementTask> CommonEngagementTasksQuery(string? subscriptionCode)
         {
             if (subscriptionCode is null)
             {
                 throw new MissingSubscriptionCodeException();
             }
 
-            ArgumentNullException.ThrowIfNull(engagementId);
+            return dbContext.EngagementTasks
+                            .Include(task => task.Engagement)
+                            .Include(task => task.Engagement.Client)
+                            .Where(task => task.Engagement.Client.CompanyCode == subscriptionCode);
+        }
 
-            var data = dbContext.Tasks
-                .Where(task => task.Engagement.Client.CompanyCode == subscriptionCode
-                                && task.EngagementId == engagementId);
-
-            if (search != null)
-            {
-                data = data.Where(d => d.Description.Contains(search));
-            }
-
-            return await data.Select(task => new TaskViewModel(
-                    task.Id ?? string.Empty,
-                    task.EngagementId ?? string.Empty,
-                    task.Description ?? string.Empty,
-                    task.Status ?? string.Empty,
-                    task.Color ?? string.Empty,
-                    task.Manager ?? string.Empty,
-                    task.Partner ?? string.Empty))
-                .ToListAsync();
+        /// <inheritdoc />
+        public Task<IList<TaskViewModel>> GetPaginatedListByClientAsync(string? subscriptionCode, string? clientId, int currentPage, int pageSize = 10, Dictionary<string, string>? filters = null, string? search = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

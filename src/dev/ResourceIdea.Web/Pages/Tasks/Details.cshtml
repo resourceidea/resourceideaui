@@ -1,4 +1,70 @@
-﻿@page
+﻿@page "/tasks/{id}"
 @model ResourceIdea.Web.Pages.Tasks.TaskDetailsModel
 @{
+    var pageTitle = Model.EngagementTask is not null ? $"Task: {Model.EngagementTask.Description}" : "Task not found";
+    ViewData["Title"] = $"{pageTitle}";
+}
+
+<h3>@ViewData["Title"]</h3>
+
+<div>
+    <ul class="pagination">
+        <li class="page-item">
+            <a asp-page="./index"
+               asp-route-engagement="@Model.EngagementTask?.EngagementId"
+               class="page-link">
+                <i class="fa-solid fa-angles-left"></i> Back
+            </a>
+        </li>
+    </ul>
+</div>
+
+@if (Model.EngagementTask is not null)
+{
+    <div class="row">
+        <div class="col-9">
+            <form method="post">
+                <input type="hidden" asp-for="EngagementTask!.ClientId" />
+                <input type="hidden" asp-for="EngagementTask!.EngagementId" />
+                <input type="hidden" asp-for="EngagementTask!.TaskId" />
+                <input type="hidden" asp-for="EngagementTask!.Engagement" />
+                <input type="hidden" asp-for="EngagementTask!.Client" />
+                <input type="hidden" asp-for="EngagementTask!.Color" />
+                <input type="hidden" asp-for="EngagementTask!.Partner" />
+                <input type="hidden" asp-for="EngagementTask!.Manager" />
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="EngagementTask!.Description" class="form-label"></label>
+                            <input type="text" class="form-control" asp-for="EngagementTask!.Description">
+                        </div>
+                        <div class="mb-0 row">
+                            <div class="col-12">
+                                <input type="submit" class="btn btn-danger" value="Save Changes">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-3">
+            <div class="list-group">
+                <a asp-page="/assignments/index"
+                    asp-route-client="@Model.EngagementTask.ClientId"
+                    asp-route-engagement="@Model.EngagementTask.EngagementId"
+                    asp-route-task="@Model.EngagementTask.TaskId"
+                    class="list-group-item list-group-item-action">Assignments</a>
+                <a href="#" class="list-group-item list-group-item-action">Resources</a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-primary d-flex align-items-center" role="alert">
+        <div>
+            Engagement was not found. Go back to the <a asp-page="./index"
+                                                        asp-route-client="@Model.EngagementTask?.EngagementId" class="alert-link">engagements list</a>.
+        </div>
+    </div>
 }

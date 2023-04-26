@@ -1,5 +1,5 @@
 ﻿@page "/engagements/{id}"
-@model ResourceIdea.Pages.Engagements.ClientDetailsModel
+@model ResourceIdea.Pages.Engagements.EngagementDetailsModel
 @{
     ViewData["Title"] = $"Engagement: {Model.Engagement?.Name}";
 }
@@ -44,7 +44,7 @@
         <div class="col-3">
             <div class="list-group">
                 <a asp-page="/tasks/index"
-                   asp-route-engagement="@Model.Engagement.ClientId"
+                   asp-route-engagement="@Model.Engagement.EngagementId"
                    class="list-group-item list-group-item-action">Tasks</a>
                 <a href="#" class="list-group-item list-group-item-action">Assignments</a>
                 <a href="#" class="list-group-item list-group-item-action">Resources</a>

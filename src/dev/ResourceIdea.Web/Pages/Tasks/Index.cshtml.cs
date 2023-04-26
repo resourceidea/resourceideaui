@@ -55,7 +55,7 @@ namespace ResourceIdea.Web.Pages.Tasks
             }
 
             SubscriptionCode = subscriptionCode;
-            Tasks = await taskHandler.GetPaginatedListAsync(SubscriptionCode, Engagement, CurrentPage, pageSize:10, search:search);
+            Tasks = await taskHandler.GetPaginatedListByEngagementAsync(SubscriptionCode, Engagement, CurrentPage, pageSize:10, search:search);
             TaskEngagement = await engagementHandler.GetEngagementByIdAsync(SubscriptionCode, Engagement);
 
             return Page();

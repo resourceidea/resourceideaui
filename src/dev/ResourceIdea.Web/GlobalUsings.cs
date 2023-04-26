@@ -13,11 +13,13 @@ global using Microsoft.EntityFrameworkCore;
 
 global using ResourceIdea.Common.Constants;
 global using ResourceIdea.Common.Exceptions;
+global using ResourceIdea.Common.Extensions;
 global using ResourceIdea.Middleware;
 global using ResourceIdea.Models;
 global using ResourceIdea.Web.Constants;
 global using ResourceIdea.Web.Core.Handlers.Clients;
 global using ResourceIdea.Web.Core.Handlers.Engagements;
+global using ResourceIdea.Web.Core.Handlers.Tasks;
 global using ResourceIdea.Web.Core.ViewModels;
 global using ResourceIdea.Web.Core.ViewModels.Clients;
 global using ResourceIdea.Web.Exceptions;

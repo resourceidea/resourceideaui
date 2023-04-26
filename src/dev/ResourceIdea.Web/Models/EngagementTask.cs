@@ -7,7 +7,7 @@ namespace ResourceIdea.Models
     {
         public EngagementTask()
         {
-            JobResources = new HashSet<TaskAssignment>();
+            TaskAssignments = new HashSet<TaskAssignment>();
             JobSkills = new HashSet<JobSkill>();
             LineOfServiceJobs = new HashSet<LineOfServiceJob>();
         }
@@ -21,7 +21,7 @@ namespace ResourceIdea.Models
         public string? Partner { get; set; }
 
         public virtual Engagement Engagement { get; set; } = null!;
-        public virtual ICollection<TaskAssignment> JobResources { get; set; }
+        public virtual ICollection<TaskAssignment> TaskAssignments { get; set; }
         public virtual ICollection<JobSkill> JobSkills { get; set; }
         public virtual ICollection<LineOfServiceJob> LineOfServiceJobs { get; set; }
     }

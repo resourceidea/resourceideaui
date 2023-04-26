@@ -3,17 +3,35 @@
 public interface ITaskHandler
 {
     /// <summary>
-    /// Get paginated list of Tasks.
+    /// Get paginated list of Tasks by engagement.
     /// </summary>
     /// <param name="subscriptionCode">Company subscription code.</param>
+    /// <param name="engagementId">Engagement ID</param>
     /// <param name="currentPage">Current page</param>
     /// <param name="pageSize">Page size</param>
     /// <param name="filters">Filters for the list</param>
     /// <param name="search">Search phrase</param>
-    /// <returns>List of engagements</returns>
-    Task<IList<TaskViewModel>> GetPaginatedListAsync(
+    /// <returns>List of tasks.</returns>
+    Task<IList<TaskViewModel>> GetPaginatedListByEngagementAsync(
         string? subscriptionCode,
         string? engagementId,
+        int currentPage,
+        int pageSize = 10,
+        Dictionary<string, string>? filters = null,
+        string? search = null);
+
+    /// <summary>
+    /// Get paginated list of Tasks by client.
+    /// </summary>
+    /// <param name="subscriptionCode">Company subscription code.</param>
+    /// <param name="clientId">Client ID</param>
+    /// <param name="currentPage">Current page</param>
+    /// <param name="filters">Filters for the list.</param>
+    /// <param name="search">Search phrase.</param>
+    /// <returns>List of tasks</returns>
+    Task<IList<TaskViewModel>> GetPaginatedListByClientAsync(
+        string? subscriptionCode,
+        string? clientId,
         int currentPage,
         int pageSize = 10,
         Dictionary<string, string>? filters = null,
@@ -34,7 +52,7 @@ public interface ITaskHandler
     /// <param name="subscriptionCode">Company subscription code.</param>
     /// <param name="taskId">Task Id</param>
     /// <returns>Task</returns>
-    Task<TaskViewModel?> GetTaskById(string? subscriptionCode, string? taskId);
+    Task<TaskViewModel?> GetTaskByIdAsync(string subscriptionCode, string? taskId);
 
     /// <summary>
     /// Update engagement details.
@@ -42,7 +60,7 @@ public interface ITaskHandler
     /// <param name="subscriptionCode">Company subscription code.</param>
     /// <param name="input">Engagement update details.</param>
     /// <returns></returns>
-    System.Threading.Tasks.Task UpdateAsync(string? subscriptionCode, TaskViewModel input);
+    System.Threading.Tasks.Task UpdateAsync(string subscriptionCode, TaskViewModel input);
 
     /// <summary>
     /// Add engagement to the store.

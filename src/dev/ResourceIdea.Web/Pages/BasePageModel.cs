@@ -25,5 +25,9 @@ public class BasePageModel : PageModel
         return (isValidRequest, redirectLocation, subscriptionCode);
     }
 
-    protected string? GetSubscriptionCode() => Request.Cookies["CompanyCode"];
+    protected string GetSubscriptionCode()
+    {
+        var subscriptionCode = Request.Cookies["CompanyCode"];
+        return string.IsNullOrEmpty(subscriptionCode) ? throw new MissingSubscriptionCodeException() : subscriptionCode.ToString();
+    }
 }
