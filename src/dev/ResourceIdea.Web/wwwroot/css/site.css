@@ -1,18 +1,76 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
+
+.planner {
+    overflow: auto;
+    height: 100px;
+    width: 200px;
+}
+
+    .planner table {
+        position: relative;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+        .planner table th,
+        .planner table td {
+            max-width: 70px;
+            min-width: 70px;
+            padding: 5px;
+        }
+
+        .planner table tbody {
+            height: 90px;
+        }
+
+        .planner table th {
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background-color: #b0b0b0;
+        }
+
+            .planner table th:nth-child(1) {
+                left: 0;
+                z-index: 3;
+            }
+
+        .planner table td {
+            text-align: center;
+            white-space: pre;
+            min-height: 10px;
+        }
+
+        .planner table tbody tr td:nth-child(1) {
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            min-width: 300px;
+            background-color: #f3f3f3;
+        }
+
+a.table-link {
+    text-decoration: none;
+}
+
+    a.table-link:hover {
+        text-decoration: dotted;
+    }

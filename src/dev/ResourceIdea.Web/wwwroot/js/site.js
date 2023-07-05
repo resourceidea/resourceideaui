@@ -1,4 +1,17 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿// Set the initial size of the planner.
+resizeWindow();
 
-// Write your JavaScript code.
+// Add event listener to resize the planner when the window is resized.
+window.addEventListener('resize', resizeWindow);
+
+// Resize the planner.
+function resizeWindow() {
+    const plannerElements = document.querySelectorAll('.planner');
+    const vw = Math.max(document.documentElement.clientWidth - 50 || 0, window.innerWidth - 50 || 0);
+    const vh = Math.max(document.documentElement.clientHeight - 350 || 0, window.innerHeight - 350 || 0);
+
+    plannerElements.forEach(planner => {
+        planner.style.width = `${vw}px`;
+        planner.style.height = `${vh}px`;
+    });
+}
