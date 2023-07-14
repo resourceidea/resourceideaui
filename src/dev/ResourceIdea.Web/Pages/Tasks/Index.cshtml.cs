@@ -8,8 +8,8 @@ namespace ResourceIdea.Web.Pages.Tasks
 {
     public class TasksIndexModel : BasePageModel
     {
-        private readonly ITaskHandler taskHandler;
-        private readonly IEngagementHandler engagementHandler;
+        private readonly ITaskService taskHandler;
+        private readonly IEngagementService engagementHandler;
 
         [FromQuery(Name = "engagement")]
         public string? Engagement { get; set; }
@@ -38,7 +38,7 @@ namespace ResourceIdea.Web.Pages.Tasks
 
         public bool ShowLast => CurrentPage != TotalPages;
 
-        public TasksIndexModel(IEngagementHandler engagementHandler, ITaskHandler taskHandler)
+        public TasksIndexModel(IEngagementService engagementHandler, ITaskService taskHandler)
         {
             this.engagementHandler = engagementHandler;
             this.taskHandler = taskHandler;

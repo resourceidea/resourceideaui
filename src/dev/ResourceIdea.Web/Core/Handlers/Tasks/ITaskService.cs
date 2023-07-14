@@ -1,12 +1,12 @@
-﻿namespace ResourceIdea.Web.Core.Handlers.Tasks;
+﻿namespace ResourceIdea.Web.Core.Services.Tasks;
 
-public interface ITaskHandler
+public interface ITaskService
 {
     /// <summary>
     /// Get paginated list of Tasks by engagement.
     /// </summary>
     /// <param name="subscriptionCode">Company subscription code.</param>
-    /// <param name="engagementId">Engagement ID</param>
+    /// <param name="engagementId">EngagementId ID</param>
     /// <param name="currentPage">Current page</param>
     /// <param name="pageSize">Page size</param>
     /// <param name="filters">Filters for the list</param>
@@ -58,7 +58,7 @@ public interface ITaskHandler
     /// Update engagement details.
     /// </summary>
     /// <param name="subscriptionCode">Company subscription code.</param>
-    /// <param name="input">Engagement update details.</param>
+    /// <param name="input">EngagementId update details.</param>
     /// <returns></returns>
     Task UpdateAsync(string subscriptionCode, TaskViewModel input);
 
@@ -66,7 +66,7 @@ public interface ITaskHandler
     /// Add engagement to the store.
     /// </summary>
     /// <param name="subscriptionCode">Subscription code.</param>
-    /// <param name="engagement">Engagement to be stored.</param>
-    /// <returns>Engagement ID.</returns>
+    /// <param name="engagement">EngagementId to be stored.</param>
+    /// <returns>EngagementId ID.</returns>
     Task<string> AddAsync(string? subscriptionCode, TaskViewModel engagement);
 }

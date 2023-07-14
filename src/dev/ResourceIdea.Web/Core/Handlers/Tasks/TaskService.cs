@@ -4,23 +4,41 @@ using ResourceIdea.Models;
 
 namespace ResourceIdea.Web.Core.Handlers.Tasks
 {
-    public class TaskHandler : ITaskHandler
+    public class TaskService : ITaskService
     {
         private readonly ResourceIdeaDBContext dbContext;
 
         /// <summary>
-        /// Initializes <see cref="TaskHandler"/>
+        /// Initializes <see cref="TaskService"/>
         /// </summary>
         /// <param name="dBContext"></param>
-        public TaskHandler(ResourceIdeaDBContext dBContext)
+        public TaskService(ResourceIdeaDBContext dBContext)
         {
             this.dbContext = dBContext;
         }
 
         /// <inheritdoc />
-        public Task<string> AddAsync(string? subscriptionCode, TaskViewModel engagement)
+        public async Task<string> AddAsync(string? subscriptionCode, TaskViewModel engagement)
         {
-            throw new NotImplementedException();
+            if (subscriptionCode is null)
+            {
+                throw new MissingSubscriptionCodeException();
+            }
+
+            ArgumentNullException.ThrowIfNull(engagement);
+
+            var result = await dbContext.EngagementTasks.AddAsync(
+                new EngagementTask
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Description = engagement.Description ?? "NA",
+                    EngagementId = engagement.EngagementId ?? Guid.NewGuid().ToString(),
+                    Color = engagement.Color ?? "NA",
+                    Status = engagement.Status ?? "NA",
+                });
+            await dbContext.SaveChangesAsync();
+
+            return result.Entity.EngagementId;
         }
 
         /// <inheritdoc />

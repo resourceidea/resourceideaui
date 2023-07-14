@@ -1,10 +1,10 @@
 ﻿namespace ResourceIdea.Web.Core.Handlers.Engagements;
 
-public class EngagementHandler : IEngagementHandler
+public class EngagementService : IEngagementService
 {
     private readonly ResourceIdeaDBContext dbContext;
 
-    public EngagementHandler(ResourceIdeaDBContext dbContext)
+    public EngagementService(ResourceIdeaDBContext dbContext)
     {
         this.dbContext = dbContext;
     }
@@ -13,8 +13,8 @@ public class EngagementHandler : IEngagementHandler
     public async Task<IList<EngagementViewModel>> GetPaginatedResultAsync(
         string? subscriptionCode,
         string? clientId,
-        int currentPage, 
-        int pageSize = 10, 
+        int currentPage,
+        int pageSize = 10,
         string? search = null)
     {
         if (subscriptionCode is null)
@@ -55,16 +55,20 @@ public class EngagementHandler : IEngagementHandler
 
         ArgumentNullException.ThrowIfNull(engagementId);
         EngagementViewModel? engagementView = null;
-        var engagementQuery = await dbContext.Engagements.SingleOrDefaultAsync(engagement => engagement.EngagementId == engagementId
+        var engagementQuery = await dbContext.Engagements
+                                             .Include(engagement => engagement.Client)
+                                             .FirstOrDefaultAsync(engagement => engagement.EngagementId == engagementId
                                                                                           && engagement.Client.CompanyCode == subscriptionCode);
         if (engagementQuery is not null)
         {
-            engagementView = new EngagementViewModel(
-                EngagementId: engagementQuery.EngagementId,
-                Name: engagementQuery.Name,
-                ClientId: engagementQuery.ClientId,
-                Color: engagementQuery.Color
-            );
+            engagementView = new EngagementViewModel
+            {
+                EngagementId = engagementQuery.EngagementId,
+                Name = engagementQuery.Name,
+                ClientId = engagementQuery.ClientId,
+                Color = engagementQuery.Color,
+                Client = engagementQuery.Client.Name
+            };
         }
 
         return engagementView;
@@ -103,20 +107,22 @@ public class EngagementHandler : IEngagementHandler
         ArgumentNullException.ThrowIfNull(clientId);
 
         var data = dbContext.Engagements
-            .Where(p => p.Client.CompanyCode == subscriptionCode
-                            && p.ClientId == clientId);
+            .Where(p => p.Client.CompanyCode == subscriptionCode &&
+                        p.ClientId == clientId);
 
         if (search != null)
         {
             data = data.Where(d => d.Name.Contains(search));
         }
 
-        return await data.Select(p => new EngagementViewModel(
-                p.EngagementId,
-                p.Name,
-                p.ClientId,
-                p.Color))
-            .ToListAsync();
+        return await data.Select(engagement => new EngagementViewModel
+        {
+            EngagementId = engagement.EngagementId,
+            Name = engagement.Name,
+            ClientId = engagement.ClientId,
+            Color = engagement.Color,
+            Client = engagement.Client.Name
+        }).ToListAsync();
     }
 
     /// <inheritdoc/>
@@ -134,7 +140,7 @@ public class EngagementHandler : IEngagementHandler
             {
                 EngagementId = engagement.EngagementId ?? Guid.NewGuid().ToString(),
                 Name = engagement.Name ?? "NA",
-                ClientId = engagement.ClientId ?? "NA"
+                ClientId = engagement.ClientId ?? "NA",
             });
         await dbContext.SaveChangesAsync();
 

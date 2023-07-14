@@ -8,7 +8,7 @@ window.addEventListener('resize', resizeWindow);
 function resizeWindow() {
     const plannerElements = document.querySelectorAll('.planner');
     const vw = Math.max(document.documentElement.clientWidth - 50 || 0, window.innerWidth - 50 || 0);
-    const vh = Math.max(document.documentElement.clientHeight - 350 || 0, window.innerHeight - 350 || 0);
+    const vh = Math.max(document.documentElement.clientHeight - 280 || 0, window.innerHeight - 280 || 0);
 
     plannerElements.forEach(planner => {
         planner.style.width = `${vw}px`;

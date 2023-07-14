@@ -1,4 +1,52 @@
 ﻿@page
 @model ResourceIdea.Web.Pages.Tasks.AddTaskModel
 @{
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Add Engagement Task";
+}
+
+<h3>@ViewData["Title"]</h3>
+<hr />
+
+<div class="btn-toolbar pb-3" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group me-2" role="group" aria-label="First group">
+        <a href="#" class="btn btn-outline-dark btn-sm"><i class="fa fa-angle-double-left"></i> Back</a>
+    </div>
+</div>
+
+@if (Model.EngagementTask is not null)
+{
+    <div class="card bd-light">
+        <div class="card-body">
+            <form method="post">
+                <input type="hidden" asp-for="EngagementTask!.EngagementId" />
+
+                <div class="mb-3">
+                    <label asp-for="EngagementTask!.Client" class="form-label"></label>
+                    <input type="text" class="form-control" asp-for="EngagementTask!.Client" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="EngagementTask!.Engagement" class="form-label"></label>
+                    <input type="text" class="form-control" asp-for="EngagementTask!.Engagement" disabled>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="EngagementTask!.Description" class="form-label"></label>
+                    <input type="text" class="form-control" asp-for="EngagementTask!.Description" placeholder="Task description">
+                </div>
+                
+                <input type="submit" class="btn btn-danger btn-sm" value="Add task" />
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-primary d-flex align-items-center" role="alert">
+        <div>
+            Engagement was not found. Go back to the <a asp-page="./index"
+                                                        asp-route-client="@Model.EngagementTask?.EngagementId" class="alert-link">engagements list</a>.
+        </div>
+    </div>
 }

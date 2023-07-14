@@ -1,6 +1,6 @@
-﻿namespace ResourceIdea.Web.Core.Handlers.Engagements;
+﻿namespace ResourceIdea.Web.Core.Services.Engagements;
 
-public interface IEngagementHandler
+public interface IEngagementService
 {
     /// <summary>
     /// Get paginated list of engagements.
@@ -31,16 +31,16 @@ public interface IEngagementHandler
     /// Get an engagement by Id.
     /// </summary>
     /// <param name="subscriptionCode">Company subscription code.</param>
-    /// <param name="clientId">Engagement client Id</param>
-    /// <param name="engagementId">Engagement Id</param>
-    /// <returns>Engagement</returns>
+    /// <param name="clientId">EngagementId client Id</param>
+    /// <param name="engagementId">EngagementId Id</param>
+    /// <returns>EngagementId</returns>
     Task<EngagementViewModel?> GetEngagementByIdAsync(string? subscriptionCode, string? engagementId);
 
     /// <summary>
     /// Update engagement details.
     /// </summary>
     /// <param name="subscriptionCode">Company subscription code.</param>
-    /// <param name="input">Engagement update details.</param>
+    /// <param name="input">EngagementId update details.</param>
     /// <returns></returns>
     System.Threading.Tasks.Task UpdateAsync(string? subscriptionCode, EngagementViewModel input);
 
@@ -48,7 +48,7 @@ public interface IEngagementHandler
     /// Add engagement to the store.
     /// </summary>
     /// <param name="subscriptionCode">Subscription code.</param>
-    /// <param name="engagement">Engagement to be stored.</param>
-    /// <returns>Engagement ID.</returns>
+    /// <param name="engagement">EngagementId to be stored.</param>
+    /// <returns>EngagementId ID.</returns>
     Task<string> AddAsync(string? subscriptionCode, EngagementViewModel engagement);
 }
