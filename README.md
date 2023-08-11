@@ -1,2 +1,0 @@
-# ResourceIdea
-Resource Planner
