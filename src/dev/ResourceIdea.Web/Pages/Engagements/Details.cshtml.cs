@@ -2,10 +2,10 @@ namespace ResourceIdea.Pages.Engagements
 {
     public class EngagementDetailsModel : BasePageModel
     {
-        private readonly IEngagementHandler engagementHandler;
+        private readonly IEngagementService engagementHandler;
 
         /// <summary>
-        /// Engagement ID from the route.
+        /// EngagementId ID from the route.
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public string? Id { get; set; }
@@ -17,12 +17,12 @@ namespace ResourceIdea.Pages.Engagements
         public string? Client { get; set; }
 
         /// <summary>
-        /// Engagement to view.
+        /// EngagementId to view.
         /// </summary>
         [BindProperty]
         public EngagementViewModel? Engagement { get; set; }
 
-        public EngagementDetailsModel(IEngagementHandler engagementHandler)
+        public EngagementDetailsModel(IEngagementService engagementHandler)
         {
             this.engagementHandler = engagementHandler;
         }

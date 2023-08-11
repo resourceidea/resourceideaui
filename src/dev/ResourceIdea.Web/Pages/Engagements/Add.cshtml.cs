@@ -2,7 +2,7 @@ namespace ResourceIdea.Pages.Engagements
 {
     public class AddEngagementModel : BasePageModel
     {
-        private readonly IEngagementHandler engagementHandler;
+        private readonly IEngagementService engagementHandler;
 
         [FromQuery(Name = "client")]
         public string? Client { get; set; }
@@ -23,7 +23,7 @@ namespace ResourceIdea.Pages.Engagements
         /// Instantiates <see cref="AddEngagementModel"/>
         /// </summary>
         /// <param name="engagementHandler"></param>
-        public AddEngagementModel(IEngagementHandler engagementHandler)
+        public AddEngagementModel(IEngagementService engagementHandler)
         {
             this.engagementHandler = engagementHandler;
         }
@@ -35,13 +35,13 @@ namespace ResourceIdea.Pages.Engagements
         public async Task<ActionResult> OnPost()
         {
             var subscriptionCode = GetSubscriptionCode();
-            var engagementId = await engagementHandler.AddAsync(subscriptionCode, new EngagementViewModel
-            (
-                EngagementId: Guid.NewGuid().ToString(),
-                Name: Name,
-                ClientId: ClientId,
-                Color: null  // We are not setting the color
-            ));
+            await engagementHandler.AddAsync(subscriptionCode, new EngagementViewModel
+            {
+                EngagementId= Guid.NewGuid().ToString(),
+                Name= Name,
+                ClientId= ClientId,
+                Color= null  // We are not setting the color
+            });
 
             return RedirectToPage("index", new { client=ClientId });
         }

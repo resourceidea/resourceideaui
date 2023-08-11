@@ -10,7 +10,7 @@
         /// </summary>
         public MissingSubscriptionCodeException() : base(
             HttpStatusCode.Forbidden,
-            ErrorCode.SubsscriptionCodeMissing,
+            ErrorCode.SubscriptionCodeMissing,
             StringConstants.MISSING_SUBSCRIPTION_CODE_ERROR){}
     }
 }

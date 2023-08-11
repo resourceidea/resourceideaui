@@ -69,14 +69,14 @@
     <tbody>
         @if (Model.Engagements is not null && Model.Engagements?.Count > 0)
         {
-            foreach (var (projectId, name, clientId, color) in Model.Engagements)
+            foreach (var engagement in Model.Engagements)
             {
                 <tr>
-                    <td class="col-11">@Html.DisplayFor(modelItem => name)</td>
+                    <td class="col-11">@Html.DisplayFor(modelItem => engagement.Name)</td>
                     <td class="col-1">
                         <a asp-page="./details"
-                           asp-route-id="@projectId"
-                           asp-route-client="@clientId"
+                           asp-route-id="@engagement.EngagementId"
+                           asp-route-client="@engagement.ClientId"
                            class="btn btn-outline-primary btn-sm">
                             Details
                         </a>

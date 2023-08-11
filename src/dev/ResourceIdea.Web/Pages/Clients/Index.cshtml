@@ -6,50 +6,54 @@
     ViewData["Title"] = "Clients List";
 }
 
+<h3>@ViewData["Title"]</h3>
+<hr />
+
 <div class="card">
     <div class="card-body bg-light">
-        <h3>@ViewData["Title"]</h3>
         <form method="post">
-            <div class="input-group mb-3">
+            <div class="input-group">
                 <input type="text" class="form-control form-control-sm" value="@Model.Search" name="search" placeholder="Enter search keywords...">
                 <button asp-page-handler="search" class="btn btn-primary btn-sm">Search</button>
             </div>
         </form>
-        <div>
-            <ul class="pagination">
-                <li class="page-item">
-                    <a asp-page="./add" class="page-link">
-                        <i class="fas fa-plus"></i> Add Client
-                    </a>
-                </li>
-                <li class="page-item @(!Model.ShowFirst ? "disabled" : "")">
-                    <a href="~/clients?page=1" class="page-link">
-                        <i class="fas fa-fast-backward"></i>
-                    </a>
-                </li>
-
-                <li class="page-item @(!Model.ShowPrevious ? "disabled" : "")">
-                    <a href="~/clients?page=@(Model.CurrentPage - 1)" class="page-link">
-                        <i class="fas fa-step-backward"></i>
-                    </a>
-                </li>
-
-                <li class="page-item  @(!Model.ShowNext ? "disabled" : "")">
-                    <a href="~/clients?page=@(Model.CurrentPage + 1)" class="page-link">
-                        <i class="fas fa-step-forward"></i>
-                    </a>
-                </li>
-
-                <li class="page-item  @(!Model.ShowLast ? "disabled" : "")">
-                    <a href="~/clients?page=@(Model.TotalPages)" class="page-link">
-                        <i class="fas fa-fast-forward"></i>
-                    </a>
-                </li>
-            </ul>
-        </div>
     </div>
 </div>
+
 <br />
+
+<div>
+    <ul class="pagination">
+        <li class="page-item">
+            <a asp-page="./add" class="page-link">
+                <i class="fas fa-plus"></i> Add Client
+            </a>
+        </li>
+        <li class="page-item @(!Model.ShowFirst ? "disabled" : "")">
+            <a href="~/clients?page=1" class="page-link">
+                <i class="fas fa-fast-backward"></i>
+            </a>
+        </li>
+
+        <li class="page-item @(!Model.ShowPrevious ? "disabled" : "")">
+            <a href="~/clients?page=@(Model.CurrentPage - 1)" class="page-link">
+                <i class="fas fa-step-backward"></i>
+            </a>
+        </li>
+
+        <li class="page-item  @(!Model.ShowNext ? "disabled" : "")">
+            <a href="~/clients?page=@(Model.CurrentPage + 1)" class="page-link">
+                <i class="fas fa-step-forward"></i>
+            </a>
+        </li>
+
+        <li class="page-item  @(!Model.ShowLast ? "disabled" : "")">
+            <a href="~/clients?page=@(Model.TotalPages)" class="page-link">
+                <i class="fas fa-fast-forward"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
 <table class="table table-bordered table-striped table-sm">
     <thead class="bg-dark text-white">

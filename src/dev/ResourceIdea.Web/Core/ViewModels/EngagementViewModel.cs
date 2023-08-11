@@ -1,7 +1,10 @@
 ﻿namespace ResourceIdea.Web.Core.ViewModels;
 
-public record EngagementViewModel(
-    string? EngagementId,
-    string? Name,
-    string? ClientId,
-    string? Color);
+public record EngagementViewModel
+{
+    public string? EngagementId { get; set; }
+    public string? Name { get; set; }
+    public string? ClientId { get; set; }
+    public string? Color { get; set; }
+    public string? Client { get; set; }
+}

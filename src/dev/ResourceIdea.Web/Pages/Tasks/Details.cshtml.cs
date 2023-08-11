@@ -4,9 +4,9 @@ namespace ResourceIdea.Web.Pages.Tasks
 {
     public class TaskDetailsModel : BasePageModel
     {
-        private readonly ITaskHandler taskHandler;
+        private readonly ITaskService taskHandler;
 
-        public TaskDetailsModel(ITaskHandler taskHandler)
+        public TaskDetailsModel(ITaskService taskHandler)
         {
             this.taskHandler = taskHandler;
         }

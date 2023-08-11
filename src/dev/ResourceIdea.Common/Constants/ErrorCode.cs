@@ -14,6 +14,14 @@ namespace ResourceIdea.Common.Constants
         /// <summary>
         /// Missing subscription code.
         /// </summary>
-        SubsscriptionCodeMissing,
+        SubscriptionCodeMissing,
+        /// <summary>
+        /// Bad request.
+        /// </summary>
+        BadRequest,
+        /// <summary>
+        /// Item requested was not found.
+        /// </summary>
+        NotFound,
     }
 }

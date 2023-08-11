@@ -2,7 +2,7 @@ namespace ResourceIdea.Pages.Engagements
 {
     public class IndexModel : BasePageModel
     {
-        private readonly IEngagementHandler _engagementHandler;
+        private readonly IEngagementService _engagementHandler;
         private readonly IClientsHandler _clientsHandler;
 
         [FromQuery(Name = "client")]
@@ -32,7 +32,7 @@ namespace ResourceIdea.Pages.Engagements
 
         public bool ShowLast => CurrentPage != TotalPages;
 
-        public IndexModel(IEngagementHandler engagementHandler, IClientsHandler clientsHandler)
+        public IndexModel(IEngagementService engagementHandler, IClientsHandler clientsHandler)
         {
             _engagementHandler = engagementHandler;
             _clientsHandler = clientsHandler;
