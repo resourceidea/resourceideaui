@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EastSeat.ResourceIdea.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ad0eecd562c6c6bcba5de4f96086541e75484b7a")]
 [assembly: System.Reflection.AssemblyProductAttribute("EastSeat.ResourceIdea.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EastSeat.ResourceIdea.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

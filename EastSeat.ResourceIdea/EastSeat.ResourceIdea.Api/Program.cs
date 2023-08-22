@@ -1,6 +1,13 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using EastSeat.ResourceIdea.Api;
+using EastSeat.ResourceIdea.Api.AppRoutes;
 
-app.MapGet("/", () => "Hello World!");
+var builder = WebApplication.CreateBuilder(args);
+
+var app = builder
+    .ConfigureServices()
+    .ConfigurePipeline()
+    .MapRoutes();
+
+await app.MigrateDatabaseAsync();
 
 app.Run();
