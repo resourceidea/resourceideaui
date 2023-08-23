@@ -408,8 +408,3 @@ ASALocalRun/
 .env
 .vscode/
 .vs/
-/.vs/*
-*.vs/
-/.vs/resourceideaui/v17/.wsuo
-/.vs/resourceideaui/v17/fileList.bin
-/.vs/slnx.sqlite
