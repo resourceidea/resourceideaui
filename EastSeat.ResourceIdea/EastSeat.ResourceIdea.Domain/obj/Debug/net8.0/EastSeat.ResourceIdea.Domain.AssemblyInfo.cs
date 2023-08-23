@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EastSeat.ResourceIdea.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d6f20a56c4831e054982d3d487c6d9b25ac091c6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("EastSeat.ResourceIdea.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EastSeat.ResourceIdea.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
