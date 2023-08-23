@@ -24,6 +24,7 @@ public class GetAssetsListQueryHandler : IRequestHandler<GetAssetsListQuery, Lis
     public async Task<List<AssetListVM>> Handle(GetAssetsListQuery request, CancellationToken cancellationToken)
     {
         var assets = await assetRepository.ListAllAsync();
+
         return mapper.Map<IEnumerable<AssetListVM>>(assets.OrderBy(a => a.Description)).ToList();
     }
 }

@@ -17,13 +17,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{DE226CA4-BBD7-4BDD-B5B4-CD63E73188F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Domain", "EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj", "{2CD863D6-02FA-471A-B442-B3D907B1ABA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Domain", "EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj", "{2CD863D6-02FA-471A-B442-B3D907B1ABA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Application", "EastSeat.ResourceIdea.Application\EastSeat.ResourceIdea.Application.csproj", "{CCA69423-7104-4EBE-BD14-128AEF402712}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Application", "EastSeat.ResourceIdea.Application\EastSeat.ResourceIdea.Application.csproj", "{CCA69423-7104-4EBE-BD14-128AEF402712}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Persistence", "EastSeat.ResourceIdea.Persistence\EastSeat.ResourceIdea.Persistence.csproj", "{5528F65C-9FD4-4058-AAD9-C4104D5FD727}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Persistence", "EastSeat.ResourceIdea.Persistence\EastSeat.ResourceIdea.Persistence.csproj", "{5528F65C-9FD4-4058-AAD9-C4104D5FD727}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Api", "EastSeat.ResourceIdea.Api\EastSeat.ResourceIdea.Api.csproj", "{7B063723-2FCF-4291-9946-FF22F103282B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Api", "EastSeat.ResourceIdea.Api\EastSeat.ResourceIdea.Api.csproj", "{7B063723-2FCF-4291-9946-FF22F103282B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "endpoints", "endpoints", "{1C9C639A-C73E-47A4-AFF7-1B3CFCAC7952}"
+	ProjectSection(SolutionItems) = preProject
+		assets.http = assets.http
+		subscriptions.http = subscriptions.http
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Identity", "EastSeat.ResourceIdea.Identity\EastSeat.ResourceIdea.Identity.csproj", "{8C353821-81FC-48FB-AF15-9DCDE5065763}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +55,10 @@ Global
 		{7B063723-2FCF-4291-9946-FF22F103282B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B063723-2FCF-4291-9946-FF22F103282B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B063723-2FCF-4291-9946-FF22F103282B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C353821-81FC-48FB-AF15-9DCDE5065763}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C353821-81FC-48FB-AF15-9DCDE5065763}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C353821-81FC-48FB-AF15-9DCDE5065763}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C353821-81FC-48FB-AF15-9DCDE5065763}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +72,8 @@ Global
 		{CCA69423-7104-4EBE-BD14-128AEF402712} = {830812C9-8057-435F-8531-6F8681B91D16}
 		{5528F65C-9FD4-4058-AAD9-C4104D5FD727} = {4008D28A-9A52-42BA-83C8-CF4F79FAC5E7}
 		{7B063723-2FCF-4291-9946-FF22F103282B} = {72408E39-F46D-49CA-8EFE-C1BA75479C3C}
+		{1C9C639A-C73E-47A4-AFF7-1B3CFCAC7952} = {47B836D3-2778-4BBB-B412-EFE8B18E8110}
+		{8C353821-81FC-48FB-AF15-9DCDE5065763} = {4008D28A-9A52-42BA-83C8-CF4F79FAC5E7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90EF3831-6802-4258-ADB8-74458BBCD246}

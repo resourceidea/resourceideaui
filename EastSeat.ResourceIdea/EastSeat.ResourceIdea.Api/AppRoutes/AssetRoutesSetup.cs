@@ -1,4 +1,6 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Asset.Queries.GetAssetsList;
+﻿using EastSeat.ResourceIdea.Application.Features.Asset.Commands;
+using EastSeat.ResourceIdea.Application.Features.Asset.Queries.GetAssetsList;
+using EastSeat.ResourceIdea.Domain.Constants;
 
 using MediatR;
 
@@ -11,11 +13,24 @@ public static class AssetRoutesSetup
 {
     public static WebApplication MapAssetRoutes(this WebApplication app)
     {
-        app.MapGet("/assets", async (IMediator mediator) => {
-            return await mediator.Send(new GetAssetsListQuery());
-        })
-        .Produces(StatusCodes.Status200OK);
+        app.MapGet(StringConstants.AssetsApiRoute, GetAssetsAsync)
+           .Produces(StatusCodes.Status200OK);
+
+        app.MapPost(StringConstants.AssetsApiRoute, PostAssetAsync)
+           .Produces(StatusCodes.Status201Created);
 
         return app;
+    }
+
+    private static async Task<List<AssetListVM>> GetAssetsAsync(IMediator mediator)
+    {
+        return await mediator.Send(new GetAssetsListQuery());
+    }
+
+    private static async Task<CreateAssetDTO> PostAssetAsync(IMediator mediator, CreateAssetCommand createAssetCommand)
+    {
+        var response = await mediator.Send(createAssetCommand);
+
+        return response.Asset;
     }
 }

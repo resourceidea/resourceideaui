@@ -1,0 +1,16 @@
+@hostname=localhost
+@port=7046
+@host={{hostname}}:{{port}}
+
+### Create a new subscription
+POST https://{{host}}/api/subscriptions
+Content-Type: application/json
+Accept-Language: en-US,en;q=0.5
+
+{
+    "subscriberName": "Subscriber 1"
+}
+
+### Get all subscriptions
+GET https://{{host}}/api/subscriptions
+

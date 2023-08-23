@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EastSeat.ResourceIdea.Persistence")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ad0eecd562c6c6bcba5de4f96086541e75484b7a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d6f20a56c4831e054982d3d487c6d9b25ac091c6")]
 [assembly: System.Reflection.AssemblyProductAttribute("EastSeat.ResourceIdea.Persistence")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EastSeat.ResourceIdea.Persistence")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

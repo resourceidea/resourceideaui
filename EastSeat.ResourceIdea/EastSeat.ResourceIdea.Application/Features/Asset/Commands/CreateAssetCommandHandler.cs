@@ -37,7 +37,12 @@ public class CreateAssetCommandHandler : IRequestHandler<CreateAssetCommand, Cre
 
         if (createAssetCommandResponse.Success)
         {
-            var asset = new Domain.Entities.Asset { Description = request.Description };
+            var asset = new Domain.Entities.Asset
+            {
+                Id = request.Id,
+                Description = request.Description,
+                SubscriptionId = request.SubscriptionId
+            };
             asset = await assetRepository.AddAsync(asset);
             createAssetCommandResponse.Asset = mapper.Map<CreateAssetDTO>(asset);
         }

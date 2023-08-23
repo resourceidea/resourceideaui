@@ -7,6 +7,7 @@ public static class AppRoutesSetup
         app.MapGet("/", () => "Hello World!");
 
         app.MapAssetRoutes();
+        app.MapSubscriptionRoutes();
 
         return app;
     }
