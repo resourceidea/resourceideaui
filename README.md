@@ -1,0 +1,2 @@
+# ResourceIdea
+ResourceIdea - Resource planner.
