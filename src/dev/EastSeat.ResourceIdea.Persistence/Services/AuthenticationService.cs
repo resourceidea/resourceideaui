@@ -110,10 +110,10 @@ public class AuthenticationService : IAuthenticationService
             {
                 response.Success = false;
                 response.Message = "User registration failed.";
-                response.ValidationErrors = [];
+                response.Errors = [];
                 foreach (var error in result.Errors)
                 {
-                    response.ValidationErrors.Add(error.Description);
+                    response.Errors.Add(error.Description);
                 }
             }
         }

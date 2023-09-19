@@ -28,10 +28,10 @@ public class CreateAssetCommandHandler : IRequestHandler<CreateAssetCommand, Cre
         if (validationResult.Errors.Count > 0)
         {
             createAssetCommandResponse.Success = false;
-            createAssetCommandResponse.ValidationErrors = new List<string>();
+            createAssetCommandResponse.Errors = new List<string>();
             foreach (var error in validationResult.Errors)
             {
-                createAssetCommandResponse.ValidationErrors.Add(error.ErrorMessage);
+                createAssetCommandResponse.Errors.Add(error.ErrorMessage);
             }
         }
 

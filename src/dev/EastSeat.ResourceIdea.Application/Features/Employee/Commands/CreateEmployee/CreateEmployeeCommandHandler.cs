@@ -39,10 +39,10 @@ namespace EastSeat.ResourceIdea.Application.Features.Employee.Commands.CreateEmp
             if (commandValidationResult.Errors.Count > 0)
             {
                 response.Success = false;
-                response.ValidationErrors = new List<string>();
+                response.Errors = new List<string>();
                 foreach (var error in commandValidationResult.Errors)
                 {
-                    response.ValidationErrors.Add(error.ErrorMessage);
+                    response.Errors.Add(error.ErrorMessage);
                 }
             }
 

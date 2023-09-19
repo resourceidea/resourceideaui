@@ -22,9 +22,14 @@ public class BaseResponse
     public string Message { get; set; } = string.Empty;
 
     /// <summary>
+    /// Error code associated with the response.
+    /// </summary>
+    public string ErrorCode { get; set; } = string.Empty;
+
+    /// <summary>
     /// Validation errors.
     /// </summary>
-    public List<string>? ValidationErrors { get; set; }
+    public List<string>? Errors { get; set; }
 
     /// <summary>
     /// Initializes <see cref="BaseResponse"/>.

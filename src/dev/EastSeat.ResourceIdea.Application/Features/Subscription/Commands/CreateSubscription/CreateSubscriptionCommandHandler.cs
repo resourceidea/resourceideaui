@@ -51,10 +51,10 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
         if (commandValidationResult.Errors.Count > 0)
         {
             response.Success = false;
-            response.ValidationErrors = [];
+            response.Errors = [];
             foreach (var error in commandValidationResult.Errors)
             {
-                response.ValidationErrors.Add(error.ErrorMessage);
+                response.Errors.Add(error.ErrorMessage);
             }
         }
 
@@ -119,7 +119,7 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
         response.ApplicationUser = userRegistrationResponse.ApplicationUser;
         response.Success = userRegistrationResponse.Success;
         response.Message = userRegistrationResponse.Message;
-        response.ValidationErrors = userRegistrationResponse.ValidationErrors;
+        response.Errors = userRegistrationResponse.Errors;
 
         return userRegistrationResponse;
     }
