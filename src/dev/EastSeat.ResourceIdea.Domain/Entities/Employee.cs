@@ -13,6 +13,9 @@ public class Employee : BaseSubscriptionEntity
     /// <summary>Job position ID.</summary>
     public Guid? JobPositionId { get; set; }
 
+    /// <summary>Employee's application user Id</summary>
+    public string UserId { get; set; } = Guid.Empty.ToString();
+
     /// <summary>Subscription to which the employee belongs to.</summary>
     public Subscription? Subscription { get; set; }
 

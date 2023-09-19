@@ -1,5 +1,4 @@
-﻿using EastSeat.ResourceIdea.Domain.Constants;
-using EastSeat.ResourceIdea.Domain.Entities;
+﻿using EastSeat.ResourceIdea.Domain.Entities;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -17,7 +16,7 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
 
         builder.Property(subscription => subscription.Status)
             .IsRequired()
-            .HasDefaultValue(SubscriptionStatus.Active)
+            .HasDefaultValue(Constants.Subscription.Status.Active)
             .HasConversion<string>();
 
         builder.Property(subscription => subscription.SubscriberName)

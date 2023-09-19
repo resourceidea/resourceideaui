@@ -1,12 +1,19 @@
-﻿namespace EastSeat.ResourceIdea.Domain.Constants;
-
-/// <summary>
-/// Different status of a subscription.
-/// </summary>
-public enum SubscriptionStatus
+﻿public static partial class Constants
 {
-    Active,
-    Suspended,
-    Expired,
-    Cancelled
+    /// <summary>
+    /// Subscription constants.
+    /// </summary>
+    public static class Subscription
+    {
+        /// <summary>
+        /// Subscription statuses.
+        /// </summary>
+        public enum Status
+        {
+            Active,
+            Suspended,
+            Expired,
+            Cancelled
+        }
+    }
 }

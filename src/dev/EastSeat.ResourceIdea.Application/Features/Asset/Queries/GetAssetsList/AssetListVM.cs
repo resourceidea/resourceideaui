@@ -5,12 +5,12 @@
 /// </summary>
 public class AssetListVM
 {
-    /// <summary>Asset Id.</summary>
+    /// <summary>Asset UserId.</summary>
     public Guid Id { get; set; } = Guid.Empty;
 
     /// <summary>Asset description.</summary>
     public string Description { get; set; } = string.Empty;
 
-    /// <summary>Subscription Id.</summary>
+    /// <summary>Subscription UserId.</summary>
     public Guid SubscriptionId { get; set; } = Guid.Empty;
 }

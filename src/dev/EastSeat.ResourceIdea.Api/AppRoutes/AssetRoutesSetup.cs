@@ -1,6 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.Asset.Commands;
 using EastSeat.ResourceIdea.Application.Features.Asset.Queries.GetAssetsList;
-using EastSeat.ResourceIdea.Domain.Constants;
 
 using MediatR;
 
@@ -13,10 +12,10 @@ public static class AssetRoutesSetup
 {
     public static WebApplication MapAssetRoutes(this WebApplication app)
     {
-        app.MapGet(StringConstants.AssetsApiRoute, GetAssetsAsync)
+        app.MapGet(Constants.ApiBaseRoutes.Assets, GetAssetsAsync)
            .Produces(StatusCodes.Status200OK);
 
-        app.MapPost(StringConstants.AssetsApiRoute, PostAssetAsync)
+        app.MapPost(Constants.ApiBaseRoutes.Assets, PostAssetAsync)
            .Produces(StatusCodes.Status201Created);
 
         return app;

@@ -1,5 +1,4 @@
 ﻿using EastSeat.ResourceIdea.Domain.Common;
-using EastSeat.ResourceIdea.Domain.Constants;
 
 namespace EastSeat.ResourceIdea.Domain.Entities;
 
@@ -27,7 +26,7 @@ public class Assignment : BaseSubscriptionEntity
     /// <summary>
     /// Status of the assignment.
     /// </summary>
-    public AssignmentStatus? Status { get; set; }
+    public Constants.Assignment.Status Status { get; set; }
 
     /// <summary>Engagement where that assignment is added.</summary>
     public Engagement? Engagement { get; set; }

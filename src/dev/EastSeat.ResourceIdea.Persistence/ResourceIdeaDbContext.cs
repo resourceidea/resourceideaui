@@ -1,6 +1,9 @@
 ﻿using EastSeat.ResourceIdea.Domain.Common;
 using EastSeat.ResourceIdea.Domain.Entities;
+using EastSeat.ResourceIdea.Persistence.Models;
 
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EastSeat.ResourceIdea.Persistence;
@@ -8,7 +11,7 @@ namespace EastSeat.ResourceIdea.Persistence;
 /// <summary>
 /// App database context.
 /// </summary>
-public class ResourceIdeaDbContext : DbContext
+public class ResourceIdeaDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
 {
     public ResourceIdeaDbContext(DbContextOptions<ResourceIdeaDbContext> options) : base(options)
     {

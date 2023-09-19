@@ -1,5 +1,4 @@
 ﻿using EastSeat.ResourceIdea.Domain.Common;
-using EastSeat.ResourceIdea.Domain.Constants;
 
 namespace EastSeat.ResourceIdea.Domain.Entities;
 
@@ -21,7 +20,7 @@ public class Subscription : BaseSubscriptionEntity
     public DateTime? LastRenewalDate { get; set; }
 
     /// <summary>Subscription status.</summary>
-    public SubscriptionStatus Status { get; set; }
+    public Constants.Subscription.Status Status { get; set; }
 
     /// <summary>Clients under the subscription.</summary>
     public IEnumerable<Client>? Clients { get; set; }

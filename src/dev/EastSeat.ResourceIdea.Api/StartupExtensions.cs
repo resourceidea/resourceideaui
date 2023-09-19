@@ -11,6 +11,12 @@ public static class StartupExtensions
     {
         builder.Services.AddApplicationServices();
         builder.Services.AddPersistentServices(builder.Configuration);
+        builder.Services.AddAuthorization();
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+        });
 
         return builder.Build();
     }
@@ -24,6 +30,12 @@ public static class StartupExtensions
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
+
+        app.UseCors("Open");
+
+        app.UseAuthorization();
+
         return app;
     }
 
@@ -33,10 +45,10 @@ public static class StartupExtensions
         try
         {
             var services = scope.ServiceProvider;
-            var context = services.GetRequiredService<ResourceIdeaDbContext>();
-            if (context is not null)
+            var dbContext = services.GetRequiredService<ResourceIdeaDbContext>();
+            if (dbContext is not null)
             {
-                await context.Database.MigrateAsync();
+                await dbContext.Database.MigrateAsync();
             }
         }
         catch (Exception)

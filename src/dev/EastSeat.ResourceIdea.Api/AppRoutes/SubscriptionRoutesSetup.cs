@@ -1,7 +1,5 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Asset.Queries.GetAssetsList;
-using EastSeat.ResourceIdea.Application.Features.Subscription.Commands.CreateSubscription;
+﻿using EastSeat.ResourceIdea.Application.Features.Subscription.Commands.CreateSubscription;
 using EastSeat.ResourceIdea.Application.Features.Subscription.Queries.GetSubscriptionsList;
-using EastSeat.ResourceIdea.Domain.Constants;
 
 using MediatR;
 
@@ -14,10 +12,10 @@ public static class SubscriptionRoutesSetup
 {
     public static WebApplication MapSubscriptionRoutes(this WebApplication app)
     {
-        app.MapGet($"{StringConstants.SubscriptionsApiRoute}", GetSubscriptionsAsync)
+        app.MapGet($"{Constants.ApiBaseRoutes.Subscriptions}", GetSubscriptionsAsync)
            .Produces(StatusCodes.Status200OK);
 
-        app.MapPost($"{StringConstants.SubscriptionsApiRoute}", PostSubscriptionAsync)
+        app.MapPost($"{Constants.ApiBaseRoutes.Subscriptions}", PostSubscriptionAsync)
            .Produces(StatusCodes.Status201Created);
 
         return app;
@@ -28,7 +26,7 @@ public static class SubscriptionRoutesSetup
         return await mediator.Send(new GetSubscriptionsListQuery());
     }
 
-    private static async Task<CreateSubscriptionVM> PostSubscriptionAsync(IMediator mediator, CreateSubscriptionCommand createSubscriptionCommand)
+    private static async Task<CreateSubscriptionViewModel> PostSubscriptionAsync(IMediator mediator, CreateSubscriptionCommand createSubscriptionCommand)
     {
         var response = await mediator.Send(createSubscriptionCommand);
 

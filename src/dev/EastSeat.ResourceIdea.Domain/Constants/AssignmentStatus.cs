@@ -1,13 +1,20 @@
-﻿namespace EastSeat.ResourceIdea.Domain.Constants;
-
-/// <summary>
-/// Different status of an assignment.
-/// </summary>
-public enum AssignmentStatus
+﻿public static partial class Constants
 {
-    NotStarted,
-    InProgress,
-    Closed,
-    Blocked,
-    Removed
+    /// <summary>
+    /// Assignment constants.
+    /// </summary>
+    public static class Assignment
+    {
+        /// <summary>
+        /// Assignment statuses.
+        /// </summary>
+        public enum Status
+        {
+            NotStarted,
+            InProgress,
+            Closed,
+            Blocked,
+            Removed
+        }
+    }
 }

@@ -9,15 +9,31 @@ public class CreateSubscriptionCommandValidator : AbstractValidator<CreateSubscr
 {
     public CreateSubscriptionCommandValidator()
     {
+        RuleFor(subscription => subscription.FirstName)
+            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingFirstName)
+            .NotNull();
+
+        RuleFor(subscription => subscription.LastName)
+            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingLastName)
+            .NotNull();
+
+        RuleFor(subscription => subscription.Email)
+            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingEmail)
+            .NotNull();
+
+        RuleFor(subscription => subscription.Password)
+            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingPassword)
+            .NotNull();
+
         RuleFor(subscription => subscription.SubscriberName)
-            .NotEmpty().WithMessage("Subscriber's name is required.")
+            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingSubscriberName)
             .NotNull();
 
         RuleFor(subscription => subscription.SubscriptionId)
-            .NotEqual(Guid.Empty).WithMessage("Subscription ID is required.");
+            .NotEqual(Guid.Empty).WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingSubscriptionId);
 
         RuleFor(subscription => subscription.StartDate)
-            .NotEmpty().WithMessage("Subscription start date is required.")
+            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingSubscriptionStartDate)
             .NotNull();
     }
 }

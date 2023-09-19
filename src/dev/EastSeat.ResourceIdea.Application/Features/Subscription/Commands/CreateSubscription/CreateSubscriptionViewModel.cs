@@ -3,7 +3,7 @@
 /// <summary>
 /// View model for the subscription that has been created.
 /// </summary>
-public class CreateSubscriptionVM
+public class CreateSubscriptionViewModel
 {
     /// <summary>Subscription ID.</summary>
     public Guid SubscriptionId { get; set; } = Guid.Empty;
@@ -13,4 +13,7 @@ public class CreateSubscriptionVM
 
     /// <summary>Subscription start date.</summary>
     public DateTime StartDate { get; set; }
+
+    /// <summary>Subscription status</summary>
+    public Constants.Subscription.Status Status { get; set; } = default!;
 }

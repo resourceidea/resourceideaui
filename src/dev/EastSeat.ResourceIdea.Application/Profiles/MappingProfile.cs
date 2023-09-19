@@ -2,6 +2,7 @@
 
 using EastSeat.ResourceIdea.Application.Features.Asset.Commands;
 using EastSeat.ResourceIdea.Application.Features.Asset.Queries.GetAssetsList;
+using EastSeat.ResourceIdea.Application.Features.Employee.Commands.CreateEmployee;
 using EastSeat.ResourceIdea.Application.Features.Subscription.Commands.CreateSubscription;
 using EastSeat.ResourceIdea.Application.Features.Subscription.Queries.GetSubscriptionsList;
 using EastSeat.ResourceIdea.Domain.Entities;
@@ -18,7 +19,9 @@ public class MappingProfile : Profile
         CreateMap<Asset, CreateAssetDTO>();
         CreateMap<Asset, AssetListVM>();
 
-        CreateMap<Subscription, CreateSubscriptionVM>();
         CreateMap<Subscription, SubscriptionsListVM>();
+        CreateMap<Subscription, CreateSubscriptionViewModel>();
+
+        CreateMap<Employee, CreateEmployeeViewModel>();
     }
 }

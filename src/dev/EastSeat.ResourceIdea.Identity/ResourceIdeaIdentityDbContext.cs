@@ -11,10 +11,8 @@ namespace EastSeat.ResourceIdea.Identity
         {
         }
 
-        public ResourceIdeaIdentityDbContext(DbContextOptions<ResourceIdeaIdentityDbContext> options)
-            : base(options)
+        public ResourceIdeaIdentityDbContext(DbContextOptions<ResourceIdeaIdentityDbContext> options) : base(options)
         {
-            
         }
     }
 }
