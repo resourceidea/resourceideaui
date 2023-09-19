@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EastSeat.ResourceIdea.Application.Responses;
+﻿namespace EastSeat.ResourceIdea.Application.Responses;
 
 /// <summary>
 /// Base response class.
@@ -27,7 +21,7 @@ public class BaseResponse
     public string ErrorCode { get; set; } = string.Empty;
 
     /// <summary>
-    /// Validation errors.
+    /// Errors on the response.
     /// </summary>
     public List<string>? Errors { get; set; }
 
@@ -58,5 +52,18 @@ public class BaseResponse
     {
         Success = success;
         Message = message;
+    }
+
+    /// <summary>
+    /// Instantiates <see cref="BaseResponse"/>
+    /// </summary>
+    /// <param name="success"></param>
+    /// <param name="message"></param>
+    /// <param name="errorCode"></param>
+    public BaseResponse(bool success, string message, string errorCode)
+    {
+        Success = success;
+        Message = message;
+        ErrorCode = errorCode;
     }
 }

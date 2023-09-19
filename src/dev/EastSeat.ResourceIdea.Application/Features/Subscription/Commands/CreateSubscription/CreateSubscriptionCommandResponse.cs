@@ -34,6 +34,16 @@ public class CreateSubscriptionCommandResponse : BaseResponse
     }
 
     /// <summary>
+    /// Instantiates <see cref="CreateSubscriptionCommandResponse"/>
+    /// </summary>
+    /// <param name="success">True if the command execution was a success, otherwise False.</param>
+    /// <param name="message">Response message.</param>
+    /// <param name="errorCode">Error code.</param>
+    public CreateSubscriptionCommandResponse(bool success, string message, string errorCode) : base (success, message, errorCode)
+    {
+    }
+
+    /// <summary>
     /// Subscription that has been created.
     /// </summary>
     public CreateSubscriptionViewModel Subscription { get; set; } = default!;

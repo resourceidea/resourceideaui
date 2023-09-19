@@ -84,6 +84,7 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
         {
             response.Success = false;
             response.Message = Constants.ErrorMessages.Commands.CreateSubscriptions.SubscriberNameAlreadyInUse;
+            response.ErrorCode = nameof(Constants.ErrorMessages.Commands.CreateSubscriptions.SubscriberNameAlreadyInUse);
 
             return;
         }
@@ -116,6 +117,10 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
             SubscriptionId = response.Subscription.SubscriptionId
         });
 
+        if (!userRegistrationResponse.Success)
+        {
+            response.Subscription = default!;
+        }
         response.ApplicationUser = userRegistrationResponse.ApplicationUser;
         response.Success = userRegistrationResponse.Success;
         response.Message = userRegistrationResponse.Message;
@@ -134,7 +139,7 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
         if (await employeeRepository.IsExisitingEmployee(request.SubscriptionId, userId))
         {
             response.Success = false;
-            response.Message = $"User {userId} is already an employee of the subscription {request.SubscriptionId}.";
+            response.Message = $"User is already an employee of the subscription.";
         }
         else
         {

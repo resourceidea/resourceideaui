@@ -76,7 +76,7 @@ public class AuthenticationService : IAuthenticationService
             return new UserRegistrationResponse
             {
                 Success = false,
-                Message = $"Username '{request.Email}' already exists."
+                Message = $"Username already exists."
             };
         }
 
@@ -120,7 +120,7 @@ public class AuthenticationService : IAuthenticationService
         else
         {
             response.Success = false;
-            response.Message = $"Email {request.Email} already exists.";
+            response.Message = $"Email already exists.";
         }
 
         return response;

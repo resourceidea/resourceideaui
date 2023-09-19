@@ -11,7 +11,7 @@ Accept-Language: en-US,en;q=0.5
     "subscriberName": "Subscriber {{$guid}}",
     "firstName": "Joseph",
     "lastName": "Serunjogi",
-    "email": "serunjogi.joseph@outlook.com",
+    "email": "serunjogi.{{$guid}}@outlook.com",
     "password": "Passw0rd001!"
 }
 
