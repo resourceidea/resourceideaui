@@ -407,3 +407,4 @@ ASALocalRun/
 # Environment file
 .env
 .vscode/
+.vs/
