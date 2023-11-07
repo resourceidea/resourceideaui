@@ -24,7 +24,7 @@ public class CreateApplicationUserCommandHandler : IRequestHandler<CreateApplica
         if (commandValidationResult.Errors.Count > 0)
         {
             response.Success = false;
-            response.Errors = [];
+            response.Errors = new List<string>();
             foreach (var error in commandValidationResult.Errors)
             {
                 response.Errors.Add(error.ErrorMessage);

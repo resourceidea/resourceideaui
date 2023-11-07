@@ -125,7 +125,7 @@ public class AuthenticationService : IAuthenticationService
             {
                 response.Success = false;
                 response.Message = Constants.ErrorMessages.Commands.CreateApplicationUsers.UserRegistrationFailed;
-                response.Errors = [];
+                response.Errors = new List<string>();
                 foreach (var error in result.Errors)
                 {
                     response.Errors.Add(error.Description);
