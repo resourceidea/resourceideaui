@@ -1,10 +1,16 @@
-﻿namespace EastSeat.ResourceIdea.Application.Models;
+﻿using EastSeat.ResourceIdea.Application.Responses;
+
+namespace EastSeat.ResourceIdea.Application.Models;
 
 /// <summary>
 /// Represents a response to an authentication response.
 /// </summary>
-public class AuthenticationResponse
+public class AuthenticationResponse : BaseResponse
 {
+    public AuthenticationResponse() : base ()
+    {
+    }
+
     /// <summary>User ID.</summary>
     public string Id { get; set; } = string.Empty;
 

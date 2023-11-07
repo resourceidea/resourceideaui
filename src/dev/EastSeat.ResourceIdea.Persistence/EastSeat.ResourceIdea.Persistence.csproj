@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EastSeat.ResourceIdea.Application\EastSeat.ResourceIdea.Application.csproj" />
+    <ProjectReference Include="..\EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj" />
   </ItemGroup>
 
 </Project>

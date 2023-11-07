@@ -14,5 +14,17 @@ public interface IAuthenticationService
     /// <returns>Authentication response.</returns>
     Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request);
 
+    /// <summary>
+    /// Delete user from the system.
+    /// </summary>
+    /// <param name="userId">Id of user to be deleted.</param>
+    /// <returns></returns>
+    Task DeleteUserAsync(Guid userId);
+
+    /// <summary>
+    /// Register a new user.
+    /// </summary>
+    /// <param name="request">User registration request.</param>
+    /// <returns>User registration response.</returns>
     Task<UserRegistrationResponse> RegisterUserAsync(UserRegistrationRequest request);
 }
