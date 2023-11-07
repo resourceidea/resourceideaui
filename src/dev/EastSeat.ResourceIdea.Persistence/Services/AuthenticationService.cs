@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 using EastSeat.ResourceIdea.Application.Contracts.Identity;
 using EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
@@ -46,6 +42,15 @@ public class AuthenticationService : IAuthenticationService
     public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email) ?? throw new Exception($"User with {request.Email} not found.");
+        if (user.UserName is null || user.Email is null)
+        {
+            return new AuthenticationResponse
+            {
+                Success = false,
+                Message = "User not found"
+            };
+        }
+
         var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
 
         if (!result.Succeeded)
@@ -64,6 +69,16 @@ public class AuthenticationService : IAuthenticationService
         };
 
         return response;
+    }
+
+    /// <inheritdoc />
+    public async Task DeleteUserAsync(Guid userId)
+    {
+        var applicationUser = await _userManager.FindByIdAsync(userId.ToString());
+        if (applicationUser is not null)
+        {
+            await _userManager.DeleteAsync(applicationUser); 
+        }
     }
 
     /// <inheritdoc />
@@ -109,7 +124,7 @@ public class AuthenticationService : IAuthenticationService
             else
             {
                 response.Success = false;
-                response.Message = "User registration failed.";
+                response.Message = Constants.ErrorMessages.Commands.CreateApplicationUsers.UserRegistrationFailed;
                 response.Errors = [];
                 foreach (var error in result.Errors)
                 {
@@ -120,7 +135,7 @@ public class AuthenticationService : IAuthenticationService
         else
         {
             response.Success = false;
-            response.Message = $"Email already exists.";
+            response.Message = Constants.ErrorMessages.Commands.CreateApplicationUsers.EmailExists;
         }
 
         return response;

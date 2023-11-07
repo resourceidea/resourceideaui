@@ -58,22 +58,40 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
             }
         }
 
-        if (response.Success)
+        await CreateSubscriptionAsync(request, response);
+
+        await CreateApplicationUserAsync(request, response);
+
+        await CreateEmployeeAsync(request, response);
+
+        if (response.Success is false)
         {
-            await CreateSubscriptionAsync(request, response);
-
-            UserRegistrationResponse userRegistrationResponse = await CreateApplicationUserAsync(request, response);
-
-            if (userRegistrationResponse.Success)
-            {
-                await CreateEmployeeAsync(request, response, userRegistrationResponse.ApplicationUser.UserId.ToString()); 
-            }
-            else
-            {
-                response.Success = userRegistrationResponse.Success;
-                response.Message = userRegistrationResponse.Message;
-            }
+            response = await RollbackCreateSubscriptionCommandAsync(response);
         }
+
+        return response;
+    }
+
+    private async Task<CreateSubscriptionCommandResponse> RollbackCreateSubscriptionCommandAsync(CreateSubscriptionCommandResponse response)
+    {
+        if (response.Subscription is not null)
+        {
+            await subscriptionRepository.DeleteAsync(response.Subscription.SubscriptionId);
+        }
+
+        if (response.ApplicationUser is not null)
+        {
+            await authenticationService.DeleteUserAsync(response.ApplicationUser.UserId);
+        }
+
+        if (response.Employee is not null)
+        {
+            await employeeRepository.DeleteAsync(Guid.Parse(response.Employee.UserId));
+        }
+
+        response.Subscription = default!;
+        response.ApplicationUser = default!;
+        response.Employee = default!;
 
         return response;
     }
@@ -101,11 +119,11 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
         response.Subscription = mapper.Map<CreateSubscriptionViewModel>(subscription);
     }
 
-    private async Task<UserRegistrationResponse> CreateApplicationUserAsync(CreateSubscriptionCommand request, CreateSubscriptionCommandResponse response)
+    private async Task CreateApplicationUserAsync(CreateSubscriptionCommand request, CreateSubscriptionCommandResponse response)
     {
         if (response.Success is false)
         {
-            return new UserRegistrationResponse(response.Success, response.Message);
+            return;
         }
 
         var userRegistrationResponse = await authenticationService.RegisterUserAsync(new UserRegistrationRequest
@@ -117,26 +135,28 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
             SubscriptionId = response.Subscription.SubscriptionId
         });
 
-        if (!userRegistrationResponse.Success)
-        {
-            response.Subscription = default!;
-        }
         response.ApplicationUser = userRegistrationResponse.ApplicationUser;
         response.Success = userRegistrationResponse.Success;
         response.Message = userRegistrationResponse.Message;
         response.Errors = userRegistrationResponse.Errors;
-
-        return userRegistrationResponse;
     }
 
-    private async Task CreateEmployeeAsync(CreateSubscriptionCommand request, CreateSubscriptionCommandResponse response, string userId)
+    private async Task CreateEmployeeAsync(CreateSubscriptionCommand request, CreateSubscriptionCommandResponse response)
     {
         if (response.Success is false)
         {
             return;
         }
 
-        if (await employeeRepository.IsExisitingEmployee(request.SubscriptionId, userId))
+        if (UserRegistrationFailed(response))
+        {
+            response.Success = false;
+            response.Message = $"User registration failed.";
+
+            return;
+        }
+
+        if (await employeeRepository.IsExisitingEmployee(request.SubscriptionId, response.ApplicationUser.UserId.ToString()))
         {
             response.Success = false;
             response.Message = $"User is already an employee of the subscription.";
@@ -147,11 +167,16 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
             {
                 SubscriptionId = request.SubscriptionId,
                 JobPositionId = request.JobPositionId == Guid.Empty ? null : request.JobPositionId,
-                UserId = userId,
+                UserId = response.ApplicationUser.UserId.ToString(),
                 Id = Guid.NewGuid()
             };
             employee = await employeeRepository.AddAsync(employee);
             response.Employee = mapper.Map<CreateEmployeeViewModel>(employee);
         }
+    }
+
+    private static bool UserRegistrationFailed(CreateSubscriptionCommandResponse response)
+    {
+        return response.ApplicationUser == default || response.ApplicationUser.FirstName == string.Empty || response.ApplicationUser.UserId.Equals(Guid.Empty);
     }
 }

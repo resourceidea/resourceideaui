@@ -6,7 +6,12 @@
     /// </summary>
     public static class ApiBaseRoutes
     {
-        public const string Assets = "/api/assets";
+        public static class Assets
+        {
+            public const string GetAssets = "/api/assets";
+            public const string PostAsset = "/api/assets";
+        }
         public const string Subscriptions = "/api/subscriptions";
+        public const string Authenticate = "/api/authenticate";
     }
 }

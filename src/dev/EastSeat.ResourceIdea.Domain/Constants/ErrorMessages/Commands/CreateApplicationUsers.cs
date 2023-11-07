@@ -16,6 +16,9 @@
             public static class CreateApplicationUsers
             {
                 public const string InvalidApplicationUserId = "Application User created with an invalid UserId.";
+                public const string UsernameExists = "Username already exists.";
+                public const string UserRegistrationFailed = "User registration failed.";
+                public const string EmailExists = "Email already exists.";
             }
         }
     }
