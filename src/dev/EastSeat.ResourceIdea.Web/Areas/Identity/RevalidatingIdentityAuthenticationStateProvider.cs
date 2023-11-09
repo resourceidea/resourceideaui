@@ -30,7 +30,7 @@ namespace EastSeat.ResourceIdea.Web.Areas.Identity
             AuthenticationState authenticationState, CancellationToken cancellationToken)
         {
             // Get the user manager from a new scope to ensure it fetches fresh data
-            var scope = _scopeFactory.CreateScope();
+            using var scope = _scopeFactory.CreateScope();
             try
             {
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<TUser>>();
