@@ -19,7 +19,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
+      uses: github/codeql-action/init@v2
       with:
         languages: csharp
         queries: +security-and-quality
@@ -37,4 +37,4 @@ jobs:
         dotnet dotnet build ./src/EastSeat.ResourceIdea.sln --no-restore --framework net7.0
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      uses: github/codeql-action/analyze@v2
