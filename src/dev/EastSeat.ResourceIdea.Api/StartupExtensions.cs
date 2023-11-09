@@ -10,7 +10,7 @@ public static class StartupExtensions
     public static void ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddApplicationServices();
-        builder.Services.AddPersistentServices(builder.Configuration);
+        builder.Services.AddApiPersistentServices(builder.Configuration);
         builder.Services.AddAuthorization();
 
         builder.Services.AddCors(options =>
