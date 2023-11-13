@@ -5,9 +5,11 @@ using System.Text;
 using EastSeat.ResourceIdea.Application.Contracts.Identity;
 using EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
 using EastSeat.ResourceIdea.Application.Models;
+using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Persistence.Models;
 
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -39,12 +41,12 @@ public class AuthenticationService : IAuthenticationService
     }
 
     /// <inheritdoc />
-    public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
+    public async Task<ApiAuthenticationResponse> AuthenticateApiUserAsync(AuthenticationRequest request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email) ?? throw new Exception($"User with {request.Email} not found.");
         if (user.UserName is null || user.Email is null)
         {
-            return new AuthenticationResponse
+            return new ApiAuthenticationResponse
             {
                 Success = false,
                 Message = "User not found"
@@ -60,7 +62,7 @@ public class AuthenticationService : IAuthenticationService
 
         JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
 
-        AuthenticationResponse response = new()
+        ApiAuthenticationResponse response = new()
         {
             Id = user.Id,
             Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
@@ -69,6 +71,31 @@ public class AuthenticationService : IAuthenticationService
         };
 
         return response;
+    }
+
+    /// <inheritdoc />
+    public async Task<WebAuthenticationResponse> AuthenticateWebUserAsync(AuthenticationRequest request)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user is null)
+        {
+            return new WebAuthenticationResponse
+            {
+                Success = false,
+                Message = "User not found",
+                ErrorCode = "UserNotFound",
+                Errors = new List<string> { "User not found" }
+            };
+        }
+
+        return new WebAuthenticationResponse
+        {
+            Success = true,
+            Message = "User found",
+            Id = user.Id,
+            Email = user.Email ?? string.Empty,
+            UserName = user.UserName ?? string.Empty
+        };
     }
 
     /// <inheritdoc />

@@ -1,4 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Application.Models;
+using EastSeat.ResourceIdea.Application.Responses;
 
 namespace EastSeat.ResourceIdea.Application.Contracts.Identity;
 
@@ -12,7 +13,14 @@ public interface IAuthenticationService
     /// </summary>
     /// <param name="request">Authentication request.</param>
     /// <returns>Authentication response.</returns>
-    Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request);
+    Task<ApiAuthenticationResponse> AuthenticateApiUserAsync(AuthenticationRequest request);
+
+    /// <summary>
+    /// Handles authentication of a web user.
+    /// </summary>
+    /// <param name="request">Authentication request.</param>
+    /// <returns>Authentication response.</returns>
+    Task<WebAuthenticationResponse> AuthenticateWebUserAsync(AuthenticationRequest request);
 
     /// <summary>
     /// Delete user from the system.

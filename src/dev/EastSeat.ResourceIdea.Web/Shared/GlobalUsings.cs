@@ -1,0 +1,1 @@
+﻿global using EastSeat.ResourceIdea.Application.Models;

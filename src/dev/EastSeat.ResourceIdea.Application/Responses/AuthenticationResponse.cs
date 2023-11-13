@@ -1,13 +1,11 @@
-﻿using EastSeat.ResourceIdea.Application.Responses;
-
-namespace EastSeat.ResourceIdea.Application.Models;
+﻿namespace EastSeat.ResourceIdea.Application.Responses;
 
 /// <summary>
 /// Represents a response to an authentication response.
 /// </summary>
 public class AuthenticationResponse : BaseResponse
 {
-    public AuthenticationResponse() : base ()
+    public AuthenticationResponse() : base()
     {
     }
 
@@ -19,7 +17,4 @@ public class AuthenticationResponse : BaseResponse
 
     /// <summary>User email.</summary>
     public string Email { get; set; } = string.Empty;
-
-    /// <summary>Authentication token.</summary>
-    public string Token { get; set; } = string.Empty;
 }

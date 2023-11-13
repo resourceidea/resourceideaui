@@ -1,7 +1,6 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
-using EastSeat.ResourceIdea.Application.Responses;
 
-namespace EastSeat.ResourceIdea.Application.Models;
+namespace EastSeat.ResourceIdea.Application.Responses;
 
 /// <summary>
 /// Represents response returned after registering a user.

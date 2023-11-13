@@ -34,7 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Application.Tests", "test\EastSeat.ResourceIdea.Application.Tests\EastSeat.ResourceIdea.Application.Tests.csproj", "{41F63A9A-3592-4857-A066-0E58BCBE4B4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Web", "dev\EastSeat.ResourceIdea.Web\EastSeat.ResourceIdea.Web.csproj", "{6B5D621B-8009-486C-97F7-7186B3F72A76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Web", "dev\EastSeat.ResourceIdea.Web\EastSeat.ResourceIdea.Web.csproj", "{6B5D621B-8009-486C-97F7-7186B3F72A76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -17,7 +17,7 @@ public static class AuthEndpointHandlers
     /// <returns></returns>
     public static async Task<IResult> AuthenticateAsync(IAuthenticationService authenticationService, AuthenticationRequest authenticationRequest)
     {
-        var authenticationResponse = await authenticationService.AuthenticateAsync(authenticationRequest);
+        var authenticationResponse = await authenticationService.AuthenticateApiUserAsync(authenticationRequest);
         var response = new ApiResponse<AuthenticationResponse>(
             authenticationResponse,
             authenticationResponse.Success,

@@ -2,6 +2,7 @@
 using EastSeat.ResourceIdea.Persistence;
 using EastSeat.ResourceIdea.Persistence.Models;
 using EastSeat.ResourceIdea.Web.Areas.Identity;
+using EastSeat.ResourceIdea.Web.Data;
 
 using Microsoft.AspNetCore.Components.Authorization;
 
@@ -16,6 +17,12 @@ public static class WebStartupExtensions
 
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor();
-        builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
+        //builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>(); stock scaffolding
+
+        builder.Services.AddScoped<WebUserService>();
+        builder.Services.AddScoped<ResourceIdeaAuthenticationStateProvider>();
+        builder.Services.AddScoped<AuthenticationStateProvider>(
+            authenticationStateProvider => authenticationStateProvider.GetRequiredService<ResourceIdeaAuthenticationStateProvider>());
+        builder.Services.AddAuthorizationCore();
     }
 }
