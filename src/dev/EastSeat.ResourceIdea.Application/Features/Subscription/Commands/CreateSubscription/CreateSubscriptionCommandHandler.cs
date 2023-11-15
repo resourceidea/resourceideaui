@@ -74,9 +74,9 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
 
     private async Task<CreateSubscriptionCommandResponse> RollbackCreateSubscriptionCommandAsync(CreateSubscriptionCommandResponse response)
     {
-        if (response.Subscription is not null)
+        if (response.Content is not null)
         {
-            await subscriptionRepository.DeleteAsync(response.Subscription.SubscriptionId);
+            await subscriptionRepository.DeleteAsync(response.Content.SubscriptionId);
         }
 
         if (response.ApplicationUser is not null)
@@ -89,7 +89,7 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
             await employeeRepository.DeleteAsync(Guid.Parse(response.Employee.UserId));
         }
 
-        response.Subscription = default!;
+        response.Content = default!;
         response.ApplicationUser = default!;
         response.Employee = default!;
 
@@ -116,7 +116,7 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
         };
 
         subscription = await subscriptionRepository.AddAsync(subscription);
-        response.Subscription = mapper.Map<CreateSubscriptionViewModel>(subscription);
+        response.Content = mapper.Map<CreateSubscriptionViewModel>(subscription);
     }
 
     private async Task CreateApplicationUserAsync(CreateSubscriptionCommand request, CreateSubscriptionCommandResponse response)
@@ -132,10 +132,10 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
             FirstName = request.FirstName,
             LastName = request.LastName,
             Password = request.Password,
-            SubscriptionId = response.Subscription.SubscriptionId
+            SubscriptionId = response.Content!.SubscriptionId
         });
 
-        response.ApplicationUser = userRegistrationResponse.ApplicationUser;
+        response.ApplicationUser = userRegistrationResponse.Content ?? default!;
         response.Success = userRegistrationResponse.Success;
         response.Message = userRegistrationResponse.Message;
         response.Errors = userRegistrationResponse.Errors;

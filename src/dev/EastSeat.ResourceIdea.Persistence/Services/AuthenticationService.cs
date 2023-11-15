@@ -5,6 +5,7 @@ using System.Text;
 using EastSeat.ResourceIdea.Application.Contracts.Identity;
 using EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
 using EastSeat.ResourceIdea.Application.Models;
+using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Persistence.Models;
 
 using Microsoft.AspNetCore.Identity;
@@ -39,36 +40,82 @@ public class AuthenticationService : IAuthenticationService
     }
 
     /// <inheritdoc />
-    public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
+    //public async Task<BaseResponse<ApplicationUserViewModel>> AuthenticateApiUserAsync(AuthenticationRequest request)
+    //{
+    //    var user = await _userManager.FindByEmailAsync(request.Email) ?? throw new Exception($"User with {request.Email} not found.");
+    //    if (user.UserName is null || user.Email is null)
+    //    {
+    //        return new BaseResponse<ApplicationUserViewModel>
+    //        {
+    //            Success = false,
+    //            Message = "User not found",
+    //            Content = null,
+    //            Errors = new List<string> { "User not found"},
+    //            ErrorCode = "UserNotFound"
+    //        };
+    //    }
+
+    //    var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
+
+    //    if (!result.Succeeded)
+    //    {
+    //        return new BaseResponse<ApplicationUserViewModel>
+    //        {
+    //            Success = false,
+    //            Message = "Invalid user credentials",
+    //            Content = null,
+    //            Errors = new List<string> { "Invalid user credentials" },
+    //            ErrorCode = "InvalidUserCredentials"
+    //        };
+    //    }
+
+    //    JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
+
+    //    BaseResponse<ApplicationUserViewModel> response = new()
+    //    {
+    //        Success = result.Succeeded,
+    //        Content = new ApplicationUserViewModel
+    //        {
+    //            Email = user.
+    //        }
+    //        Id = user.Id,
+    //        Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+    //        Email = user.Email,
+    //        UserName = user.UserName
+    //    };
+
+    //    return response;
+    //}
+
+    /// <inheritdoc />
+    public async Task<BaseResponse<ApplicationUserViewModel>> AuthenticateUserAsync(AuthenticationRequest request)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email) ?? throw new Exception($"User with {request.Email} not found.");
-        if (user.UserName is null || user.Email is null)
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user is null)
         {
-            return new AuthenticationResponse
+            return new BaseResponse<ApplicationUserViewModel>
             {
                 Success = false,
-                Message = "User not found"
+                Content = null,
+                Message = "User not found",
+                ErrorCode = "UserNotFound",
+                Errors = new List<string> { "User not found" }
             };
         }
 
-        var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
-
-        if (!result.Succeeded)
+        return new BaseResponse<ApplicationUserViewModel>
         {
-            throw new Exception($"Credentials for '{request.Email} aren't valid'.");
-        }
-
-        JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
-
-        AuthenticationResponse response = new()
-        {
-            Id = user.Id,
-            Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-            Email = user.Email,
-            UserName = user.UserName
+            Success = true,
+            Content = new ApplicationUserViewModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                SubscriptionId = user.SubscriptionId
+            }
         };
-
-        return response;
     }
 
     /// <inheritdoc />
@@ -77,7 +124,7 @@ public class AuthenticationService : IAuthenticationService
         var applicationUser = await _userManager.FindByIdAsync(userId.ToString());
         if (applicationUser is not null)
         {
-            await _userManager.DeleteAsync(applicationUser); 
+            await _userManager.DeleteAsync(applicationUser);
         }
     }
 
@@ -112,7 +159,7 @@ public class AuthenticationService : IAuthenticationService
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {
-                response.ApplicationUser = new CreateApplicationUserViewModel
+                response.Content = new CreateApplicationUserViewModel
                 {
                     UserId = Guid.Parse(user.Id),
                     SubscriptionId = user.SubscriptionId,
@@ -141,6 +188,35 @@ public class AuthenticationService : IAuthenticationService
         return response;
     }
 
+    /// <inheritdoc />
+    public async Task<BaseResponse<ApplicationUserViewModel>> GetApplicationUserAsync(Guid id)
+    {
+        var applicationUser = await _userManager.FindByIdAsync(id.ToString());
+        if (applicationUser is null)
+        {
+            return new BaseResponse<ApplicationUserViewModel>
+            {
+                Success = false,
+                Content = null,
+                Message = $"Application user with Id {id} not found.",
+                ErrorCode = "ApplicationUserNotFound",
+                Errors = new List<string>() { $"Application user with Id {id} not found." }
+            };
+        }
+
+        return new BaseResponse<ApplicationUserViewModel>
+        {
+            Success = true,
+            Content = new ApplicationUserViewModel
+            {
+                Id = applicationUser.Id,
+                UserName = applicationUser.UserName,
+                FirstName = applicationUser.FirstName,
+                SubscriptionId = applicationUser.SubscriptionId
+            }
+        };
+    }
+
     private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)
     {
         var userClaims = await _userManager.GetClaimsAsync(user);
@@ -155,9 +231,9 @@ public class AuthenticationService : IAuthenticationService
 
         var claims = new[]
         {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName ?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
                 new Claim("uid", user.Id)
             }
         .Union(userClaims)

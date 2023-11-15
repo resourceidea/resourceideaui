@@ -56,7 +56,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Employee.Commands.CreateEmp
                     Id = Guid.NewGuid()
                 };
                 employee = await employeeRepository.AddAsync(employee);
-                response.Employee = mapper.Map<CreateEmployeeViewModel>(employee);
+                response.Content = mapper.Map<CreateEmployeeViewModel>(employee);
             }
 
             return response;

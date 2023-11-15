@@ -26,29 +26,14 @@ public static class PersistenceServiceRegistration
     /// <summary>
     /// Add data persistence services to the service collection.
     /// </summary>
-    /// <param name="services">Service collection.</param>
+    /// <param name="services">Services collection.</param>
     /// <param name="configuration">App configurations.</param>
-    /// <returns>Services collection.</returns>
-    public static IServiceCollection AddPersistentServices(this IServiceCollection services, IConfiguration configuration)
+    /// <returns>Registered services collection.</returns>
+    public static IServiceCollection AddApiPersistentServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
-        services.AddDbContext<ResourceIdeaDbContext>(
-            options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString"),
-            b => b.MigrationsAssembly(typeof(ResourceIdeaDbContext).Assembly.FullName))
-        );
-        services.AddDatabaseDeveloperPageExceptionFilter();
-
-        // TODO: Move the options configs to appsettings.json
-        services.AddIdentity<ApplicationUser, IdentityRole>(options => {
-            options.SignIn.RequireConfirmedAccount = false;
-            options.SignIn.RequireConfirmedPhoneNumber = false;
-            options.SignIn.RequireConfirmedEmail = false;
-        })
-                .AddEntityFrameworkStores<ResourceIdeaDbContext>()
-                .AddDefaultTokenProviders();
-
-        services.AddTransient<IAuthenticationService, AuthenticationService>();
+        services.RegisterAuthIdentityServices(configuration);
 
         // TODO: Move the JWT setting to configuration store.
         services.AddAuthentication(options => {
@@ -94,6 +79,28 @@ public static class PersistenceServiceRegistration
                     };
                 });
 
+        services.RegisterAppServices();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Register persistence services to the services collection.
+    /// </summary>
+    /// <param name="services">Services collection.</param>
+    /// <param name="configuration">App configuration.</param>
+    /// <returns>Services collection.</returns>
+    public static IServiceCollection AddWebPersistentServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        services.RegisterAuthIdentityServices(configuration);
+        services.RegisterAppServices();
+
+        return services;
+    }
+
+    private static void RegisterAppServices(this IServiceCollection services)
+    {
         services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
 
         services.AddScoped<IAssetAssignmentRepository, AssetAssignmentRepository>();
@@ -105,7 +112,24 @@ public static class PersistenceServiceRegistration
         services.AddScoped<IEngagementRepository, EngagementRepository>();
         services.AddScoped<IJobPositionRepository, JobPositionRepository>();
         services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+    }
 
-        return services;
+    private static void RegisterAuthIdentityServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddDbContext<ResourceIdeaDbContext>(
+            options => options.UseSqlServer(connectionString: configuration.GetConnectionString("DefaultConnectionString"),
+                                            sqlServerOptionsAction: b => b.MigrationsAssembly(typeof(ResourceIdeaDbContext).Assembly.FullName))
+        );
+        services.AddDatabaseDeveloperPageExceptionFilter();
+
+        services.AddIdentity<ApplicationUser, IdentityRole>(options => {
+            options.SignIn.RequireConfirmedAccount = false;
+            options.SignIn.RequireConfirmedPhoneNumber = false;
+            options.SignIn.RequireConfirmedEmail = false;
+        })
+        .AddEntityFrameworkStores<ResourceIdeaDbContext>()
+        .AddDefaultTokenProviders();
+
+        services.AddTransient<IAuthenticationService, AuthenticationService>();
     }
 }

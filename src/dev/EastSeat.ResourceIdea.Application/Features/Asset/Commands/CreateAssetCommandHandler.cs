@@ -44,7 +44,7 @@ public class CreateAssetCommandHandler : IRequestHandler<CreateAssetCommand, Cre
                 SubscriptionId = request.SubscriptionId
             };
             asset = await assetRepository.AddAsync(asset);
-            createAssetCommandResponse.Asset = mapper.Map<CreateAssetDTO>(asset);
+            createAssetCommandResponse.Content = mapper.Map<CreateAssetDTO>(asset);
         }
 
         return createAssetCommandResponse;
