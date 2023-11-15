@@ -5,11 +5,6 @@ namespace EastSeat.ResourceIdea.Application.Features.Asset.Commands;
 /// <summary>
 /// Response from the command to create an asset.
 /// </summary>
-public class CreateAssetCommandResponse : BaseResponse
+public class CreateAssetCommandResponse : BaseResponse<CreateAssetDTO>
 {
-    public CreateAssetCommandResponse() : base()
-    {
-    }
-
-    public CreateAssetDTO Asset { get; set; } = default!;
 }

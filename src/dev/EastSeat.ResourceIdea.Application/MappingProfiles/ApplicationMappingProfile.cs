@@ -12,9 +12,9 @@ namespace EastSeat.ResourceIdea.Application.Profiles;
 /// <summary>
 /// Mapping profile for AutoMapper.
 /// </summary>
-public class MappingProfile : Profile
+public class ApplicationMappingProfile : Profile
 {
-    public MappingProfile()
+    public ApplicationMappingProfile()
     {
         CreateMap<Asset, CreateAssetDTO>();
         CreateMap<Asset, AssetListVM>();

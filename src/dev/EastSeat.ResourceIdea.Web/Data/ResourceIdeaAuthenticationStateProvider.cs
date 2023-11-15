@@ -1,5 +1,7 @@
-﻿using System.Data;
-using System.Security.Claims;
+﻿using System.Security.Claims;
+
+using EastSeat.ResourceIdea.Application.Responses;
+using EastSeat.ResourceIdea.Web.Services;
 
 using Microsoft.AspNetCore.Components.Authorization;
 
@@ -7,50 +9,62 @@ namespace EastSeat.ResourceIdea.Web.Data;
 
 public class ResourceIdeaAuthenticationStateProvider : AuthenticationStateProvider
 {
-    private readonly WebUserService webUserService;
+    private readonly AuthenticationService authenticationService;
 
-    public User? CurrentUser { get; private set; } = new ();
+    public ApplicationUserViewModel? CurrentUser { get; private set; } = new();
 
-    public ResourceIdeaAuthenticationStateProvider(WebUserService webUserService)
+    public ResourceIdeaAuthenticationStateProvider(AuthenticationService authenticationService)
     {
-        this.webUserService = webUserService;
+        this.authenticationService = authenticationService;
         AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        ClaimsPrincipal principal = new ();
-        var user = await webUserService.FetchUserFromBrowserAsync();
+        ClaimsPrincipal principal = new();
+        var user = await authenticationService.FetchUserFromBrowserAsync();
         if (user is not null)
         {
-            var authenticatedUser = await webUserService.FindUserFromDatabaseAsync(user.Username, user.Password);
-            CurrentUser = authenticatedUser;
+            var response = await authenticationService.AuthenticateUserAsync(
+                new AuthenticationRequest
+                {
+                    Email = user.UserName ?? string.Empty
+                });
 
-            if (authenticatedUser is not null)
+            CurrentUser = response.Content;
+
+            if (response.Success && response.Content is not null)
             {
-                principal = authenticatedUser.ToClaimsPrincipal();
+                principal = response.Content.ToClaimsPrincipal();
             }
         }
 
         return new(principal);
     }
 
-    public async Task LoginAsync(string username, string password)
+    public async Task<BaseResponse<ApplicationUserViewModel>> LoginAsync(string username, string password)
     {
-        ClaimsPrincipal principal = new ();
-        User? user = await webUserService.FindUserFromDatabaseAsync(username, password);
-        if (user is not null)
+        ClaimsPrincipal principal = new();
+        var response = await authenticationService.AuthenticateUserAsync(
+            new AuthenticationRequest
+            {
+                Email = username,
+                Password = password
+            });
+        if (response.Success && response.Content is not null)
         {
-            principal = user.ToClaimsPrincipal();
-            CurrentUser = user;
+            principal = response.Content.ToClaimsPrincipal();
+            CurrentUser = response.Content;
         }
 
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
+
+        return response;
     }
 
     public async Task LogoutAsync()
     {
-        await webUserService.ClearBrowserUserDataAsync();
+        await authenticationService.ClearBrowserUserDataAsync();
 
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal())));
     }
@@ -60,7 +74,7 @@ public class ResourceIdeaAuthenticationStateProvider : AuthenticationStateProvid
         var authenticationState = await task;
         if (authenticationState is not null)
         {
-            CurrentUser = User.FromClaimsPrincipal(authenticationState.User);
+            CurrentUser = ApplicationUserViewModel.FromClaimsPrincipal(authenticationState.User);
         }
     }
 

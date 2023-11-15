@@ -92,6 +92,7 @@ public static class PersistenceServiceRegistration
     /// <returns>Services collection.</returns>
     public static IServiceCollection AddWebPersistentServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.RegisterAuthIdentityServices(configuration);
         services.RegisterAppServices();
 

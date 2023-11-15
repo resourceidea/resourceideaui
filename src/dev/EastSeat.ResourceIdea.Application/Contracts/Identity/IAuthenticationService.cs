@@ -13,14 +13,14 @@ public interface IAuthenticationService
     /// </summary>
     /// <param name="request">Authentication request.</param>
     /// <returns>Authentication response.</returns>
-    Task<ApiAuthenticationResponse> AuthenticateApiUserAsync(AuthenticationRequest request);
+    //Task<ApiAuthenticationResponse> AuthenticateApiUserAsync(AuthenticationRequest request);
 
     /// <summary>
     /// Handles authentication of a web user.
     /// </summary>
     /// <param name="request">Authentication request.</param>
     /// <returns>Authentication response.</returns>
-    Task<WebAuthenticationResponse> AuthenticateWebUserAsync(AuthenticationRequest request);
+    Task<BaseResponse<ApplicationUserViewModel>> AuthenticateUserAsync(AuthenticationRequest request);
 
     /// <summary>
     /// Delete user from the system.
@@ -35,4 +35,11 @@ public interface IAuthenticationService
     /// <param name="request">User registration request.</param>
     /// <returns>User registration response.</returns>
     Task<UserRegistrationResponse> RegisterUserAsync(UserRegistrationRequest request);
+
+    /// <summary>
+    /// Get the application user given the Id.
+    /// </summary>
+    /// <param name="id">Application user Id.</param>
+    /// <returns>Operation response with application user as content.</returns>
+    Task<BaseResponse<ApplicationUserViewModel>> GetApplicationUserAsync(Guid id);
 }

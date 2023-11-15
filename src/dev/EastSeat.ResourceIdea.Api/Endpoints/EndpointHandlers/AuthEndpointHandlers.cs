@@ -15,16 +15,20 @@ public static class AuthEndpointHandlers
     /// <param name="authenticationService"></param>
     /// <param name="authenticationRequest"></param>
     /// <returns></returns>
-    public static async Task<IResult> AuthenticateAsync(IAuthenticationService authenticationService, AuthenticationRequest authenticationRequest)
+    public static Task<IResult> AuthenticateAsync(IAuthenticationService authenticationService, AuthenticationRequest authenticationRequest)
     {
-        var authenticationResponse = await authenticationService.AuthenticateApiUserAsync(authenticationRequest);
-        var response = new ApiResponse<AuthenticationResponse>(
-            authenticationResponse,
-            authenticationResponse.Success,
-            authenticationResponse.Message,
-            authenticationResponse.ErrorCode
-        );
+        //var authenticationResponse = await authenticationService.AuthenticateApiUserAsync(authenticationRequest);
+        //var response = new BaseResponse<AuthenticationResponse>
+        //{
+        //    Content = authenticationResponse.
+        //}; (
+        //    authenticationResponse,
+        //    authenticationResponse.Success,
+        //    authenticationResponse.Message,
+        //    authenticationResponse.ErrorCode
+        //);
 
-        return response.Success ? TypedResults.Ok(response) : TypedResults.BadRequest(response);
+        //return response.Success ? TypedResults.Ok(response) : TypedResults.BadRequest(response);
+        throw new NotImplementedException();
     }
 }

@@ -30,12 +30,14 @@ public static class SubscriptionEndpointsHandlers
     {
         var commandResponse = await mediator.Send(createSubscriptionCommand);
 
-        var response = new ApiResponse<CreateSubscriptionViewModel>(
-            data: commandResponse.Subscription,
-            success: commandResponse.Success,
-            message: commandResponse.Message,
-            errorCode: commandResponse.ErrorCode
-        );
+        var response = new BaseResponse<CreateSubscriptionViewModel>
+        {
+            Success = commandResponse.Success,
+            Message = commandResponse.Message,
+            ErrorCode = commandResponse.ErrorCode,
+            Errors = commandResponse.Errors,
+            Content = commandResponse.Content
+        };
 
         return response.Success ? TypedResults.Ok(response) : TypedResults.BadRequest(response);
     }

@@ -44,7 +44,7 @@ public class CreateApplicationUserCommandHandler : IRequestHandler<CreateApplica
             response.Success = userRegistrationResponse.Success;
             response.Message = userRegistrationResponse.Message;
             response.Errors = userRegistrationResponse.Errors;
-            response.ApplicationUser = userRegistrationResponse.ApplicationUser;
+            response.Content = userRegistrationResponse.Content;
         }
 
         return response;

@@ -3,7 +3,7 @@
 /// <summary>
 /// Base response class.
 /// </summary>
-public class BaseResponse
+public class BaseResponse<T> where T : class
 {
     /// <summary>
     /// True if response is a success, otherwise False.
@@ -66,4 +66,9 @@ public class BaseResponse
         Message = message;
         ErrorCode = errorCode;
     }
+
+    /// <summary>
+    /// Response content.
+    /// </summary>
+    public T? Content { get; set; } = default;
 }
