@@ -17,4 +17,8 @@
     <ProjectReference Include="..\EastSeat.ResourceIdea.Persistence\EastSeat.ResourceIdea.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

@@ -1,6 +1,6 @@
 ﻿using EastSeat.ResourceIdea.Application;
 using EastSeat.ResourceIdea.Persistence;
-using EastSeat.ResourceIdea.Web.Services;
+using EastSeat.ResourceIdea.Persistence.Services;
 using EastSeat.ResourceIdea.Web.Data;
 
 using Microsoft.AspNetCore.Components.Authorization;
