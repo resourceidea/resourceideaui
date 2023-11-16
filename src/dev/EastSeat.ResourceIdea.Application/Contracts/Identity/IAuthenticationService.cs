@@ -1,4 +1,5 @@
-﻿using EastSeat.ResourceIdea.Application.Models;
+﻿using EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
+using EastSeat.ResourceIdea.Application.Models;
 using EastSeat.ResourceIdea.Application.Responses;
 
 namespace EastSeat.ResourceIdea.Application.Contracts.Identity;
@@ -34,7 +35,7 @@ public interface IAuthenticationService
     /// </summary>
     /// <param name="request">User registration request.</param>
     /// <returns>User registration response.</returns>
-    Task<UserRegistrationResponse> RegisterUserAsync(UserRegistrationRequest request);
+    Task<BaseResponse<CreateApplicationUserViewModel>> RegisterUserAsync(UserRegistrationRequest request);
 
     /// <summary>
     /// Get the application user given the Id.

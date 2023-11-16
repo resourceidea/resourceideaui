@@ -2,6 +2,8 @@
 using System.Security.Claims;
 using System.Text;
 
+using AutoMapper;
+
 using EastSeat.ResourceIdea.Application.Contracts.Identity;
 using EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
 using EastSeat.ResourceIdea.Application.Models;
@@ -19,9 +21,10 @@ namespace EastSeat.ResourceIdea.Persistence.Services;
 /// </summary>
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly JwtSettings _jwtSettings;
+    private readonly UserManager<ApplicationUser> userManager;
+    private readonly SignInManager<ApplicationUser> signInManager;
+    private readonly JwtSettings jwtSettings;
+    private readonly IMapper mapper;
 
     /// <summary>
     /// Initializes an instance of <see cref="AuthenticationService"/>.
@@ -32,17 +35,20 @@ public class AuthenticationService : IAuthenticationService
     public AuthenticationService(
         UserManager<ApplicationUser> userManager,
         IOptions<JwtSettings> jwtSettings,
-        SignInManager<ApplicationUser> signInManager)
+        SignInManager<ApplicationUser> signInManager,
+        IMapper mapper)
     {
-        _userManager = userManager;
-        _jwtSettings = jwtSettings.Value;
-        _signInManager = signInManager;
+        this.userManager = userManager;
+        this.jwtSettings = jwtSettings.Value;
+        this.signInManager = signInManager;
+        this.mapper = mapper;
     }
 
+    // Uncomment block when implementing API authentication.
     /// <inheritdoc />
     //public async Task<BaseResponse<ApplicationUserViewModel>> AuthenticateApiUserAsync(AuthenticationRequest request)
     //{
-    //    var user = await _userManager.FindByEmailAsync(request.Email) ?? throw new Exception($"User with {request.Email} not found.");
+    //    var user = await userManager.FindByEmailAsync(request.Email) ?? throw new Exception($"User with {request.Email} not found.");
     //    if (user.UserName is null || user.Email is null)
     //    {
     //        return new BaseResponse<ApplicationUserViewModel>
@@ -55,7 +61,7 @@ public class AuthenticationService : IAuthenticationService
     //        };
     //    }
 
-    //    var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
+    //    var result = await signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
 
     //    if (!result.Succeeded)
     //    {
@@ -90,55 +96,48 @@ public class AuthenticationService : IAuthenticationService
     /// <inheritdoc />
     public async Task<BaseResponse<ApplicationUserViewModel>> AuthenticateUserAsync(AuthenticationRequest request)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user is null)
+        var applicationUser = await userManager.FindByEmailAsync(request.Email);
+        if (applicationUser is null)
         {
-            return new BaseResponse<ApplicationUserViewModel>
-            {
-                Success = false,
-                Content = null,
-                Message = "User not found",
-                ErrorCode = "UserNotFound",
-                Errors = new List<string> { "User not found" }
-            };
+            return GetFailedResponse(message: "User not found", errorCode: "UserNotFound");
         }
 
-        return new BaseResponse<ApplicationUserViewModel>
+        var result = await signInManager.PasswordSignInAsync(applicationUser.UserName ?? string.Empty, request.Password, false, false);
+        if (!result.Succeeded)
+        {
+            return GetFailedResponse(message: "Invalid login credentials entered", errorCode: "InvalidCredentials");
+        }
+
+        var response = new BaseResponse<ApplicationUserViewModel>
         {
             Success = true,
-            Content = new ApplicationUserViewModel
-            {
-                Id = user.Id,
-                Email = user.Email,
-                UserName = user.UserName,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                SubscriptionId = user.SubscriptionId
-            }
+            Content = mapper.Map<ApplicationUserViewModel>(applicationUser)
         };
+
+        return response;
     }
 
     /// <inheritdoc />
     public async Task DeleteUserAsync(Guid userId)
     {
-        var applicationUser = await _userManager.FindByIdAsync(userId.ToString());
+        var applicationUser = await userManager.FindByIdAsync(userId.ToString());
         if (applicationUser is not null)
         {
-            await _userManager.DeleteAsync(applicationUser);
+            await userManager.DeleteAsync(applicationUser);
         }
     }
 
     /// <inheritdoc />
-    public async Task<UserRegistrationResponse> RegisterUserAsync(UserRegistrationRequest request)
+    public async Task<BaseResponse<CreateApplicationUserViewModel>> RegisterUserAsync(UserRegistrationRequest request)
     {
-        var existingUser = await _userManager.FindByNameAsync(request.Email);
+        BaseResponse<CreateApplicationUserViewModel> response = new();
 
-        if (existingUser != null)
+        if (await UserExistsAsync(request))
         {
-            return new UserRegistrationResponse
+            return new BaseResponse<CreateApplicationUserViewModel>
             {
                 Success = false,
-                Message = $"Username already exists."
+                Message = Constants.ErrorMessages.Commands.CreateApplicationUsers.EmailExists
             };
         }
 
@@ -152,38 +151,28 @@ public class AuthenticationService : IAuthenticationService
             SubscriptionId = request.SubscriptionId
         };
 
-        UserRegistrationResponse response = new();
-        var existingEmail = await _userManager.FindByEmailAsync(request.Email);
-        if (existingEmail == null)
-        {
-            var result = await _userManager.CreateAsync(user, request.Password);
-            if (result.Succeeded)
-            {
-                response.Content = new CreateApplicationUserViewModel
-                {
-                    UserId = Guid.Parse(user.Id),
-                    SubscriptionId = user.SubscriptionId,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email
-                };
-            }
-            else
-            {
-                response.Success = false;
-                response.Message = Constants.ErrorMessages.Commands.CreateApplicationUsers.UserRegistrationFailed;
-                response.Errors = new List<string>();
-                foreach (var error in result.Errors)
-                {
-                    response.Errors.Add(error.Description);
-                }
-            }
-        }
-        else
+        var result = await userManager.CreateAsync(user, request.Password);
+        if (!result.Succeeded)
         {
             response.Success = false;
-            response.Message = Constants.ErrorMessages.Commands.CreateApplicationUsers.EmailExists;
+            response.Message = Constants.ErrorMessages.Commands.CreateApplicationUsers.UserRegistrationFailed;
+            response.Errors = new List<string>();
+            foreach (var error in result.Errors)
+            {
+                response.Errors.Add(error.Description);
+            }
+
+            return response;
         }
+
+        response.Content = new CreateApplicationUserViewModel
+        {
+            UserId = Guid.Parse(user.Id),
+            SubscriptionId = user.SubscriptionId,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email
+        };
 
         return response;
     }
@@ -191,7 +180,7 @@ public class AuthenticationService : IAuthenticationService
     /// <inheritdoc />
     public async Task<BaseResponse<ApplicationUserViewModel>> GetApplicationUserAsync(Guid id)
     {
-        var applicationUser = await _userManager.FindByIdAsync(id.ToString());
+        var applicationUser = await userManager.FindByIdAsync(id.ToString());
         if (applicationUser is null)
         {
             return new BaseResponse<ApplicationUserViewModel>
@@ -217,37 +206,62 @@ public class AuthenticationService : IAuthenticationService
         };
     }
 
-    private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)
+    // Uncomment block when implementing API authentication.
+    //private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)
+    //{
+    //    var userClaims = await userManager.GetClaimsAsync(user);
+    //    var roles = await userManager.GetRolesAsync(user);
+
+    //    var roleClaims = new List<Claim>();
+
+    //    for (int i = 0; i < roles.Count; i++)
+    //    {
+    //        roleClaims.Add(new Claim("roles", roles[i]));
+    //    }
+
+    //    var claims = new[]
+    //    {
+    //            new Claim(JwtRegisteredClaimNames.Sub, user.UserName ?? string.Empty),
+    //            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+    //            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
+    //            new Claim("uid", user.Id)
+    //        }
+    //    .Union(userClaims)
+    //    .Union(roleClaims);
+
+    //    var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key));
+    //    var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+
+    //    var jwtSecurityToken = new JwtSecurityToken(
+    //        issuer: jwtSettings.Issuer,
+    //        audience: jwtSettings.Audience,
+    //        claims: claims,
+    //        expires: DateTime.UtcNow.AddMinutes(jwtSettings.DurationInMinutes),
+    //        signingCredentials: signingCredentials);
+    //    return jwtSecurityToken;
+    //}
+
+    private static BaseResponse<ApplicationUserViewModel> GetFailedResponse(string message, string errorCode)
     {
-        var userClaims = await _userManager.GetClaimsAsync(user);
-        var roles = await _userManager.GetRolesAsync(user);
-
-        var roleClaims = new List<Claim>();
-
-        for (int i = 0; i < roles.Count; i++)
+        return new BaseResponse<ApplicationUserViewModel>
         {
-            roleClaims.Add(new Claim("roles", roles[i]));
+            Success = false,
+            Content = null,
+            Message = message,
+            ErrorCode = errorCode
+        };
+    }
+
+    private async Task<bool> UserExistsAsync(UserRegistrationRequest request)
+    {
+        var existingUser = await userManager.FindByEmailAsync(request.Email);
+        var existingEmail = await userManager.FindByNameAsync(request.Email);
+
+        if (existingUser is not null || existingEmail is not null)
+        {
+            return true;
         }
 
-        var claims = new[]
-        {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName ?? string.Empty),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
-                new Claim("uid", user.Id)
-            }
-        .Union(userClaims)
-        .Union(roleClaims);
-
-        var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
-        var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
-        var jwtSecurityToken = new JwtSecurityToken(
-            issuer: _jwtSettings.Issuer,
-            audience: _jwtSettings.Audience,
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
-            signingCredentials: signingCredentials);
-        return jwtSecurityToken;
+        return false;
     }
 }

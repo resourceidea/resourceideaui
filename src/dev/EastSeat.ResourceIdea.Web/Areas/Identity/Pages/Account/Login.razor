@@ -8,7 +8,7 @@
         <h3>Login</h3>
     </div>
     <div class="card-body">
-        <EditForm Model="@model" OnValidSubmit="@LoginAsync">
+        <EditForm EditContext="editContext" OnValidSubmit="@LoginAsync">
             <DataAnnotationsValidator />
             <ValidationSummary />
 
@@ -32,6 +32,14 @@
 
 @code {
     private AuthenticationRequest model = new AuthenticationRequest();
+    private EditContext editContext = default!;
+    private ValidationMessageStore validationMessageStore = default!;
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(model);
+        validationMessageStore = new ValidationMessageStore(editContext);
+    }
 
     private async Task LoginAsync()
     {
@@ -42,6 +50,10 @@
             {
                 NavigationManager.NavigateTo("/");
             }
+
+            model.Password = string.Empty;
+            validationMessageStore.Add(editContext.Field(nameof(model.Email)), response.Message);
+            editContext.NotifyValidationStateChanged();
         }
     }
 

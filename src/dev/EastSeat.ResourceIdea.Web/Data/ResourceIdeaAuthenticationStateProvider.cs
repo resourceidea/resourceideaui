@@ -1,9 +1,11 @@
 ﻿using System.Security.Claims;
+using System.Text.Json;
 
 using EastSeat.ResourceIdea.Application.Responses;
-using EastSeat.ResourceIdea.Web.Services;
+using EastSeat.ResourceIdea.Persistence.Services;
 
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace EastSeat.ResourceIdea.Web.Data;
 
@@ -11,10 +13,14 @@ public class ResourceIdeaAuthenticationStateProvider : AuthenticationStateProvid
 {
     private readonly AuthenticationService authenticationService;
 
+    private readonly ProtectedLocalStorage protectedLocalStorage;
+    private readonly string webUserStorageKey = "resourceIdeaWebUserIdentity";
+
     public ApplicationUserViewModel? CurrentUser { get; private set; } = new();
 
-    public ResourceIdeaAuthenticationStateProvider(AuthenticationService authenticationService)
+    public ResourceIdeaAuthenticationStateProvider(AuthenticationService authenticationService, ProtectedLocalStorage protectedLocalStorage)
     {
+        this.protectedLocalStorage = protectedLocalStorage;
         this.authenticationService = authenticationService;
         AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
     }
@@ -22,7 +28,7 @@ public class ResourceIdeaAuthenticationStateProvider : AuthenticationStateProvid
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         ClaimsPrincipal principal = new();
-        var user = await authenticationService.FetchUserFromBrowserAsync();
+        var user = await FetchUserFromBrowserAsync();
         if (user is not null)
         {
             var response = await authenticationService.AuthenticateUserAsync(
@@ -36,6 +42,7 @@ public class ResourceIdeaAuthenticationStateProvider : AuthenticationStateProvid
             if (response.Success && response.Content is not null)
             {
                 principal = response.Content.ToClaimsPrincipal();
+                await PersistUserToBrowserAsync(response.Content);
             }
         }
 
@@ -55,6 +62,7 @@ public class ResourceIdeaAuthenticationStateProvider : AuthenticationStateProvid
         {
             principal = response.Content.ToClaimsPrincipal();
             CurrentUser = response.Content;
+            await PersistUserToBrowserAsync(response.Content);
         }
 
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
@@ -64,10 +72,40 @@ public class ResourceIdeaAuthenticationStateProvider : AuthenticationStateProvid
 
     public async Task LogoutAsync()
     {
-        await authenticationService.ClearBrowserUserDataAsync();
-
+        await ClearBrowserUserDataAsync();
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal())));
     }
+
+    public async Task PersistUserToBrowserAsync(ApplicationUserViewModel user)
+    {
+        string userJson = JsonSerializer.Serialize(user);
+        await protectedLocalStorage.SetAsync(webUserStorageKey, userJson);
+    }
+
+    public async Task<ApplicationUserViewModel?> FetchUserFromBrowserAsync()
+    {
+        // When Blazor Server is rendering at server side, the browser storage is not available.
+        // Therefore, put an empty try/catch block around the call to the browser storage.
+        try
+        {
+            var fetchedUserResult = await protectedLocalStorage.GetAsync<string>(webUserStorageKey);
+            if (fetchedUserResult.Success && !string.IsNullOrEmpty(fetchedUserResult.Value))
+            {
+                string userJson = fetchedUserResult.Value;
+                ApplicationUserViewModel? user = JsonSerializer.Deserialize<ApplicationUserViewModel>(userJson);
+                return user;
+            }
+        }
+        catch
+        {
+        }
+
+        return null;
+    }
+
+    public void Dispose() => AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
+
+    public async Task ClearBrowserUserDataAsync() => await protectedLocalStorage.DeleteAsync(webUserStorageKey);
 
     private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task)
     {
@@ -77,6 +115,4 @@ public class ResourceIdeaAuthenticationStateProvider : AuthenticationStateProvid
             CurrentUser = ApplicationUserViewModel.FromClaimsPrincipal(authenticationState.User);
         }
     }
-
-    public void Dispose() => AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
 }
