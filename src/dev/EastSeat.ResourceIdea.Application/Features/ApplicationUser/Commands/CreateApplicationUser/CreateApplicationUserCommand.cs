@@ -1,11 +1,13 @@
-﻿using MediatR;
+﻿using EastSeat.ResourceIdea.Application.Responses;
+
+using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
 
 /// <summary>
 /// Command to create an application user.
 /// </summary>
-public class CreateApplicationUserCommand : IRequest<CreateApplicationUserCommandResponse>
+public class CreateApplicationUserCommand : IRequest<BaseResponse<CreateApplicationUserViewModel>>
 {
     /// <summary>Application user's first name.</summary>
     public string FirstName { get; set; } = string.Empty;

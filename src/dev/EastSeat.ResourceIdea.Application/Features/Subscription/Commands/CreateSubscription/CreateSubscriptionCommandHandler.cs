@@ -18,7 +18,7 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
 {
     private readonly IMapper mapper;
     private readonly ISubscriptionRepository subscriptionRepository;
-    private readonly IAuthenticationService authenticationService;
+    private readonly IResourceIdeaAuthenticationService authenticationService;
     private readonly IEmployeeRepository employeeRepository;
 
     /// <summary>
@@ -30,7 +30,7 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
     public CreateSubscriptionCommandHandler(
         IMapper mapper,
         ISubscriptionRepository subscriptionRepository,
-        IAuthenticationService authenticationService,
+        IResourceIdeaAuthenticationService authenticationService,
         IEmployeeRepository employeeRepository)
     {
         this.mapper = mapper;

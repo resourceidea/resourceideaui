@@ -48,7 +48,7 @@
             var response = await ResourceIdeaAuthenticationStateProvider.LoginAsync(model.Email, model.Password);
             if (response.Success)
             {
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/", true);
             }
 
             model.Password = string.Empty;

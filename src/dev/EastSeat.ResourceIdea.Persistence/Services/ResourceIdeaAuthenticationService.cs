@@ -10,6 +10,7 @@ using EastSeat.ResourceIdea.Application.Models;
 using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Persistence.Models;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -17,9 +18,9 @@ using Microsoft.IdentityModel.Tokens;
 namespace EastSeat.ResourceIdea.Persistence.Services;
 
 /// <summary>
-/// Implements <see cref="IAuthenticationService"/>.
+/// Implements <see cref="IResourceIdeaAuthenticationService"/>.
 /// </summary>
-public class AuthenticationService : IAuthenticationService
+public class ResourceIdeaAuthenticationService : IResourceIdeaAuthenticationService
 {
     private readonly UserManager<ApplicationUser> userManager;
     private readonly SignInManager<ApplicationUser> signInManager;
@@ -27,12 +28,12 @@ public class AuthenticationService : IAuthenticationService
     private readonly IMapper mapper;
 
     /// <summary>
-    /// Initializes an instance of <see cref="AuthenticationService"/>.
+    /// Initializes an instance of <see cref="ResourceIdeaAuthenticationService"/>.
     /// </summary>
     /// <param name="userManager"></param>
     /// <param name="jwtSettings"></param>
     /// <param name="signInManager"></param>
-    public AuthenticationService(
+    public ResourceIdeaAuthenticationService(
         UserManager<ApplicationUser> userManager,
         IOptions<JwtSettings> jwtSettings,
         SignInManager<ApplicationUser> signInManager,
@@ -102,7 +103,7 @@ public class AuthenticationService : IAuthenticationService
             return GetFailedResponse(message: "User not found", errorCode: "UserNotFound");
         }
 
-        var result = await signInManager.PasswordSignInAsync(applicationUser.UserName ?? string.Empty, request.Password, false, false);
+        var result = await signInManager.CheckPasswordSignInAsync(applicationUser, request.Password, false);
         if (!result.Succeeded)
         {
             return GetFailedResponse(message: "Invalid login credentials entered", errorCode: "InvalidCredentials");
@@ -134,11 +135,10 @@ public class AuthenticationService : IAuthenticationService
 
         if (await UserExistsAsync(request))
         {
-            return new BaseResponse<CreateApplicationUserViewModel>
-            {
-                Success = false,
-                Message = Constants.ErrorMessages.Commands.CreateApplicationUsers.EmailExists
-            };
+            response.Success = false;
+            response.Message = Constants.ErrorMessages.Commands.CreateApplicationUsers.EmailExists;
+
+            return response;
         }
 
         var user = new ApplicationUser

@@ -3,6 +3,7 @@ using System.Text.Json;
 
 using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Persistence.Services;
+using EastSeat.ResourceIdea.Web.Services;
 
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -11,24 +12,25 @@ namespace EastSeat.ResourceIdea.Web.Data;
 
 public class ResourceIdeaAuthenticationStateProvider : AuthenticationStateProvider
 {
-    private readonly AuthenticationService authenticationService;
-
+    private readonly ResourceIdeaAuthenticationService authenticationService;
+    private readonly WebUserService webUserService;
     private readonly ProtectedLocalStorage protectedLocalStorage;
     private readonly string webUserStorageKey = "resourceIdeaWebUserIdentity";
 
     public ApplicationUserViewModel? CurrentUser { get; private set; } = new();
 
-    public ResourceIdeaAuthenticationStateProvider(AuthenticationService authenticationService, ProtectedLocalStorage protectedLocalStorage)
+    public ResourceIdeaAuthenticationStateProvider(ResourceIdeaAuthenticationService authenticationService, ProtectedLocalStorage protectedLocalStorage, WebUserService webUserService)
     {
         this.protectedLocalStorage = protectedLocalStorage;
         this.authenticationService = authenticationService;
+        this.webUserService = webUserService;
         AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         ClaimsPrincipal principal = new();
-        var user = await FetchUserFromBrowserAsync();
+        var user = await webUserService.FetchUserFromBrowserAsync();
         if (user is not null)
         {
             var response = await authenticationService.AuthenticateUserAsync(
@@ -42,7 +44,7 @@ public class ResourceIdeaAuthenticationStateProvider : AuthenticationStateProvid
             if (response.Success && response.Content is not null)
             {
                 principal = response.Content.ToClaimsPrincipal();
-                await PersistUserToBrowserAsync(response.Content);
+                await webUserService.PersistUserToBrowserAsync(response.Content);
             }
         }
 
@@ -52,17 +54,11 @@ public class ResourceIdeaAuthenticationStateProvider : AuthenticationStateProvid
     public async Task<BaseResponse<ApplicationUserViewModel>> LoginAsync(string username, string password)
     {
         ClaimsPrincipal principal = new();
-        var response = await authenticationService.AuthenticateUserAsync(
-            new AuthenticationRequest
-            {
-                Email = username,
-                Password = password
-            });
+        var response = await webUserService.FindUserFromDatabaseAsync(username, password);
+        CurrentUser = response.Content;
         if (response.Success && response.Content is not null)
         {
             principal = response.Content.ToClaimsPrincipal();
-            CurrentUser = response.Content;
-            await PersistUserToBrowserAsync(response.Content);
         }
 
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
@@ -74,33 +70,6 @@ public class ResourceIdeaAuthenticationStateProvider : AuthenticationStateProvid
     {
         await ClearBrowserUserDataAsync();
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal())));
-    }
-
-    public async Task PersistUserToBrowserAsync(ApplicationUserViewModel user)
-    {
-        string userJson = JsonSerializer.Serialize(user);
-        await protectedLocalStorage.SetAsync(webUserStorageKey, userJson);
-    }
-
-    public async Task<ApplicationUserViewModel?> FetchUserFromBrowserAsync()
-    {
-        // When Blazor Server is rendering at server side, the browser storage is not available.
-        // Therefore, put an empty try/catch block around the call to the browser storage.
-        try
-        {
-            var fetchedUserResult = await protectedLocalStorage.GetAsync<string>(webUserStorageKey);
-            if (fetchedUserResult.Success && !string.IsNullOrEmpty(fetchedUserResult.Value))
-            {
-                string userJson = fetchedUserResult.Value;
-                ApplicationUserViewModel? user = JsonSerializer.Deserialize<ApplicationUserViewModel>(userJson);
-                return user;
-            }
-        }
-        catch
-        {
-        }
-
-        return null;
     }
 
     public void Dispose() => AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
