@@ -7,7 +7,7 @@ namespace EastSeat.ResourceIdea.Application.Contracts.Identity;
 /// <summary>
 /// Authentication service.
 /// </summary>
-public interface IAuthenticationService
+public interface IResourceIdeaAuthenticationService
 {
     /// <summary>
     /// Handles authentication requests.

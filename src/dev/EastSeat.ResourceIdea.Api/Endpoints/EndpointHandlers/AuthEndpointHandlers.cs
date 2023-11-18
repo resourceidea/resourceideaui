@@ -15,7 +15,7 @@ public static class AuthEndpointHandlers
     /// <param name="authenticationService"></param>
     /// <param name="authenticationRequest"></param>
     /// <returns></returns>
-    public static Task<IResult> AuthenticateAsync(IAuthenticationService authenticationService, AuthenticationRequest authenticationRequest)
+    public static Task<IResult> AuthenticateAsync(IResourceIdeaAuthenticationService authenticationService, AuthenticationRequest authenticationRequest)
     {
         //var authenticationResponse = await authenticationService.AuthenticateApiUserAsync(authenticationRequest);
         //var response = new BaseResponse<AuthenticationResponse>

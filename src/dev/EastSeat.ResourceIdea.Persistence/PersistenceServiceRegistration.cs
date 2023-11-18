@@ -126,10 +126,18 @@ public static class PersistenceServiceRegistration
             options.SignIn.RequireConfirmedAccount = false;
             options.SignIn.RequireConfirmedPhoneNumber = false;
             options.SignIn.RequireConfirmedEmail = false;
+
+            options.Password.RequireDigit = false;
+            options.Password.RequiredLength = 8;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireLowercase = false;
+
+            options.User.RequireUniqueEmail = true;
         })
         .AddEntityFrameworkStores<ResourceIdeaDbContext>()
         .AddDefaultTokenProviders();
 
-        services.AddTransient<IAuthenticationService, AuthenticationService>();
+        services.AddTransient<IResourceIdeaAuthenticationService, ResourceIdeaAuthenticationService>();
     }
 }
