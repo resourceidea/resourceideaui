@@ -120,7 +120,6 @@ public static class PersistenceServiceRegistration
             options => options.UseSqlServer(connectionString: configuration.GetConnectionString("DefaultConnectionString"),
                                             sqlServerOptionsAction: b => b.MigrationsAssembly(typeof(ResourceIdeaDbContext).Assembly.FullName))
         );
-        services.AddDatabaseDeveloperPageExceptionFilter();
 
         services.AddIdentity<ApplicationUser, IdentityRole>(options => {
             options.SignIn.RequireConfirmedAccount = false;
@@ -139,5 +138,6 @@ public static class PersistenceServiceRegistration
         .AddDefaultTokenProviders();
 
         services.AddTransient<IResourceIdeaAuthenticationService, ResourceIdeaAuthenticationService>();
+        services.AddDatabaseDeveloperPageExceptionFilter();
     }
 }
