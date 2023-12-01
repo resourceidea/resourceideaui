@@ -34,7 +34,7 @@ jobs:
     - name: Build solution
       run: |
         dotnet restore ./src/EastSeat.ResourceIdea.sln
-        dotnet build ./src/EastSeat.ResourceIdea.sln --no-restore --framework net7.0
+        dotnet build ./src/EastSeat.ResourceIdea.sln --no-restore --framework net8.0
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
