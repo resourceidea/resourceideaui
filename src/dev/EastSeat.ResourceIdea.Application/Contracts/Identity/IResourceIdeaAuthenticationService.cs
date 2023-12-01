@@ -1,6 +1,7 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
 using EastSeat.ResourceIdea.Application.Models;
 using EastSeat.ResourceIdea.Application.Responses;
+using EastSeat.ResourceIdea.Domain.Enums;
 
 namespace EastSeat.ResourceIdea.Application.Contracts.Identity;
 
@@ -20,8 +21,9 @@ public interface IResourceIdeaAuthenticationService
     /// Handles authentication of a web user.
     /// </summary>
     /// <param name="request">Authentication request.</param>
+    /// <param name="authenticationOptions">Option used to authentication.</param>
     /// <returns>Authentication response.</returns>
-    Task<BaseResponse<ApplicationUserViewModel>> AuthenticateUserAsync(AuthenticationRequest request);
+    Task<BaseResponse<ApplicationUserViewModel>> AuthenticateUserAsync(AuthenticationRequest request, ResourceIdeaAuthenticationOption authenticationOption);
 
     /// <summary>
     /// Delete user from the system.

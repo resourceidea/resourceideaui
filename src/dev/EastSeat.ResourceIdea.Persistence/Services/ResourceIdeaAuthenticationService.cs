@@ -8,6 +8,7 @@ using EastSeat.ResourceIdea.Application.Contracts.Identity;
 using EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
 using EastSeat.ResourceIdea.Application.Models;
 using EastSeat.ResourceIdea.Application.Responses;
+using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Persistence.Models;
 
 using Microsoft.AspNetCore.Http;
@@ -95,27 +96,16 @@ public class ResourceIdeaAuthenticationService : IResourceIdeaAuthenticationServ
     //}
 
     /// <inheritdoc />
-    public async Task<BaseResponse<ApplicationUserViewModel>> AuthenticateUserAsync(AuthenticationRequest request)
+    public async Task<BaseResponse<ApplicationUserViewModel>> AuthenticateUserAsync(AuthenticationRequest request, ResourceIdeaAuthenticationOption authenticationOption)
     {
-        var applicationUser = await userManager.FindByEmailAsync(request.Email);
-        if (applicationUser is null)
+        var authenticationResponse = authenticationOption switch
         {
-            return GetFailedResponse(message: "User not found", errorCode: "UserNotFound");
-        }
-
-        var result = await signInManager.CheckPasswordSignInAsync(applicationUser, request.Password, false);
-        if (!result.Succeeded)
-        {
-            return GetFailedResponse(message: "Invalid login credentials entered", errorCode: "InvalidCredentials");
-        }
-
-        var response = new BaseResponse<ApplicationUserViewModel>
-        {
-            Success = true,
-            Content = mapper.Map<ApplicationUserViewModel>(applicationUser)
+            ResourceIdeaAuthenticationOption.Web => await AuthenticateWebUserAsync(request),
+            ResourceIdeaAuthenticationOption.Api => await AuthenticateApiUserAsync(request),
+            _ => throw new NotImplementedException()
         };
 
-        return response;
+        return authenticationResponse;
     }
 
     /// <inheritdoc />
@@ -263,5 +253,49 @@ public class ResourceIdeaAuthenticationService : IResourceIdeaAuthenticationServ
         }
 
         return false;
+    }
+
+    private async Task<BaseResponse<ApplicationUserViewModel>> AuthenticateApiUserAsync(AuthenticationRequest request)
+    {
+        var applicationUser = await userManager.FindByEmailAsync(request.Email);
+        if (applicationUser is null)
+        {
+            return GetFailedResponse(message: "User not found", errorCode: "UserNotFound");
+        }
+
+        var result = await signInManager.CheckPasswordSignInAsync(applicationUser, request.Password, false);
+        if (!result.Succeeded)
+        {
+            return GetFailedResponse(message: "Invalid login credentials entered", errorCode: "InvalidCredentials");
+        }
+
+        var response = new BaseResponse<ApplicationUserViewModel>
+        {
+            Success = true,
+            Content = mapper.Map<ApplicationUserViewModel>(applicationUser)
+        };
+
+        return response;
+    }
+
+    private async Task<BaseResponse<ApplicationUserViewModel>> AuthenticateWebUserAsync(AuthenticationRequest request)
+    {
+        BaseResponse<ApplicationUserViewModel> response = new();
+        var result = await signInManager.PasswordSignInAsync(request.Email, request.Password, false, lockoutOnFailure: false);
+        if (!result.Succeeded)
+        {
+            response.Success = false;
+            response.Message = "Invalid login credentials entered";
+            response.ErrorCode = "InvalidCredentials";
+            response.Errors = new List<string> { "Invalid login credentials entered" };
+
+            return response;
+        }
+
+        var applicationUser = await userManager.FindByEmailAsync(request.Email);
+        response.Success = result.Succeeded;
+        response.Content = mapper.Map<ApplicationUserViewModel>(applicationUser);
+
+        return response;
     }
 }

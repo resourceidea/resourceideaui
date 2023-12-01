@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<PageTitle>ResourceIdea</PageTitle>
+<PageTitle>EastSeat.ResourceIdea.Web</PageTitle>
 
 <div class="page">
     <div class="sidebar">
@@ -8,9 +8,11 @@
     </div>
 
     <main>
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        <div class="top-row px-4">
+            <AuthorizeView>
+                <Authorized><a href="/identity/account/login" target="_blank">Login</a></Authorized>
+                <Authorized><a href="/identity/account/logout" target="_blank">Logout</a></Authorized>
+            </AuthorizeView>
         </div>
 
         <article class="content px-4">
