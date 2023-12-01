@@ -1,9 +1,5 @@
 using EastSeat.ResourceIdea.Application;
 using EastSeat.ResourceIdea.Persistence;
-using EastSeat.ResourceIdea.Web.Data;
-
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +9,6 @@ builder.Services.AddServerSideBlazor();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddWebPersistentServices(builder.Configuration);
-
-builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();
 
