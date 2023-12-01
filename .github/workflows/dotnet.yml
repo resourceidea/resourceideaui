@@ -22,6 +22,8 @@ jobs:
         dotnet-version: 7.0.x
     - name: Restore dependencies
       run: dotnet restore ./src/EastSeat.ResourceIdea.sln
+    - name: Clean solution
+      run: dotnet clean ./src/EastSeat.ResourceIdea.sln
     - name: Build
       run: dotnet build ./src/EastSeat.ResourceIdea.sln --no-restore
     - name: Test
