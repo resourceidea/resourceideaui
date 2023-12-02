@@ -10,8 +10,11 @@
     <main>
         <div class="top-row px-4">
             <AuthorizeView>
-                <Authorized><a href="/identity/account/login" target="_blank">Login</a></Authorized>
-                <Authorized><a href="/identity/account/logout" target="_blank">Logout</a></Authorized>
+                <Authorized>
+                    <a href="/identity/account/logout" target="_blank">@(context.User.Identity?.Name)</a>
+                    <a href="/identity/account/logout" target="_blank">Logout</a>
+                </Authorized>
+                <NotAuthorized><a href="/identity/account/login" target="_blank">Login</a></NotAuthorized>
             </AuthorizeView>
         </div>
 

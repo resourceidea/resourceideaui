@@ -12,6 +12,12 @@ public class Assignment : BaseSubscriptionEntity
     /// </summary>
     public Guid Id { get; set; } = Guid.Empty;
 
+    /// <summary>Details of the assignment.</summary>
+    public string Details { get; set; } = string.Empty;
+
+    /// <summary>Assignment task name</summary>
+    public string Task { get; set; } = string.Empty;
+
     /// <summary>
     /// Engagement that is being assigned to.
     /// </summary>

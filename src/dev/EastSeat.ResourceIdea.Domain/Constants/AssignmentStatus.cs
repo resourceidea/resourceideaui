@@ -17,4 +17,19 @@
             Removed
         }
     }
+
+    /// <summary>
+    /// Engagement constants.
+    /// </summary>
+    public static class Engagement
+    {
+        public enum Status
+        {
+            NotStarted,
+            InProgress,
+            Closed,
+            Blocked,
+            Removed
+        }
+    }
 }
