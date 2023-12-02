@@ -4,12 +4,41 @@
 
 <AuthorizeView>
     <Authorized>
-        <h1>Hello</h1>
-
-        Welcome to ResourceIdea, your business resource planning solution.
-
+        <div class="row">
+            <div class="col-8 order-2 order-md-2">
+                <p class="fs-5">Week Assignments</p>
+                <hr />
+                <div class="card">
+                    <div class="card-body bg-light">
+                        <h5 class="card-title">Task Name</h5>
+                        <h6 class="card-subtitle fw-lighter mb-2 text-body-secondary">Engagement Name</h6>
+                        <span class="pe-5 card-small-text">Days Left: #</span>
+                        <span class="ps-5 card-small-text">Progress: %</span><br />
+                        <span class="badge  bg-primary text-bg-primary">In Progress</span>
+                        <p class="mt-2 mb-0 card-small-text card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <span class="pe-5 card-small-text">Partner: <a href="#" class="card-small-text card-link">Name</a></span>
+                        <span class="ps-5 card-small-text">Manager: <a href="#" class="card-small-text card-link">Name</a></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 order-1 order-md-2">
+                <p class="fs-6">My Hub</p>
+                <div class="card">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Request Leave</li>
+                        <li class="list-group-item">Submit Expense</li>
+                        <li class="list-group-item">Submit Timesheet</li>
+                        <li class="list-group-item">Change Password</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </Authorized>
     <NotAuthorized>
         <p role="status"><a href="/identity/account/login">Login</a> to access this resource.</p>
     </NotAuthorized>
 </AuthorizeView>
+
+@{
+
+}

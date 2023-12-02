@@ -189,7 +189,7 @@ public class ResourceIdeaAuthenticationService : IResourceIdeaAuthenticationServ
             Content = new ApplicationUserViewModel
             {
                 Id = applicationUser.Id,
-                UserName = applicationUser.UserName,
+                UserName = applicationUser.UserName ?? string.Empty,
                 FirstName = applicationUser.FirstName,
                 SubscriptionId = applicationUser.SubscriptionId
             }

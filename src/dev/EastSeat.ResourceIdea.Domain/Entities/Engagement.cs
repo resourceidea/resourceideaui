@@ -10,6 +10,12 @@ public class Engagement : BaseSubscriptionEntity
     /// <summary>Engagement ID.</summary>
     public Guid Id { get; set; } = Guid.Empty;
 
+    /// <summary>Engagement's name.</summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>Engagement's description.</summary>
+    public string Description { get; set; } = string.Empty;
+
     /// <summary>Engagement's client ID.</summary>
     public Guid? ClientId { get; set; }
 
@@ -18,6 +24,9 @@ public class Engagement : BaseSubscriptionEntity
 
     /// <summary>Date when the engagement was closed.</summary>
     public DateTime? EndDate { get; set; }
+
+    /// <summary>Assignment status</summary>
+    public Constants.Engagement.Status Status { get; set; }
 
     /// <summary>Subscription to which the engagement belongs to.</summary>
     public Subscription? Subscription { get; set; }

@@ -4,6 +4,7 @@ using EastSeat.ResourceIdea.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EastSeat.ResourceIdea.Persistence.Migrations
 {
     [DbContext(typeof(ResourceIdeaDbContext))]
-    partial class ResourceIdeaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231202230715_UndoDateTimeOffset")]
+    partial class UndoDateTimeOffset
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
