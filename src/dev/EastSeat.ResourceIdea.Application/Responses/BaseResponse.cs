@@ -3,7 +3,7 @@
 /// <summary>
 /// Base response class.
 /// </summary>
-public class BaseResponse<T> where T : class
+public class BaseResponse<T>
 {
     /// <summary>
     /// True if response is a success, otherwise False.
