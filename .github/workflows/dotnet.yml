@@ -19,10 +19,10 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.x
-    - name: Restore dependencies
-      run: dotnet restore ./src/EastSeat.ResourceIdea.sln
-    - name: Build
-      run: dotnet build ./src/EastSeat.ResourceIdea.sln --no-restore
-    - name: Test
+        dotnet-version: 8.0.x
+    - name: Build solution
+      run: |
+          dotnet restore ./src/EastSeat.ResourceIdea.sln
+          dotnet build ./src/EastSeat.ResourceIdea.sln --no-restore --framework net8.0
+    - name: Run tests
       run: dotnet test ./src/EastSeat.ResourceIdea.sln --no-build --verbosity normal
