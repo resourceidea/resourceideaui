@@ -26,5 +26,6 @@ public class ApplicationMappingProfile : Profile
         CreateMap<Employee, CreateEmployeeViewModel>();
 
         CreateMap<Client, ClientDTO>();
+        CreateMap<Client, ClientListDTO>();
     }
 }
