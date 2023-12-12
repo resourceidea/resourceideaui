@@ -29,7 +29,7 @@ public class CreateClientCommandHandler : IRequestHandler<CreateClientCommand, B
         if (!validationResult.IsValid || validationResult.Errors.Count > 0)
         {
             response.Success = false;
-            response.Errors = new List<string>();
+            response.Errors = [];
             foreach (var error in validationResult.Errors)
             {
                 response.Errors.Add(error.ErrorMessage);
@@ -46,8 +46,17 @@ public class CreateClientCommandHandler : IRequestHandler<CreateClientCommand, B
                 ColorCode = request.ColorCode,
                 SubscriptionId = request.SubscriptionId
             };
-            client = await clientRepository.AddAsync(client);
-            response.Content = mapper.Map<ClientDTO>(client);
+            try
+            {
+                await clientRepository.AddAsync(client);
+                response.Content = mapper.Map<ClientDTO>(client);
+            }
+            catch (Exception error)
+            {
+                response.Success = false;
+                response.Errors = [];
+                response.Errors.Add(error.Message);
+            }
         }
 
         return response;

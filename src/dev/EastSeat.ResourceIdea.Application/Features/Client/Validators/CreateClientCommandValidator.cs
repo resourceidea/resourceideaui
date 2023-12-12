@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace EastSeat.ResourceIdea.Application.Features.Client.Validators;
 
-public class CreateClientCommandValidator : AbstractValidator<CreateClientCommand>
+class CreateClientCommandValidator : AbstractValidator<CreateClientCommand>
 {
     private const int ColorCodeLength = 6;
 
@@ -14,11 +14,22 @@ public class CreateClientCommandValidator : AbstractValidator<CreateClientComman
             .NotNull();
 
         RuleFor(client => client.ColorCode)
-            .Must(x => string.IsNullOrEmpty(x) || x.Length == ColorCodeLength)
+            .Must(BeColorCodeOfValidLength)
+            .Matches(@"^[a-fA-F0-9]*$")
             .WithMessage("Invalid client color code.");
 
         RuleFor(client => client.SubscriptionId)
-            .NotEmpty().WithMessage("Subscription ID is required.")
+            .Must(BeANonEmptySubscriptionId).WithMessage("Empty Subscription ID is not allowed.")
             .NotNull();
+    }
+
+    private bool BeColorCodeOfValidLength(string colorCode)
+    {
+        return !string.IsNullOrEmpty(colorCode) && colorCode.Length == ColorCodeLength;
+    }
+
+    private bool BeANonEmptySubscriptionId(Guid subscriptionId)
+    {
+        return subscriptionId != Guid.Empty;
     }
 }

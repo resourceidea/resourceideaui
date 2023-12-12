@@ -11,7 +11,7 @@ on:
 
 jobs:
   CI:
-    name: CI
+    name: build
     runs-on: ubuntu-latest
 
     steps:
