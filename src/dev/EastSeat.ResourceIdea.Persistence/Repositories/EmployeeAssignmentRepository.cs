@@ -6,9 +6,6 @@ namespace EastSeat.ResourceIdea.Persistence.Repositories;
 /// <summary>
 /// Repository for the employee assignment records.
 /// </summary>
-public class EmployeeAssignmentRepository : BaseRepository<EmployeeAssignment>, IEmployeeAssignmentRepository
+public class EmployeeAssignmentRepository(ResourceIdeaDbContext dbContext) : BaseRepository<EmployeeAssignment>(dbContext), IEmployeeAssignmentRepository
 {
-    public EmployeeAssignmentRepository(ResourceIdeaDbContext dbContext) : base(dbContext)
-    {
-    }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using EastSeat.ResourceIdea.Application.Features.Client.DTO;
+﻿using EastSeat.ResourceIdea.Application.Features.Client.DTO;
 using EastSeat.ResourceIdea.Application.Responses;
 
 using MediatR;
@@ -27,4 +21,7 @@ public class UpdateClientCommand : IRequest<BaseResponse<ClientDTO>>
 
     /// <summary>Client color code.</summary>
     public string ColorCode { get; set; } = string.Empty;
+
+    /// <summary>User who triggered the command to update a client.</summary>
+    public string LastModifiedBy { get; set; } = string.Empty;
 }

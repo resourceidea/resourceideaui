@@ -14,30 +14,22 @@ namespace EastSeat.ResourceIdea.Application.Features.Subscription.Commands.Creat
 /// <summary>
 /// Handles the create subscription command.
 /// </summary>
-public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscriptionCommand, CreateSubscriptionCommandResponse>
+/// <remarks>
+/// Initializes <see cref="CreateSubscriptionCommandHandler"/>.
+/// </remarks>
+/// <param name="mapper">Mapper.</param>
+/// <param name="subscriptionRepository">Subscription repository.</param>
+/// <param name="authentication">Authentication service.</param>
+public class CreateSubscriptionCommandHandler(
+    IMapper mapper,
+    ISubscriptionRepository subscriptionRepository,
+    IResourceIdeaAuthenticationService authenticationService,
+    IEmployeeRepository employeeRepository) : IRequestHandler<CreateSubscriptionCommand, CreateSubscriptionCommandResponse>
 {
-    private readonly IMapper mapper;
-    private readonly ISubscriptionRepository subscriptionRepository;
-    private readonly IResourceIdeaAuthenticationService authenticationService;
-    private readonly IEmployeeRepository employeeRepository;
-
-    /// <summary>
-    /// Initializes <see cref="CreateSubscriptionCommandHandler"/>.
-    /// </summary>
-    /// <param name="mapper">Mapper.</param>
-    /// <param name="subscriptionRepository">Subscription repository.</param>
-    /// <param name="authentication">Authentication service.</param>
-    public CreateSubscriptionCommandHandler(
-        IMapper mapper,
-        ISubscriptionRepository subscriptionRepository,
-        IResourceIdeaAuthenticationService authenticationService,
-        IEmployeeRepository employeeRepository)
-    {
-        this.mapper = mapper;
-        this.subscriptionRepository = subscriptionRepository;
-        this.authenticationService = authenticationService;
-        this.employeeRepository = employeeRepository;
-    }
+    private readonly IMapper mapper = mapper;
+    private readonly ISubscriptionRepository subscriptionRepository = subscriptionRepository;
+    private readonly IResourceIdeaAuthenticationService authenticationService = authenticationService;
+    private readonly IEmployeeRepository employeeRepository = employeeRepository;
 
     /// <inheritdoc />
     public async Task<CreateSubscriptionCommandResponse> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)

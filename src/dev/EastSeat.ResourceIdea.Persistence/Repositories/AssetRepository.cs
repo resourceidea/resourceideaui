@@ -6,9 +6,6 @@ namespace EastSeat.ResourceIdea.Persistence.Repositories;
 /// <summary>
 /// Repository for the Asset records.
 /// </summary>
-public class AssetRepository : BaseRepository<Asset>, IAssetRepository
+public class AssetRepository(ResourceIdeaDbContext dbContext) : BaseRepository<Asset>(dbContext), IAssetRepository
 {
-    public AssetRepository(ResourceIdeaDbContext dbContext) : base(dbContext)
-    {
-    }
 }

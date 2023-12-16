@@ -6,9 +6,6 @@ namespace EastSeat.ResourceIdea.Persistence.Repositories;
 /// <summary>
 /// Repository for the engagement records.
 /// </summary>
-public class EngagementRepository : BaseRepository<Engagement>, IEngagementRepository
+public class EngagementRepository(ResourceIdeaDbContext dbContext) : BaseRepository<Engagement>(dbContext), IEngagementRepository
 {
-    public EngagementRepository(ResourceIdeaDbContext dbContext) : base(dbContext)
-    {
-    }
 }

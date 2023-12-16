@@ -18,16 +18,10 @@ namespace EastSeat.ResourceIdea.Application.Features.Employee.Commands.CreateEmp
     /// <summary>
     /// Handles the command to create an employee.
     /// </summary>
-    public class CreateEmployeeCommandHandler : IRequestHandler<CreateEmployeeCommand, CreateEmployeeCommandResponse>
+    public class CreateEmployeeCommandHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Employee> employeeRepository) : IRequestHandler<CreateEmployeeCommand, CreateEmployeeCommandResponse>
     {
-        private readonly IMapper mapper;
-        private readonly IAsyncRepository<Domain.Entities.Employee> employeeRepository;
-
-        public CreateEmployeeCommandHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Employee> employeeRepository)
-        {
-            this.mapper = mapper;
-            this.employeeRepository = employeeRepository;
-        }
+        private readonly IMapper mapper = mapper;
+        private readonly IAsyncRepository<Domain.Entities.Employee> employeeRepository = employeeRepository;
 
         /// <inheritdoc />
         public async Task<CreateEmployeeCommandResponse> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)

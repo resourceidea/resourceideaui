@@ -19,4 +19,7 @@ public class BaseSubscriptionEntity
 
     /// <summary>User or agent that last modified the entity.</summary>
     public string? LastModifiedBy { get; set; }
+
+    /// <summary>Flag indicating if the entity is deleted.</summary>
+    public bool IsDeleted { get; set; } = false;
 }

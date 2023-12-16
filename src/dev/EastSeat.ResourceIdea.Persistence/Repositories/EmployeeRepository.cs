@@ -8,11 +8,8 @@ namespace EastSeat.ResourceIdea.Persistence.Repositories;
 /// <summary>
 /// Repository for the employee records.
 /// </summary>
-public class EmployeeRepository : BaseRepository<Employee>, IEmployeeRepository
+public class EmployeeRepository(ResourceIdeaDbContext dbContext) : BaseRepository<Employee>(dbContext), IEmployeeRepository
 {
-    public EmployeeRepository(ResourceIdeaDbContext dbContext) : base(dbContext)
-    {
-    }
 
     /// <inheritdoc/>
     public async Task<bool> IsExisitingEmployee(Guid subscriptionId, string userId)

@@ -8,14 +8,9 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
 
-public class CreateApplicationUserCommandHandler : IRequestHandler<CreateApplicationUserCommand, BaseResponse<CreateApplicationUserViewModel>>
+public class CreateApplicationUserCommandHandler(IResourceIdeaAuthenticationService authenticationService) : IRequestHandler<CreateApplicationUserCommand, BaseResponse<CreateApplicationUserViewModel>>
 {
-    private readonly IResourceIdeaAuthenticationService authenticationService;
-
-    public CreateApplicationUserCommandHandler(IResourceIdeaAuthenticationService authenticationService)
-    {
-        this.authenticationService = authenticationService;
-    }
+    private readonly IResourceIdeaAuthenticationService authenticationService = authenticationService;
 
     public async Task<BaseResponse<CreateApplicationUserViewModel>> Handle(CreateApplicationUserCommand request, CancellationToken cancellationToken)
     {

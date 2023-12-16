@@ -1,4 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Application.Contracts.Persistence;
+using EastSeat.ResourceIdea.Domain.Common;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -7,18 +8,13 @@ namespace EastSeat.ResourceIdea.Persistence.Repositories;
 /// <summary>
 /// Base repository.
 /// </summary>
-public class BaseRepository<T> : IAsyncRepository<T> where T : class
+/// <remarks>
+/// Initializes <see cref="BaseRepository{T}" />.
+/// </remarks>
+/// <param name="dbContext">App database context.</param>
+public class BaseRepository<T>(ResourceIdeaDbContext dbContext) : IAsyncRepository<T> where T : BaseSubscriptionEntity
 {
-    protected readonly ResourceIdeaDbContext dbContext;
-
-    /// <summary>
-    /// Initializes <see cref="BaseRepository{T}" />.
-    /// </summary>
-    /// <param name="dbContext">App database context.</param>
-    public BaseRepository(ResourceIdeaDbContext dbContext)
-    {
-        this.dbContext = dbContext;
-    }
+    protected readonly ResourceIdeaDbContext dbContext = dbContext;
 
     /// <inheritdoc />
     public async Task<T> AddAsync(T entity)
@@ -35,8 +31,8 @@ public class BaseRepository<T> : IAsyncRepository<T> where T : class
         var entity = await dbContext.Set<T>().FindAsync(id);
         if (entity is not null)
         {
-            dbContext.Set<T>().Remove(entity);
-            await dbContext.SaveChangesAsync();
+            entity.IsDeleted = true;
+            await UpdateAsync(entity);
         }
     }
 

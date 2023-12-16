@@ -11,12 +11,8 @@ namespace EastSeat.ResourceIdea.Persistence;
 /// <summary>
 /// App database context.
 /// </summary>
-public class ResourceIdeaDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
+public class ResourceIdeaDbContext(DbContextOptions<ResourceIdeaDbContext> options) : IdentityDbContext<ApplicationUser, IdentityRole, string>(options)
 {
-    public ResourceIdeaDbContext(DbContextOptions<ResourceIdeaDbContext> options) : base(options)
-    {
-    }
-
     public DbSet<Subscription> Subscriptions { get; set; }
     public DbSet<Client> Clients { get; set; }
     public DbSet<Engagement> Engagements { get; set; }

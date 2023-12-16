@@ -12,9 +12,6 @@ namespace EastSeat.ResourceIdea.Persistence.Repositories;
 /// <summary>
 /// Repository for the job position records.
 /// </summary>
-public class JobPositionRepository : BaseRepository<JobPosition>, IJobPositionRepository
+public class JobPositionRepository(ResourceIdeaDbContext dbContext) : BaseRepository<JobPosition>(dbContext), IJobPositionRepository
 {
-    public JobPositionRepository(ResourceIdeaDbContext dbContext) : base(dbContext)
-    {
-    }
 }

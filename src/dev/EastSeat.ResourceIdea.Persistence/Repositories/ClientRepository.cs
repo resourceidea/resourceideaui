@@ -6,9 +6,6 @@ namespace EastSeat.ResourceIdea.Persistence.Repositories;
 /// <summary>
 /// Repository for the client records.
 /// </summary>
-public class ClientRepository : BaseRepository<Client>, IClientRepository
+public class ClientRepository(ResourceIdeaDbContext dbContext) : BaseRepository<Client>(dbContext), IClientRepository
 {
-    public ClientRepository(ResourceIdeaDbContext dbContext) : base(dbContext)
-    {
-    }
 }
