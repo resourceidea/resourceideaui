@@ -21,30 +21,22 @@ namespace EastSeat.ResourceIdea.Persistence.Services;
 /// <summary>
 /// Implements <see cref="IResourceIdeaAuthenticationService"/>.
 /// </summary>
-public class ResourceIdeaAuthenticationService : IResourceIdeaAuthenticationService
+/// <remarks>
+/// Initializes an instance of <see cref="ResourceIdeaAuthenticationService"/>.
+/// </remarks>
+/// <param name="userManager"></param>
+/// <param name="jwtSettings"></param>
+/// <param name="signInManager"></param>
+public class ResourceIdeaAuthenticationService(
+    UserManager<ApplicationUser> userManager,
+    IOptions<JwtSettings> jwtSettings,
+    SignInManager<ApplicationUser> signInManager,
+    IMapper mapper) : IResourceIdeaAuthenticationService
 {
-    private readonly UserManager<ApplicationUser> userManager;
-    private readonly SignInManager<ApplicationUser> signInManager;
-    private readonly JwtSettings jwtSettings;
-    private readonly IMapper mapper;
-
-    /// <summary>
-    /// Initializes an instance of <see cref="ResourceIdeaAuthenticationService"/>.
-    /// </summary>
-    /// <param name="userManager"></param>
-    /// <param name="jwtSettings"></param>
-    /// <param name="signInManager"></param>
-    public ResourceIdeaAuthenticationService(
-        UserManager<ApplicationUser> userManager,
-        IOptions<JwtSettings> jwtSettings,
-        SignInManager<ApplicationUser> signInManager,
-        IMapper mapper)
-    {
-        this.userManager = userManager;
-        this.jwtSettings = jwtSettings.Value;
-        this.signInManager = signInManager;
-        this.mapper = mapper;
-    }
+    private readonly UserManager<ApplicationUser> userManager = userManager;
+    private readonly SignInManager<ApplicationUser> signInManager = signInManager;
+    private readonly JwtSettings jwtSettings = jwtSettings.Value;
+    private readonly IMapper mapper = mapper;
 
     // Uncomment block when implementing API authentication.
     /// <inheritdoc />

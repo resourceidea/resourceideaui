@@ -14,11 +14,8 @@ namespace EastSeat.ResourceIdea.Persistence.Repositories;
 /// <summary>
 /// Repository for the subscription records.
 /// </summary>
-public class SubscriptionRepository : BaseRepository<Subscription>, ISubscriptionRepository
+public class SubscriptionRepository(ResourceIdeaDbContext dbContext) : BaseRepository<Subscription>(dbContext), ISubscriptionRepository
 {
-    public SubscriptionRepository(ResourceIdeaDbContext dbContext) : base(dbContext)
-    {
-    }
 
     /// <inheritdoc/>
     public async Task<bool> IsSubscriberNameAlreadyInUse(string? subscriberName)

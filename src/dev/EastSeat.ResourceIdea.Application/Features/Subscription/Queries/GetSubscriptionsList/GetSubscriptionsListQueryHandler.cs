@@ -9,21 +9,15 @@ namespace EastSeat.ResourceIdea.Application.Features.Subscription.Queries.GetSub
 /// <summary>
 /// Handles the query to get a list of subscriptions.
 /// </summary>
-public class GetSubscriptionsListQueryHandler : IRequestHandler<GetSubscriptionsListQuery, IEnumerable<SubscriptionsListVM>>
+/// <remarks>
+/// Instantiates <see cref="GetSubscriptionsListQueryHandler"/>.
+/// </remarks>
+/// <param name="mapper">Mapper.</param>
+/// <param name="subscriptionRepository">Subscription repository.</param>
+public class GetSubscriptionsListQueryHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Subscription> subscriptionRepository) : IRequestHandler<GetSubscriptionsListQuery, IEnumerable<SubscriptionsListVM>>
 {
-    private readonly IMapper mapper;
-    private readonly IAsyncRepository<Domain.Entities.Subscription> subscriptionRepository;
-
-    /// <summary>
-    /// Instantiates <see cref="GetSubscriptionsListQueryHandler"/>.
-    /// </summary>
-    /// <param name="mapper">Mapper.</param>
-    /// <param name="subscriptionRepository">Subscription repository.</param>
-    public GetSubscriptionsListQueryHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Subscription> subscriptionRepository)
-    {
-        this.mapper = mapper;
-        this.subscriptionRepository = subscriptionRepository;
-    }
+    private readonly IMapper mapper = mapper;
+    private readonly IAsyncRepository<Domain.Entities.Subscription> subscriptionRepository = subscriptionRepository;
 
     /// <inheritdoc />
     public async Task<IEnumerable<SubscriptionsListVM>> Handle(GetSubscriptionsListQuery request, CancellationToken cancellationToken)

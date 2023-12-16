@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+
 using EastSeat.ResourceIdea.Application.Contracts.Persistence;
 using EastSeat.ResourceIdea.Application.Features.Client.Commands;
 using EastSeat.ResourceIdea.Application.Features.Client.DTO;
@@ -9,16 +10,10 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Client.Handlers;
 
-public class CreateClientCommandHandler : IRequestHandler<CreateClientCommand, BaseResponse<ClientDTO>>
+public class CreateClientCommandHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Client> clientRepository) : IRequestHandler<CreateClientCommand, BaseResponse<ClientDTO>>
 {
-    private readonly IMapper mapper;
-    private readonly IAsyncRepository<Domain.Entities.Client> clientRepository;
-
-    public CreateClientCommandHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Client> clientRepository)
-    {
-        this.mapper = mapper;
-        this.clientRepository = clientRepository;
-    }
+    private readonly IMapper mapper = mapper;
+    private readonly IAsyncRepository<Domain.Entities.Client> clientRepository = clientRepository;
 
     public async Task<BaseResponse<ClientDTO>> Handle(CreateClientCommand request, CancellationToken cancellationToken)
     {
@@ -44,19 +39,12 @@ public class CreateClientCommandHandler : IRequestHandler<CreateClientCommand, B
                 Name = request.Name,
                 Address = request.Address,
                 ColorCode = request.ColorCode,
-                SubscriptionId = request.SubscriptionId
+                SubscriptionId = request.SubscriptionId,
+                CreatedBy = request.CreatedBy
             };
-            try
-            {
-                await clientRepository.AddAsync(client);
-                response.Content = mapper.Map<ClientDTO>(client);
-            }
-            catch (Exception error)
-            {
-                response.Success = false;
-                response.Errors = [];
-                response.Errors.Add(error.Message);
-            }
+
+            await clientRepository.AddAsync(client);
+            response.Content = mapper.Map<ClientDTO>(client);
         }
 
         return response;

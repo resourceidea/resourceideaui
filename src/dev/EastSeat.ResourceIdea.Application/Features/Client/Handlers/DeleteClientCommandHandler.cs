@@ -7,14 +7,9 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Client.Handlers
 {
-    public class DeleteClientCommandHandler : IRequestHandler<DeleteClientCommand, BaseResponse<Unit>>
+    public class DeleteClientCommandHandler(IAsyncRepository<Domain.Entities.Client> clientRepository) : IRequestHandler<DeleteClientCommand, BaseResponse<Unit>>
     {
-        private readonly IAsyncRepository<Domain.Entities.Client> clientRepository;
-
-        public DeleteClientCommandHandler(IAsyncRepository<Domain.Entities.Client> clientRepository)
-        {
-            this.clientRepository = clientRepository;
-        }
+        private readonly IAsyncRepository<Domain.Entities.Client> clientRepository = clientRepository;
 
         public async Task<BaseResponse<Unit>> Handle(DeleteClientCommand request, CancellationToken cancellationToken)
         {
@@ -25,7 +20,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Client.Handlers
             if (!validationResult.IsValid || validationResult.Errors.Count > 0)
             {
                 response.Success = false;
-                response.Errors = new List<string>();
+                response.Errors = [];
                 foreach (var error in validationResult.Errors)
                 {
                     response.Errors.Add(error.ErrorMessage);

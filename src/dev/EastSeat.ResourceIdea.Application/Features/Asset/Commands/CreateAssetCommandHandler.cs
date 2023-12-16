@@ -6,16 +6,10 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Asset.Commands;
 
-public class CreateAssetCommandHandler : IRequestHandler<CreateAssetCommand, CreateAssetCommandResponse>
+public class CreateAssetCommandHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Asset> assetRepository) : IRequestHandler<CreateAssetCommand, CreateAssetCommandResponse>
 {
-    private readonly IMapper mapper;
-    private readonly IAsyncRepository<Domain.Entities.Asset> assetRepository;
-
-    public CreateAssetCommandHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Asset> assetRepository)
-    {
-        this.mapper = mapper;
-        this.assetRepository = assetRepository;
-    }
+    private readonly IMapper mapper = mapper;
+    private readonly IAsyncRepository<Domain.Entities.Asset> assetRepository = assetRepository;
 
     /// <inheritdoc/>
     public async Task<CreateAssetCommandResponse> Handle(CreateAssetCommand request, CancellationToken cancellationToken)

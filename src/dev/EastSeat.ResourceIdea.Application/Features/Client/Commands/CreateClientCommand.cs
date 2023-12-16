@@ -24,4 +24,7 @@ public class CreateClientCommand : IRequest<BaseResponse<ClientDTO>>
 
     /// <summary>Client color code.</summary>
     public string ColorCode { get; set; } = string.Empty;
+
+    /// <summary>User who triggered the command to create the client.</summary>
+    public string CreatedBy { get; set; } = string.Empty;
 }

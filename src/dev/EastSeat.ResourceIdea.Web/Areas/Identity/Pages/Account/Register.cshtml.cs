@@ -8,14 +8,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EastSeat.ResourceIdea.Web.Areas.Identity.Pages.Account
 {
-    public class RegisterModel : PageModel
+    public class RegisterModel(IResourceIdeaAuthenticationService authenticationService) : PageModel
     {
-        private readonly IResourceIdeaAuthenticationService authenticationService;
-
-        public RegisterModel(IResourceIdeaAuthenticationService authenticationService)
-        {
-            this.authenticationService = authenticationService;
-        }
+        private readonly IResourceIdeaAuthenticationService authenticationService = authenticationService;
 
         [BindProperty]
         public InputModel Input { get; set; } = default!;
