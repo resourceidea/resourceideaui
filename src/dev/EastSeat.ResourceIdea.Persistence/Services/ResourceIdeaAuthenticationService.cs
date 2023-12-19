@@ -118,7 +118,7 @@ public class ResourceIdeaAuthenticationService(
         if (await UserExistsAsync(request))
         {
             response.Success = false;
-            response.Message = Constants.ErrorMessages.Commands.CreateApplicationUsers.EmailExists;
+            response.Message = Constants.ErrorCodes.Commands.CreateApplicationUsers.EmailExists;
 
             return response;
         }
@@ -137,7 +137,7 @@ public class ResourceIdeaAuthenticationService(
         if (!result.Succeeded)
         {
             response.Success = false;
-            response.Message = Constants.ErrorMessages.Commands.CreateApplicationUsers.UserRegistrationFailed;
+            response.Message = Constants.ErrorCodes.Commands.CreateApplicationUsers.UserRegistrationFailed;
             response.Errors = new List<string>();
             foreach (var error in result.Errors)
             {
