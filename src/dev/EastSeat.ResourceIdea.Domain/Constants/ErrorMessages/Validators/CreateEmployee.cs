@@ -3,7 +3,7 @@
     /// <summary>
     /// Error messages.
     /// </summary>
-    public static partial class ErrorMessages
+    public static partial class ErrorCodes
     {
         /// <summary>
         /// Error messages on validators.
