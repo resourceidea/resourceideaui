@@ -10,30 +10,30 @@ public class CreateSubscriptionCommandValidator : AbstractValidator<CreateSubscr
     public CreateSubscriptionCommandValidator()
     {
         RuleFor(subscription => subscription.FirstName)
-            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingFirstName)
+            .NotEmpty().WithMessage(Constants.ErrorCodes.Validators.CreateSubscription.MissingFirstName)
             .NotNull();
 
         RuleFor(subscription => subscription.LastName)
-            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingLastName)
+            .NotEmpty().WithMessage(Constants.ErrorCodes.Validators.CreateSubscription.MissingLastName)
             .NotNull();
 
         RuleFor(subscription => subscription.Email)
-            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingEmail)
+            .NotEmpty().WithMessage(Constants.ErrorCodes.Validators.CreateSubscription.MissingEmail)
             .NotNull();
 
         RuleFor(subscription => subscription.Password)
-            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingPassword)
+            .NotEmpty().WithMessage(Constants.ErrorCodes.Validators.CreateSubscription.MissingPassword)
             .NotNull();
 
         RuleFor(subscription => subscription.SubscriberName)
-            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingSubscriberName)
+            .NotEmpty().WithMessage(Constants.ErrorCodes.Validators.CreateSubscription.MissingSubscriberName)
             .NotNull();
 
         RuleFor(subscription => subscription.SubscriptionId)
-            .NotEqual(Guid.Empty).WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingSubscriptionId);
+            .NotEqual(Guid.Empty).WithMessage(Constants.ErrorCodes.Validators.CreateSubscription.MissingSubscriptionId);
 
         RuleFor(subscription => subscription.StartDate)
-            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateSubscription.MissingSubscriptionStartDate)
+            .NotEmpty().WithMessage(Constants.ErrorCodes.Validators.CreateSubscription.MissingSubscriptionStartDate)
             .NotNull();
     }
 }

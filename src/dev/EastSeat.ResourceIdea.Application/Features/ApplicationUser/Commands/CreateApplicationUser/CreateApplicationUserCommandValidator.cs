@@ -16,22 +16,22 @@ public class CreateApplicationUserCommandValidator : AbstractValidator<CreateApp
     public CreateApplicationUserCommandValidator()
     {
         RuleFor(applicationUser => applicationUser.FirstName)
-            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateApplicationUser.MissingFirstName)
+            .NotEmpty().WithMessage(Constants.ErrorCodes.Validators.CreateApplicationUser.MissingFirstName)
             .NotNull();
 
         RuleFor(applicationUser => applicationUser.LastName)
-            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateApplicationUser.MissingLastName)
+            .NotEmpty().WithMessage(Constants.ErrorCodes.Validators.CreateApplicationUser.MissingLastName)
             .NotNull();
 
         RuleFor(subscription => subscription.SubscriptionId)
-            .NotEqual(Guid.Empty).WithMessage(Constants.ErrorMessages.Validators.CreateApplicationUser.MissingSubscriptionId);
+            .NotEqual(Guid.Empty).WithMessage(Constants.ErrorCodes.Validators.CreateApplicationUser.MissingSubscriptionId);
 
         RuleFor(subscription => subscription.Email)
-            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateApplicationUser.MissingEmail)
+            .NotEmpty().WithMessage(Constants.ErrorCodes.Validators.CreateApplicationUser.MissingEmail)
             .NotNull();
 
         RuleFor(applicationUser => applicationUser.Password)
-            .NotEmpty().WithMessage(Constants.ErrorMessages.Validators.CreateApplicationUser.MissingPassword)
+            .NotEmpty().WithMessage(Constants.ErrorCodes.Validators.CreateApplicationUser.MissingPassword)
             .NotNull();
     }
 }
