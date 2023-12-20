@@ -14,6 +14,6 @@ public class GetClientsListQueryHandler (IMapper mapper, IAsyncRepository<Domain
     public async Task<IReadOnlyList<ClientListDTO>> Handle(GetClientsListQuery request, CancellationToken cancellationToken)
     {
         var clients = await clientRepository.ListAllAsync();
-        return mapper.Map<IReadOnlyList<ClientListDTO>>(clients.OrderBy(c => c.Name));
+        return mapper.Map<IReadOnlyList<ClientListDTO>>(clients.OrderBy(c => c?.Name));
     }
 }
