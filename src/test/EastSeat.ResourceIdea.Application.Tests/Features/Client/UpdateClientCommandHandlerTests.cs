@@ -89,8 +89,8 @@ public class UpdateClientCommandHandlerTests
         mockRepository.Verify(m => m.GetByIdAsync(It.IsAny<Guid>()), Times.Once);
         Assert.IsType<BaseResponse<ClientDTO>>(result);
         Assert.False(result.Success);
-        Assert.Equal("ClientNotFound", result.ErrorCode);
-        Assert.Contains("ClientNotFound", result.Errors ?? []);
+        Assert.Equal(Constants.ErrorCodes.NotFound, result.ErrorCode);
+        Assert.Contains(Constants.ErrorCodes.NotFound, result.Errors ?? []);
     }
 
     [Fact]

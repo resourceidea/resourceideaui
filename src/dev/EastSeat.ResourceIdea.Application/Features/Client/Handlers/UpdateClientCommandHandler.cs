@@ -27,7 +27,7 @@ public class UpdateClientCommandHandler(IMapper mapper, IAsyncRepository<Domain.
         if (IsFailedValidationResult(validationResult))
         {
             response.Success = false;
-            response.ErrorCode = Constants.ErrorCodes.Commands.UpdateClient.ValidationFailure;
+            response.ErrorCode = Constants.ErrorCodes.ValidationFailure;
             response.Errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
             return response;
         }
@@ -36,9 +36,9 @@ public class UpdateClientCommandHandler(IMapper mapper, IAsyncRepository<Domain.
         if (client is null)
         {
             response.Success = false;
-            response.ErrorCode = Constants.ErrorCodes.Commands.UpdateClient.ClientNotFound;
+            response.ErrorCode = Constants.ErrorCodes.NotFound;
             response.Errors = [
-                Constants.ErrorCodes.Commands.UpdateClient.ClientNotFound
+                Constants.ErrorCodes.NotFound
                 ];
             return response;
         }

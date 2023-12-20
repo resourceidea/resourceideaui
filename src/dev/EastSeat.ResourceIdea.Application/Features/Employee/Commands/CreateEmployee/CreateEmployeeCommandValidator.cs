@@ -10,14 +10,14 @@ public class CreateEmployeeCommandValidator : AbstractValidator<CreateEmployeeCo
     public CreateEmployeeCommandValidator()
     {
         RuleFor(employee => employee.UserId)
-            .NotEmpty().WithMessage(Constants.ErrorCodes.Validators.CreateEmployee.MissingUserId)
+            .NotEmpty().WithMessage(Constants.ErrorCodes.MissingUserId)
             .NotNull();
 
         RuleFor(employee => employee.SubscriptionId)
-            .NotEqual(Guid.Empty).WithMessage(Constants.ErrorCodes.Validators.CreateEmployee.MissingSubscriptionId);
+            .NotEqual(Guid.Empty).WithMessage(Constants.ErrorCodes.MissingSubscriptionId);
 
         RuleFor(employee => employee.JobPositionId)
-            .NotEmpty().WithMessage(Constants.ErrorCodes.Validators.CreateEmployee.MissingJobPositionId)
+            .NotEmpty().WithMessage(Constants.ErrorCodes.MissingJobPositionId)
             .NotNull();
     }
 }
