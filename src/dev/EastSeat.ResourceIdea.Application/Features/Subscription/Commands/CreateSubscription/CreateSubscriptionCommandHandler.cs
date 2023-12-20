@@ -93,8 +93,8 @@ public class CreateSubscriptionCommandHandler(
         if (await subscriptionRepository.IsSubscriberNameAlreadyInUse(request.SubscriberName))
         {
             response.Success = false;
-            response.Message = Constants.ErrorCodes.Commands.CreateSubscriptions.SubscriberNameAlreadyInUse;
-            response.ErrorCode = nameof(Constants.ErrorCodes.Commands.CreateSubscriptions.SubscriberNameAlreadyInUse);
+            response.Message = Constants.ErrorCodes.SubscriberNameAlreadyInUse;
+            response.ErrorCode = nameof(Constants.ErrorCodes.SubscriberNameAlreadyInUse);
 
             return;
         }
