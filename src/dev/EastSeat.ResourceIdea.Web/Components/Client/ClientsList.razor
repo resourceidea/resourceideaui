@@ -1,42 +1,50 @@
 ﻿@namespace EastSeat.ResourceIdea.Web.Components.Clients
 
+@using EastSeat.ResourceIdea.Application.Features.Client.DTO
+@using EastSeat.ResourceIdea.Application.Features.Client.Queries
+@using MediatR
+
+@inject IMediator Mediator
+
 <div class="mb-2"><button class="btn btn-primary" @onclick="()=>{ }">Add Client</button></div>
 
 <div class="card">
     <div class="card-header">
         <div class="input-group mb-3 mt-3">
             <input type="text" class="form-control" placeholder="Search clients by name"
-                aria-label="Search clients by name" aria-describedby="button-client-search">
+                   aria-label="Search clients by name" aria-describedby="button-client-search">
             <button class="btn btn-outline-primary" type="button" id="button-client-search">
                 <i class="fa-solid fa-magnifying-glass"></i>&nbsp;Search Clients
             </button>
         </div>
     </div>
 </div>
-<table class="table table-striped table-bordered table-sm">
-    <thead>
-        <tr>
-            <th>Client name</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-        </tr>
-    </tbody>
-</table>
-</div>
-
+@if (ListOfClients is not null && ListOfClients.Count > 0)
+{
+    <table class="table table-striped table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>Client name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in ListOfClients)
+            {
+                <tr><td>@client.Name</td></tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="m-3 lead">No clients have been added!</p>
+}
 
 @code {
+    private IReadOnlyList<ClientListDTO> ListOfClients = [];
 
+    protected override async Task OnInitializedAsync()
+    {
+        ListOfClients = await Mediator.Send(new GetClientsListQuery());
+    }
 }
