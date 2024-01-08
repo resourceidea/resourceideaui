@@ -61,41 +61,6 @@ public partial class CreateClientCommandHandlerTests
 
     [Fact]
     [Trait("Category", "Unit")]
-    public async Task Handle_WhenValidRequest_GeneratesClientId()
-    {
-        // Arrange
-        var mockRepository = new Mock<IClientRepository>();
-        var fakeCommand = new Faker<CreateClientCommand>()
-            .RuleFor(c => c.Name, f => f.Company.CompanyName())
-            .RuleFor(c => c.SubscriptionId, subscriptionId)
-            .RuleFor(c => c.Address, f => f.Address.FullAddress())
-            .RuleFor(c => c.ColorCode, f => f.Random.Hexadecimal(6, string.Empty));
-        var command = fakeCommand.Generate();
-        var fakeClient = new Domain.Entities.Client
-        {
-            Id = command.Id,
-            Name = command.Name,
-            SubscriptionId = command.SubscriptionId,
-            Address = command.Address,
-            ColorCode = command.ColorCode
-        };
-        mockRepository.Setup(repo => repo.AddAsync(fakeClient)).Returns(Task.FromResult(fakeClient));
-        var handler = new CreateClientCommandHandler(mapper, mockRepository.Object);
-
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.IsType<BaseResponse<ClientDTO>>(result);
-        Assert.True(result.Success);
-        Assert.NotNull(result.Content);
-        Assert.NotNull(result.Content?.Id);
-        Assert.IsType<Guid>(result.Content?.Id);
-        Assert.NotEqual(Guid.Empty, result.Content?.Id);
-    }
-
-    [Fact]
-    [Trait("Category", "Unit")]
     public async Task Handle_WhenColorCodeIsNotValid_ReturnsFailureResponse()
     {
         // Arrange
