@@ -11,7 +11,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Client.Commands;
 public class CreateClientCommand : IRequest<BaseResponse<ClientDTO>>
 {
     /// <summary>Client Id.</summary>
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
 
     /// <summary>Subscription Id.</summary>
     public Guid SubscriptionId { get; set; }

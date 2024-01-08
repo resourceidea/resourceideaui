@@ -1,12 +1,8 @@
 ﻿@namespace EastSeat.ResourceIdea.Web.Components.Clients
 
-@using EastSeat.ResourceIdea.Application.Features.Client.DTO
-@using EastSeat.ResourceIdea.Application.Features.Client.Queries
-@using MediatR
-
 @inject IMediator Mediator
 
-<div class="mb-2"><button class="btn btn-primary" @onclick="()=>{ }">Add Client</button></div>
+<NavLink href="/clients/new" class="mb-2 btn btn-primary">Add Client</NavLink>
 
 <div class="card">
     <div class="card-header">

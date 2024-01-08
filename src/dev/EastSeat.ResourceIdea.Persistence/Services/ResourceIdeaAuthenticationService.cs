@@ -171,7 +171,7 @@ public class ResourceIdeaAuthenticationService(
                 Content = null,
                 Message = $"Application user with Id {id} not found.",
                 ErrorCode = "ApplicationUserNotFound",
-                Errors = new List<string>() { $"Application user with Id {id} not found." }
+                Errors = [$"Application user with Id {id} not found."]
             };
         }
 
@@ -279,7 +279,7 @@ public class ResourceIdeaAuthenticationService(
             response.Success = false;
             response.Message = "Invalid login credentials entered";
             response.ErrorCode = "InvalidCredentials";
-            response.Errors = new List<string> { "Invalid login credentials entered" };
+            response.Errors = ["Invalid login credentials entered"];
 
             return response;
         }
