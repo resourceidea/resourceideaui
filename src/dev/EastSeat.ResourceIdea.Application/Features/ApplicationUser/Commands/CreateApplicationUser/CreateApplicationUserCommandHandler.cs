@@ -21,7 +21,7 @@ public class CreateApplicationUserCommandHandler(IResourceIdeaAuthenticationServ
         response.Success = commandValidationResult.IsValid;
         if (commandValidationResult.Errors.Count > 0)
         {
-            response.Errors = new List<string>();
+            response.Errors = [];
             foreach (var error in commandValidationResult.Errors)
             {
                 response.Errors.Add(error.ErrorMessage);

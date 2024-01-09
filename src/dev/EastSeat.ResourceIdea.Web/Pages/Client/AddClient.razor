@@ -1,0 +1,108 @@
+﻿@page "/clients/new"
+
+@using System.Security.Claims
+
+@inject IMediator Mediator
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>ResourceIdea - Add Client</PageTitle>
+
+<AuthorizeView Context="authContext">
+    <Authorized>
+        <PageHeader Title="Add New Client"></PageHeader>
+        <div class="card bg-light">
+            <div class="card-body">
+                <EditForm Context="editContext" Model="@Model" OnValidSubmit="@HandleValidSubmitAsync" FormName="AddClient">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="row mb-3">
+                        <label for="name" class="col-2 col-form-label text-end">Name:</label>
+                        <div class="col">
+                            <InputText @bind-Value="@Model!.Name" id="name" class="form-control" placeholder="Client name" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="address" class="col-2 col-form-label text-end">Address:</label>
+                        <div class="col">
+                            <InputText @bind-Value="@Model!.Address" id="address" class="form-control" placeholder="Physical address" />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary offset-2">Save</button>
+
+                </EditForm>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <PageHeader Title="Add New Client"></PageHeader>
+        <h1>Not Authorized</h1>
+        <p>You're not authorized to view this page.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [SupplyParameterFromForm]
+    public CreateClientCommand? Model { get; set; }
+
+    protected override void OnInitialized() => Model ??= new();
+
+    private async Task HandleValidSubmitAsync()
+    {
+        if (Model is not null)
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            Model.Id = Guid.NewGuid();
+            Model.SubscriptionId = HasUserSubscriptionId(user, out var subscriptionId) ? subscriptionId : Guid.Empty;
+            Model.CreatedBy = HasUserId(user, out var userId) ? userId : string.Empty;
+            Model.ColorCode = RandomHexColorCode();
+
+            await Mediator.Send(Model);
+        }
+    }
+
+    private bool HasUserSubscriptionId(ClaimsPrincipal user, out Guid subscriptionId)
+    {
+        subscriptionId = Guid.Empty;
+        if (IsAuthenticatedUser(user) && Guid.TryParse(user.FindFirst("SubscriptionId")?.Value, out subscriptionId))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private bool HasUserId(ClaimsPrincipal user, out string userId)
+    {
+        userId = string.Empty;
+        if (IsAuthenticatedUser(user))
+        {
+            userId = user.FindFirst(ClaimTypes.PrimarySid)?.Value ?? string.Empty;
+            return true;
+        }
+        return false;
+    }
+
+    private bool IsAuthenticatedUser(ClaimsPrincipal user)
+    {
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    // TODO: Move this to the application layer since it will be used in multiple places.
+    private string RandomHexColorCode()
+    {
+        var random = new Random();
+        var color = String.Format("{0:X6}", random.Next(0x1000000));
+
+        // TODO: Implement a method to check the uniqueness of the generated color code.
+        //       If the color code is not unique, generate a new one.
+        return color;
+    }
+}
