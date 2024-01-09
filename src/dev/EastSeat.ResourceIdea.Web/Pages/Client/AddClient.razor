@@ -95,11 +95,14 @@
         return false;
     }
 
-    // TODO: Implement a method to check the uniqueness of the generated color code.
+    // TODO: Move this to the application layer since it will be used in multiple places.
     private string RandomHexColorCode()
     {
         var random = new Random();
         var color = String.Format("{0:X6}", random.Next(0x1000000));
+
+        // TODO: Implement a method to check the uniqueness of the generated color code.
+        //       If the color code is not unique, generate a new one.
         return color;
     }
 }
