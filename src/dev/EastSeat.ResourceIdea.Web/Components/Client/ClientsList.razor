@@ -1,0 +1,46 @@
+﻿@namespace EastSeat.ResourceIdea.Web.Components.Clients
+
+@inject IMediator Mediator
+
+<NavLink href="/clients/new" class="mb-2 btn btn-primary">Add Client</NavLink>
+
+<div class="card">
+    <div class="card-header">
+        <div class="input-group mb-3 mt-3">
+            <input type="text" class="form-control" placeholder="Search clients by name"
+                   aria-label="Search clients by name" aria-describedby="button-client-search">
+            <button class="btn btn-outline-primary" type="button" id="button-client-search">
+                <i class="fa-solid fa-magnifying-glass"></i>&nbsp;Search Clients
+            </button>
+        </div>
+    </div>
+</div>
+@if (ListOfClients is not null && ListOfClients.Count > 0)
+{
+    <table class="table table-striped table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>Client name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in ListOfClients)
+            {
+                <tr><td>@client.Name</td></tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="m-3 lead">No clients have been added!</p>
+}
+
+@code {
+    private IReadOnlyList<ClientListDTO> ListOfClients = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListOfClients = await Mediator.Send(new GetClientsListQuery());
+    }
+}
