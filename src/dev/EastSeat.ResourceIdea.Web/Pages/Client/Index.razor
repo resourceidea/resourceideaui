@@ -1,0 +1,15 @@
+﻿@page "/clients"
+
+<PageTitle>ResourceIdea - Clients</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <PageHeader Title="Clients"></PageHeader>
+        <ClientsList></ClientsList>
+    </Authorized>
+    <NotAuthorized>
+        <PageHeader Title="Clients"></PageHeader>
+        <h1>Not Authorized</h1>
+        <p>You're not authorized to view this page.</p>
+    </NotAuthorized>
+</AuthorizeView>

@@ -5,12 +5,10 @@
 /// </summary>
 public enum ResourceIdeaAuthenticationOption
 {
-    /// <summary>
-    /// Authenticate using the web application.
-    /// </summary>
+    /// <summary>Authenticate using the web application.</summary>
     Web,
-    /// <summary>
-    /// Authenticate using the API.
+
+    /// <summary>Authenticate using the API.</summary>
     Api
 
 }
