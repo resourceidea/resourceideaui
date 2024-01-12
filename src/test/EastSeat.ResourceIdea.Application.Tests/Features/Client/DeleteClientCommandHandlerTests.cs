@@ -10,7 +10,7 @@ namespace EastSeat.ResourceIdea.Application.Tests.Features.Client;
 public partial class DeleteClientCommandHandlerTests
 {
     [Fact]
-    [Trait("Category", "Unit")]
+    [Trait("Feature", "Client")]
     public async void Handle_WhenValidRequest_ReturnsSuccessResponse()
     {
         // Given
@@ -30,7 +30,7 @@ public partial class DeleteClientCommandHandlerTests
     }
 
     [Fact(Skip = "NotImplemented")]
-    [Trait("Category", "Unit")]
+    [Trait("Feature", "Client")]
     public void Handle_WhenValidRequest_IsDeleted()
     {
         // Given
@@ -41,7 +41,7 @@ public partial class DeleteClientCommandHandlerTests
     }
 
     [Fact(Skip = "NotImplemented")]
-    [Trait("Category", "Unit")]
+    [Trait("Feature", "Client")]
     public void Handle_WhenNoClient_ReturnsFalseWithNotFoundError()
     {
         // Given

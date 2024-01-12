@@ -11,6 +11,7 @@ using EastSeat.ResourceIdea.Application.Features.Client.DTO;
 using EastSeat.ResourceIdea.Application.Features.Client.Handlers;
 using EastSeat.ResourceIdea.Application.Features.Client.Queries;
 using EastSeat.ResourceIdea.Application.Profiles;
+using EastSeat.ResourceIdea.Domain.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Tests.Features.Client;
 
@@ -26,28 +27,36 @@ public class GetClientsListQueryHandlerTests
 
     // Add test to verify that the handler returns a list of clients.
     [Fact]
-    [Trait("Category", "Unit")]
-    public async Task Handler_ReturnsListOfClients()
+    [Trait("Feature", "Client")]
+    public async Task Handler_ReturnsPaginatedListOfClients()
     {
         // Arrange
-        List<Domain.Entities.Client> mockClientList = [
+        var fakePagedList = new PagedList<Domain.Entities.Client>
+        {
+            Items = [
             new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 1", Address = "Address 1", ColorCode = "#000000", SubscriptionId = Guid.NewGuid() },
             new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 2", Address = "Address 2", ColorCode = "#000000", SubscriptionId = Guid.NewGuid() },
             new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 3", Address = "Address 3", ColorCode = "#000000", SubscriptionId = Guid.NewGuid() }
-        ];
+        ]
+        };
         var clientRepository = new Mock<IAsyncRepository<Domain.Entities.Client>>();
-        clientRepository.Setup(repo => repo.ListAllAsync()).ReturnsAsync(() => mockClientList);
+        clientRepository.Setup(repo => repo.GetPagedListAsync(1, 10)).ReturnsAsync(() => fakePagedList);
 
         var handler = new GetClientsListQueryHandler(mapper, clientRepository.Object);
 
         // Act
-        var result = await handler.Handle(new GetClientsListQuery(), CancellationToken.None);
+        var result = await handler.Handle(
+            new GetClientsListQuery
+            {
+                Page = 1,
+                Size = 10
+            }, CancellationToken.None);
 
         // Assert
-        Assert.IsType<List<ClientListDTO>>(result);
-        Assert.Equal(3, result.Count);
-        Assert.Equal("Client 1", result[0].Name);
-        Assert.Equal("Client 2", result[1].Name);
-        Assert.Equal("Client 3", result[2].Name);
+        Assert.IsType<List<ClientListDTO>>(result.Items?.ToList());
+        Assert.Equal(3, result.Items?.Count);
+        Assert.Equal("Client 1", result.Items?[0].Name);
+        Assert.Equal("Client 2", result.Items?[1].Name);
+        Assert.Equal("Client 3", result.Items?[2].Name);
     }
 }

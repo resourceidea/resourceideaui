@@ -30,6 +30,10 @@
             }
         </tbody>
     </table>
+    <PagedListBrowser HasPreviousPage="HasPreviousPage"
+                      HasNextPage="HasNextPage"
+                      OnNext="LoadNextPage"
+                      OnPrevious="LoadPreviousPage" />
 }
 else
 {
@@ -38,9 +42,37 @@ else
 
 @code {
     private IReadOnlyList<ClientListDTO> ListOfClients = [];
+    private bool HasPreviousPage = false;
+    private bool HasNextPage = false;
+    private int CurrentPage = 1;
 
     protected override async Task OnInitializedAsync()
     {
-        ListOfClients = await Mediator.Send(new GetClientsListQuery());
+        var response = await Mediator.Send(new GetClientsListQuery());
+        ListOfClients = response.Items ?? Enumerable.Empty<ClientListDTO>().ToList();
+        HasPreviousPage = response.CurrentPage > 1;
+        HasNextPage = response.HasNextPage;
+    }
+
+    private async Task LoadNextPage()
+    {
+        var response = await Mediator.Send(new GetClientsListQuery
+            {
+                Page = CurrentPage + 1
+            });
+        ListOfClients = response.Items ?? Enumerable.Empty<ClientListDTO>().ToList();
+        HasPreviousPage = response.CurrentPage > 1;
+        HasNextPage = response.HasNextPage;
+    }
+
+    private async Task LoadPreviousPage()
+    {
+        var response = await Mediator.Send(new GetClientsListQuery
+            {
+                Page = CurrentPage > 1 ? CurrentPage - 1 : 1
+            });
+        ListOfClients = response.Items ?? Enumerable.Empty<ClientListDTO>().ToList();
+        HasPreviousPage = response.CurrentPage > 1;
+        HasNextPage = response.HasNextPage;
     }
 }

@@ -38,7 +38,7 @@ public partial class CreateClientCommandHandlerTests
     }
 
     [Fact]
-    [Trait("Category", "Unit")]
+    [Trait("Feature", "Client")]
     public async Task Handle_WhenValidRequest_ReturnsSuccessResponse()
     {
         // Arrange
@@ -60,7 +60,7 @@ public partial class CreateClientCommandHandlerTests
     }
 
     [Fact]
-    [Trait("Category", "Unit")]
+    [Trait("Feature", "Client")]
     public async Task Handle_WhenColorCodeIsNotValid_ReturnsFailureResponse()
     {
         // Arrange
@@ -93,7 +93,7 @@ public partial class CreateClientCommandHandlerTests
     }
 
     [Fact]
-    [Trait("Category", "Unit")]
+    [Trait("Feature", "Client")]
     public async Task Handle_WhenMissingClientName_ReturnsFailureResponse()
     {
         // Arrange
@@ -126,7 +126,7 @@ public partial class CreateClientCommandHandlerTests
     }
 
     [Fact]
-    [Trait("Category", "Unit")]
+    [Trait("Feature", "Client")]
     public async Task Handle_WhenEmptySubscriptionGuid_ReturnsFailureResponse()
     {
         // Arrange

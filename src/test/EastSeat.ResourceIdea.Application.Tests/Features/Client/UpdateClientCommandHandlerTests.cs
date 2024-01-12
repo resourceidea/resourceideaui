@@ -31,7 +31,7 @@ public class UpdateClientCommandHandlerTests
     }
 
     [Fact]
-    [Trait("Category", "Unit")]
+    [Trait("Feature", "Client")]
     public async Task Handle_WhenValidRequest_ReturnsSuccessResponse()
     {
         // Given
@@ -67,7 +67,7 @@ public class UpdateClientCommandHandlerTests
     }
 
     [Fact]
-    [Trait("Category", "Unit")]
+    [Trait("Feature", "Client")]
     public async Task Handle_WhenClientNotFound_ReturnsFailureResponse()
     {
         // Given
@@ -94,7 +94,7 @@ public class UpdateClientCommandHandlerTests
     }
 
     [Fact]
-    [Trait("Category", "Unit")]
+    [Trait("Feature", "Client")]
     public async Task Handle_WhenValidationFails_ReturnsFailureResponse()
     {
         // Given
