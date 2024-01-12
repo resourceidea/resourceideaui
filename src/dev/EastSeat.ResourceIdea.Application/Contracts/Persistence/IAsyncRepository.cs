@@ -1,4 +1,6 @@
-﻿namespace EastSeat.ResourceIdea.Application.Contracts.Persistence;
+﻿using EastSeat.ResourceIdea.Domain.ValueObjects;
+
+namespace EastSeat.ResourceIdea.Application.Contracts.Persistence;
 
 /// <summary>
 /// Base async repository interface.
@@ -44,5 +46,5 @@ public interface IAsyncRepository<T> where T : class
     /// <param name="page">Page of the list to be returned.</param>
     /// <param name="size">Size of the page to be returned.</param>
     /// <returns>Readonly paged list of entities.</returns>
-    Task<IReadOnlyList<T>> GetPaginatedListAsync(int page, int size);
+    Task<PagedList<T>> GetPagedListAsync(int page, int size);
 }

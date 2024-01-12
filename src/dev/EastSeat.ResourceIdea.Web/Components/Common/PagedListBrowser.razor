@@ -1,0 +1,22 @@
+﻿@namespace EastSeat.ResourceIdea.Web.Components.Common
+
+<div class="btn-toolbar mb-3" role="toolbar" aria-label="Paging toolbar">
+    <div class="btn-group me-2" role="group" aria-label="Paging buttons">
+        <button class="btn btn-outline-primary" @onclick="OnPrevious" disabled="@(!HasPreviousPage)" ><i class="fa-solid fa-chevron-left"></i> Previous</button>
+        <button class="btn btn-outline-primary" @onclick="OnNext" disabled="@(!HasNextPage)" >Next <i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnNext { get; set; }
+
+    [Parameter]
+    public EventCallback OnPrevious { get; set; }
+
+    [Parameter]
+    public bool HasNextPage { get; set; }
+
+    [Parameter]
+    public bool HasPreviousPage { get; set; }
+}

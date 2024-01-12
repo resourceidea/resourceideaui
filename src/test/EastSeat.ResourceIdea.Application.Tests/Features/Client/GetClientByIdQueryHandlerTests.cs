@@ -36,7 +36,7 @@ public class GetClientByIdQueryHandlerTests
     /// </summary>
     /// <returns></returns>
     [Fact]
-    [Trait("Category", "Unit")]
+    [Trait("Feature", "Client")]
     public async Task Handle_WhenValidRequest_ReturnsSuccessResponse()
     {
         // Given
@@ -72,7 +72,7 @@ public class GetClientByIdQueryHandlerTests
     /// </summary>
     /// <returns></returns>
     [Fact]
-    [Trait("Category", "Unit")]
+    [Trait("Feature", "Client")]
     public async Task Handle_WhenClientNotFound_ReturnsNotFoundResponse()
     {
         // Given
