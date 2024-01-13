@@ -8,8 +8,8 @@
     <div class="card-header">
         <div class="input-group mb-3 mt-3">
             <input type="text" class="form-control" placeholder="Search clients by name"
-                   aria-label="Search clients by name" aria-describedby="button-client-search">
-            <button class="btn btn-outline-primary" type="button" id="button-client-search">
+                   aria-label="Search clients by name" aria-describedby="button-client-search" @bind="SearchTerm">
+            <button class="btn btn-outline-primary" type="button" id="button-client-search" @onclick="SearchClients">
                 <i class="fa-solid fa-magnifying-glass"></i>&nbsp;Search Clients
             </button>
         </div>
@@ -47,37 +47,23 @@ else
     private int CurrentPage = 1;
     private bool SortAscending = true;
     private string sortIcon = "fa-sort";
+    private string SearchTerm { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await Mediator.Send(new GetClientsListQuery());
-        ListOfClients = response.Items ?? Enumerable.Empty<ClientListDTO>().ToList();
-        HasPreviousPage = response.CurrentPage > 1;
-        HasNextPage = response.HasNextPage;
+        await LoadClientsList();
     }
 
     private async Task LoadNextPage()
     {
         CurrentPage += 1;
-        var response = await Mediator.Send(new GetClientsListQuery
-            {
-                Page = CurrentPage
-            });
-        ListOfClients = response.Items ?? Enumerable.Empty<ClientListDTO>().ToList();
-        HasPreviousPage = response.CurrentPage > 1;
-        HasNextPage = response.HasNextPage;
+        await LoadClientsList();
     }
 
     private async Task LoadPreviousPage()
     {
         CurrentPage = CurrentPage > 1 ? CurrentPage - 1 : 1;
-        var response = await Mediator.Send(new GetClientsListQuery
-            {
-                Page = CurrentPage
-            });
-        ListOfClients = response.Items ?? Enumerable.Empty<ClientListDTO>().ToList();
-        HasPreviousPage = response.CurrentPage > 1;
-        HasNextPage = response.HasNextPage;
+        await LoadClientsList();
     }
 
     private void SortClients()
@@ -94,5 +80,22 @@ else
             SortAscending = true;
             sortIcon = "fa-sort-down";
         }
+    }
+
+    private async Task SearchClients()
+    {
+        await LoadClientsList();
+    }
+
+    private async Task LoadClientsList()
+    {
+        var response = await Mediator.Send(new GetClientsListQuery
+            {
+                Page = CurrentPage,
+                Filter = SearchTerm
+            });
+        ListOfClients = response.Items ?? Enumerable.Empty<ClientListDTO>().ToList();
+        HasPreviousPage = response.CurrentPage > 1;
+        HasNextPage = response.HasNextPage;
     }
 }

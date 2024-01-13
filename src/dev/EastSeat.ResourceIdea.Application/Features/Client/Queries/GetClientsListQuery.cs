@@ -12,4 +12,7 @@ public class GetClientsListQuery : IRequest<PagedList<ClientListDTO>>
 
     /// <summary>Clients list page size.</summary>
     public int Size { get; set; } = 10;
+
+    /// <summary>Query filter.</summary>
+    public string Filter { get; set; } = string.Empty;
 }

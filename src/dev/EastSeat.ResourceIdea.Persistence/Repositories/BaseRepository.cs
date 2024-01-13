@@ -1,4 +1,6 @@
-﻿using EastSeat.ResourceIdea.Application.Contracts.Persistence;
+﻿using System.Linq.Expressions;
+
+using EastSeat.ResourceIdea.Application.Contracts.Persistence;
 using EastSeat.ResourceIdea.Domain.Common;
 using EastSeat.ResourceIdea.Domain.ValueObjects;
 
@@ -45,10 +47,17 @@ public class BaseRepository<T>(ResourceIdeaDbContext dbContext) : IAsyncReposito
     }
 
     /// <inheritdoc />
-    public async Task<PagedList<T>> GetPagedListAsync(int page, int size)
+    public async Task<PagedList<T>> GetPagedListAsync(int page, int size, Expression<Func<T, bool>>? filter = null)
     {
-        var items = await dbContext.Set<T>().Skip(size * (page - 1)).Take(size).ToListAsync() ?? Enumerable.Empty<T>().ToList();
-        var totalItemsCount = dbContext.Set<T>().Count();
+        var query = dbContext.Set<T>().AsQueryable();
+        if (filter != null)
+        {
+            query = query.Where(filter);
+        }
+
+        var items = await query.Skip(size * (page - 1)).Take(size).ToListAsync();
+
+        var totalItemsCount = query.Count();
         var pagedList = new PagedList<T>
         {
             TotalCount = totalItemsCount,
@@ -56,6 +65,7 @@ public class BaseRepository<T>(ResourceIdeaDbContext dbContext) : IAsyncReposito
             CurrentPage = page,
             PageSize = size
         };
+
         return pagedList;
     }
 

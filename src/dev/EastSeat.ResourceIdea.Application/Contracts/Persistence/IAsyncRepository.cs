@@ -1,4 +1,6 @@
-﻿using EastSeat.ResourceIdea.Domain.ValueObjects;
+﻿using System.Linq.Expressions;
+
+using EastSeat.ResourceIdea.Domain.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Contracts.Persistence;
 
@@ -45,6 +47,7 @@ public interface IAsyncRepository<T> where T : class
     /// </summary>
     /// <param name="page">Page of the list to be returned.</param>
     /// <param name="size">Size of the page to be returned.</param>
+    /// <param name="filter">Query filter.</param>
     /// <returns>Readonly paged list of entities.</returns>
-    Task<PagedList<T>> GetPagedListAsync(int page, int size);
+    Task<PagedList<T>> GetPagedListAsync(int page, int size, Expression<Func<T, bool>>? filter = null);
 }

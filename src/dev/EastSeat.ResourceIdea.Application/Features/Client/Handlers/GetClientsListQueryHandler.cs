@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+
+using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Contracts.Persistence;
 using EastSeat.ResourceIdea.Application.Features.Client.DTO;
@@ -9,12 +11,18 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Client.Handlers;
 
-public class GetClientsListQueryHandler (IMapper mapper, IAsyncRepository<Domain.Entities.Client> clientRepository) : IRequestHandler<GetClientsListQuery, PagedList<ClientListDTO>>
+public class GetClientsListQueryHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Client> clientRepository) : IRequestHandler<GetClientsListQuery, PagedList<ClientListDTO>>
 {
 
     public async Task<PagedList<ClientListDTO>> Handle(GetClientsListQuery request, CancellationToken cancellationToken)
     {
-        var pagedList = await clientRepository.GetPagedListAsync(request.Page, request.Size);
+        Expression<Func<Domain.Entities.Client, bool>>? filter = null;
+        if (!string.IsNullOrEmpty(request.Filter))
+        {
+            filter = (Domain.Entities.Client client) => client.Name.Contains(request.Filter);
+        }
+
+        var pagedList = await clientRepository.GetPagedListAsync(request.Page, request.Size, filter);
 
         return new PagedList<ClientListDTO>
         {
