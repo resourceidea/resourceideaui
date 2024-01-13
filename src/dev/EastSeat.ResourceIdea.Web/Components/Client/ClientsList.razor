@@ -18,9 +18,9 @@
 @if (ListOfClients is not null && ListOfClients.Count > 0)
 {
     <table class="table table-striped table-bordered table-sm">
-        <thead>
+        <thead class="table-info">
             <tr>
-                <th>Client name</th>
+                <th><span @onclick="SortClients">Client name &nbsp;&nbsp;<i class="fa-solid @sortIcon small"></i></span></th>
             </tr>
         </thead>
         <tbody>
@@ -45,6 +45,8 @@ else
     private bool HasPreviousPage = false;
     private bool HasNextPage = false;
     private int CurrentPage = 1;
+    private bool SortAscending = true;
+    private string sortIcon = "fa-sort";
 
     protected override async Task OnInitializedAsync()
     {
@@ -56,9 +58,10 @@ else
 
     private async Task LoadNextPage()
     {
+        CurrentPage += 1;
         var response = await Mediator.Send(new GetClientsListQuery
             {
-                Page = CurrentPage + 1
+                Page = CurrentPage
             });
         ListOfClients = response.Items ?? Enumerable.Empty<ClientListDTO>().ToList();
         HasPreviousPage = response.CurrentPage > 1;
@@ -67,12 +70,29 @@ else
 
     private async Task LoadPreviousPage()
     {
+        CurrentPage = CurrentPage > 1 ? CurrentPage - 1 : 1;
         var response = await Mediator.Send(new GetClientsListQuery
             {
-                Page = CurrentPage > 1 ? CurrentPage - 1 : 1
+                Page = CurrentPage
             });
         ListOfClients = response.Items ?? Enumerable.Empty<ClientListDTO>().ToList();
         HasPreviousPage = response.CurrentPage > 1;
         HasNextPage = response.HasNextPage;
+    }
+
+    private void SortClients()
+    {
+        if (SortAscending)
+        {
+            ListOfClients = ListOfClients.OrderBy(c => c.Name).ToList();
+            SortAscending = false;
+            sortIcon = "fa-sort-up";
+        }
+        else
+        {
+            ListOfClients = ListOfClients.OrderByDescending(c => c.Name).ToList();
+            SortAscending = true;
+            sortIcon = "fa-sort-down";
+        }
     }
 }
