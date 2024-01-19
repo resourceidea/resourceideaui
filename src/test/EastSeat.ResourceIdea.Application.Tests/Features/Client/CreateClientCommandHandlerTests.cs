@@ -10,7 +10,9 @@ using EastSeat.ResourceIdea.Application.Features.Client.DTO;
 using EastSeat.ResourceIdea.Application.Features.Client.Handlers;
 using EastSeat.ResourceIdea.Application.Profiles;
 using EastSeat.ResourceIdea.Application.Responses;
+using EastSeat.ResourceIdea.Domain.Common;
 using EastSeat.ResourceIdea.Domain.Entities;
+using EastSeat.ResourceIdea.Domain.ValueObjects;
 
 using Microsoft.EntityFrameworkCore.Update.Internal;
 
@@ -44,9 +46,9 @@ public partial class CreateClientCommandHandlerTests
         // Arrange
         var mockRepository = new Mock<IClientRepository>();
         var command = new Faker<CreateClientCommand>()
-            .RuleFor(c => c.Name, f => f.Company.CompanyName())
+            .RuleFor(c => c.Name, f => new NonEmptyString(f.Company.CompanyName()))
             .RuleFor(c => c.SubscriptionId, subscriptionId)
-            .RuleFor(c => c.Address, f => f.Address.FullAddress())
+            .RuleFor(c => c.Address, f => new NonEmptyString(f.Address.FullAddress()))
             .RuleFor(c => c.ColorCode, f => f.Random.Hexadecimal(6, string.Empty));
 
         var handler = new CreateClientCommandHandler(mapper, mockRepository.Object);
@@ -66,9 +68,9 @@ public partial class CreateClientCommandHandlerTests
         // Arrange
         var mockRepository = new Mock<IClientRepository>();
         var fakeCommand = new Faker<CreateClientCommand>()
-            .RuleFor(c => c.Name, f => f.Company.CompanyName())
+            .RuleFor(c => c.Name, f => new NonEmptyString(f.Company.CompanyName()))
             .RuleFor(c => c.SubscriptionId, subscriptionId)
-            .RuleFor(c => c.Address, f => f.Address.FullAddress())
+            .RuleFor(c => c.Address, f => new NonEmptyString(f.Address.FullAddress()))
             .RuleFor(c => c.ColorCode, f => f.Random.String2(8));
         var command = fakeCommand.Generate();
         var fakeClient = new Domain.Entities.Client
@@ -99,9 +101,9 @@ public partial class CreateClientCommandHandlerTests
         // Arrange
         var mockRepository = new Mock<IClientRepository>();
         var fakeCommand = new Faker<CreateClientCommand>()
-            .RuleFor(c => c.Name, string.Empty)
+            .RuleFor(c => c.Name, new NonEmptyString(Constants.Strings.NonEmptyString))
             .RuleFor(c => c.SubscriptionId, subscriptionId)
-            .RuleFor(c => c.Address, f => f.Address.FullAddress())
+            .RuleFor(c => c.Address, f => new NonEmptyString(f.Address.FullAddress()))
             .RuleFor(c => c.ColorCode, f => f.Random.Hexadecimal(6, string.Empty));
         var command = fakeCommand.Generate();
         var fakeClient = new Domain.Entities.Client
@@ -132,9 +134,9 @@ public partial class CreateClientCommandHandlerTests
         // Arrange
         var mockRepository = new Mock<IClientRepository>();
         var fakeCommand = new Faker<CreateClientCommand>()
-            .RuleFor(c => c.Name, f => f.Company.CompanyName())
+            .RuleFor(c => c.Name, f => new NonEmptyString(f.Company.CompanyName()))
             .RuleFor(c => c.SubscriptionId, Guid.Empty)
-            .RuleFor(c => c.Address, f => f.Address.FullAddress())
+            .RuleFor(c => c.Address, f => new NonEmptyString(f.Address.FullAddress()))
             .RuleFor(c => c.ColorCode, f => f.Random.Hexadecimal(6, string.Empty));
         var command = fakeCommand.Generate();
         var fakeClient = new Domain.Entities.Client

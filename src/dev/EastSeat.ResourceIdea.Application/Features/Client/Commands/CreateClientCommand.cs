@@ -1,6 +1,6 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.Client.DTO;
 using EastSeat.ResourceIdea.Application.Responses;
-
+using EastSeat.ResourceIdea.Domain.Common;
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Client.Commands;
@@ -17,14 +17,14 @@ public class CreateClientCommand : IRequest<BaseResponse<ClientDTO>>
     public Guid SubscriptionId { get; set; }
 
     /// <summary>Client Name.</summary>
-    public string Name { get; set; } = string.Empty;
+    public NonEmptyString Name { get; set; }
 
     /// <summary>Client Address.</summary>
-    public string Address { get; set; } = string.Empty;
+    public NonEmptyString Address { get; set; }
 
     /// <summary>Client color code.</summary>
-    public string ColorCode { get; set; } = string.Empty;
+    public string? ColorCode { get; set; }
 
     /// <summary>User who triggered the command to create the client.</summary>
-    public string CreatedBy { get; set; } = string.Empty;
+    public string? CreatedBy { get; set; }
 }

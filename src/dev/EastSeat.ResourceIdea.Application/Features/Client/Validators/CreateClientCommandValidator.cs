@@ -13,7 +13,7 @@ class CreateClientCommandValidator : AbstractValidator<CreateClientCommand>
             .NotEmpty().WithMessage("Client name is required.")
             .NotNull();
 
-        RuleFor(client => client.ColorCode)
+        RuleFor(client => client.ColorCode ?? string.Empty)
             .Must(BeColorCodeOfValidLength)
             .Matches(@"^[a-fA-F0-9]*$")
             .WithMessage("Invalid client color code.");
