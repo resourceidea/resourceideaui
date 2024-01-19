@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Appli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Web", "dev\EastSeat.ResourceIdea.Web\EastSeat.ResourceIdea.Web.csproj", "{32228889-BA3B-4146-A140-CA400011779E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Web.Tests", "test\EastSeat.ResourceIdea.Web.Tests\EastSeat.ResourceIdea.Web.Tests.csproj", "{4DE72E05-CBBA-4682-BA4F-68010809653D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Web.Tests", "test\EastSeat.ResourceIdea.Web.Tests\EastSeat.ResourceIdea.Web.Tests.csproj", "{4DE72E05-CBBA-4682-BA4F-68010809653D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

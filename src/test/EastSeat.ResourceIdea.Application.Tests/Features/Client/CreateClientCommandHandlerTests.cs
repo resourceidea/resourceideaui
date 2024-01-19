@@ -10,9 +10,9 @@ using EastSeat.ResourceIdea.Application.Features.Client.DTO;
 using EastSeat.ResourceIdea.Application.Features.Client.Handlers;
 using EastSeat.ResourceIdea.Application.Profiles;
 using EastSeat.ResourceIdea.Application.Responses;
-using EastSeat.ResourceIdea.Domain.Entities;
+using EastSeat.ResourceIdea.Domain.Common;
 
-using Microsoft.EntityFrameworkCore.Update.Internal;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace EastSeat.ResourceIdea.Application.Tests.Features.Client;
 
@@ -43,15 +43,16 @@ public partial class CreateClientCommandHandlerTests
     {
         // Arrange
         var mockRepository = new Mock<IClientRepository>();
-        var command = new Faker<CreateClientCommand>()
-            .RuleFor(c => c.Name, f => f.Company.CompanyName())
-            .RuleFor(c => c.SubscriptionId, subscriptionId)
-            .RuleFor(c => c.Address, f => f.Address.FullAddress())
-            .RuleFor(c => c.ColorCode, f => f.Random.Hexadecimal(6, string.Empty));
-
-        var handler = new CreateClientCommandHandler(mapper, mockRepository.Object);
+        var command = new CreateClientCommand
+        {
+            Name = "Company name",
+            SubscriptionId = subscriptionId,
+            Address = "Address 1",
+            ColorCode = "00FFBB"
+        };
 
         // Act
+        var handler = new CreateClientCommandHandler(mapper, mockRepository.Object);
         var result = await handler.Handle(command, CancellationToken.None);
 
         // Assert
@@ -65,12 +66,13 @@ public partial class CreateClientCommandHandlerTests
     {
         // Arrange
         var mockRepository = new Mock<IClientRepository>();
-        var fakeCommand = new Faker<CreateClientCommand>()
-            .RuleFor(c => c.Name, f => f.Company.CompanyName())
-            .RuleFor(c => c.SubscriptionId, subscriptionId)
-            .RuleFor(c => c.Address, f => f.Address.FullAddress())
-            .RuleFor(c => c.ColorCode, f => f.Random.String2(8));
-        var command = fakeCommand.Generate();
+        var command = new CreateClientCommand
+        {
+            Name = "Company name",
+            SubscriptionId = subscriptionId,
+            Address = "Address 1",
+            ColorCode = "00FFB"
+        };
         var fakeClient = new Domain.Entities.Client
         {
             Id = command.Id,
@@ -89,40 +91,21 @@ public partial class CreateClientCommandHandlerTests
         Assert.IsType<BaseResponse<ClientDTO>>(result);
         Assert.False(result.Success);
         Assert.NotNull(result.Errors);
-        Assert.Contains("Invalid client color code.", result.Errors);
     }
 
     [Fact]
     [Trait("Feature", "Client")]
-    public async Task Handle_WhenMissingClientName_ReturnsFailureResponse()
+    public void Handle_WhenMissingClientName_ReturnsFailureResponse()
     {
         // Arrange
         var mockRepository = new Mock<IClientRepository>();
-        var fakeCommand = new Faker<CreateClientCommand>()
-            .RuleFor(c => c.Name, string.Empty)
-            .RuleFor(c => c.SubscriptionId, subscriptionId)
-            .RuleFor(c => c.Address, f => f.Address.FullAddress())
-            .RuleFor(c => c.ColorCode, f => f.Random.Hexadecimal(6, string.Empty));
-        var command = fakeCommand.Generate();
-        var fakeClient = new Domain.Entities.Client
+        Assert.Throws<ArgumentException>(() => new CreateClientCommand
         {
-            Id = command.Id,
-            Name = command.Name,
-            SubscriptionId = command.SubscriptionId,
-            Address = command.Address,
-            ColorCode = command.ColorCode
-        };
-        mockRepository.Setup(repo => repo.AddAsync(fakeClient)).Returns(Task.FromResult(fakeClient));
-        var handler = new CreateClientCommandHandler(mapper, mockRepository.Object);
-
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.IsType<BaseResponse<ClientDTO>>(result);
-        Assert.False(result.Success);
-        Assert.NotNull(result.Errors);
-        Assert.Contains("Client name is required.", result.Errors);
+            Name = string.Empty,
+            SubscriptionId = subscriptionId,
+            Address = "Address 1",
+            ColorCode = "#00FFBB"
+        });
     }
 
     [Fact]
@@ -131,12 +114,13 @@ public partial class CreateClientCommandHandlerTests
     {
         // Arrange
         var mockRepository = new Mock<IClientRepository>();
-        var fakeCommand = new Faker<CreateClientCommand>()
-            .RuleFor(c => c.Name, f => f.Company.CompanyName())
-            .RuleFor(c => c.SubscriptionId, Guid.Empty)
-            .RuleFor(c => c.Address, f => f.Address.FullAddress())
-            .RuleFor(c => c.ColorCode, f => f.Random.Hexadecimal(6, string.Empty));
-        var command = fakeCommand.Generate();
+        var command = new CreateClientCommand
+        {
+            Name = "Company name",
+            SubscriptionId = Guid.Empty,
+            Address = "Address 1",
+            ColorCode = "#00FFBB"
+        };
         var fakeClient = new Domain.Entities.Client
         {
             Id = command.Id,

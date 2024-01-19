@@ -1,4 +1,6 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.Client.Commands;
+using EastSeat.ResourceIdea.Domain.Common;
+
 using FluentValidation;
 
 namespace EastSeat.ResourceIdea.Application.Features.Client.Validators;
@@ -13,7 +15,7 @@ class CreateClientCommandValidator : AbstractValidator<CreateClientCommand>
             .NotEmpty().WithMessage("Client name is required.")
             .NotNull();
 
-        RuleFor(client => client.ColorCode)
+        RuleFor(client => client.ColorCode.Value)
             .Must(BeColorCodeOfValidLength)
             .Matches(@"^[a-fA-F0-9]*$")
             .WithMessage("Invalid client color code.");

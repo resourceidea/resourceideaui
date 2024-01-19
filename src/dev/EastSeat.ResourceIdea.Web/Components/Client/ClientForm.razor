@@ -1,0 +1,31 @@
+﻿@namespace EastSeat.ResourceIdea.Web.Components.Clients
+
+@using System.Security.Claims
+@inject IMediator Mediator
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<EditForm Context="editContext" Model="@Model" OnValidSubmit="@OnValidSubmitAsync" FormName="ClientForm">
+    <DataAnnotationsValidator />
+    <div class="row mb-3">
+        <label for="name" class="col-2 col-form-label text-end">Name:</label>
+        <div class="col">
+            <InputText @bind-Value="@Model!.Name" id="name" class="form-control" placeholder="Client name" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="address" class="col-2 col-form-label text-end">Address:</label>
+        <div class="col">
+            <InputText @bind-Value="@Model!.Address" id="address" class="form-control" placeholder="Physical address" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-danger btn-sm offset-2">Save</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public ClientInput? Model { get; set; }
+
+    [Parameter]
+    public EventCallback OnValidSubmitAsync { get; set; }
+}
