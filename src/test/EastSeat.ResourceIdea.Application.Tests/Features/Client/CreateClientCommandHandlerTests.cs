@@ -11,10 +11,8 @@ using EastSeat.ResourceIdea.Application.Features.Client.Handlers;
 using EastSeat.ResourceIdea.Application.Profiles;
 using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Domain.Common;
-using EastSeat.ResourceIdea.Domain.Entities;
-using EastSeat.ResourceIdea.Domain.ValueObjects;
 
-using Microsoft.EntityFrameworkCore.Update.Internal;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace EastSeat.ResourceIdea.Application.Tests.Features.Client;
 
@@ -96,35 +94,17 @@ public partial class CreateClientCommandHandlerTests
 
     [Fact]
     [Trait("Feature", "Client")]
-    public async Task Handle_WhenMissingClientName_ReturnsFailureResponse()
+    public void Handle_WhenMissingClientName_ReturnsFailureResponse()
     {
         // Arrange
         var mockRepository = new Mock<IClientRepository>();
-        var fakeCommand = new Faker<CreateClientCommand>()
-            .RuleFor(c => c.Name, new NonEmptyString(Constants.Strings.NonEmptyString))
-            .RuleFor(c => c.SubscriptionId, subscriptionId)
-            .RuleFor(c => c.Address, f => new NonEmptyString(f.Address.FullAddress()))
-            .RuleFor(c => c.ColorCode, f => f.Random.Hexadecimal(6, string.Empty));
-        var command = fakeCommand.Generate();
-        var fakeClient = new Domain.Entities.Client
+        Assert.Throws<ArgumentException>(() => new CreateClientCommand
         {
-            Id = command.Id,
-            Name = command.Name,
-            SubscriptionId = command.SubscriptionId,
-            Address = command.Address,
-            ColorCode = command.ColorCode
-        };
-        mockRepository.Setup(repo => repo.AddAsync(fakeClient)).Returns(Task.FromResult(fakeClient));
-        var handler = new CreateClientCommandHandler(mapper, mockRepository.Object);
-
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.IsType<BaseResponse<ClientDTO>>(result);
-        Assert.False(result.Success);
-        Assert.NotNull(result.Errors);
-        Assert.Contains("Client name is required.", result.Errors);
+            Name = string.Empty,
+            SubscriptionId = subscriptionId,
+            Address = "Address 1",
+            ColorCode = "#00FFBB"
+        });
     }
 
     [Fact]
