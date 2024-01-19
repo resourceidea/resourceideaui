@@ -23,8 +23,8 @@ public class CreateClientCommand : IRequest<BaseResponse<ClientDTO>>
     public NonEmptyString Address { get; set; }
 
     /// <summary>Client color code.</summary>
-    public string? ColorCode { get; set; }
+    public NonEmptyString ColorCode { get; set; }
 
     /// <summary>User who triggered the command to create the client.</summary>
-    public string? CreatedBy { get; set; }
+    public NonEmptyString CreatedBy { get; set; }
 }
