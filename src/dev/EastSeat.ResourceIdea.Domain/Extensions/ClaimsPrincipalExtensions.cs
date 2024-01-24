@@ -23,8 +23,13 @@ public static class ClaimsPrincipalExtensions
         return Guid.Empty;
     }
 
-    public static string GetUserId(this ClaimsPrincipal user) => 
-        IsAuthenticatedUser(user) ? user.FindFirst(ClaimTypes.PrimarySid)?.Value ?? string.Empty : string.Empty;
+    /// <summary>
+    /// Get the user's Id.
+    /// </summary>
+    /// <param name="user">User</param>
+    /// <returns>User Id</returns>
+    /// TODO: Change the implementation to return PrimarySid claim type.
+    public static string GetUserId(this ClaimsPrincipal user) => Guid.NewGuid().ToString();
 
     private static bool IsAuthenticatedUser(ClaimsPrincipal user) => user.Identity is not null && user.Identity.IsAuthenticated;
 }
