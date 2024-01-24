@@ -1,0 +1,107 @@
+﻿@page "/clients/{id:guid}"
+
+@inject IMediator Mediator
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IMapper Mapper
+
+<PageTitle>ResourceIde - Edit Client</PageTitle>
+
+<AuthorizeView Context="authContext">
+    <Authorized>
+        <PageHeader Title="Client Details"></PageHeader>
+        <NavLink href="/clients" class="btn btn-primary btn-sm mb-2 mt-2"><i class="fa-solid fa-chevron-left"></i> Back</NavLink>
+
+        <NotificationMessage IsVisible="@IsVisible" Type="@NotificationMessageType" Text="@MessageText" />
+        <div class="card bg-light">
+            <div class="card-body">
+                <ClientForm Model="@Model" OnValidSubmitAsync="HandleValidSubmitAsync" />
+            </div>
+        </div>
+
+    </Authorized>
+    <NotAuthorized>
+        <PageHeader Title="Client Details"></PageHeader>
+        <h1>Not Authorized</h1>
+        <p>You're not authorized to view this page.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    [SupplyParameterFromForm]
+    public ClientInput? Model { get; set; }
+
+    private bool IsVisible { get; set; } = false;
+
+    private MessageType NotificationMessageType { get; set; } = MessageType.Info;
+
+    private string? MessageText { get; set; } = string.Empty;
+
+    private string? ColorCode { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var clientQuery = new GetClientByIdQuery()
+            {
+                Id = Id
+            };
+
+        var response = await Mediator.Send(clientQuery);
+        if (!response.Success)
+        {
+            IsVisible = true;
+            NotificationMessageType = MessageType.Error;
+            MessageText = $"{Constants.Strings.NotFoundPrefix}Client not found.";
+
+            // TODO: Log client query failure.
+            return;
+        }
+
+        Model = Mapper.Map<ClientInput>(response.Content);
+        ColorCode = response.Content?.ColorCode;
+    }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        if (Model is null)
+        {
+
+            IsVisible = true;
+            NotificationMessageType = MessageType.Error;
+            MessageText = $"{Constants.Strings.ErrorMessagePrefix}No client details submitted.";
+
+            // TODO: Log no client details submitted for edit.
+            return;
+        }
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        var command = new UpdateClientCommand()
+            {
+                Id = Id,
+                SubscriptionId = user.GetUserSubscriptionId(),
+                Name = Model.Name ?? string.Empty,
+                Address = Model.Address ?? string.Empty,
+                LastModifiedBy = user.GetUserId(),
+                ColorCode = ColorCode ?? string.Empty
+            };
+
+        var response = await Mediator.Send(command);
+
+        if (!response.Success)
+        {
+            IsVisible = true;
+            NotificationMessageType = MessageType.Error;
+            MessageText = $"{Constants.Strings.ErrorMessagePrefix}Client update failed.";
+
+            return;
+        }
+
+        IsVisible = true;
+        NotificationMessageType = MessageType.Success;
+        MessageText = $"{Constants.Strings.SuccessMessagePrefix}Client details updated successfully.";
+    }
+}
