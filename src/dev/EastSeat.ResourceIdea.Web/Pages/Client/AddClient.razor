@@ -1,7 +1,5 @@
 ﻿@page "/clients/new"
 
-@using System.Security.Claims
-
 @inject IMediator Mediator
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -54,8 +52,8 @@
                         Id = Guid.NewGuid(),
                         Name = Model.Name ?? string.Empty,
                         Address = Model.Address ?? string.Empty,
-                        SubscriptionId = HasUserSubscriptionId(user, out var subscriptionId) ? subscriptionId : Guid.Empty,
-                        CreatedBy = HasUserId(user, out var userId) ? userId : string.Empty,
+                        SubscriptionId = user.GetUserSubscriptionId(),
+                        CreatedBy = user.GetUserId(),
                         ColorCode = RandomHexColorCode()
                     };
 
@@ -84,16 +82,6 @@
         MessageText = $"{Constants.Strings.ErrorMessagePrefix}No client details submitted.";
 
         // TODO: Log no client details submitted.
-    }
-
-    private bool HasUserSubscriptionId(ClaimsPrincipal user, out Guid subscriptionId)
-    {
-        subscriptionId = Guid.Empty;
-        if (IsAuthenticatedUser(user) && Guid.TryParse(user.FindFirst("SubscriptionId")?.Value, out subscriptionId))
-        {
-            return true;
-        }
-        return false;
     }
 
     private bool HasUserId(ClaimsPrincipal user, out string userId)

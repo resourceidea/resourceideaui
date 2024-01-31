@@ -18,7 +18,7 @@ public class UpdateClientCommandValidator : AbstractValidator<UpdateClientComman
             .NotEmpty().WithMessage("Client name is required.")
             .NotNull();
 
-        RuleFor(client => client.ColorCode)
+        RuleFor(client => client.ColorCode.Value)
             .Must(BeAValidColorCode)
             .WithMessage("Invalid client color code.");
 

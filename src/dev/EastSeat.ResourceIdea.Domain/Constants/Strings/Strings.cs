@@ -29,5 +29,10 @@
         /// Prefix for the info message displayed.
         /// </summary>
         public const string InfoMessagePrefix = "Info: ";
+
+        /// <summary>
+        /// Prefix for the not found message displayed.
+        /// </summary>
+        public const string NotFoundPrefix = "Not Found: ";
     }
 }

@@ -7,6 +7,7 @@ using EastSeat.ResourceIdea.Application.Features.Employee.Commands.CreateEmploye
 using EastSeat.ResourceIdea.Application.Features.Subscription.Commands.CreateSubscription;
 using EastSeat.ResourceIdea.Application.Features.Subscription.Queries.GetSubscriptionsList;
 using EastSeat.ResourceIdea.Domain.Entities;
+using EastSeat.ResourceIdea.Domain.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Profiles;
 
@@ -27,5 +28,7 @@ public class ApplicationMappingProfile : Profile
 
         CreateMap<Client, ClientDTO>();
         CreateMap<Client, ClientListDTO>();
+
+        CreateMap<ClientDTO, ClientInput>();
     }
 }

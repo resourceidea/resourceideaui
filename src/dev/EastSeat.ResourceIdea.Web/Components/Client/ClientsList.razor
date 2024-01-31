@@ -26,7 +26,11 @@
         <tbody>
             @foreach (var client in ListOfClients)
             {
-                <tr><td>@client.Name</td></tr>
+                <tr>
+                    <td>
+                        <NavLink href="@($"/clients/{client.Id}")">@client.Name</NavLink>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
