@@ -14,11 +14,11 @@ using EastSeat.ResourceIdea.Application.Responses;
 
 namespace EastSeat.ResourceIdea.Application.Tests.Features.Client;
 
-public class GetClientByIdQueryHandlerTests
+public class TestGetClientByIdQueryHandler
 {
     private readonly IMapper mapper;
 
-    public GetClientByIdQueryHandlerTests()
+    public TestGetClientByIdQueryHandler()
     {
         // Setup Mapping profile configuration.
         if (mapper == null)
@@ -37,7 +37,7 @@ public class GetClientByIdQueryHandlerTests
     /// <returns></returns>
     [Fact]
     [Trait("Feature", "Client")]
-    public async Task Handle_WhenValidRequest_ReturnsSuccessResponse()
+    public async Task ReturnsSuccessResponse_When_RequestIsValid()
     {
         // Given
         var mockRepository = new Mock<IAsyncRepository<Domain.Entities.Client>>();
@@ -73,7 +73,7 @@ public class GetClientByIdQueryHandlerTests
     /// <returns></returns>
     [Fact]
     [Trait("Feature", "Client")]
-    public async Task Handle_WhenClientNotFound_ReturnsNotFoundResponse()
+    public async Task ReturnsNotFoundResponse_When_ClientIsNotFound()
     {
         // Given
         var mockRepository = new Mock<IAsyncRepository<Domain.Entities.Client>>();

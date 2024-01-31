@@ -7,11 +7,11 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Tests.Features.Client;
 
-public partial class DeleteClientCommandHandlerTests
+public partial class TestDeleteClientCommandHandler
 {
     [Fact]
     [Trait("Feature", "Client")]
-    public async void Handle_WhenValidRequest_ReturnsSuccessResponse()
+    public async void ReturnsSuccessResponse_When_RequestIsValid()
     {
         // Given
         var mockRepository = new Mock<IAsyncRepository<Domain.Entities.Client>>();

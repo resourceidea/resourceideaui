@@ -14,12 +14,12 @@ using EastSeat.ResourceIdea.Domain.Common;
 
 namespace EastSeat.ResourceIdea.Application.Tests.Features.Client;
 
-public class UpdateClientCommandHandlerTests
+public class TestUpdateClientCommandHandler
 {
     private readonly Guid subscriptionId;
     private readonly IMapper mapper;
 
-    public UpdateClientCommandHandlerTests()
+    public TestUpdateClientCommandHandler()
     {
         // Setup the id for the subscription.
         subscriptionId = new("0373ba5e-b03c-4883-a30e-f4a30fe6b53d");
@@ -37,7 +37,7 @@ public class UpdateClientCommandHandlerTests
 
     [Fact]
     [Trait("Feature", "Client")]
-    public async Task Handle_WhenValidRequest_ReturnsSuccessResponse()
+    public async Task ReturnsSuccessResponse_When_RequestIsValid()
     {
         // Given
         var mockRepository = new Mock<IAsyncRepository<Domain.Entities.Client>>();
@@ -72,7 +72,7 @@ public class UpdateClientCommandHandlerTests
     }
 
     [Fact(Skip = "No longer applies with use of NonEmptyString on UpdateClientCommand")]
-    public async Task Handle_WhenClientNotFound_ReturnsFailureResponse()
+    public async Task ReturnsFailureResponse_When_ClientIsNotFound()
     {
         // Given
         var mockRepository = new Mock<IAsyncRepository<Domain.Entities.Client>>();
@@ -98,7 +98,7 @@ public class UpdateClientCommandHandlerTests
     }
 
     [Fact(Skip = "No longer applies with use of NonEmptyString on UpdateClientCommand")]
-    public async Task Handle_WhenValidationFails_ReturnsFailureResponse()
+    public async Task ReturnsFailureResponse_When_ValidationFails()
     {
         // Given
         var mockRepository = new Mock<IAsyncRepository<Domain.Entities.Client>>();
