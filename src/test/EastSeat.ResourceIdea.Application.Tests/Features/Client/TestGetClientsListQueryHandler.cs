@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 using AutoMapper;
 
@@ -16,11 +11,11 @@ using EastSeat.ResourceIdea.Domain.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Tests.Features.Client;
 
-public class GetClientsListQueryHandlerTests
+public class TestGetClientsListQueryHandler
 {
     private readonly IMapper mapper;
 
-    public GetClientsListQueryHandlerTests()
+    public TestGetClientsListQueryHandler()
     {
         var mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfile<ApplicationMappingProfile>());
         mapper = mapperConfiguration.CreateMapper();
@@ -29,7 +24,7 @@ public class GetClientsListQueryHandlerTests
     // Add test to verify that the handler returns a list of clients.
     [Fact]
     [Trait("Feature", "Client")]
-    public async Task Handler_ReturnsPaginatedListOfClients()
+    public async Task ReturnsPaginatedListOfClients()
     {
         // Arrange
         var fakePagedList = new PagedList<Domain.Entities.Client>
@@ -65,7 +60,7 @@ public class GetClientsListQueryHandlerTests
     // Add test to verify that the handler returns a list of clients.
     [Fact]
     [Trait("Feature", "Client")]
-    public async Task Handler_ReturnsPaginatedListOfFilteredClients()
+    public async Task ReturnsPaginatedListOfFilteredClients()
     {
         // Arrange
         var fakePagedList = new PagedList<Domain.Entities.Client>

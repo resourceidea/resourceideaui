@@ -2,26 +2,21 @@
 
 using AutoMapper;
 
-using Bogus;
-
 using EastSeat.ResourceIdea.Application.Contracts.Persistence;
 using EastSeat.ResourceIdea.Application.Features.Client.Commands;
 using EastSeat.ResourceIdea.Application.Features.Client.DTO;
 using EastSeat.ResourceIdea.Application.Features.Client.Handlers;
 using EastSeat.ResourceIdea.Application.Profiles;
 using EastSeat.ResourceIdea.Application.Responses;
-using EastSeat.ResourceIdea.Domain.Common;
-
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace EastSeat.ResourceIdea.Application.Tests.Features.Client;
 
-public partial class CreateClientCommandHandlerTests
+public partial class TestCreateClientCommandHandler
 {
     private readonly Guid subscriptionId;
     private readonly IMapper mapper;
 
-    public CreateClientCommandHandlerTests()
+    public TestCreateClientCommandHandler()
     {
         // Setup the id for the subscription.
         subscriptionId = new("0373ba5e-b03c-4883-a30e-f4a30fe6b53d");
@@ -39,7 +34,7 @@ public partial class CreateClientCommandHandlerTests
 
     [Fact]
     [Trait("Feature", "Client")]
-    public async Task Handle_WhenValidRequest_ReturnsSuccessResponse()
+    public async Task ReturnsSuccessResponse_When_RequestIsValid()
     {
         // Arrange
         var mockRepository = new Mock<IClientRepository>();
@@ -62,7 +57,7 @@ public partial class CreateClientCommandHandlerTests
 
     [Fact]
     [Trait("Feature", "Client")]
-    public async Task Handle_WhenColorCodeIsNotValid_ReturnsFailureResponse()
+    public async Task ReturnsFailureResponse_When_ColorCodeIsNotValid()
     {
         // Arrange
         var mockRepository = new Mock<IClientRepository>();
@@ -95,7 +90,7 @@ public partial class CreateClientCommandHandlerTests
 
     [Fact]
     [Trait("Feature", "Client")]
-    public void Handle_WhenMissingClientName_ReturnsFailureResponse()
+    public void ReturnsFailureResponse_When_ClientNameIsMissing()
     {
         // Arrange
         var mockRepository = new Mock<IClientRepository>();
@@ -110,7 +105,7 @@ public partial class CreateClientCommandHandlerTests
 
     [Fact]
     [Trait("Feature", "Client")]
-    public async Task Handle_WhenEmptySubscriptionGuid_ReturnsFailureResponse()
+    public async Task ReturnsFailureResponse_When_SubscriptionIdIsEmptyGuid()
     {
         // Arrange
         var mockRepository = new Mock<IClientRepository>();
