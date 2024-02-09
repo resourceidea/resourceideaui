@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace EastSeat.ResourceIdea.Application.Features.Asset.Queries.GetAssetsList;
+namespace EastSeat.ResourceIdea.Application.Features.Assets.Queries.GetAssetsList;
 
 /// <summary>
 /// Query to get a list of assets.

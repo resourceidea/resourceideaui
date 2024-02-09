@@ -4,7 +4,7 @@ using EastSeat.ResourceIdea.Application.Contracts.Persistence;
 
 using MediatR;
 
-namespace EastSeat.ResourceIdea.Application.Features.Asset.Commands;
+namespace EastSeat.ResourceIdea.Application.Features.Assets.Commands;
 
 public class CreateAssetCommandHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Asset> assetRepository) : IRequestHandler<CreateAssetCommand, CreateAssetCommandResponse>
 {

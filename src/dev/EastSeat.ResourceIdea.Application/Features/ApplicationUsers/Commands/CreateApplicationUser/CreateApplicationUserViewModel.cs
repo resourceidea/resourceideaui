@@ -1,4 +1,4 @@
-﻿namespace EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
+﻿namespace EastSeat.ResourceIdea.Application.Features.ApplicationUsers.Commands.CreateApplicationUser;
 
 /// <summary>
 /// Application user that has been created.

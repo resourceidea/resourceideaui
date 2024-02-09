@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Engagement\**" />
+    <EmbeddedResource Remove="Features\Engagement\**" />
+    <None Remove="Features\Engagement\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj" />
   </ItemGroup>
 
@@ -17,11 +23,6 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Optional" Version="4.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\Engagement\Commands\" />
-    <Folder Include="Features\Engagement\Validators\" />
   </ItemGroup>
 
 </Project>

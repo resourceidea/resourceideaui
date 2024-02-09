@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Bogus;
 using EastSeat.ResourceIdea.Application.Contracts.Persistence;
-using EastSeat.ResourceIdea.Application.Features.Client.DTO;
-using EastSeat.ResourceIdea.Application.Features.Client.Handlers;
-using EastSeat.ResourceIdea.Application.Features.Client.Queries;
+using EastSeat.ResourceIdea.Application.Features.Clients.DTO;
+using EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
+using EastSeat.ResourceIdea.Application.Features.Clients.Queries;
 using EastSeat.ResourceIdea.Application.Profiles;
 using EastSeat.ResourceIdea.Application.Responses;
 

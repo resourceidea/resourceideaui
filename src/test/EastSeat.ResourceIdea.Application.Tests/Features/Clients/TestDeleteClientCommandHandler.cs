@@ -1,7 +1,7 @@
 using Bogus;
 using EastSeat.ResourceIdea.Application.Contracts.Persistence;
-using EastSeat.ResourceIdea.Application.Features.Client.Commands;
-using EastSeat.ResourceIdea.Application.Features.Client.Handlers;
+using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
+using EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
 using EastSeat.ResourceIdea.Application.Responses;
 using MediatR;
 

@@ -1,6 +1,6 @@
 ﻿using EastSeat.ResourceIdea.Application.Responses;
 
-namespace EastSeat.ResourceIdea.Application.Features.Asset.Commands;
+namespace EastSeat.ResourceIdea.Application.Features.Assets.Commands;
 
 /// <summary>
 /// Response from the command to create an asset.

@@ -1,5 +1,5 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Asset.Commands;
-using EastSeat.ResourceIdea.Application.Features.Asset.Queries.GetAssetsList;
+﻿using EastSeat.ResourceIdea.Application.Features.Assets.Commands;
+using EastSeat.ResourceIdea.Application.Features.Assets.Queries.GetAssetsList;
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Api.Endpoints.EndpointHandlers;

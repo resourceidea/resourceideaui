@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace EastSeat.ResourceIdea.Application.Features.Asset.Commands;
+namespace EastSeat.ResourceIdea.Application.Features.Assets.Commands;
 
 /// <summary>
 /// Validates the command to create an asset.

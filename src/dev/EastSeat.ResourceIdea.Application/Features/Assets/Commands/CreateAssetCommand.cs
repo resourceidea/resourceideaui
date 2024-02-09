@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace EastSeat.ResourceIdea.Application.Features.Asset.Commands;
+namespace EastSeat.ResourceIdea.Application.Features.Assets.Commands;
 
 /// <summary>
 /// Command to create an asset record.

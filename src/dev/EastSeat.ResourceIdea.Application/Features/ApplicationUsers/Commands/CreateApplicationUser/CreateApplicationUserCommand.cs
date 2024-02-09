@@ -2,7 +2,7 @@
 
 using MediatR;
 
-namespace EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
+namespace EastSeat.ResourceIdea.Application.Features.ApplicationUsers.Commands.CreateApplicationUser;
 
 /// <summary>
 /// Command to create an application user.

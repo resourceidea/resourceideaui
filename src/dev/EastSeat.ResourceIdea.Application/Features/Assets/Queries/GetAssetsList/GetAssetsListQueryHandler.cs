@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Contracts.Persistence;
+using EastSeat.ResourceIdea.Application.Features.Assets.Queries.GetAssetsList;
 
 using MediatR;
 
-namespace EastSeat.ResourceIdea.Application.Features.Asset.Queries.GetAssetsList;
+namespace EastSeat.ResourceIdea.Application.Features.Assets.Queries.GetAssetsList;
 
 /// <summary>
 /// Handles the query to list assets.

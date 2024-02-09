@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Contracts.Persistence;
-using EastSeat.ResourceIdea.Application.Features.Client.DTO;
-using EastSeat.ResourceIdea.Application.Features.Client.Handlers;
-using EastSeat.ResourceIdea.Application.Features.Client.Queries;
-using EastSeat.ResourceIdea.Application.Features.Engagement.DTO;
-using EastSeat.ResourceIdea.Application.Features.Engagement.Handlers;
-using EastSeat.ResourceIdea.Application.Features.Engagement.Queries;
+using EastSeat.ResourceIdea.Application.Features.Clients.DTO;
+using EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
+using EastSeat.ResourceIdea.Application.Features.Clients.Queries;
+using EastSeat.ResourceIdea.Application.Features.Engagements.DTO;
+using EastSeat.ResourceIdea.Application.Features.Engagements.Handlers;
+using EastSeat.ResourceIdea.Application.Features.Engagements.Queries;
 using EastSeat.ResourceIdea.Application.Profiles;
 using EastSeat.ResourceIdea.Application.Tests.Setup;
 using EastSeat.ResourceIdea.Domain.ValueObjects;
@@ -57,7 +57,6 @@ public class TestGetEngagementsListQueryHandler
                        {
                            Page = 1,
                            Size = 10,
-                           Filter = string.Empty
                        }, CancellationToken.None);
 
         // Assert
@@ -66,10 +65,10 @@ public class TestGetEngagementsListQueryHandler
     }
 
     // Add test to verify that the handler returns a list of engagements.
-    [Fact]
+    [Fact(Skip = "Not implemented")]
     [Trait("Feature", "Engagement")]
-    public async Task ReturnsPagedListOfFilteredEngagements()
+    public Task ReturnsPagedListOfFilteredEngagements()
     {
-
+        throw new NotImplementedException();
     }
 }

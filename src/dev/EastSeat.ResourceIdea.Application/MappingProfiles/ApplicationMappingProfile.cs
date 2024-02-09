@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 
-using EastSeat.ResourceIdea.Application.Features.Asset.Commands;
-using EastSeat.ResourceIdea.Application.Features.Asset.Queries.GetAssetsList;
-using EastSeat.ResourceIdea.Application.Features.Client.DTO;
-using EastSeat.ResourceIdea.Application.Features.Employee.Commands.CreateEmployee;
-using EastSeat.ResourceIdea.Application.Features.Engagement.DTO;
-using EastSeat.ResourceIdea.Application.Features.Subscription.Commands.CreateSubscription;
-using EastSeat.ResourceIdea.Application.Features.Subscription.Queries.GetSubscriptionsList;
+using EastSeat.ResourceIdea.Application.Features.Assets.Commands;
+using EastSeat.ResourceIdea.Application.Features.Assets.Queries.GetAssetsList;
+using EastSeat.ResourceIdea.Application.Features.Clients.DTO;
+using EastSeat.ResourceIdea.Application.Features.Employees.Commands.CreateEmployee;
+using EastSeat.ResourceIdea.Application.Features.Engagements.DTO;
+using EastSeat.ResourceIdea.Application.Features.Subscriptions.Commands.CreateSubscription;
+using EastSeat.ResourceIdea.Application.Features.Subscriptions.Queries.GetSubscriptionsList;
 using EastSeat.ResourceIdea.Domain.Entities;
 using EastSeat.ResourceIdea.Domain.ValueObjects;
 

@@ -1,5 +1,5 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Subscription.Commands.CreateSubscription;
-using EastSeat.ResourceIdea.Application.Features.Subscription.Queries.GetSubscriptionsList;
+﻿using EastSeat.ResourceIdea.Application.Features.Subscriptions.Commands.CreateSubscription;
+using EastSeat.ResourceIdea.Application.Features.Subscriptions.Queries.GetSubscriptionsList;
 using EastSeat.ResourceIdea.Application.Responses;
 using MediatR;
 

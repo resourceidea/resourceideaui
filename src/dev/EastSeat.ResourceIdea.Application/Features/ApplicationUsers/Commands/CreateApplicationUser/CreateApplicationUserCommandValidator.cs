@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using FluentValidation;
 
-namespace EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
+namespace EastSeat.ResourceIdea.Application.Features.ApplicationUsers.Commands.CreateApplicationUser;
 
 /// <summary>
 /// Validates the command used to create an application user.

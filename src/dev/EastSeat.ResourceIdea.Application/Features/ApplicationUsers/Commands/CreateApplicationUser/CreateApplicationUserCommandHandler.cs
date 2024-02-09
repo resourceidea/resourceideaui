@@ -6,7 +6,7 @@ using FluentValidation.Results;
 
 using MediatR;
 
-namespace EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
+namespace EastSeat.ResourceIdea.Application.Features.ApplicationUsers.Commands.CreateApplicationUser;
 
 public class CreateApplicationUserCommandHandler(IResourceIdeaAuthenticationService authenticationService) : IRequestHandler<CreateApplicationUserCommand, BaseResponse<CreateApplicationUserViewModel>>
 {

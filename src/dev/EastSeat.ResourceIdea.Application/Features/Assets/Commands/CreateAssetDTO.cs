@@ -1,4 +1,4 @@
-﻿namespace EastSeat.ResourceIdea.Application.Features.Asset.Commands;
+﻿namespace EastSeat.ResourceIdea.Application.Features.Assets.Commands;
 
 /// <summary>
 /// Data Transfer Object for an asset that has been created.

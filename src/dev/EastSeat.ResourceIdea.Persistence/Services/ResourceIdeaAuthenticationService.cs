@@ -5,7 +5,7 @@ using System.Text;
 using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Contracts.Identity;
-using EastSeat.ResourceIdea.Application.Features.ApplicationUser.Commands.CreateApplicationUser;
+using EastSeat.ResourceIdea.Application.Features.ApplicationUsers.Commands.CreateApplicationUser;
 using EastSeat.ResourceIdea.Application.Models;
 using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Domain.Enums;

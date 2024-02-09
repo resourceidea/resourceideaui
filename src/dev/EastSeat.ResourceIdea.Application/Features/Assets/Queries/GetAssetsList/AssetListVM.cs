@@ -1,4 +1,4 @@
-﻿namespace EastSeat.ResourceIdea.Application.Features.Asset.Queries.GetAssetsList;
+﻿namespace EastSeat.ResourceIdea.Application.Features.Assets.Queries.GetAssetsList;
 
 /// <summary>
 /// View model for the list of assets record.
