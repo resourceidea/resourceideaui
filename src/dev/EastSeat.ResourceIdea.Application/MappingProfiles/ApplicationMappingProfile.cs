@@ -4,6 +4,7 @@ using EastSeat.ResourceIdea.Application.Features.Asset.Commands;
 using EastSeat.ResourceIdea.Application.Features.Asset.Queries.GetAssetsList;
 using EastSeat.ResourceIdea.Application.Features.Client.DTO;
 using EastSeat.ResourceIdea.Application.Features.Employee.Commands.CreateEmployee;
+using EastSeat.ResourceIdea.Application.Features.Engagement.DTO;
 using EastSeat.ResourceIdea.Application.Features.Subscription.Commands.CreateSubscription;
 using EastSeat.ResourceIdea.Application.Features.Subscription.Queries.GetSubscriptionsList;
 using EastSeat.ResourceIdea.Domain.Entities;
@@ -30,5 +31,7 @@ public class ApplicationMappingProfile : Profile
         CreateMap<Client, ClientListDTO>();
 
         CreateMap<ClientDTO, ClientInput>();
+
+        CreateMap<Engagement, EngagementListDTO>();
     }
 }
