@@ -6,6 +6,8 @@ using EastSeat.ResourceIdea.Domain.ValueObjects;
 
 using Microsoft.EntityFrameworkCore;
 
+using Optional;
+
 namespace EastSeat.ResourceIdea.Persistence.Repositories;
 
 /// <summary>
@@ -47,21 +49,19 @@ public class BaseRepository<T>(ResourceIdeaDbContext dbContext) : IAsyncReposito
     }
 
     /// <inheritdoc />
-    public async Task<PagedList<T>> GetPagedListAsync(int page, int size, Expression<Func<T, bool>>? filter = null)
+    public async Task<PagedList<T>> GetPagedListAsync(int page, int size, Expression<Func<T, bool>> specification)
     {
-        var query = dbContext.Set<T>().AsQueryable();
-        if (filter != null)
-        {
-            query = query.Where(filter);
-        }
+        var query = dbContext.Set<T>().Where(specification)
+                                      .Skip(size * (page - 1))
+                                      .Take(size);
 
-        var items = await query.Skip(size * (page - 1)).Take(size).ToListAsync();
+        var items = await query.ToListAsync();
+        var totalItemsCount = await dbContext.Set<T>().CountAsync(specification);
 
-        var totalItemsCount = query.Count();
         var pagedList = new PagedList<T>
         {
             TotalCount = totalItemsCount,
-            Items = items,
+            Items = Option.Some<IReadOnlyList<T>>(items),
             CurrentPage = page,
             PageSize = size
         };

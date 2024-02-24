@@ -47,7 +47,7 @@ public interface IAsyncRepository<T> where T : class
     /// </summary>
     /// <param name="page">Page of the list to be returned.</param>
     /// <param name="size">Size of the page to be returned.</param>
-    /// <param name="filter">Query filter.</param>
+    /// <param name="specification">Query filter specification.</param>
     /// <returns>Readonly paged list of entities.</returns>
-    Task<PagedList<T>> GetPagedListAsync(int page, int size, Expression<Func<T, bool>>? filter = null);
+    Task<PagedList<T>> GetPagedListAsync(int page, int size, Expression<Func<T, bool>> specification);
 }

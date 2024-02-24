@@ -1,0 +1,15 @@
+﻿@page "/engagements"
+
+<PageTitle>ResourceIdea - Engagements</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <PageHeader Title="Engagements"></PageHeader>
+        <EngagementsList></EngagementsList>
+    </Authorized>
+    <NotAuthorized>
+        <PageHeader Title="Clients"></PageHeader>
+        <h1>Not Authorized</h1>
+        <p>You're not authorized to view this page.</p>
+    </NotAuthorized>
+</AuthorizeView>

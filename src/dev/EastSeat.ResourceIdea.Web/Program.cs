@@ -1,5 +1,6 @@
 using EastSeat.ResourceIdea.Application;
 using EastSeat.ResourceIdea.Persistence;
+using EastSeat.ResourceIdea.Web.Components.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddServerSideBlazor();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddWebPersistentServices(builder.Configuration);
+builder.Services.AddScoped(typeof(ListHandler<>));
 
 var app = builder.Build();
 

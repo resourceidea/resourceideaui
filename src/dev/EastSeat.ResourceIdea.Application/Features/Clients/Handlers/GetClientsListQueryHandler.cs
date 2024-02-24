@@ -9,6 +9,8 @@ using EastSeat.ResourceIdea.Domain.ValueObjects;
 
 using MediatR;
 
+using Optional;
+
 namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
 
 public class GetClientsListQueryHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Client> clientRepository) : IRequestHandler<GetClientsListQuery, PagedList<ClientListDTO>>
@@ -26,7 +28,7 @@ public class GetClientsListQueryHandler(IMapper mapper, IAsyncRepository<Domain.
 
         return new PagedList<ClientListDTO>
         {
-            Items = mapper.Map<IReadOnlyList<ClientListDTO>>(pagedList.Items),
+            Items = Option.Some(mapper.Map<IReadOnlyList<ClientListDTO>>(pagedList.Items.ValueOr([]))),
             TotalCount = pagedList.TotalCount,
             PageSize = pagedList.PageSize,
             CurrentPage = pagedList.CurrentPage

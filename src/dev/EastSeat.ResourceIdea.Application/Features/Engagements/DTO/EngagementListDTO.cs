@@ -21,5 +21,5 @@ public record EngagementListDTO
     public DateTime? EndDate { get; set; }
 
     /// <summary>Current status of the engagement.</summary>
-    public Constants.Engagement.Status Status { get; set; }
+    public Constants.EngagementStatus Status { get; set; }
 }

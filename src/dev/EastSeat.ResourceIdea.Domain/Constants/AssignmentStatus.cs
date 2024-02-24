@@ -1,35 +1,26 @@
 ﻿public static partial class Constants
 {
     /// <summary>
-    /// Assignment constants.
+    /// Assignment status.
     /// </summary>
-    public static class Assignment
+    public enum AssignmentStatus
     {
-        /// <summary>
-        /// Assignment statuses.
-        /// </summary>
-        public enum Status
-        {
-            NotStarted,
-            InProgress,
-            Closed,
-            Blocked,
-            Removed
-        }
+        NotStarted,
+        InProgress,
+        Closed,
+        Blocked,
+        Removed
     }
 
     /// <summary>
-    /// Engagement constants.
+    /// Engagement Status.
     /// </summary>
-    public static class Engagement
+    public enum EngagementStatus
     {
-        public enum Status
-        {
-            NotStarted,
-            InProgress,
-            Closed,
-            Blocked,
-            Removed
-        }
+        NotStarted,
+        InProgress,
+        Closed,
+        Blocked,
+        Removed
     }
 }

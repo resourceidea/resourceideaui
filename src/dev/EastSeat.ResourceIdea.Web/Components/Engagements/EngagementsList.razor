@@ -1,0 +1,72 @@
+﻿@namespace EastSeat.ResourceIdea.Web.Components.Engagements
+
+@inject IMediator Mediator
+@inject ListHandler<EngagementListDTO> ListHandler
+
+@inherits PagedListSupportBase<EngagementListDTO>
+
+<NavLink href="/clients/new" class="mb-2 mt-2 btn btn-primary btn-sm">Add Client</NavLink>
+
+<div class="card">
+    <div class="card-header">
+        <div class="input-group mb-3 mt-3">
+            <input type="text" class="form-control" placeholder="Search clients by name"
+                   aria-label="Search clients by name" aria-describedby="button-client-search" @bind="SearchTerm">
+            <button class="btn btn-outline-primary" type="button" id="button-client-search" @onclick="SearchEngagements">
+                <i class="fa-solid fa-magnifying-glass"></i>&nbsp;Search Clients
+            </button>
+        </div>
+    </div>
+</div>
+@if (Items is not null && Items.Count > 0)
+{
+    <table class="table table-striped table-bordered table-sm">
+        <thead class="table-info">
+            <tr>
+                <th><span @onclick="SortEngagements">Engagement &nbsp;&nbsp;<i class="fa-solid @ListHandler.SortIcon small"></i></span></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var engagement in Items)
+            {
+                <tr>
+                    <td>
+                        <NavLink href="@($"/engagements/{engagement.Id}")">@engagement.Name</NavLink>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <PagedListBrowser HasPreviousPage="HasPreviousPage"
+                      HasNextPage="HasNextPage"
+                      OnNext="LoadNextPage"
+                      OnPrevious="LoadPreviousPage" />
+}
+else
+{
+    <p class="m-3 lead">No engagements have been added!</p>
+}
+
+@code {
+    protected override async Task OnInitializedAsync() => await LoadEngagementsList(CurrentPage);
+
+    private async Task LoadNextPage() => await ListHandler.LoadNextPage(LoadEngagementsList);
+
+    private async Task LoadPreviousPage() => await ListHandler.LoadPreviousPage(LoadEngagementsList);
+
+    private void SortEngagements() => ListHandler.SortItems(ref Items, c => c.Name);
+
+    private async Task SearchEngagements() => await ListHandler.SearchItems(LoadEngagementsList);
+
+    private async Task LoadEngagementsList(int page)
+    {
+        var response = await Mediator.Send(new GetEngagementsListQuery
+            {
+                Page = page,
+                SearchKeyword = Option.Some(SearchTerm)
+            });
+        Items = response.Items.ValueOr([]).ToList();
+        HasPreviousPage = response.CurrentPage > 1;
+        HasNextPage = response.HasNextPage;
+    }
+}

@@ -5,6 +5,8 @@ using MediatR;
 
 using Optional;
 
+using static Constants;
+
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Queries;
 
 public class GetEngagementsListQuery : IRequest<PagedList<EngagementListDTO>>
@@ -26,4 +28,7 @@ public class GetEngagementsListQuery : IRequest<PagedList<EngagementListDTO>>
 
     /// <summary>Filters engagements with less than or equal end dates.</summary>
     public Option<DateTime> EndDate { get; set; }
+
+    /// <summary>Filters engagements of a given status.</summary>
+    public Option<EngagementStatus> Status { get; set; }
 }

@@ -32,7 +32,7 @@ public class Assignment : BaseSubscriptionEntity
     /// <summary>
     /// Status of the assignment.
     /// </summary>
-    public Constants.Assignment.Status Status { get; set; }
+    public Constants.AssignmentStatus Status { get; set; }
 
     /// <summary>Engagement where that assignment is added.</summary>
     public Engagement? Engagement { get; set; }

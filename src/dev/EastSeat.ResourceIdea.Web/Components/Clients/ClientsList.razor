@@ -1,6 +1,9 @@
 ﻿@namespace EastSeat.ResourceIdea.Web.Components.Clients
 
 @inject IMediator Mediator
+@inject ListHandler<ClientListDTO> ListHandler
+
+@inherits PagedListSupportBase<ClientListDTO>
 
 <NavLink href="/clients/new" class="mb-2 mt-2 btn btn-primary btn-sm">Add Client</NavLink>
 
@@ -15,16 +18,16 @@
         </div>
     </div>
 </div>
-@if (ListOfClients is not null && ListOfClients.Count > 0)
+@if (Items is not null && Items.Count > 0)
 {
     <table class="table table-striped table-bordered table-sm">
         <thead class="table-info">
             <tr>
-                <th><span @onclick="SortClients">Client name &nbsp;&nbsp;<i class="fa-solid @sortIcon small"></i></span></th>
+                <th><span @onclick="SortClients">Client name &nbsp;&nbsp;<i class="fa-solid @ListHandler.SortIcon small"></i></span></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var client in ListOfClients)
+            @foreach (var client in Items)
             {
                 <tr>
                     <td>
@@ -45,60 +48,24 @@ else
 }
 
 @code {
-    private IReadOnlyList<ClientListDTO> ListOfClients = [];
-    private bool HasPreviousPage = false;
-    private bool HasNextPage = false;
-    private int CurrentPage = 1;
-    private bool SortAscending = true;
-    private string sortIcon = "fa-sort";
-    private string SearchTerm { get; set; } = string.Empty;
+    protected override async Task OnInitializedAsync() => await LoadClientsList(CurrentPage);
 
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadClientsList();
-    }
+    private async Task LoadNextPage() => await ListHandler.LoadNextPage(LoadClientsList);
 
-    private async Task LoadNextPage()
-    {
-        CurrentPage += 1;
-        await LoadClientsList();
-    }
+    private async Task LoadPreviousPage() => await ListHandler.LoadPreviousPage(LoadClientsList);
 
-    private async Task LoadPreviousPage()
-    {
-        CurrentPage = CurrentPage > 1 ? CurrentPage - 1 : 1;
-        await LoadClientsList();
-    }
+    private void SortClients() => ListHandler.SortItems(ref Items, c => c.Name);
 
-    private void SortClients()
-    {
-        if (SortAscending)
-        {
-            ListOfClients = ListOfClients.OrderBy(c => c.Name).ToList();
-            SortAscending = false;
-            sortIcon = "fa-sort-up";
-        }
-        else
-        {
-            ListOfClients = ListOfClients.OrderByDescending(c => c.Name).ToList();
-            SortAscending = true;
-            sortIcon = "fa-sort-down";
-        }
-    }
+    private async Task SearchClients() => await ListHandler.SearchItems(LoadClientsList);
 
-    private async Task SearchClients()
-    {
-        await LoadClientsList();
-    }
-
-    private async Task LoadClientsList()
+    private async Task LoadClientsList(int page)
     {
         var response = await Mediator.Send(new GetClientsListQuery
             {
-                Page = CurrentPage,
+                Page = page,
                 Filter = SearchTerm
             });
-        ListOfClients = response.Items ?? Enumerable.Empty<ClientListDTO>().ToList();
+        Items = response.Items.ValueOr([]).ToList();
         HasPreviousPage = response.CurrentPage > 1;
         HasNextPage = response.HasNextPage;
     }

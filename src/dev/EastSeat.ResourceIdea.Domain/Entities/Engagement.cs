@@ -1,5 +1,7 @@
 ﻿using EastSeat.ResourceIdea.Domain.Common;
 
+using Optional;
+
 namespace EastSeat.ResourceIdea.Domain.Entities;
 
 /// <summary>
@@ -26,14 +28,14 @@ public class Engagement : BaseSubscriptionEntity
     public DateTime? EndDate { get; set; }
 
     /// <summary>Assignment status</summary>
-    public Constants.Engagement.Status Status { get; set; }
+    public Constants.EngagementStatus Status { get; set; }
 
     /// <summary>Subscription to which the engagement belongs to.</summary>
-    public Subscription? Subscription { get; set; }
+    public Option<Subscription> Subscription { get; set; }
 
     /// <summary>Engagement's client.</summary>
-    public Client? Client { get; set; }
+    public Option<Client> Client { get; set; }
 
     /// <summary>Assignments on the engagement.</summary>
-    public IEnumerable<Assignment>? Assignments { get; set; }
+    public Option<IEnumerable<Assignment>> Assignments { get; set; }
 }

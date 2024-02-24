@@ -1,12 +1,16 @@
 ﻿@using EastSeat.ResourceIdea.Application.Features.Clients.Commands
 @using EastSeat.ResourceIdea.Application.Features.Clients.DTO
 @using EastSeat.ResourceIdea.Application.Features.Clients.Queries
+@using EastSeat.ResourceIdea.Application.Features.Engagements.DTO
+@using EastSeat.ResourceIdea.Application.Features.Engagements.Handlers
+@using EastSeat.ResourceIdea.Application.Features.Engagements.Queries
 @using EastSeat.ResourceIdea.Domain.Common
 @using EastSeat.ResourceIdea.Domain.Extensions
 @using EastSeat.ResourceIdea.Domain.ValueObjects
 @using EastSeat.ResourceIdea.Web
 @using EastSeat.ResourceIdea.Web.Components.Clients
 @using EastSeat.ResourceIdea.Web.Components.Common
+@using EastSeat.ResourceIdea.Web.Components.Engagements
 @using EastSeat.ResourceIdea.Web.Shared
 @using AutoMapper
 @using Microsoft.AspNetCore.Authorization
@@ -18,5 +22,6 @@
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.JSInterop
 @using MediatR
+@using Optional
 @using System.Net.Http
 @using System.Security.Claims
