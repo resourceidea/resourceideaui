@@ -13,15 +13,15 @@ namespace EastSeat.ResourceIdea.Persistence;
 /// </summary>
 public class ResourceIdeaDbContext(DbContextOptions<ResourceIdeaDbContext> options) : IdentityDbContext<ApplicationUser, IdentityRole, string>(options)
 {
-    public DbSet<Subscription> Subscriptions { get; set; }
-    public DbSet<Client> Clients { get; set; }
-    public DbSet<Engagement> Engagements { get; set; }
-    public DbSet<Assignment> Assignments { get; set; }
-    public DbSet<AssetAssignment> AssetAssignments { get; set; }
-    public DbSet<EmployeeAssignment> EmployeeAssignments { get; set; }
+    public DbSet<SubscriptionEntity> Subscriptions { get; set; }
+    public DbSet<ClientEntity> Clients { get; set; }
+    //public DbSet<Engagement> Engagements { get; set; }
+    //public DbSet<Assignment> Assignments { get; set; }
+    //public DbSet<AssetAssignment> AssetAssignments { get; set; }
+    //public DbSet<EmployeeAssignment> EmployeeAssignments { get; set; }
     public DbSet<Employee> Employees { get; set; }
-    public DbSet<Asset> Assets { get; set; }
-    public DbSet<JobPosition> JobPositions { get; set; }
+    //public DbSet<Asset> Assets { get; set; }
+    //public DbSet<JobPosition> JobPositions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,6 +31,7 @@ public class ResourceIdeaDbContext(DbContextOptions<ResourceIdeaDbContext> optio
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        // TODO: Change to BaseEntity after updating entities.
         foreach (var entry in ChangeTracker.Entries<BaseSubscriptionEntity>())
         {
             switch (entry.State)

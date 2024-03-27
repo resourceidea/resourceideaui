@@ -1,4 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Domain.Entities;
+using EastSeat.ResourceIdea.Persistence.Models;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -8,15 +9,11 @@ namespace EastSeat.ResourceIdea.Persistence.Configurations;
 /// <summary>
 /// Client table configuration.
 /// </summary>
-public class ClientConfiguration : IEntityTypeConfiguration<Client>
+public class ClientConfiguration : IEntityTypeConfiguration<ClientEntity>
 {
-    public void Configure(EntityTypeBuilder<Client> builder)
+    public void Configure(EntityTypeBuilder<ClientEntity> builder)
     {
         builder.HasKey(client => client.Id);
-
-        builder.HasMany(client => client.Engagements)
-            .WithOne(engagement => engagement.Client)
-            .HasForeignKey(engagement => engagement.ClientId);
 
         builder.Property(client => client.Name)
             .HasMaxLength(250)
@@ -24,6 +21,10 @@ public class ClientConfiguration : IEntityTypeConfiguration<Client>
 
         builder.Property(client => client.Address)
             .HasMaxLength(250)
+            .IsRequired(false);
+
+        builder.Property(client => client.ColorCode)
+            .HasMaxLength(6)
             .IsRequired(false);
 
         builder.ToTable("Client");

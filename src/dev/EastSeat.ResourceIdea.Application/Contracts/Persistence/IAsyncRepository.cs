@@ -2,6 +2,8 @@
 
 using EastSeat.ResourceIdea.Domain.ValueObjects;
 
+using Optional;
+
 namespace EastSeat.ResourceIdea.Application.Contracts.Persistence;
 
 /// <summary>

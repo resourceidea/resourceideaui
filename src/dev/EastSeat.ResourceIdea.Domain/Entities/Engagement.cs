@@ -1,4 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Domain.Common;
+using EastSeat.ResourceIdea.Domain.Enums;
 
 namespace EastSeat.ResourceIdea.Domain.Entities;
 
@@ -26,7 +27,7 @@ public class Engagement : BaseSubscriptionEntity
     public DateTime? EndDate { get; set; }
 
     /// <summary>Assignment status</summary>
-    public Constants.Engagement.Status Status { get; set; }
+    public EngagementStatus Status { get; set; }
 
     /// <summary>Subscription to which the engagement belongs to.</summary>
     public Subscription? Subscription { get; set; }

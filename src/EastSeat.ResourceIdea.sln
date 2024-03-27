@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dev", "dev", "{AE853910-D93
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{44822C56-5C53-4644-91B0-69F70CA8435C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "endpoints", "endpoints", "{AB434DE8-1AB6-4299-811A-72499D479044}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Api", "dev\EastSeat.ResourceIdea.Api\EastSeat.ResourceIdea.Api.csproj", "{3026ED91-DAEF-4A6D-A52F-5752B90B01F8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Application", "dev\EastSeat.ResourceIdea.Application\EastSeat.ResourceIdea.Application.csproj", "{EFECFD0F-D38A-449D-AA51-AF3F9BA0724C}"

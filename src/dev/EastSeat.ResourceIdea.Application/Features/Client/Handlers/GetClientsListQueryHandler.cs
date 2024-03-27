@@ -11,7 +11,7 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Client.Handlers;
 
-public class GetClientsListQueryHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Client> clientRepository) : IRequestHandler<GetClientsListQuery, PagedList<ClientListDTO>>
+public class GetClientsListQueryHandler(IMapper mapper, IClientRepository clientRepository) : IRequestHandler<GetClientsListQuery, PagedList<ClientListDTO>>
 {
 
     public async Task<PagedList<ClientListDTO>> Handle(GetClientsListQuery request, CancellationToken cancellationToken)

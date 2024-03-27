@@ -1,4 +1,6 @@
-﻿namespace EastSeat.ResourceIdea.Application.Features.Subscription.Commands.CreateSubscription;
+﻿using EastSeat.ResourceIdea.Domain.Enums;
+
+namespace EastSeat.ResourceIdea.Application.Features.Subscription.Commands.CreateSubscription;
 
 /// <summary>
 /// View model for the subscription that has been created.
@@ -15,5 +17,5 @@ public class CreateSubscriptionViewModel
     public DateTime StartDate { get; set; }
 
     /// <summary>Subscription status</summary>
-    public Constants.Subscription.Status Status { get; set; } = default!;
+    public SubscriptionStatus Status { get; set; } = default!;
 }

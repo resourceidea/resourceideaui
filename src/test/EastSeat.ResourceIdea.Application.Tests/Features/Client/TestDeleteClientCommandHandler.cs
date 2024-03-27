@@ -14,7 +14,7 @@ public partial class TestDeleteClientCommandHandler
     public async void ReturnsSuccessResponse_When_RequestIsValid()
     {
         // Given
-        var mockRepository = new Mock<IAsyncRepository<Domain.Entities.Client>>();
+        var mockRepository = new Mock<IClientRepository>();
         var commandFaker = new Faker<DeleteClientCommand>()
             .RuleFor(c => c.Id, f => f.Random.Guid());
         var command = commandFaker.Generate();

@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using EastSeat.ResourceIdea.Domain.Enums;
+
+using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Subscription.Commands.CreateSubscription;
 
@@ -32,5 +34,5 @@ public class CreateSubscriptionCommand : IRequest<CreateSubscriptionCommandRespo
     public Guid JobPositionId { get; set; } = Guid.Empty;
 
     /// <summary>Subscription status.</summary>
-    public Constants.Subscription.Status Status { get; set; } = Constants.Subscription.Status.Active;
+    public SubscriptionStatus Status { get; set; } = SubscriptionStatus.Active;
 }

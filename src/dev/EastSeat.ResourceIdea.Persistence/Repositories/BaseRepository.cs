@@ -3,8 +3,11 @@
 using EastSeat.ResourceIdea.Application.Contracts.Persistence;
 using EastSeat.ResourceIdea.Domain.Common;
 using EastSeat.ResourceIdea.Domain.ValueObjects;
+using EastSeat.ResourceIdea.Persistence.Models;
 
 using Microsoft.EntityFrameworkCore;
+
+using Optional;
 
 namespace EastSeat.ResourceIdea.Persistence.Repositories;
 

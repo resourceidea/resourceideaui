@@ -10,10 +10,10 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Client.Handlers;
 
-public class CreateClientCommandHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Client> clientRepository) : IRequestHandler<CreateClientCommand, BaseResponse<ClientDTO>>
+public class CreateClientCommandHandler(IMapper mapper, IClientRepository clientRepository) : IRequestHandler<CreateClientCommand, BaseResponse<ClientDTO>>
 {
     private readonly IMapper mapper = mapper;
-    private readonly IAsyncRepository<Domain.Entities.Client> clientRepository = clientRepository;
+    private readonly IClientRepository clientRepository = clientRepository;
 
     public async Task<BaseResponse<ClientDTO>> Handle(CreateClientCommand request, CancellationToken cancellationToken)
     {
@@ -38,9 +38,7 @@ public class CreateClientCommandHandler(IMapper mapper, IAsyncRepository<Domain.
                 Id = request.Id,
                 Name = request.Name,
                 Address = request.Address,
-                ColorCode = request.ColorCode,
-                SubscriptionId = request.SubscriptionId,
-                CreatedBy = request.CreatedBy
+                ColorCode = request.ColorCode
             };
 
             await clientRepository.AddAsync(client);

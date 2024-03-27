@@ -7,9 +7,9 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Client.Handlers
 {
-    public class DeleteClientCommandHandler(IAsyncRepository<Domain.Entities.Client> clientRepository) : IRequestHandler<DeleteClientCommand, BaseResponse<Unit>>
+    public class DeleteClientCommandHandler(IClientRepository clientRepository) : IRequestHandler<DeleteClientCommand, BaseResponse<Unit>>
     {
-        private readonly IAsyncRepository<Domain.Entities.Client> clientRepository = clientRepository;
+        private readonly IClientRepository clientRepository = clientRepository;
 
         public async Task<BaseResponse<Unit>> Handle(DeleteClientCommand request, CancellationToken cancellationToken)
         {

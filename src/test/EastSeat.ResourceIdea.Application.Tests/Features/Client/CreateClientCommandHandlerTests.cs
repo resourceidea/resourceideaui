@@ -8,6 +8,9 @@ using EastSeat.ResourceIdea.Application.Features.Client.DTO;
 using EastSeat.ResourceIdea.Application.Features.Client.Handlers;
 using EastSeat.ResourceIdea.Application.Profiles;
 using EastSeat.ResourceIdea.Application.Responses;
+using EastSeat.ResourceIdea.Domain.Entities;
+
+using Optional;
 
 namespace EastSeat.ResourceIdea.Application.Tests.Features.Client;
 
@@ -72,11 +75,10 @@ public partial class TestCreateClientCommandHandler
         {
             Id = command.Id,
             Name = command.Name,
-            SubscriptionId = command.SubscriptionId,
             Address = command.Address,
             ColorCode = command.ColorCode
         };
-        mockRepository.Setup(repo => repo.AddAsync(fakeClient)).Returns(Task.FromResult(fakeClient));
+        mockRepository.Setup(repo => repo.AddAsync(fakeClient)).Returns(Task.FromResult(It.IsAny<Option<Domain.Entities.Client>>()));
         var handler = new CreateClientCommandHandler(mapper, mockRepository.Object);
 
         // Act
@@ -120,11 +122,10 @@ public partial class TestCreateClientCommandHandler
         {
             Id = command.Id,
             Name = command.Name,
-            SubscriptionId = command.SubscriptionId,
             Address = command.Address,
             ColorCode = command.ColorCode
         };
-        mockRepository.Setup(repo => repo.AddAsync(fakeClient)).Returns(Task.FromResult(fakeClient));
+        mockRepository.Setup(repo => repo.AddAsync(fakeClient)).Returns(Task.FromResult(It.IsAny<Option<Domain.Entities.Client>>()));
         var handler = new CreateClientCommandHandler(mapper, mockRepository.Object);
 
         // Act

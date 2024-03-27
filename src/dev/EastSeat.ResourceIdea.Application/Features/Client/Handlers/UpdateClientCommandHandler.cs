@@ -10,12 +10,14 @@ using FluentValidation.Results;
 
 using MediatR;
 
+using Optional;
+
 namespace EastSeat.ResourceIdea.Application.Features.Client.Handlers;
 
-public class UpdateClientCommandHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Client> clientRepository) : IRequestHandler<UpdateClientCommand, BaseResponse<ClientDTO>>
+public class UpdateClientCommandHandler(IMapper mapper, IClientRepository clientRepository) : IRequestHandler<UpdateClientCommand, BaseResponse<ClientDTO>>
 {
     private readonly IMapper mapper = mapper;
-    private readonly IAsyncRepository<Domain.Entities.Client> clientRepository = clientRepository;
+    private readonly IClientRepository clientRepository = clientRepository;
 
     public async Task<BaseResponse<ClientDTO>> Handle(UpdateClientCommand request, CancellationToken cancellationToken)
     {
@@ -33,7 +35,7 @@ public class UpdateClientCommandHandler(IMapper mapper, IAsyncRepository<Domain.
         }
 
         var client = await clientRepository.GetByIdAsync(request.Id);
-        if (client is null)
+        if (!client.HasValue)
         {
             response.Success = false;
             response.ErrorCode = Constants.ErrorCodes.NotFound;
@@ -44,11 +46,14 @@ public class UpdateClientCommandHandler(IMapper mapper, IAsyncRepository<Domain.
         }
 
         // SubscriptionId is not updated because we don't expect it to be changed by this operation.
-        client.Name = request.Name;
-        client.Address = request.Address;
-        client.ColorCode = request.ColorCode;
+        client = Option.Some(new Domain.Entities.Client
+        {
+            Name = request.Name,
+            Address = request.Address,
+            ColorCode = request.ColorCode
+        });
 
-        var updatedClient = await clientRepository.UpdateAsync(client);
+        var updatedClient = await clientRepository.UpdateAsync(client.ValueOr(new Domain.Entities.Client()));
         response.Content = mapper.Map<ClientDTO>(updatedClient);
 
         return response;

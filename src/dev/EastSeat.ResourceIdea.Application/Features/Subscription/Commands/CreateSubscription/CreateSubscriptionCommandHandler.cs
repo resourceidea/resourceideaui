@@ -103,7 +103,6 @@ public class CreateSubscriptionCommandHandler(
         {
             StartDate = request.StartDate,
             SubscriberName = request.SubscriberName,
-            SubscriptionId = request.SubscriptionId,
             Status = request.Status
         };
 

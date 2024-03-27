@@ -30,12 +30,12 @@ public class TestGetClientsListQueryHandler
         var fakePagedList = new PagedList<Domain.Entities.Client>
         {
             Items = [
-            new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 1", Address = "Address 1", ColorCode = "#000000", SubscriptionId = Guid.NewGuid() },
-            new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 2", Address = "Address 2", ColorCode = "#000000", SubscriptionId = Guid.NewGuid() },
-            new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 3", Address = "Address 3", ColorCode = "#000000", SubscriptionId = Guid.NewGuid() }
+            new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 1", Address = "Address 1", ColorCode = "#000000" },
+            new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 2", Address = "Address 2", ColorCode = "#000000" },
+            new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 3", Address = "Address 3", ColorCode = "#000000" }
         ]
         };
-        var clientRepository = new Mock<IAsyncRepository<Domain.Entities.Client>>();
+        var clientRepository = new Mock<IClientRepository>();
         clientRepository.Setup(repo => repo.GetPagedListAsync(1, 10, null)).ReturnsAsync(() => fakePagedList);
 
         var handler = new GetClientsListQueryHandler(mapper, clientRepository.Object);
@@ -66,12 +66,12 @@ public class TestGetClientsListQueryHandler
         var fakePagedList = new PagedList<Domain.Entities.Client>
         {
             Items = [
-            new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 1", Address = "Address 1", ColorCode = "#000000", SubscriptionId = Guid.NewGuid() },
-            new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 2", Address = "Address 2", ColorCode = "#000000", SubscriptionId = Guid.NewGuid() },
-            new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 3", Address = "Address 3", ColorCode = "#000000", SubscriptionId = Guid.NewGuid() }
+            new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 1", Address = "Address 1", ColorCode = "#000000" },
+            new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 2", Address = "Address 2", ColorCode = "#000000" },
+            new Domain.Entities.Client { Id = Guid.NewGuid(), Name = "Client 3", Address = "Address 3", ColorCode = "#000000" }
         ]
         };
-        var clientRepository = new Mock<IAsyncRepository<Domain.Entities.Client>>();
+        var clientRepository = new Mock<IClientRepository>();
         clientRepository.Setup(repo => repo.GetPagedListAsync(1, 10, It.IsAny<Expression<Func<Domain.Entities.Client, bool>>>())).ReturnsAsync(() => fakePagedList);
 
         var handler = new GetClientsListQueryHandler(mapper, clientRepository.Object);

@@ -14,10 +14,10 @@ namespace EastSeat.ResourceIdea.Application.Features.Subscription.Queries.GetSub
 /// </remarks>
 /// <param name="mapper">Mapper.</param>
 /// <param name="subscriptionRepository">Subscription repository.</param>
-public class GetSubscriptionsListQueryHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Subscription> subscriptionRepository) : IRequestHandler<GetSubscriptionsListQuery, IEnumerable<SubscriptionsListVM>>
+public class GetSubscriptionsListQueryHandler(IMapper mapper, ISubscriptionRepository subscriptionRepository) : IRequestHandler<GetSubscriptionsListQuery, IEnumerable<SubscriptionsListVM>>
 {
     private readonly IMapper mapper = mapper;
-    private readonly IAsyncRepository<Domain.Entities.Subscription> subscriptionRepository = subscriptionRepository;
+    private readonly ISubscriptionRepository subscriptionRepository = subscriptionRepository;
 
     /// <inheritdoc />
     public async Task<IEnumerable<SubscriptionsListVM>> Handle(GetSubscriptionsListQuery request, CancellationToken cancellationToken)

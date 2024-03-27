@@ -9,12 +9,12 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Client.Handlers;
 
-public class GetClientByIdQueryHandler(IMapper mapper, IAsyncRepository<Domain.Entities.Client> clientRepository) : IRequestHandler<GetClientByIdQuery, BaseResponse<ClientDTO>>
+public class GetClientByIdQueryHandler(IMapper mapper, IClientRepository clientRepository) : IRequestHandler<GetClientByIdQuery, BaseResponse<ClientDTO>>
 {
     public async Task<BaseResponse<ClientDTO>> Handle(GetClientByIdQuery request, CancellationToken cancellationToken)
     {
         var client = await clientRepository.GetByIdAsync(request.Id);
-        if (client is null)
+        if (client.HasValue)
         {
             return new BaseResponse<ClientDTO>
             {

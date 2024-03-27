@@ -1,16 +1,19 @@
-﻿using EastSeat.ResourceIdea.Domain.Common;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using EastSeat.ResourceIdea.Domain.Entities;
 using EastSeat.ResourceIdea.Domain.Enums;
 
-namespace EastSeat.ResourceIdea.Domain.Entities;
+namespace EastSeat.ResourceIdea.Persistence.Models;
 
 /// <summary>
-/// Service subscription details.
+/// Subscription entity.
 /// </summary>
-public class Subscription
+public class SubscriptionEntity : BaseEntity
 {
-    /// <summary>Subscription ID.</summary>
-    public Guid SubscriptionId { get; set; }
-
     /// <summary>Name of the subscribing entity.</summary>
     public string? SubscriberName { get; set; }
 
@@ -25,4 +28,7 @@ public class Subscription
 
     /// <summary>Subscription status.</summary>
     public SubscriptionStatus Status { get; set; }
+
+    /// <summary>Clients under the subscription.</summary>
+    public IEnumerable<ClientEntity>? Clients { get; set; }
 }
