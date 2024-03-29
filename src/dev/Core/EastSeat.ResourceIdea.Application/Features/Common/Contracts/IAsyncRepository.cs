@@ -42,7 +42,7 @@ public interface IAsyncRepository<T> where T : BaseEntity
     /// </summary>
     /// <param name="entity">Entity to update.</param>
     /// <returns>Entity.</returns>
-    Task<Option<T>> UpdateAsync(T entity);
+    Task<Option<T>> UpdateAsync(T entity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete entity.

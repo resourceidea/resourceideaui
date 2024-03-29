@@ -10,7 +10,7 @@ public class TenantModel
     /// <summary>
     /// Tenant Id.
     /// </summary>
-    public TenantId? TenantId { get; set; }
+    public TenantId TenantId { get; set; }
 
     /// <summary>
     /// Tenant's organization name.

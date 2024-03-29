@@ -2,7 +2,7 @@ using EastSeat.ResourceIdea.Domain.Common.Exceptions;
 
 namespace EastSeat.ResourceIdea.Domain.Tenant.ValueObjects;
 
-public record TenantId
+public record struct TenantId
 {
     public Guid Value { get; }
 
