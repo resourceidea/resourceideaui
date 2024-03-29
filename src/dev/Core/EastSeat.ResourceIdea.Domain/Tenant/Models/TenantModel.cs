@@ -1,3 +1,5 @@
+using EastSeat.ResourceIdea.Domain.Tenant.ValueObjects;
+
 namespace EastSeat.ResourceIdea.Domain.Tenant.Models;
 
 /// <summary>
@@ -8,7 +10,7 @@ public class TenantModel
     /// <summary>
     /// Tenant Id.
     /// </summary>
-    public Guid TenantId { get; set; }
+    public TenantId? TenantId { get; set; }
 
     /// <summary>
     /// Tenant's organization name.
