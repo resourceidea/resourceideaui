@@ -1,3 +1,6 @@
+using EastSeat.ResourceIdea.Domain.Common.Constants;
+using EastSeat.ResourceIdea.Domain.Tenant.Models;
+
 using Optional;
 
 namespace EastSeat.ResourceIdea.Domain.Common.Responses;
@@ -54,5 +57,15 @@ public sealed class ResourceIdeaResponse<T> where T : class
         Success = success;
         Message = message;
         ErrorCode = errorCode;
+    }
+
+    public static ResourceIdeaResponse<T> NotFound()
+    {
+        return new ResourceIdeaResponse<T>
+        {
+            Success = false,
+            Message = "Resource not found.",
+            ErrorCode = ErrorCodes.ResourceNotFound.ToString()
+        };
     }
 }

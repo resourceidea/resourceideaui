@@ -26,8 +26,9 @@ public interface IAsyncRepository<T> where T : BaseEntity
     /// Get entity by Id.
     /// </summary>
     /// <param name="id">Entity Id.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Entity.</returns>
-    Task<Option<T>> GetByIdAsync(Guid id);
+    Task<Option<T>> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Add entity.
