@@ -7,7 +7,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 public sealed class PagedList<T> where T : class
 {
     /// <summary>Items on the current page.</summary>
-    public IReadOnlyList<T>? Items { get; set; }
+    public IReadOnlyList<T> Items { get; set; } = [];
 
     /// <summary>Total number of items in the data store.</summary>
     public int TotalCount { get; set; } = 0;
