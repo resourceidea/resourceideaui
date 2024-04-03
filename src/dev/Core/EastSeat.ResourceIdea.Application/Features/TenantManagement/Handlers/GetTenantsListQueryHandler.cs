@@ -12,8 +12,8 @@ using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.TenantManagement.Queries;
 using EastSeat.ResourceIdea.Domain.Common.Responses;
-using EastSeat.ResourceIdea.Domain.Tenant.Entities;
-using EastSeat.ResourceIdea.Domain.Tenant.Models;
+using EastSeat.ResourceIdea.Domain.TenantManagement.Entities;
+using EastSeat.ResourceIdea.Domain.TenantManagement.Models;
 
 using MediatR;
 

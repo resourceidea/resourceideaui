@@ -1,8 +1,8 @@
 using EastSeat.ResourceIdea.Domain.Common.Exceptions;
 
-namespace EastSeat.ResourceIdea.Domain.Tenant.ValueObjects;
+namespace EastSeat.ResourceIdea.Domain.TenantManagement.ValueObjects;
 
-public record struct TenantId
+public readonly record struct TenantId
 {
     public Guid Value { get; }
 

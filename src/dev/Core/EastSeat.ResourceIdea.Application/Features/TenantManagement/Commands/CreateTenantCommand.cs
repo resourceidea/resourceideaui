@@ -1,6 +1,6 @@
-using EastSeat.ResourceIdea.Domain.Common;
 using EastSeat.ResourceIdea.Domain.Common.Responses;
-using EastSeat.ResourceIdea.Domain.Tenant.Models;
+using EastSeat.ResourceIdea.Domain.TenantManagement.Models;
+
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.TenantManagement.Commands;

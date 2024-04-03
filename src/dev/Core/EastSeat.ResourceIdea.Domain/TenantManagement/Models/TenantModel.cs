@@ -1,7 +1,6 @@
-using EastSeat.ResourceIdea.Domain.Tenant.Models;
-using EastSeat.ResourceIdea.Domain.Tenant.ValueObjects;
+using EastSeat.ResourceIdea.Domain.TenantManagement.ValueObjects;
 
-namespace EastSeat.ResourceIdea.Domain.Tenant.Models;
+namespace EastSeat.ResourceIdea.Domain.TenantManagement.Models;
 
 /// <summary>
 /// Tenant model.

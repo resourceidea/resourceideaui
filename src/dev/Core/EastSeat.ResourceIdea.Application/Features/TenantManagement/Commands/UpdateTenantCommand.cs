@@ -1,6 +1,6 @@
 ﻿using EastSeat.ResourceIdea.Domain.Common.Responses;
-using EastSeat.ResourceIdea.Domain.Tenant.Models;
-using EastSeat.ResourceIdea.Domain.Tenant.ValueObjects;
+using EastSeat.ResourceIdea.Domain.TenantManagement.Models;
+using EastSeat.ResourceIdea.Domain.TenantManagement.ValueObjects;
 
 using MediatR;
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Common.Responses;
-using EastSeat.ResourceIdea.Domain.Tenant.Models;
+using EastSeat.ResourceIdea.Domain.TenantManagement.Models;
 
 using MediatR;
 

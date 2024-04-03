@@ -1,4 +1,4 @@
-﻿namespace EastSeat.ResourceIdea.Domain.Tenant.ValueObjects;
+﻿namespace EastSeat.ResourceIdea.Domain.TenantManagement.ValueObjects;
 
 /// <summary>
 /// Empty tenant instance.

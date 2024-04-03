@@ -1,6 +1,6 @@
 using EastSeat.ResourceIdea.Domain.Common.Entities;
 
-namespace EastSeat.ResourceIdea.Domain.Tenant.Entities;
+namespace EastSeat.ResourceIdea.Domain.TenantManagement.Entities;
 
 /// <summary>
 /// Tenant entity.

@@ -1,5 +1,4 @@
 using EastSeat.ResourceIdea.Domain.Common.Constants;
-using EastSeat.ResourceIdea.Domain.Tenant.Models;
 
 using Optional;
 

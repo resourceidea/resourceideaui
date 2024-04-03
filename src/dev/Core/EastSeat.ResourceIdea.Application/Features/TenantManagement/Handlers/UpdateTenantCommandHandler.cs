@@ -8,8 +8,8 @@ using EastSeat.ResourceIdea.Application.Features.TenantManagement.Validators;
 using EastSeat.ResourceIdea.Domain.Common.Constants;
 using EastSeat.ResourceIdea.Domain.Common.Exceptions;
 using EastSeat.ResourceIdea.Domain.Common.Responses;
-using EastSeat.ResourceIdea.Domain.Tenant.Entities;
-using EastSeat.ResourceIdea.Domain.Tenant.Models;
+using EastSeat.ResourceIdea.Domain.TenantManagement.Entities;
+using EastSeat.ResourceIdea.Domain.TenantManagement.Models;
 
 using MediatR;
 

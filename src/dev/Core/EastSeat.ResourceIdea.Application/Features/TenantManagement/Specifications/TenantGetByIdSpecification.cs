@@ -1,8 +1,8 @@
 using System.Linq.Expressions;
 
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
-using EastSeat.ResourceIdea.Domain.Tenant.Entities;
-using EastSeat.ResourceIdea.Domain.Tenant.ValueObjects;
+using EastSeat.ResourceIdea.Domain.TenantManagement.Entities;
+using EastSeat.ResourceIdea.Domain.TenantManagement.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Features.TenantManagement.Specifications;
 
