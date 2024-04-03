@@ -2,8 +2,9 @@
 
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.TenantManagement.Queries;
+using EastSeat.ResourceIdea.Application.Features.TenantManagement.Specifications;
 using EastSeat.ResourceIdea.Domain.Common.Responses;
-using EastSeat.ResourceIdea.Domain.Entities;
+using EastSeat.ResourceIdea.Domain.Tenant.Entities;
 using EastSeat.ResourceIdea.Domain.Tenant.Models;
 using EastSeat.ResourceIdea.Domain.Tenant.ValueObjects;
 
@@ -22,7 +23,8 @@ public sealed class GetTenantByIdQueryHandler(
 
     public async Task<ResourceIdeaResponse<TenantModel>> Handle(GetTenantByIdQuery request, CancellationToken cancellationToken)
     {
-        Option<Tenant> tenantQuery = await _tenantRepository.GetByIdAsync(request.TenantId.Value, cancellationToken);
+        var getTenantByIdSpecification = new TenantGetByIdSpecification(request.TenantId);
+        Option<Tenant> tenantQuery = await _tenantRepository.GetByIdAsync(getTenantByIdSpecification, cancellationToken);
         Tenant tenant = tenantQuery.Match(
             some: tenant => tenant,
             none: () => EmptyTenant.Instance

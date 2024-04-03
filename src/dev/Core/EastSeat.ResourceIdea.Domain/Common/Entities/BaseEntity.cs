@@ -1,4 +1,4 @@
-namespace EastSeat.ResourceIdea.Domain.Entities;
+namespace EastSeat.ResourceIdea.Domain.Common.Entities;
 
 /// <summary>
 /// Common properties for all entities in the system.

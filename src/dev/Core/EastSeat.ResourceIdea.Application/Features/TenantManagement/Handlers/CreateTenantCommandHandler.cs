@@ -5,7 +5,7 @@ using EastSeat.ResourceIdea.Application.Features.TenantManagement.Commands;
 using EastSeat.ResourceIdea.Application.Features.TenantManagement.Validators;
 using EastSeat.ResourceIdea.Domain.Common.Constants;
 using EastSeat.ResourceIdea.Domain.Common.Responses;
-using EastSeat.ResourceIdea.Domain.Entities;
+using EastSeat.ResourceIdea.Domain.Tenant.Entities;
 using EastSeat.ResourceIdea.Domain.Tenant.Models;
 using EastSeat.ResourceIdea.Domain.Tenant.ValueObjects;
 

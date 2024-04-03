@@ -1,7 +1,9 @@
 using System.Linq.Expressions;
 
+using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Entities;
+using EastSeat.ResourceIdea.Application.Features.TenantManagement.Specifications;
+using EastSeat.ResourceIdea.Domain.Common.Entities;
 
 using Optional;
 
@@ -23,16 +25,16 @@ public interface IAsyncRepository<T> where T : BaseEntity
     Task<PagedList<T>> GetPagedListAsync(
         int page,
         int size,
-        Option<Expression<Func<T, bool>>> filter,
+        BaseSpecification<T> specification,
         CancellationToken cancellationToken);
 
     /// <summary>
     /// Get entity by Id.
     /// </summary>
-    /// <param name="id">Entity Id.</param>
+    /// <param name="specification">Entity Id.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Entity.</returns>
-    Task<Option<T>> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<Option<T>> GetByIdAsync(BaseSpecification<T> specification, CancellationToken cancellationToken);
 
     /// <summary>
     /// Add entity.

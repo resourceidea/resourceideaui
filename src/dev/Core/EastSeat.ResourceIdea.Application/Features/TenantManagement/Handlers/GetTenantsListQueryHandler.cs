@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.TenantManagement.Queries;
 using EastSeat.ResourceIdea.Domain.Common.Responses;
-using EastSeat.ResourceIdea.Domain.Entities;
+using EastSeat.ResourceIdea.Domain.Tenant.Entities;
 using EastSeat.ResourceIdea.Domain.Tenant.Models;
 
 using MediatR;
@@ -33,13 +34,12 @@ public sealed class GetTenantsListQueryHandler(
 
     public async Task<ResourceIdeaResponse<PagedList<TenantModel>>> Handle(GetTenantsListQuery request, CancellationToken cancellationToken)
     {
-        Option<Expression<Func<Tenant, bool>>> queryFilter = Option.None<Expression<Func<Tenant, bool>>>();
-        queryFilter = GetQueryFilter(request.Filter, queryFilter);
+        var specification = GetTenantsQuerySpecification(request.Filter);
 
         PagedList<Tenant> tenants = await _tenantRepository.GetPagedListAsync(
             request.CurrentPageNumber,
             request.PageSize,
-            queryFilter,
+            specification,
             cancellationToken);
 
         return new ResourceIdeaResponse<PagedList<TenantModel>>
@@ -49,14 +49,14 @@ public sealed class GetTenantsListQueryHandler(
         };
     }
 
-    private static Option<Expression<Func<Tenant, bool>>> GetQueryFilter(string requestQueryFilter, Option<Expression<Func<Tenant, bool>>> predicate)
+    private static BaseSpecification<Tenant> GetTenantsQuerySpecification(string requestQueryFilter)
     {
+        var tenantsQuerySpecification = new NoFilterSpecification<Tenant>();
         if (!string.IsNullOrEmpty(requestQueryFilter))
         {
-            Expression<Func<Tenant, bool>> filterExpression = tenant => tenant.Organization.Contains(requestQueryFilter);
-            predicate = Option.Some(filterExpression);
+            ; // If query filter is not empty, then create and add new specification before returning. 
         }
 
-        return predicate;
+        return tenantsQuerySpecification;
     }
 }

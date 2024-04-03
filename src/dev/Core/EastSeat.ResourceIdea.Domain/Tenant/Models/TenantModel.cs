@@ -1,3 +1,4 @@
+using EastSeat.ResourceIdea.Domain.Tenant.Models;
 using EastSeat.ResourceIdea.Domain.Tenant.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Domain.Tenant.Models;
