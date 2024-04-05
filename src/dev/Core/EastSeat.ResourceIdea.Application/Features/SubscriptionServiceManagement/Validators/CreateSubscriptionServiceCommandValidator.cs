@@ -8,9 +8,9 @@ namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManageme
 /// <summary>
 /// Validates the command to create a service that can be subscribed to by the tenants.
 /// </summary>
-public sealed class CreateSubscriptionServiceValidator : AbstractValidator<CreateSubscriptionServiceCommand>
+public sealed class CreateSubscriptionServiceCommandValidator : AbstractValidator<CreateSubscriptionServiceCommand>
 {
-    public CreateSubscriptionServiceValidator()
+    public CreateSubscriptionServiceCommandValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty()

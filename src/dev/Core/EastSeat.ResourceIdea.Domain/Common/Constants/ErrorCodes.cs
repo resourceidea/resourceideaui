@@ -10,5 +10,12 @@ public enum ErrorCodes
 
     /// <summary>Resource being queried was not found.</summary>
     ResourceNotFound,
-    CreateSubscriptionServiceCommandValidationFailure
+
+    /// <summary>Validation of the command to create a subscription service failed.</summary>
+    CreateSubscriptionServiceCommandValidationFailure,
+
+    /// <summary>
+    /// Validation of the command to update a subscription service failed.
+    /// </summary>
+    UpdateSubscriptionServiceCommandValidationFailure
 }

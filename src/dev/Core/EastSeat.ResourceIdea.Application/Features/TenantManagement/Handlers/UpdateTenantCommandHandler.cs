@@ -49,7 +49,7 @@ public sealed class UpdateTenantCommandHandler(
         var tenantUpdateResult = await _tenantRepository.UpdateAsync(tenantUpdateDetails, cancellationToken);
         Tenant updatedTenant = tenantUpdateResult.Match(
             some: tenant => tenant,
-            none: () => throw new UpdateTenantNotFoundException("Update tenant to be updated was not found.")
+            none: () => throw new UpdateItemNotFoundException("Update tenant to be updated was not found.")
         );
 
         return new ResourceIdeaResponse<TenantModel>
