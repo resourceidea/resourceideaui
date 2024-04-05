@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using AutoMapper;
+﻿using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManagement.Commands;
@@ -14,8 +8,6 @@ using EastSeat.ResourceIdea.Domain.Common.Exceptions;
 using EastSeat.ResourceIdea.Domain.Common.Responses;
 using EastSeat.ResourceIdea.Domain.SubscriptionServiceManagement.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServiceManagement.Models;
-using EastSeat.ResourceIdea.Domain.SubscriptionServiceManagement.ValueObjects;
-using EastSeat.ResourceIdea.Domain.TenantManagement.Entities;
 
 using MediatR;
 
@@ -58,14 +50,14 @@ public sealed class UpdateSubscriptionServiceCommandHandler(
             cancellationToken);
         SubscriptionService updatedSubscriptionService = subscriptionServiceUpdateResult.Match(
             some: subscriptionService => subscriptionService,
-            none: () => throw new UpdateItemNotFoundException("Update tenant to be updated was not found.")
+            none: () => throw new UpdateItemNotFoundException("Subscription service to be updated was not found.")
         );
 
         return new ResourceIdeaResponse<SubscriptionServiceModel>
         {
             Success = true,
-            Message = "Subscription service created successfully",
-            Content = Option.Some(_mapper.Map<SubscriptionServiceModel>(newSubscriptionService))
+            Message = "Subscription service updated successfully",
+            Content = Option.Some(_mapper.Map<SubscriptionServiceModel>(updatedSubscriptionService))
         };
     }
 }
