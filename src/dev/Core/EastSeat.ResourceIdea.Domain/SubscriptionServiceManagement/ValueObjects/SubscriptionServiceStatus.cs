@@ -9,5 +9,8 @@ public enum SubscriptionServiceStatus
     Active,
 
     /// <summary>Service is terminated.</summary>
-    Terminated,
+    EndOfLife,
+
+    /// <summary>Service is retired.</summary>
+    Retired,
 }

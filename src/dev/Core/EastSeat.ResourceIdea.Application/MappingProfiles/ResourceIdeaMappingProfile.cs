@@ -3,6 +3,8 @@ namespace EastSeat.ResourceIdea.Application.MappingProfiles;
 using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
+using EastSeat.ResourceIdea.Domain.SubscriptionServiceManagement.Entities;
+using EastSeat.ResourceIdea.Domain.SubscriptionServiceManagement.Models;
 using EastSeat.ResourceIdea.Domain.TenantManagement.Entities;
 using EastSeat.ResourceIdea.Domain.TenantManagement.Models;
 using EastSeat.ResourceIdea.Domain.TenantManagement.ValueObjects;
@@ -25,5 +27,7 @@ public sealed class ResourceIdeaMappingProfile : Profile
             .ForMember(dest => dest.TotalCount, opt => opt.MapFrom(src => src.TotalCount))
             .ForMember(dest => dest.Items, opt => opt.MapFrom(
                 src => src.Items.Select(item => _mapper.Map<TenantModel>(item)).ToList()));
+
+        CreateMap<SubscriptionService, SubscriptionServiceModel>();
     }
 }

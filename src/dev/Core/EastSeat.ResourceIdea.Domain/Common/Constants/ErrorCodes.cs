@@ -9,5 +9,6 @@ public enum ErrorCodes
     UpdateTenantCommandValidationFailure,
 
     /// <summary>Resource being queried was not found.</summary>
-    ResourceNotFound
+    ResourceNotFound,
+    CreateSubscriptionServiceCommandValidationFailure
 }
