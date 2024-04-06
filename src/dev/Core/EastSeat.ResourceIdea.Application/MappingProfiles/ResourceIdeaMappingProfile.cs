@@ -3,11 +3,11 @@ namespace EastSeat.ResourceIdea.Application.MappingProfiles;
 using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
-using EastSeat.ResourceIdea.Domain.SubscriptionServiceManagement.Entities;
-using EastSeat.ResourceIdea.Domain.SubscriptionServiceManagement.Models;
-using EastSeat.ResourceIdea.Domain.TenantManagement.Entities;
-using EastSeat.ResourceIdea.Domain.TenantManagement.Models;
-using EastSeat.ResourceIdea.Domain.TenantManagement.ValueObjects;
+using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
+using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
+using EastSeat.ResourceIdea.Domain.Tenants.Entities;
+using EastSeat.ResourceIdea.Domain.Tenants.Models;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 public sealed class ResourceIdeaMappingProfile : Profile
 {

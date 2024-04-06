@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
-using EastSeat.ResourceIdea.Application.Features.TenantManagement.Specifications;
+using EastSeat.ResourceIdea.Application.Features.Tenants.Specifications;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
 
 using Optional;
