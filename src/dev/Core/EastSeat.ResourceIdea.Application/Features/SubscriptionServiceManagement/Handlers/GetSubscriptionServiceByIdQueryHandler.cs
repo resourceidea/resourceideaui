@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using AutoMapper;
+﻿using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManagement.Queries;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManagement.Specifications;
-using EastSeat.ResourceIdea.Application.Features.TenantManagement.Contracts;
 using EastSeat.ResourceIdea.Domain.Common.Responses;
 using EastSeat.ResourceIdea.Domain.SubscriptionServiceManagement.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServiceManagement.Models;
 using EastSeat.ResourceIdea.Domain.SubscriptionServiceManagement.ValueObjects;
-using EastSeat.ResourceIdea.Domain.TenantManagement.Entities;
-using EastSeat.ResourceIdea.Domain.TenantManagement.Models;
-using EastSeat.ResourceIdea.Domain.TenantManagement.ValueObjects;
 
 using MediatR;
 
