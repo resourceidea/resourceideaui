@@ -1,6 +1,8 @@
 using EastSeat.ResourceIdea.Domain.Common.Entities;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Enums;
 using EastSeat.ResourceIdea.Domain.Subscriptions.ValueObjects;
+using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
+using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Domain.Subscriptions.Entities;
 
@@ -28,4 +30,19 @@ public class Subscription : BaseEntity
     /// Date when the subscription was cancelled by the tenant.
     /// </summary>
     public DateTimeOffset? SubscriptionCancellationDate { get; set; }
+
+    /// <summary>
+    /// Id of the service subscribed to by the tenant.
+    /// </summary>
+    public SubscriptionServiceId SubscriptionServiceId { get; set; }
+    
+    /// <summary>
+    /// Type of subscription for the service.
+    /// </summary>
+    public SubscriptionType SubscriptionType { get; set; }
+
+    /// <summary>
+    /// Subscription service.
+    /// </summary>
+    public SubscriptionService? SubscriptionService { get; set; }
 }

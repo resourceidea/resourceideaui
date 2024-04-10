@@ -2,7 +2,7 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 
-public class SubscriptionServiceModel
+public record SubscriptionServiceModel
 {
     /// <summary>Service Id.</summary>
     public SubscriptionServiceId Id { get; set; }

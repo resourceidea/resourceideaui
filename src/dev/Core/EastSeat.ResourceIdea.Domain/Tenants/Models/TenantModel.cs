@@ -5,7 +5,7 @@ namespace EastSeat.ResourceIdea.Domain.Tenants.Models;
 /// <summary>
 /// Tenant model.
 /// </summary>
-public class TenantModel
+public record TenantModel
 {
     /// <summary>
     /// Tenant Id.
