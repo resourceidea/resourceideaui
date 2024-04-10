@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{31FB4B75-E0CB-42AB-84D9-3EF2FB38A9AE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dev", "dev", "{BDDA5256-3631-41B4-83D8-400082D76CA4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{F1933A58-6710-4CCF-958E-0C93465093DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Application", "src\dev\Core\EastSeat.ResourceIdea.Application\EastSeat.ResourceIdea.Application.csproj", "{A108CA08-BE86-4725-A062-F35AEFAD1ED0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Domain", "src\dev\Core\EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj", "{1428C4AE-A4F3-436E-8560-AB1173CA743E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A108CA08-BE86-4725-A062-F35AEFAD1ED0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A108CA08-BE86-4725-A062-F35AEFAD1ED0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A108CA08-BE86-4725-A062-F35AEFAD1ED0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A108CA08-BE86-4725-A062-F35AEFAD1ED0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1428C4AE-A4F3-436E-8560-AB1173CA743E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1428C4AE-A4F3-436E-8560-AB1173CA743E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1428C4AE-A4F3-436E-8560-AB1173CA743E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1428C4AE-A4F3-436E-8560-AB1173CA743E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BDDA5256-3631-41B4-83D8-400082D76CA4} = {31FB4B75-E0CB-42AB-84D9-3EF2FB38A9AE}
+		{F1933A58-6710-4CCF-958E-0C93465093DE} = {BDDA5256-3631-41B4-83D8-400082D76CA4}
+		{A108CA08-BE86-4725-A062-F35AEFAD1ED0} = {F1933A58-6710-4CCF-958E-0C93465093DE}
+		{1428C4AE-A4F3-436E-8560-AB1173CA743E} = {F1933A58-6710-4CCF-958E-0C93465093DE}
+	EndGlobalSection
+EndGlobal
