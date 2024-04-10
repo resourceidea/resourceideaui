@@ -7,9 +7,9 @@ using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 namespace EastSeat.ResourceIdea.Application.Features.Tenants.Specifications;
 
 /// <summary>
-/// Specification to get a tenant by Id.
+/// Specification to get a tenant by SubscriptionId.
 /// </summary>
-/// <param name="tenantId">Tenant Id.</param>
+/// <param name="tenantId">Tenant SubscriptionId.</param>
 public sealed class TenantGetByIdSpecification(TenantId tenantId) : BaseSpecification<Tenant>
 {
     private readonly TenantId _tenantId = tenantId;

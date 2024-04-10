@@ -29,9 +29,9 @@ public interface IAsyncRepository<T> where T : BaseEntity
         CancellationToken cancellationToken);
 
     /// <summary>
-    /// Get entity by Id.
+    /// Get entity by SubscriptionId.
     /// </summary>
-    /// <param name="specification">Entity Id.</param>
+    /// <param name="specification">Entity SubscriptionId.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Entity.</returns>
     Task<Option<T>> GetByIdAsync(BaseSpecification<T> specification, CancellationToken cancellationToken);

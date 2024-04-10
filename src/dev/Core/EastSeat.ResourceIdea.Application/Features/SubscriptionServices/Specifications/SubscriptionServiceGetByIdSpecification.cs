@@ -7,9 +7,9 @@ using System.Linq.Expressions;
 namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Specifications;
 
 /// <summary>
-/// Specification to get a subscription service by Id.
+/// Specification to get a subscription service by SubscriptionId.
 /// </summary>
-/// <param name="subscriptionServiceId">Subscription service Id.</param>
+/// <param name="subscriptionServiceId">Subscription service SubscriptionId.</param>
 public sealed class SubscriptionServiceGetByIdSpecification(SubscriptionServiceId subscriptionServiceId) : BaseSpecification<SubscriptionService>
 {
     private readonly SubscriptionServiceId _subscriptionServiceId = subscriptionServiceId;
