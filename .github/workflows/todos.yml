@@ -1,0 +1,17 @@
+name: 'TODO'
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  todo:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+    - name: Create issue from TODO
+      uses: alstr/todo-to-issue-action@v1
+      with:
+        REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TODO_REGEX: '(?i)(todo|fixme|bug)'
