@@ -42,7 +42,8 @@ public sealed class SuspendSubscriptionCommandHandler(
             return new ResourceIdeaResponse<SubscriptionModel>
             {
                 Success = false,
-                Message = "Subscription to suspend was not found."
+                Message = "Subscription to suspend was not found.",
+                ErrorCode = ErrorCodes.ItemNotFound.ToString()
             };
         }
 
@@ -59,9 +60,9 @@ public sealed class SuspendSubscriptionCommandHandler(
             return new ResourceIdeaResponse<SubscriptionModel>
             {
                 Success = false,
-                Message = "",
+                Message = "Subscription suspension failed.",
                 ErrorCode = ErrorCodes.SubscriptionSuspensionFailure.ToString()
-            }
+            };
         }
 
         return new ResourceIdeaResponse<SubscriptionModel>

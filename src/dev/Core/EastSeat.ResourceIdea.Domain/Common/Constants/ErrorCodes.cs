@@ -18,5 +18,6 @@ public enum ErrorCodes
     /// Validation of the command to update a subscription service failed.
     /// </summary>
     UpdateSubscriptionServiceCommandValidationFailure,
-    SubscriptionSuspensionFailure
+    SubscriptionSuspensionFailure,
+    ItemNotFound,
 }
