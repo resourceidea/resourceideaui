@@ -11,7 +11,7 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
     - name: Create issue from TODO
-      uses: alstr/todo-to-issue-action@v1
+      uses: alstr/todo-to-issue-action@v4
       with:
         REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         TODO_REGEX: '(?i)(todo|fixme|bug)'
