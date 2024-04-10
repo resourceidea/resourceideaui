@@ -6,7 +6,7 @@ public sealed record EmptySubscriptionService
 {
     public static SubscriptionService Instance { get; } = new()
     {
-        Id = SubscriptionServiceId.Create(Guid.Empty),
+        Id = SubscriptionServiceId.Empty,
         Name = string.Empty
     };
 
