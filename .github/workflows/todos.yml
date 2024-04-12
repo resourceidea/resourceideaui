@@ -13,5 +13,5 @@ jobs:
     - name: Create issue from TODO
       uses: alstr/todo-to-issue-action@v4
       with:
-        REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        TODO_REGEX: '(?i)(todo|fixme|bug)'
+        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        IDENTIFIERS: '[{"name": "TODO,FIXME,BUG", "labels": ["todo,fixme,bug"]}]'
