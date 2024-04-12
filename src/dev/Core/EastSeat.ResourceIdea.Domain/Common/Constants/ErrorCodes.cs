@@ -18,6 +18,19 @@ public enum ErrorCodes
     /// Validation of the command to update a subscription service failed.
     /// </summary>
     UpdateSubscriptionServiceCommandValidationFailure,
+
+    /// <summary>
+    /// Suspension of a subscription failed.
+    /// </summary>
     SubscriptionSuspensionFailure,
+
+    /// <summary>
+    /// Querying of and item from the data store failed.
+    /// </summary>
     ItemNotFound,
+
+    /// <summary>
+    /// Cancelation of a subscription failed.
+    /// </summary>
+    SubscriptionCancelationFailure,
 }
