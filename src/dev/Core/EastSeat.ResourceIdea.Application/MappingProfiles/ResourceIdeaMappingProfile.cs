@@ -37,5 +37,12 @@ public sealed class ResourceIdeaMappingProfile : Profile
             .ForMember(dest => dest.SubscriptionServiceName, opt => opt.MapFrom(src => src.SubscriptionService != null
                                                                                      ? src.SubscriptionService.Name
                                                                                      : string.Empty));
+
+        CreateMap<PagedList<Subscription>, PagedList<SubscriptionModel>>()
+            .ForMember(dest => dest.CurrentPage, opt => opt.MapFrom(src => src.CurrentPage))
+            .ForMember(dest => dest.PageSize, opt => opt.MapFrom(src => src.PageSize))
+            .ForMember(dest => dest.TotalCount, opt => opt.MapFrom(src => src.TotalCount))
+            .ForMember(dest => dest.Items, opt => opt.MapFrom(
+                src => src.Items.Select(item => _mapper.Map<SubscriptionModel>(item)).ToList()));
     }
 }
