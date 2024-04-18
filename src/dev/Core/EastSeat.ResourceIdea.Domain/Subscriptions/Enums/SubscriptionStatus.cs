@@ -20,6 +20,6 @@ namespace EastSeat.ResourceIdea.Domain.Subscriptions.Enums
         /// <summary>
         /// Subscription has been cancelled by the tenant.
         /// </summary>
-        Cancelled
+        Canceled
     }
 }
