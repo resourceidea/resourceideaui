@@ -1,5 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Common.Responses;
+using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 
 using MediatR;
@@ -9,7 +9,7 @@ namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Querie
 /// <summary>
 /// Query to get a list of subscription services.
 /// </summary>
-public sealed class GetSubscriptionServicesListQuery : IRequest<ResourceIdeaResponse<PagedList<SubscriptionServiceModel>>>
+public sealed class GetSubscriptionServicesListQuery : IRequest<ResourceIdeaResponse<PagedListResponse<SubscriptionServiceModel>>>
 {
     /// <summary>Current page number of the subscription services paged list.</summary>
     public int CurrentPageNumber { get; set; } = 1;

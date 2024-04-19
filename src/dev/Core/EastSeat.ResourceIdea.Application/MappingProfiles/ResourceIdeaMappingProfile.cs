@@ -1,5 +1,3 @@
-namespace EastSeat.ResourceIdea.Application.MappingProfiles;
-
 using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
@@ -10,6 +8,8 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.Models;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
+
+namespace EastSeat.ResourceIdea.Application.MappingProfiles;
 
 public sealed class ResourceIdeaMappingProfile : Profile
 {
@@ -23,7 +23,7 @@ public sealed class ResourceIdeaMappingProfile : Profile
             .ForMember(tenantModel => tenantModel.TenantId,
                        opt => opt.MapFrom(tenant => TenantId.Create(tenant.TenantId)));
 
-        CreateMap<PagedList<Tenant>, PagedList<TenantModel>>()
+        CreateMap<PagedListResponse<Tenant>, PagedListResponse<TenantModel>>()
             .ForMember(dest => dest.CurrentPage, opt => opt.MapFrom(src => src.CurrentPage))
             .ForMember(dest => dest.PageSize, opt => opt.MapFrom(src => src.PageSize))
             .ForMember(dest => dest.TotalCount, opt => opt.MapFrom(src => src.TotalCount))
@@ -38,7 +38,7 @@ public sealed class ResourceIdeaMappingProfile : Profile
                                                                                      ? src.SubscriptionService.Name
                                                                                      : string.Empty));
 
-        CreateMap<PagedList<Subscription>, PagedList<SubscriptionModel>>()
+        CreateMap<PagedListResponse<Subscription>, PagedListResponse<SubscriptionModel>>()
             .ForMember(dest => dest.CurrentPage, opt => opt.MapFrom(src => src.CurrentPage))
             .ForMember(dest => dest.PageSize, opt => opt.MapFrom(src => src.PageSize))
             .ForMember(dest => dest.TotalCount, opt => opt.MapFrom(src => src.TotalCount))

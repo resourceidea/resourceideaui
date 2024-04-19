@@ -1,8 +1,8 @@
-using EastSeat.ResourceIdea.Domain.Common.Constants;
+using EastSeat.ResourceIdea.Application.Constants;
 
 using Optional;
 
-namespace EastSeat.ResourceIdea.Domain.Common.Responses;
+namespace EastSeat.ResourceIdea.Application.Responses;
 
 public sealed class ResourceIdeaResponse<T> where T : class
 {

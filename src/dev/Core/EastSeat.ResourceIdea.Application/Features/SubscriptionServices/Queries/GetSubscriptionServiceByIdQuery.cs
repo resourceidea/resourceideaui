@@ -1,4 +1,4 @@
-using EastSeat.ResourceIdea.Domain.Common.Responses;
+using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 

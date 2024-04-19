@@ -22,7 +22,7 @@ public interface IAsyncRepository<T> where T : BaseEntity
     /// <param name="size">Size of the page to be returned.</param>
     /// <param name="filter">Query filter.</param>
     /// <returns>Readonly paged list of entities.</returns>
-    Task<PagedList<T>> GetPagedListAsync(
+    Task<PagedListResponse<T>> GetPagedListAsync(
         int page,
         int size,
         BaseSpecification<T> specification,

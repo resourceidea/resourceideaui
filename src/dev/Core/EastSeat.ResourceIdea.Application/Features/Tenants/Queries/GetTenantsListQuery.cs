@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Common.Responses;
+﻿using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
+using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Domain.Tenants.Models;
 
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Tenants.Queries;
 
-public sealed class GetTenantsListQuery : IRequest<ResourceIdeaResponse<PagedList<TenantModel>>>
+public sealed class GetTenantsListQuery : IRequest<ResourceIdeaResponse<PagedListResponse<TenantModel>>>
 {
     /// <summary>Current page number of the tenants paged list.</summary>
     public int CurrentPageNumber { get; set; } = 1;

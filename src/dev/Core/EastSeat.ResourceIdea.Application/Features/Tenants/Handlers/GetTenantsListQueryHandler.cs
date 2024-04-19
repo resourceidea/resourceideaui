@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 
+using EastSeat.ResourceIdea.Application.Extensions;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Queries;
-using EastSeat.ResourceIdea.Domain.Common.Responses;
+using EastSeat.ResourceIdea.Application.Features.Tenants.Specifications;
+using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.Models;
 
@@ -19,36 +21,53 @@ namespace EastSeat.ResourceIdea.Application.Features.Tenants.Handlers;
 /// </summary>
 public sealed class GetTenantsListQueryHandler(
     IAsyncRepository<Tenant> tenantRepository,
-    IMapper mapper) : IRequestHandler<GetTenantsListQuery, ResourceIdeaResponse<PagedList<TenantModel>>>
+    IMapper mapper) : IRequestHandler<GetTenantsListQuery, ResourceIdeaResponse<PagedListResponse<TenantModel>>>
 {
     private readonly IAsyncRepository<Tenant> _tenantRepository = tenantRepository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<ResourceIdeaResponse<PagedList<TenantModel>>> Handle(GetTenantsListQuery request, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<PagedListResponse<TenantModel>>> Handle(GetTenantsListQuery request, CancellationToken cancellationToken)
     {
         var specification = GetTenantsQuerySpecification(request.Filter);
 
-        PagedList<Tenant> tenants = await _tenantRepository.GetPagedListAsync(
+        PagedListResponse<Tenant> tenants = await _tenantRepository.GetPagedListAsync(
             request.CurrentPageNumber,
             request.PageSize,
             specification,
             cancellationToken);
 
-        return new ResourceIdeaResponse<PagedList<TenantModel>>
+        return new ResourceIdeaResponse<PagedListResponse<TenantModel>>
         {
             Success = true,
-            Content = Option.Some(_mapper.Map<PagedList<TenantModel>>(tenants))
+            Content = Option.Some(_mapper.Map<PagedListResponse<TenantModel>>(tenants))
         };
     }
 
     private static BaseSpecification<Tenant> GetTenantsQuerySpecification(string requestQueryFilter)
     {
-        var tenantsQuerySpecification = new NoFilterSpecification<Tenant>();
-        if (!string.IsNullOrEmpty(requestQueryFilter))
+        var noFilterSpecification = new NoFilterSpecification<Tenant>();
+        if (string.IsNullOrWhiteSpace(requestQueryFilter))
         {
-            ; // If query filter is not empty, then create and add new specification before returning. 
+            return noFilterSpecification;
         }
 
-        return tenantsQuerySpecification;
+        char[] filtersDelimiter = [';'];
+        char[] keyValueSeparator = ['='];
+        var filters = requestQueryFilter.GetFiltersAsDictionary(filtersDelimiter, keyValueSeparator);
+
+        if (filters.Count == 0)
+        {
+            return noFilterSpecification;
+        }
+
+        if (!filters.TryGetValue("organization", out var organizationValue)
+            || string.IsNullOrEmpty(organizationValue))
+        {
+            return noFilterSpecification;
+        }
+
+        return new TenantOrganizationSpecification(organizationValue);
     }
+
+
 }

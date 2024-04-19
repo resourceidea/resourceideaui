@@ -3,9 +3,8 @@
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Commands;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Specifications;
-using EastSeat.ResourceIdea.Domain.Common.Constants;
-using EastSeat.ResourceIdea.Domain.Common.Exceptions;
-using EastSeat.ResourceIdea.Domain.Common.Responses;
+using EastSeat.ResourceIdea.Application.Constants;
+using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Entities;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Enums;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Models;

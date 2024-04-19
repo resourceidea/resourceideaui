@@ -1,5 +1,4 @@
-using EastSeat.ResourceIdea.Domain.Common.Exceptions;
-using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Exceptions;
 
 namespace EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 

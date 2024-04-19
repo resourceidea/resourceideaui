@@ -1,4 +1,4 @@
-namespace EastSeat.ResourceIdea.Domain.Common.Exceptions;
+namespace EastSeat.ResourceIdea.Domain.Exceptions;
 
 /// <summary>
 /// Invalid ItemId exception.

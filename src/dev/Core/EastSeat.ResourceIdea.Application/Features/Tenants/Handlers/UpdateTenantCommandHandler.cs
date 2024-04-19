@@ -5,15 +5,15 @@ using AutoMapper;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Commands;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Validators;
-using EastSeat.ResourceIdea.Domain.Common.Constants;
-using EastSeat.ResourceIdea.Domain.Common.Exceptions;
-using EastSeat.ResourceIdea.Domain.Common.Responses;
+using EastSeat.ResourceIdea.Application.Constants;
+using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.Models;
 
 using MediatR;
 
 using Optional;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Features.Tenants.Handlers;
 
@@ -49,8 +49,7 @@ public sealed class UpdateTenantCommandHandler(
         var tenantUpdateResult = await _tenantRepository.UpdateAsync(tenantUpdateDetails, cancellationToken);
         Tenant updatedTenant = tenantUpdateResult.Match(
             some: tenant => tenant,
-            none: () => throw new UpdateItemNotFoundException("Update tenant to be updated was not found.")
-        );
+            none: () => EmptyTenant.Instance);
 
         return new ResourceIdeaResponse<TenantModel>
         {

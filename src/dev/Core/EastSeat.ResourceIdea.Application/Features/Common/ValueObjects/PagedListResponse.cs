@@ -4,7 +4,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 /// Holds a paged list of items.
 /// </summary>
 /// <typeparam name="T">Class</typeparam>
-public sealed class PagedList<T> where T : class
+public sealed class PagedListResponse<T> where T : class
 {
     /// <summary>Items on the current page.</summary>
     public IReadOnlyList<T> Items { get; set; } = [];

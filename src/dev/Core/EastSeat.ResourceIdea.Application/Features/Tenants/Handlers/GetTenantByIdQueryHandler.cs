@@ -3,7 +3,7 @@
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Queries;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Specifications;
-using EastSeat.ResourceIdea.Domain.Common.Responses;
+using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.Models;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;

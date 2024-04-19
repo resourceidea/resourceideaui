@@ -3,15 +3,16 @@
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Commands;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Validators;
-using EastSeat.ResourceIdea.Domain.Common.Constants;
-using EastSeat.ResourceIdea.Domain.Common.Exceptions;
-using EastSeat.ResourceIdea.Domain.Common.Responses;
+using EastSeat.ResourceIdea.Application.Constants;
+using EastSeat.ResourceIdea.Domain.Exceptions;
+using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 
 using MediatR;
 
 using Optional;
+using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManagement.Handlers;
 
@@ -50,8 +51,7 @@ public sealed class UpdateSubscriptionServiceCommandHandler(
             cancellationToken);
         SubscriptionService updatedSubscriptionService = subscriptionServiceUpdateResult.Match(
             some: subscriptionService => subscriptionService,
-            none: () => throw new UpdateItemNotFoundException("Subscription service to be updated was not found.")
-        );
+            none: () => EmptySubscriptionService.Instance);
 
         return new ResourceIdeaResponse<SubscriptionServiceModel>
         {
