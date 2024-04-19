@@ -1,4 +1,6 @@
-﻿namespace EastSeat.ResourceIdea.Application.Extensions;
+﻿using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
+
+namespace EastSeat.ResourceIdea.Application.Extensions;
 
 /// <summary>
 /// Extensions for the <see cref="string"/> class.
@@ -14,6 +16,11 @@ public static class StringExtensions
     /// <returns>Filters as a dictionary of key value pairs.</returns>
     public static Dictionary<string, string> GetFiltersAsDictionary(this string input, char[] delimiter, char[] keyValueSeparator)
     {
+        if (string.IsNullOrEmpty(input))
+        {
+            return [];
+        }
+
         return input
             .Split(delimiter, StringSplitOptions.RemoveEmptyEntries)
             .Select(part => part.Split(keyValueSeparator, 2))

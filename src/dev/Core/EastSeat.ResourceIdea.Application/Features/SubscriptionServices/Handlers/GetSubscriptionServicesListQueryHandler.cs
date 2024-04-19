@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 
+using EastSeat.ResourceIdea.Application.Extensions;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Queries;
+using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Specifications;
+using EastSeat.ResourceIdea.Application.Features.Tenants.Specifications;
 using EastSeat.ResourceIdea.Application.Responses;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
@@ -39,14 +42,10 @@ public sealed class GetSubscriptionServicesListQueryHandler(
         };
     }
 
-    private static BaseSpecification<SubscriptionService> GetSubscriptionServicesQuerySpecification(string filter)
+    private static BaseSpecification<SubscriptionService> GetSubscriptionServicesQuerySpecification(string queryFilters)
     {
-        var subscriptionServiceSpecification = new NoFilterSpecification<SubscriptionService>();
-        if (!string.IsNullOrEmpty(filter))
-        {
-            ; // If query filter is not empty, then create and add new specification before returning. 
-        }
+        var filters = queryFilters.GetFiltersAsDictionary(delimiter: [';'], keyValueSeparator: ['=']);
 
-        return subscriptionServiceSpecification;
+        return new SubscriptionServiceNameSpecification(filters);
     }
 }

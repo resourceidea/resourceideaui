@@ -43,30 +43,11 @@ public sealed class GetTenantsListQueryHandler(
         };
     }
 
-    private static BaseSpecification<Tenant> GetTenantsQuerySpecification(string requestQueryFilter)
+    private static BaseSpecification<Tenant> GetTenantsQuerySpecification(string queryFilters)
     {
-        var noFilterSpecification = new NoFilterSpecification<Tenant>();
-        if (string.IsNullOrWhiteSpace(requestQueryFilter))
-        {
-            return noFilterSpecification;
-        }
+        var filters = queryFilters.GetFiltersAsDictionary(delimiter: [';'], keyValueSeparator: ['=']);
 
-        char[] filtersDelimiter = [';'];
-        char[] keyValueSeparator = ['='];
-        var filters = requestQueryFilter.GetFiltersAsDictionary(filtersDelimiter, keyValueSeparator);
-
-        if (filters.Count == 0)
-        {
-            return noFilterSpecification;
-        }
-
-        if (!filters.TryGetValue("organization", out var organizationValue)
-            || string.IsNullOrEmpty(organizationValue))
-        {
-            return noFilterSpecification;
-        }
-
-        return new TenantOrganizationSpecification(organizationValue);
+        return new TenantOrganizationSpecification(filters);
     }
 
 
