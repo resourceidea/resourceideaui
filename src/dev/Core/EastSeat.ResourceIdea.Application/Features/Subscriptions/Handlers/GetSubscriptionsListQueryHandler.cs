@@ -33,12 +33,14 @@ public sealed class GetSubscriptionsListQueryHandler(
         GetSubscriptionsListQuery request,
         CancellationToken cancellationToken)
     {
+        var periodSpecification = GetSubscriptionBySubscriptionBeforeDateSpecification(request.Query.Filter)
+            .And(GetSubscriptionBySubscriptionAfterDateSpecification(request.Query.Filter));
+
         BaseSpecification<Subscription> specification = GetSubscriptionServiceSpecification(request.Query.Filter)
             .Or(GetSubscriptionStatusSpecification(request.Query.Filter))
             .Or(GetSubscriptionTypeSpecification(request.Query.Filter))
             .Or(GetSubscriptionBySubscribedOnDateSpecification(request.Query.Filter))
-            .Or(GetSubscriptionBySubscriptionBeforeDateSpecification(request.Query.Filter))
-            .And(GetSubscriptionBySubscriptionAfterDateSpecification(request.Query.Filter));
+            .Or(periodSpecification);
 
         PagedListResponse<Subscription> subscriptions = await _subscriptionRepository.GetPagedListAsync(
             request.Query.PageNumber,
