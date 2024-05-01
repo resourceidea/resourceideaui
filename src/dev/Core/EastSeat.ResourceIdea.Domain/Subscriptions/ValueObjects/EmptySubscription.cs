@@ -8,7 +8,7 @@ namespace EastSeat.ResourceIdea.Domain.Subscriptions.ValueObjects;
 /// </summary>
 public sealed record EmptySubscription
 {
-    public static Subscription Instance { get; } = new()
+    public static Subscription Instance => new()
     {
         Id = SubscriptionId.Empty,
         Status = SubscriptionStatus.Inactive,
