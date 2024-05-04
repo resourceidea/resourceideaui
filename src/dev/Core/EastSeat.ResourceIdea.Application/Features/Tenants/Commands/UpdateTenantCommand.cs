@@ -1,4 +1,4 @@
-﻿using EastSeat.ResourceIdea.Application.Responses;
+﻿using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Tenants.Models;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 

@@ -1,5 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
-using EastSeat.ResourceIdea.Application.Responses;
+using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 
 using MediatR;

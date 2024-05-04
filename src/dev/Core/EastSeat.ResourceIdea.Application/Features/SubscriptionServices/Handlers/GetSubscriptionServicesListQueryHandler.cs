@@ -6,7 +6,7 @@ using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Queries;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Specifications;
-using EastSeat.ResourceIdea.Application.Responses;
+using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 

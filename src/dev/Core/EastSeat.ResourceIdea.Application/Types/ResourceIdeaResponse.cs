@@ -2,7 +2,7 @@ using EastSeat.ResourceIdea.Application.Constants;
 
 using Optional;
 
-namespace EastSeat.ResourceIdea.Application.Responses;
+namespace EastSeat.ResourceIdea.Application.Types;
 
 public sealed class ResourceIdeaResponse<T> where T : class
 {

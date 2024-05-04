@@ -2,7 +2,7 @@
 
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Commands;
-using EastSeat.ResourceIdea.Application.Responses;
+using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Entities;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Enums;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Models;

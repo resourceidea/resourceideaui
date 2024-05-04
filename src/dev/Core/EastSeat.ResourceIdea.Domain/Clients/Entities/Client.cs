@@ -5,9 +5,18 @@ namespace EastSeat.ResourceIdea.Domain.Clients.Entities;
 
 public class Client : BaseEntity
 {
+    /// <summary>
+    /// Client ID.
+    /// </summary>
     public ClientId Id { get; set; }
 
+    /// <summary>
+    /// Client address.
+    /// </summary>
     public Address Address { get; set; }
 
-    public string? Name { get; set; }
+    /// <summary>
+    /// Client name.
+    /// </summary>
+    public required string Name { get; set; }
 }
