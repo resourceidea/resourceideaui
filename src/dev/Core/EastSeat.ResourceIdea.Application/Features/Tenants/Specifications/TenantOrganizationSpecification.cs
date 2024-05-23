@@ -1,9 +1,8 @@
 ﻿using System.Linq.Expressions;
 
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
+using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
-
-using Optional;
 
 namespace EastSeat.ResourceIdea.Application.Features.Tenants.Specifications;
 
@@ -20,7 +19,7 @@ public sealed class TenantOrganizationSpecification(Dictionary<string, string>? 
     {
         get
         {
-            Option<string> filterValidationResult = GetValidatedOrganizationFilter();
+            Optional<string> filterValidationResult = GetValidatedOrganizationFilter();
             string filter = filterValidationResult.Match(
                 some: value => value,
                 none: () => string.Empty);
@@ -31,16 +30,16 @@ public sealed class TenantOrganizationSpecification(Dictionary<string, string>? 
         }
     }
 
-    private Option<string> GetValidatedOrganizationFilter()
+    private Optional<string> GetValidatedOrganizationFilter()
     {
         if (_filters is null
             || _filters.Count <= 0
             || !_filters.TryGetValue("organization", out var organizationValue)
             || string.IsNullOrEmpty(organizationValue))
         {
-            return Option.None<string>();
+            return Optional<string>.None;
         }
 
-        return Option.Some<string>(organizationValue);
+        return Optional<string>.Some(organizationValue);
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-using AutoMapper;
+﻿using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Commands;
@@ -11,8 +9,6 @@ using EastSeat.ResourceIdea.Domain.Tenants.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.Models;
 
 using MediatR;
-
-using Optional;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Features.Tenants.Handlers;
@@ -36,7 +32,7 @@ public sealed class UpdateTenantCommandHandler(
                 Success = false,
                 Message = "Update tenant command validation failed",
                 ErrorCode = ErrorCodes.UpdateTenantCommandValidationFailure.ToString(),
-                Content = Option.None<TenantModel>()
+                Content = Optional<TenantModel>.None
             };
         }
 
@@ -55,7 +51,7 @@ public sealed class UpdateTenantCommandHandler(
         {
             Success = true,
             Message = "Tenant updated successfully",
-            Content = Option.Some(_mapper.Map<TenantModel>(updatedTenant))
+            Content = Optional<TenantModel>.Some(_mapper.Map<TenantModel>(updatedTenant))
         };
     }
 }

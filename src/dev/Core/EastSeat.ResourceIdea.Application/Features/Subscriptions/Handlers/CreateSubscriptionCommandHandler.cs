@@ -12,8 +12,6 @@ using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 using MediatR;
 
-using Optional;
-
 namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Handlers;
 
 public sealed class CreateSubscriptionCommandHandler(
@@ -42,7 +40,7 @@ public sealed class CreateSubscriptionCommandHandler(
         return new ResourceIdeaResponse<SubscriptionModel>
         {
             Success = true,
-            Content = Option.Some(_mapper.Map<SubscriptionModel>(addedSubscription))
+            Content = Optional<SubscriptionModel>.Some(_mapper.Map<SubscriptionModel>(addedSubscription))
         };
     }
 }

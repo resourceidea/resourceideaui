@@ -11,8 +11,6 @@ using EastSeat.ResourceIdea.Domain.Subscriptions.ValueObjects;
 
 using MediatR;
 
-using Optional;
-
 namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Handlers;
 
 /// <summary>
@@ -46,7 +44,7 @@ public sealed class ActivateSubscriptionCommandHandler(
         return new ResourceIdeaResponse<SubscriptionModel>
         {
             Success = true,
-            Content = Option.Some(_mapper.Map<SubscriptionModel>(updatedSubscription)),
+            Content = Optional<SubscriptionModel>.Some(_mapper.Map<SubscriptionModel>(updatedSubscription)),
             Message = "Subscription activated successfully."
         };
     }

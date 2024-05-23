@@ -12,8 +12,6 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 
 using MediatR;
 
-using Optional;
-
 namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManagement.Handlers;
 
 public sealed class GetSubscriptionServicesListQueryHandler(
@@ -37,7 +35,7 @@ public sealed class GetSubscriptionServicesListQueryHandler(
         return new ResourceIdeaResponse<PagedListResponse<SubscriptionServiceModel>>
         {
             Success = true,
-            Content = Option.Some(_mapper.Map<PagedListResponse<SubscriptionServiceModel>>(subscriptionServices))
+            Content = Optional<PagedListResponse<SubscriptionServiceModel>>.Some(_mapper.Map<PagedListResponse<SubscriptionServiceModel>>(subscriptionServices))
         };
     }
 

@@ -11,8 +11,6 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 
 using MediatR;
 
-using Optional;
-
 namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManagement.Handlers;
 
 public sealed class CreateSubscriptionServiceCommandHandler(
@@ -34,7 +32,7 @@ public sealed class CreateSubscriptionServiceCommandHandler(
                 Success = false,
                 Message = "Create subscription service command validation failed",
                 ErrorCode = ErrorCodes.CreateSubscriptionServiceCommandValidationFailure.ToString(),
-                Content = Option.None<SubscriptionServiceModel>()
+                Content = Optional<SubscriptionServiceModel>.None
             };
         }
 
@@ -50,7 +48,7 @@ public sealed class CreateSubscriptionServiceCommandHandler(
         {
             Success = true,
             Message = "Subscription service created successfully",
-            Content = Option.Some(_mapper.Map<SubscriptionServiceModel>(newSubscriptionService))
+            Content = Optional<SubscriptionServiceModel>.Some(_mapper.Map<SubscriptionServiceModel>(newSubscriptionService))
         };
     }
 }

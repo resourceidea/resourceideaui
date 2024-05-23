@@ -1,5 +1,4 @@
 ﻿using EastSeat.ResourceIdea.Application.Exceptions;
-using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 
 namespace EastSeat.ResourceIdea.Application.Extensions;
 

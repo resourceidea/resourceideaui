@@ -1,9 +1,8 @@
 ﻿using System.Linq.Expressions;
 
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
+using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Entities;
-
-using Optional;
 
 namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Specifications;
 
@@ -15,7 +14,7 @@ public sealed class GetSubscriptionByStatusSpecification (Dictionary<string, str
     {
         get
         {
-            Option<string> filterValidationResult = GetValidatedStatusFilter();
+            Optional<string> filterValidationResult = GetValidatedStatusFilter();
             string filter = filterValidationResult.Match(
                 some: value => value,
                 none: () => string.Empty);
@@ -26,16 +25,16 @@ public sealed class GetSubscriptionByStatusSpecification (Dictionary<string, str
         }
     }
 
-    private Option<string> GetValidatedStatusFilter()
+    private Optional<string> GetValidatedStatusFilter()
     {
         if (_filters is null
             || _filters.Count <= 0
             || !_filters.TryGetValue("status", out var statusValue)
             || string.IsNullOrEmpty(statusValue))
         {
-            return Option.None<string>();
+            return Optional<string>.None;
         }
 
-        return Option.Some(statusValue);
+        return Optional<string>.Some(statusValue);
     }
 }

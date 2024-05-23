@@ -12,8 +12,6 @@ using EastSeat.ResourceIdea.Domain.Tenants.Models;
 
 using MediatR;
 
-using Optional;
-
 namespace EastSeat.ResourceIdea.Application.Features.Tenants.Handlers;
 
 /// <summary>
@@ -39,7 +37,7 @@ public sealed class GetTenantsListQueryHandler(
         return new ResourceIdeaResponse<PagedListResponse<TenantModel>>
         {
             Success = true,
-            Content = Option.Some(_mapper.Map<PagedListResponse<TenantModel>>(tenants))
+            Content = Optional<PagedListResponse<TenantModel>>.Some(_mapper.Map<PagedListResponse<TenantModel>>(tenants))
         };
     }
 

@@ -1,11 +1,7 @@
-using System.Linq.Expressions;
-
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
-using EastSeat.ResourceIdea.Application.Features.Tenants.Specifications;
+using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
-
-using Optional;
 
 namespace EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 
@@ -34,7 +30,7 @@ public interface IAsyncRepository<T> where T : BaseEntity
     /// <param name="specification">Entity SubscriptionId.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Entity.</returns>
-    Task<Option<T>> GetByIdAsync(BaseSpecification<T> specification, CancellationToken cancellationToken);
+    Task<Optional<T>> GetByIdAsync(BaseSpecification<T> specification, CancellationToken cancellationToken);
 
     /// <summary>
     /// Add entity.
@@ -49,12 +45,12 @@ public interface IAsyncRepository<T> where T : BaseEntity
     /// </summary>
     /// <param name="entity">Entity to update.</param>
     /// <returns>Entity.</returns>
-    Task<Option<T>> UpdateAsync(T entity, CancellationToken cancellationToken);
+    Task<Optional<T>> UpdateAsync(T entity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete entity.
     /// </summary>
     /// <param name="entity">Entity to delete.</param>
     /// <returns>Entity.</returns>
-    Task<Option<T>> DeleteAsync(T entity);
+    Task<Optional<T>> DeleteAsync(T entity);
 }

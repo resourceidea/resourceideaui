@@ -10,8 +10,6 @@ using EastSeat.ResourceIdea.Domain.Subscriptions.ValueObjects;
 
 using MediatR;
 
-using Optional;
-
 namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Handlers;
 
 public sealed class GetSubscriptionByIdQueryHandler(
@@ -24,7 +22,7 @@ public sealed class GetSubscriptionByIdQueryHandler(
     public async Task<ResourceIdeaResponse<SubscriptionModel>> Handle(GetSubscriptionByIdQuery request, CancellationToken cancellationToken)
     {
         GetSubscriptionByIdSpecification getSubscriptionByIdSpecification = new (request.SubscriptionId);
-        Option<Subscription> getSubscriptionResult = await _subscriptionRepository.GetByIdAsync(getSubscriptionByIdSpecification, cancellationToken);
+        Optional<Subscription> getSubscriptionResult = await _subscriptionRepository.GetByIdAsync(getSubscriptionByIdSpecification, cancellationToken);
         Subscription subscription = getSubscriptionResult.Match(
             some: subscription => subscription,
             none: () => EmptySubscription.Instance);
@@ -37,7 +35,7 @@ public sealed class GetSubscriptionByIdQueryHandler(
         return new ResourceIdeaResponse<SubscriptionModel>
         {
             Success = true,
-            Content = Option.Some(_mapper.Map<SubscriptionModel>(subscription))
+            Content = Optional<SubscriptionModel>.Some(_mapper.Map<SubscriptionModel>(subscription))
         };
     }
 }

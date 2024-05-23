@@ -11,8 +11,6 @@ using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 using MediatR;
 
-using Optional;
-
 namespace EastSeat.ResourceIdea.Application.Features.Tenants.Handlers;
 
 /// <summary>
@@ -37,7 +35,7 @@ public sealed class CreateTenantCommandHandler (
                 Success = false,
                 Message = "Create tenant command validation failed",
                 ErrorCode = ErrorCodes.CreateTenantCommandValidationFailure.ToString(),
-                Content = Option.None<TenantModel>()
+                Content = Optional<TenantModel>.None
             };
         }
 
@@ -53,7 +51,7 @@ public sealed class CreateTenantCommandHandler (
         {
             Success = true,
             Message = "Tenant created successfully",
-            Content = Option.Some(_mapper.Map<TenantModel>(newTenant))
+            Content = Optional<TenantModel>.Some(_mapper.Map<TenantModel>(newTenant))
         };
     }
 }

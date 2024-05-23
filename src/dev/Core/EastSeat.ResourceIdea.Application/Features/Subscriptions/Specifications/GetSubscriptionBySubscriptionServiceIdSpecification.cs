@@ -1,9 +1,8 @@
 ﻿using System.Linq.Expressions;
 
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
+using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Entities;
-
-using Optional;
 
 namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Specifications;
 
@@ -20,7 +19,7 @@ public sealed class GetSubscriptionBySubscriptionServiceIdSpecification(
     {
         get
         {
-            Option<Guid> filterValidationResult = GetValidatedSubscriptionServiceId();
+            Optional<Guid> filterValidationResult = GetValidatedSubscriptionServiceId();
             Guid filter = filterValidationResult.Match(
                 some: value => value,
                 none: () => Guid.Empty);
@@ -31,21 +30,21 @@ public sealed class GetSubscriptionBySubscriptionServiceIdSpecification(
         }
     }
 
-    private Option<Guid> GetValidatedSubscriptionServiceId()
+    private Optional<Guid> GetValidatedSubscriptionServiceId()
     {
         if (_filters is null
             || _filters.Count <= 0
             || !_filters.TryGetValue("subscriptionServiceId", out var subscriptionServiceIdValue)
             || string.IsNullOrEmpty(subscriptionServiceIdValue))
         {
-            return Option.None<Guid>();
+            return Optional<Guid>.None;
         }
 
         if (Guid.TryParse(subscriptionServiceIdValue, out Guid subscriptionServiceIdGuid))
         {
-            return Option.None<Guid>();
+            return Optional<Guid>.None;
         }
 
-        return Option.Some(subscriptionServiceIdGuid);
+        return Optional<Guid>.Some(subscriptionServiceIdGuid);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Common.Models;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Domain.Clients.Models;
@@ -6,7 +7,7 @@ namespace EastSeat.ResourceIdea.Domain.Clients.Models;
 /// <summary>
 /// Client model.
 /// </summary>
-public record ClientModel
+public record ClientModel : BaseModel<ClientModel>
 {
     /// <summary>
     /// Client Id.
@@ -27,4 +28,12 @@ public record ClientModel
     /// Client address.
     /// </summary>
     public Address Address { get; set; }
+
+    public override ClientModel DefaultInstance => new()
+    {
+        Id = ClientId.Empty,
+        TenantId = TenantId.Empty,
+        Name = string.Empty,
+        Address = Address.Empty
+    };
 }

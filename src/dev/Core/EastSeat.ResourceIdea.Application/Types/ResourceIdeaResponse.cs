@@ -1,7 +1,5 @@
 using EastSeat.ResourceIdea.Application.Constants;
 
-using Optional;
-
 namespace EastSeat.ResourceIdea.Application.Types;
 
 public sealed class ResourceIdeaResponse<T> where T : class
@@ -16,7 +14,7 @@ public sealed class ResourceIdeaResponse<T> where T : class
     public string ErrorCode { get; set; } = string.Empty;
 
     /// <summary>Content from a success response on an operation.</summary>
-    public Option<T> Content { get; set; }
+    public Optional<T> Content { get; set; }
 
     /// <summary>Initializes <see cref="ResourceIdeaResponse{T}"/>.</summary>
     public ResourceIdeaResponse()

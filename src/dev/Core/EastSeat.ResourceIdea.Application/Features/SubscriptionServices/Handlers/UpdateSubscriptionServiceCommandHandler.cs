@@ -10,7 +10,6 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 
 using MediatR;
 
-using Optional;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManagement.Handlers;
@@ -35,7 +34,7 @@ public sealed class UpdateSubscriptionServiceCommandHandler(
                 Success = false,
                 Message = "Subscription service update command validation failed",
                 ErrorCode = ErrorCodes.UpdateSubscriptionServiceCommandValidationFailure.ToString(),
-                Content = Option.None<SubscriptionServiceModel>()
+                Content = Optional<SubscriptionServiceModel>.None
             };
         }
 
@@ -45,7 +44,7 @@ public sealed class UpdateSubscriptionServiceCommandHandler(
             Name = request.Name
         };
 
-        Option<SubscriptionService> subscriptionServiceUpdateResult = await _subscriptionServiceRepository.UpdateAsync(
+        Optional<SubscriptionService> subscriptionServiceUpdateResult = await _subscriptionServiceRepository.UpdateAsync(
             subscriptionService,
             cancellationToken);
         SubscriptionService updatedSubscriptionService = subscriptionServiceUpdateResult.Match(
@@ -56,7 +55,7 @@ public sealed class UpdateSubscriptionServiceCommandHandler(
         {
             Success = true,
             Message = "Subscription service updated successfully",
-            Content = Option.Some(_mapper.Map<SubscriptionServiceModel>(updatedSubscriptionService))
+            Content = Optional<SubscriptionServiceModel>.Some(_mapper.Map<SubscriptionServiceModel>(updatedSubscriptionService))
         };
     }
 }

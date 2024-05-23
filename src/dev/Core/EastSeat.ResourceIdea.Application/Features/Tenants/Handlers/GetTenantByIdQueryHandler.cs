@@ -10,8 +10,6 @@ using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 using MediatR;
 
-using Optional;
-
 namespace EastSeat.ResourceIdea.Application.Features.Tenants.Handlers;
 
 public sealed class GetTenantByIdQueryHandler(
@@ -24,7 +22,7 @@ public sealed class GetTenantByIdQueryHandler(
     public async Task<ResourceIdeaResponse<TenantModel>> Handle(GetTenantByIdQuery request, CancellationToken cancellationToken)
     {
         var getTenantByIdSpecification = new TenantGetByIdSpecification(request.TenantId);
-        Option<Tenant> tenantQuery = await _tenantRepository.GetByIdAsync(getTenantByIdSpecification, cancellationToken);
+        Optional<Tenant> tenantQuery = await _tenantRepository.GetByIdAsync(getTenantByIdSpecification, cancellationToken);
         Tenant tenant = tenantQuery.Match(
             some: tenant => tenant,
             none: () => EmptyTenant.Instance
@@ -38,7 +36,7 @@ public sealed class GetTenantByIdQueryHandler(
         return new ResourceIdeaResponse<TenantModel>
         {
             Success = true,
-            Content = Option.Some(_mapper.Map<TenantModel>(tenant))
+            Content = Optional<TenantModel>.Some(_mapper.Map<TenantModel>(tenant))
         };
     }
 }

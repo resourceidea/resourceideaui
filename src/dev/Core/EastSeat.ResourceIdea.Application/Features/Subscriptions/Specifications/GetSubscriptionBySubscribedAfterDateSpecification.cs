@@ -1,9 +1,8 @@
 ﻿using System.Linq.Expressions;
 
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
+using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Entities;
-
-using Optional;
 
 namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Specifications;
 
@@ -16,7 +15,7 @@ public sealed class GetSubscriptionBySubscribedAfterDateSpecification(Dictionary
     {
         get
         {
-            Option<DateTimeOffset> filterValidationResult = GetValidatedDateTimeOffset();
+            Optional<DateTimeOffset> filterValidationResult = GetValidatedDateTimeOffset();
             DateTimeOffset filter = filterValidationResult.Match(
                 some: value => value,
                 none: () => DateTimeOffset.MinValue);
@@ -27,21 +26,21 @@ public sealed class GetSubscriptionBySubscribedAfterDateSpecification(Dictionary
         }
     }
 
-    private Option<DateTimeOffset> GetValidatedDateTimeOffset()
+    private Optional<DateTimeOffset> GetValidatedDateTimeOffset()
     {
         if (_filters is null
             || _filters.Count <= 0
             || !_filters.TryGetValue("subafter", out var filterDateValue)
             || string.IsNullOrEmpty(filterDateValue))
         {
-            return Option.None<DateTimeOffset>();
+            return Optional<DateTimeOffset>.None;
         }
 
         if (!DateTimeOffset.TryParse(filterDateValue, out DateTimeOffset filterDate))
         {
-            return Option.None<DateTimeOffset>();
+            return Optional<DateTimeOffset>.None;
         }
 
-        return Option.Some(filterDate);
+        return Optional<DateTimeOffset>.Some(filterDate);
     }
 }
