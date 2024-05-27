@@ -31,6 +31,9 @@ public readonly record struct TenantId
         return new TenantId(value);
     }
 
+    /// <summary>Tenant Id is not empty.</summary>
+    public bool IsNotEmpty() => this != TenantId.Empty;
+
     /// <summary>
     /// Empty tenant id.
     /// </summary>

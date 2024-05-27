@@ -1,6 +1,9 @@
 using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Clients.Entities;
+using EastSeat.ResourceIdea.Domain.Clients.Models;
+using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Entities;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Models;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
@@ -44,5 +47,9 @@ public sealed class ResourceIdeaMappingProfile : Profile
             .ForMember(dest => dest.TotalCount, opt => opt.MapFrom(src => src.TotalCount))
             .ForMember(dest => dest.Items, opt => opt.MapFrom(
                 src => src.Items.Select(item => _mapper.Map<SubscriptionModel>(item)).ToList()));
+        
+        CreateMap<Client, ClientModel>()
+            .ForMember(dest => dest.TenantId, opt => opt.MapFrom(src => TenantId.Create(src.TenantId)))
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => ClientId.Create(src.Id.Value)));
     }
 }

@@ -38,4 +38,9 @@ public enum ErrorCodes
     /// Validation of the command to create a client failed.
     /// </summary>
     CreateClientCommandValidationFailure,
+
+    /// <summary>
+    /// Validation of the command to update a client failed.
+    /// </summary>
+    UpdateClientCommandValidationFailure,
 }
