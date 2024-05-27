@@ -33,4 +33,9 @@ public enum ErrorCodes
     /// Cancelation of a subscription failed.
     /// </summary>
     SubscriptionCancelationFailure,
+
+    /// <summary>
+    /// Validation of the command to create a client failed.
+    /// </summary>
+    CreateClientCommandValidationFailure,
 }

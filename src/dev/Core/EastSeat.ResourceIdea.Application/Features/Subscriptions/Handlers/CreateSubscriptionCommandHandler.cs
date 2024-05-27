@@ -32,9 +32,10 @@ public sealed class CreateSubscriptionCommandHandler(
             Status = SubscriptionStatus.Active,
             SubscriptionDate = DateTimeOffset.UtcNow,
             SubscriptionType = SubscriptionType.Monthly,
-            SubscriptionServiceId = SubscriptionServiceId.Create(Guid.NewGuid()), // TODO: Get the susbcription service id from the user who made request.
-            TenantId = TenantId.Create(Guid.NewGuid()).Value // TODO: Get the tenant id from the user who made request.
+            SubscriptionServiceId = request.SubscriptionServiceId,
+            TenantId = request.TenantId.Value
         };
+        
         var addedSubscription = await _subscriptionRepository.AddAsync(subscription, cancellationToken);
 
         return new ResourceIdeaResponse<SubscriptionModel>

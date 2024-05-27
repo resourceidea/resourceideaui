@@ -56,4 +56,6 @@ public readonly record struct Address
         string.IsNullOrEmpty(_building)
         ? $"{_street}, {_city}"
         : $"{_building}, {_street}, {_city}";
+
+    public bool IsNotEmpty() => this != Address.Empty;
 }
