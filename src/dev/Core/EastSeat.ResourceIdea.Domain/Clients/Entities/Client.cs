@@ -19,4 +19,10 @@ public class Client : BaseEntity
     /// Client name.
     /// </summary>
     public required string Name { get; set; }
+
+    /// <summary>
+    /// Checks if the instance of <see cref="Client"/> is empty.
+    /// </summary>
+    /// <returns>True if instance is empty; Otherwise, False.</returns>
+    public bool IsEmpty() => this == EmptyClient.Instance;
 }
