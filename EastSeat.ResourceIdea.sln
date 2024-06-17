@@ -9,25 +9,30 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dev", "dev", "{BDDA5256-363
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{F1933A58-6710-4CCF-958E-0C93465093DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Application", "src\dev\Core\EastSeat.ResourceIdea.Application\EastSeat.ResourceIdea.Application.csproj", "{A108CA08-BE86-4725-A062-F35AEFAD1ED0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Application", "src\dev\Core\EastSeat.ResourceIdea.Application\EastSeat.ResourceIdea.Application.csproj", "{A108CA08-BE86-4725-A062-F35AEFAD1ED0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Domain", "src\dev\Core\EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj", "{1428C4AE-A4F3-436E-8560-AB1173CA743E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Domain", "src\dev\Core\EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj", "{1428C4AE-A4F3-436E-8560-AB1173CA743E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{31A313E8-C7C5-4526-A62B-93E49A8E117F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Architecture.Tests", "src\tests\EastSeat.ResourceIdea.Architecture.Tests\EastSeat.ResourceIdea.Architecture.Tests.csproj", "{155136CB-2DBF-405C-B286-EA893BD6CBC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Architecture.Tests", "src\tests\EastSeat.ResourceIdea.Architecture.Tests\EastSeat.ResourceIdea.Architecture.Tests.csproj", "{155136CB-2DBF-405C-B286-EA893BD6CBC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Application.UnitTests", "src\tests\EastSeat.ResourceIdea.Application.UnitTests\EastSeat.ResourceIdea.Application.UnitTests.csproj", "{A4683337-B073-403E-B03A-CC573317406B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Application.UnitTests", "src\tests\EastSeat.ResourceIdea.Application.UnitTests\EastSeat.ResourceIdea.Application.UnitTests.csproj", "{A4683337-B073-403E-B03A-CC573317406B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Domain.UnitTests", "src\tests\EastSeat.ResourceIdea.Domain.UnitTests\EastSeat.ResourceIdea.Domain.UnitTests.csproj", "{39407174-7053-4E55-A462-D32AB67878C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Domain.UnitTests", "src\tests\EastSeat.ResourceIdea.Domain.UnitTests\EastSeat.ResourceIdea.Domain.UnitTests.csproj", "{39407174-7053-4E55-A462-D32AB67878C8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{09639DF0-7E5B-4975-9160-D5C9B67E090E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.DataStore", "src\dev\Infrastructure\EastSeat.ResourceIdea.DataStore\EastSeat.ResourceIdea.DataStore.csproj", "{AB91B3C8-8823-4E69-ADBA-833C1008BBA6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{815958C9-111B-4D2E-8BC1-A39EF3FD4A81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Web", "src\dev\Web\EastSeat.ResourceIdea.Web\EastSeat.ResourceIdea.Web.csproj", "{00697456-7B25-4D49-A4F3-DEA27CBA7A11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A108CA08-BE86-4725-A062-F35AEFAD1ED0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -50,6 +55,17 @@ Global
 		{39407174-7053-4E55-A462-D32AB67878C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39407174-7053-4E55-A462-D32AB67878C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39407174-7053-4E55-A462-D32AB67878C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB91B3C8-8823-4E69-ADBA-833C1008BBA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB91B3C8-8823-4E69-ADBA-833C1008BBA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB91B3C8-8823-4E69-ADBA-833C1008BBA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB91B3C8-8823-4E69-ADBA-833C1008BBA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00697456-7B25-4D49-A4F3-DEA27CBA7A11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00697456-7B25-4D49-A4F3-DEA27CBA7A11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00697456-7B25-4D49-A4F3-DEA27CBA7A11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00697456-7B25-4D49-A4F3-DEA27CBA7A11}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BDDA5256-3631-41B4-83D8-400082D76CA4} = {31FB4B75-E0CB-42AB-84D9-3EF2FB38A9AE}
@@ -60,5 +76,12 @@ Global
 		{155136CB-2DBF-405C-B286-EA893BD6CBC6} = {31A313E8-C7C5-4526-A62B-93E49A8E117F}
 		{A4683337-B073-403E-B03A-CC573317406B} = {31A313E8-C7C5-4526-A62B-93E49A8E117F}
 		{39407174-7053-4E55-A462-D32AB67878C8} = {31A313E8-C7C5-4526-A62B-93E49A8E117F}
+		{09639DF0-7E5B-4975-9160-D5C9B67E090E} = {BDDA5256-3631-41B4-83D8-400082D76CA4}
+		{AB91B3C8-8823-4E69-ADBA-833C1008BBA6} = {09639DF0-7E5B-4975-9160-D5C9B67E090E}
+		{815958C9-111B-4D2E-8BC1-A39EF3FD4A81} = {BDDA5256-3631-41B4-83D8-400082D76CA4}
+		{00697456-7B25-4D49-A4F3-DEA27CBA7A11} = {815958C9-111B-4D2E-8BC1-A39EF3FD4A81}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BD3ACFC7-CE2F-48BA-8F56-41B20B33F258}
 	EndGlobalSection
 EndGlobal

@@ -13,7 +13,7 @@ public class Client : BaseEntity
     /// <summary>
     /// Client address.
     /// </summary>
-    public Address Address { get; set; }
+    public Address Address { get; set; } = Address.Empty;
 
     /// <summary>
     /// Client name.
