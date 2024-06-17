@@ -1,4 +1,5 @@
 using EastSeat.ResourceIdea.Domain.Common.Entities;
+using EastSeat.ResourceIdea.Domain.Subscriptions.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;

@@ -3,7 +3,7 @@
 /// <summary>
 /// Representation of an address.
 /// </summary>
-public readonly record struct Address
+public class Address
 {
     private readonly string _building;
     private readonly string _street;
@@ -45,8 +45,8 @@ public readonly record struct Address
     /// <returns><see cref="Address"/> created.</returns>
     public static Address Create(string building, string street, string city)
     {
-        ArgumentNullException.ThrowIfNullOrEmpty(street);
-        ArgumentNullException.ThrowIfNullOrEmpty(city);
+        ArgumentException.ThrowIfNullOrEmpty(street);
+        ArgumentException.ThrowIfNullOrEmpty(city);
 
         return new Address(building, street, city);
     }
