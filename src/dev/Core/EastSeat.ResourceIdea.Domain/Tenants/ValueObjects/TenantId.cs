@@ -31,6 +31,23 @@ public readonly record struct TenantId
         return new TenantId(value);
     }
 
+    /// <summary>
+    /// Creates a tenant id from a string value.
+    /// </summary>
+    /// <param name="value">Tenant ID as a string.</param>
+    /// <returns>Instance of <see cref="TenantId"/></returns>
+    /// <exception cref="InvalidEntityIdException">Thrown when creating a new Tenant ID
+    /// from a string value that can't be parsed to a Guid.</exception>
+    public static TenantId Create(string value)
+    {
+        if (!Guid.TryParse(value, out var tenantId))
+        {
+            throw new InvalidEntityIdException("TenantId is not a valid Guid");
+        }
+
+        return Create(tenantId);
+    }
+
     /// <summary>Tenant Id is not empty.</summary>
     public bool IsNotEmpty() => this != TenantId.Empty;
 

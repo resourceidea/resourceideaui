@@ -29,6 +29,23 @@ namespace EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects
         }
 
         /// <summary>
+        /// Create a new subscription service id from a string value.
+        /// </summary>
+        /// <param name="value">Subscription ID as a string value.</param>
+        /// <returns>Instance of <see cref="SubscriptionServiceId"/>.</returns>
+        /// <exception cref="InvalidEntityIdException">Thrown when a new SubscriptionServiceId from
+        /// a string that cannot be parsed as a Guid.</exception>
+        public static SubscriptionServiceId Create(string value)
+        {
+            if (!Guid.TryParse(value, out var subscriptionServiceId))
+            {
+                throw new InvalidEntityIdException("SubscriptionServiceId is not a valid Guid");
+            }
+
+            return Create(subscriptionServiceId);
+        }
+
+        /// <summary>
         /// Create an empty subscription service id.
         /// </summary>
         public static SubscriptionServiceId Empty => new(Guid.Empty);
