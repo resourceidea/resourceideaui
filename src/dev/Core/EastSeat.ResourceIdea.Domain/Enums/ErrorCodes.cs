@@ -1,4 +1,4 @@
-namespace EastSeat.ResourceIdea.Application.Constants;
+namespace EastSeat.ResourceIdea.Domain.Enums;
 
 public enum ErrorCodes
 {
