@@ -25,7 +25,7 @@ public sealed class StartEngagementCommandHandler (
         StartEngagementCommandValidator startEngagementValidator = new();
         var validationResult = startEngagementValidator.Validate(request);
         
-        if (validationResult.IsValid || validationResult.Errors.Count > 0)
+        if (!validationResult.IsValid || validationResult.Errors.Count > 0)
         {
             return new ResourceIdeaResponse<EngagementModel>
             {
@@ -43,7 +43,7 @@ public sealed class StartEngagementCommandHandler (
             EngagementStatus = EngagementStatus.InProgress
         };
 
-        Engagement startedEngagement = await _engagementRepository.StartAsync(engagement, cancellationToken);
+        var startedEngagement = await _engagementRepository.StartAsync(engagement, cancellationToken);
 
         return new ResourceIdeaResponse<EngagementModel>
         {

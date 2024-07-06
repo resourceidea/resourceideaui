@@ -61,4 +61,14 @@ public enum ErrorCodes
     /// Validation of the start engagement command failed.
     /// </summary>
     StartEngagementCommandValidationFailure,
+
+    /// <summary>
+    /// Validation of the update engagement command failed.
+    /// </summary>
+    UpdateEngagementCommandValidationFailure,
+
+    /// <summary>
+    /// Validation of the cancel subscription command failed.
+    /// </summary>
+    SubscriptionCancelationFailure,
 }

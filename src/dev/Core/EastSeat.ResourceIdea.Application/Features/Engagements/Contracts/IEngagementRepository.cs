@@ -1,4 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
+using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
@@ -14,7 +15,7 @@ public interface IEngagementRepository : IAsyncRepository<Engagement>
     /// <param name="engagement">The engagement to cancel.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The cancelled engagement.</returns>
-    Task<Engagement> CancelAsync(Engagement engagement, CancellationToken cancellationToken);
+    Task<Optional<Engagement>> CancelAsync(Engagement engagement, CancellationToken cancellationToken);
 
     /// <summary>
     /// Completes an engagement asynchronously.
@@ -22,7 +23,7 @@ public interface IEngagementRepository : IAsyncRepository<Engagement>
     /// <param name="engagement">The engagement to complete.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The completed engagement.</returns>
-    Task<Engagement> CompleteAsync(Engagement engagement, CancellationToken cancellationToken);
+    Task<Optional<Engagement>> CompleteAsync(Engagement engagement, CancellationToken cancellationToken);
 
     /// <summary>
     /// Starts an engagement.
@@ -30,5 +31,5 @@ public interface IEngagementRepository : IAsyncRepository<Engagement>
     /// <param name="engagement">The engagement to start.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The started engagement.</returns>
-    Task<Engagement> StartAsync(Engagement engagement, CancellationToken cancellationToken);
+    Task<Optional<Engagement>> StartAsync(Engagement engagement, CancellationToken cancellationToken);
 }

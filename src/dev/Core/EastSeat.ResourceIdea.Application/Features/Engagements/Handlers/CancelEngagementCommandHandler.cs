@@ -28,7 +28,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers
                 Id = request.EngagementId
             };
 
-            Engagement canceledEngagement = await _engagementRepository.CancelAsync(engagement, cancellationToken);
+            var canceledEngagement = await _engagementRepository.CancelAsync(engagement, cancellationToken);
 
             return new ResourceIdeaResponse<EngagementModel>
             {

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AutoMapper;
+﻿using AutoMapper;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Commands;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Validators;
@@ -42,7 +41,7 @@ public sealed class CompleteEngagementCommandHandler (
             Id = request.EngagementId
         };
 
-        Engagement completedEngagement = await _engagementRepository.CompleteAsync(engagement, cancellationToken);
+        var completedEngagement = await _engagementRepository.CompleteAsync(engagement, cancellationToken);
 
         return new ResourceIdeaResponse<EngagementModel>
         {
