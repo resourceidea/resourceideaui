@@ -21,7 +21,7 @@ public interface IAsyncRepository<T> where T : BaseEntity
     Task<PagedListResponse<T>> GetPagedListAsync(
         int page,
         int size,
-        BaseSpecification<T> specification,
+        Optional<BaseSpecification<T>> specification,
         CancellationToken cancellationToken);
 
     /// <summary>
