@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{815958C9-111
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EastSeat.ResourceIdea.Web", "src\dev\Web\EastSeat.ResourceIdea.Web\EastSeat.ResourceIdea.Web.csproj", "{00697456-7B25-4D49-A4F3-DEA27CBA7A11}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EastSeat.ResourceIdea.Application.UnitTests", "src\tests\EastSeat.ResourceIdea.Application.UnitTests\EastSeat.ResourceIdea.Application.UnitTests.csproj", "{716A3852-2EAE-4E63-80B4-F6AC2EF32B47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{00697456-7B25-4D49-A4F3-DEA27CBA7A11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00697456-7B25-4D49-A4F3-DEA27CBA7A11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00697456-7B25-4D49-A4F3-DEA27CBA7A11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{716A3852-2EAE-4E63-80B4-F6AC2EF32B47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{716A3852-2EAE-4E63-80B4-F6AC2EF32B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{716A3852-2EAE-4E63-80B4-F6AC2EF32B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{716A3852-2EAE-4E63-80B4-F6AC2EF32B47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +72,7 @@ Global
 		{AB91B3C8-8823-4E69-ADBA-833C1008BBA6} = {09639DF0-7E5B-4975-9160-D5C9B67E090E}
 		{815958C9-111B-4D2E-8BC1-A39EF3FD4A81} = {BDDA5256-3631-41B4-83D8-400082D76CA4}
 		{00697456-7B25-4D49-A4F3-DEA27CBA7A11} = {815958C9-111B-4D2E-8BC1-A39EF3FD4A81}
+		{716A3852-2EAE-4E63-80B4-F6AC2EF32B47} = {31A313E8-C7C5-4526-A62B-93E49A8E117F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD3ACFC7-CE2F-48BA-8F56-41B20B33F258}

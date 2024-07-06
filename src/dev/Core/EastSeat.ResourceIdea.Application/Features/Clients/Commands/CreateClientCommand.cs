@@ -15,7 +15,7 @@ public class CreateClientCommand : IRequest<ResourceIdeaResponse<ClientModel>>
     public required string Name { get; set; }
 
     /// <summary>Client address</summary>
-    public Address Address { get; set; }
+    public Address Address { get; set; } = Address.Empty;
 
     /// <summary>Client's owning tenant</summary>
     public TenantId TenantId { get; set; }

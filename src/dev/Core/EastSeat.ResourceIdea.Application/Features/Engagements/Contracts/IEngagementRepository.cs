@@ -8,4 +8,10 @@ namespace EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
 /// </summary>
 public interface IEngagementRepository : IAsyncRepository<Engagement>
 {
+    /// <summary>
+    /// Cancels an engagement asynchronously.
+    /// </summary>
+    /// <param name="engagement">The engagement to cancel.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<Engagement> CancelAsync(Engagement engagement, CancellationToken cancellationToken);
 }

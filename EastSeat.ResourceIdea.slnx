@@ -1,10 +1,20 @@
 <Solution>
-  <Folder Name="/src/dev/Core/" />
-  <Folder Name="/src/dev/" />
   <Folder Name="/src/" />
-</Solution>eat.ResourceIdea.Application.csproj" />
+  <Folder Name="/src/dev/" />
+  <Folder Name="/src/dev/Core/">
+    <Project Path="src\dev\Core\EastSeat.ResourceIdea.Application\EastSeat.ResourceIdea.Application.csproj" />
     <Project Path="src\dev\Core\EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj" />
   </Folder>
-  <Folder Name="/src/dev/" />
-  <Folder Name="/src/" />
+  <Folder Name="/src/dev/Infrastructure/">
+    <Project Path="src\dev\Infrastructure\EastSeat.ResourceIdea.DataStore\EastSeat.ResourceIdea.DataStore.csproj" />
+  </Folder>
+  <Folder Name="/src/dev/Web/">
+    <Project Path="src\dev\Web\EastSeat.ResourceIdea.Web\EastSeat.ResourceIdea.Web.csproj" />
+  </Folder>
+  <Folder Name="/src/tests/">
+    <Project Path="src\tests\EastSeat.ResourceIdea.Domain.UnitTests\EastSeat.ResourceIdea.Domain.UnitTests.csproj" />
+  </Folder>
+  <Properties Name="Visual Studio">
+    <Property Name="OpenWith" Value="17" />
+  </Properties>
 </Solution>
