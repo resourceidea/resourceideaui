@@ -26,5 +26,5 @@ public sealed class GetEngagementsByClientQuery (
     /// <summary>
     /// The client identifier to retrieve engagements for.
     /// </summary>
-    public ClientId ClientId { get; set; }
+    public ClientId ClientId { get; init; }
 }

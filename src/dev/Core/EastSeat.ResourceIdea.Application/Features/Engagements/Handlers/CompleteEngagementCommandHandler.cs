@@ -25,7 +25,7 @@ public sealed class CompleteEngagementCommandHandler (
         CompleteEngagementCommandValidator completeEngagementValidator = new();
         var validationResult = completeEngagementValidator.Validate(request);
 
-        if (validationResult.IsValid || validationResult.Errors.Count > 0)
+        if (!validationResult.IsValid || validationResult.Errors.Count > 0)
         {
             return new ResourceIdeaResponse<EngagementModel>
             {
