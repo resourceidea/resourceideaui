@@ -23,4 +23,12 @@ public interface IEngagementRepository : IAsyncRepository<Engagement>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The completed engagement.</returns>
     Task<Engagement> CompleteAsync(Engagement engagement, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Starts an engagement.
+    /// </summary>
+    /// <param name="engagement">The engagement to start.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The started engagement.</returns>
+    Task<Engagement> StartAsync(Engagement engagement, CancellationToken cancellationToken);
 }

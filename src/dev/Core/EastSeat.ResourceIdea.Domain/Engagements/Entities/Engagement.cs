@@ -16,6 +16,11 @@ public class Engagement : BaseEntity
     public EngagementId Id { get; set; }
 
     /// <summary>
+    /// Description of the engagement.
+    /// </summary>
+    public string? Description { get; set; }
+
+    /// <summary>
     /// Id of the client that the engagement is for.
     /// </summary>
     public ClientId ClientId { get; set; }
