@@ -3,7 +3,6 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
-    using EastSeat.ResourceIdea.Application.Constants;
     using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
     using EastSeat.ResourceIdea.Application.Features.Clients.Validators;
     using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
@@ -11,6 +10,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers
     using EastSeat.ResourceIdea.Domain.Clients.Entities;
     using EastSeat.ResourceIdea.Domain.Clients.Models;
     using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
+    using EastSeat.ResourceIdea.Domain.Enums;
     using MediatR;
 
     /// <summary>

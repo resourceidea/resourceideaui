@@ -1,5 +1,4 @@
 using AutoMapper;
-using EastSeat.ResourceIdea.Application.Constants;
 using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
 using EastSeat.ResourceIdea.Application.Features.Clients.Validators;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
@@ -7,6 +6,7 @@ using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Enums;
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers;

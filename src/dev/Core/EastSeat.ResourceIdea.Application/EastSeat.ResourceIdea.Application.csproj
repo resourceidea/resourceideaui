@@ -10,6 +10,10 @@
     <PackageReference Include="MediatR" Version="12.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Engagements\Specifications\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

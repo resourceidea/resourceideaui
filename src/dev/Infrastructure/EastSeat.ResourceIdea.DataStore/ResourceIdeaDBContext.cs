@@ -29,5 +29,6 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
         builder.ApplyConfiguration(new SubscriptionServiceEntityTypeConfiguration());
         builder.ApplyConfiguration(new SubscriptionEntityTypeConfiguration());
         builder.ApplyConfiguration(new ClientEntityTypeConfiguration());
+        builder.ApplyConfiguration(new EngagementEntityTypeConfiguration());
     }
 }

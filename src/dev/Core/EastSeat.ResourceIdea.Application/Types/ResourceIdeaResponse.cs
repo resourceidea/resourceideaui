@@ -1,4 +1,4 @@
-using EastSeat.ResourceIdea.Application.Constants;
+using EastSeat.ResourceIdea.Domain.Enums;
 
 namespace EastSeat.ResourceIdea.Application.Types;
 

@@ -7,7 +7,7 @@ namespace EastSeat.ResourceIdea.Domain.Clients.Models;
 /// <summary>
 /// Client model.
 /// </summary>
-public record ClientModel : BaseModel<ClientModel>
+public record ClientModel
 {
     /// <summary>
     /// Client Id.
@@ -27,13 +27,5 @@ public record ClientModel : BaseModel<ClientModel>
     /// <summary>
     /// Client address.
     /// </summary>
-    public Address Address { get; set; }
-
-    public override ClientModel DefaultInstance => new()
-    {
-        Id = ClientId.Empty,
-        TenantId = TenantId.Empty,
-        Name = string.Empty,
-        Address = Address.Empty
-    };
+    public Address Address { get; set; } = Address.Empty;
 }
