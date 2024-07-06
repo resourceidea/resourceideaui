@@ -4,6 +4,7 @@ using EastSeat.ResourceIdea.DataStore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EastSeat.ResourceIdea.DataStore.Migrations
 {
     [DbContext(typeof(ResourceIdeaDBContext))]
-    partial class ResourceIdeaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240706172715_EngagementsTableChanges")]
+    partial class EngagementsTableChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,64 +151,6 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clients", (string)null);
-                });
-
-            modelBuilder.Entity("EastSeat.ResourceIdea.Domain.Engagements.Entities.Engagement", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("CommencementDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("CompletionDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTimeOffset?>("Deleted")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("DeletedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("EngagementStatus")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Engagements", (string)null);
                 });
 
             modelBuilder.Entity("EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities.SubscriptionService", b =>
