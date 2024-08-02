@@ -31,7 +31,7 @@ public sealed class CreateSubscriptionServiceCommandHandler(
             {
                 Success = false,
                 Message = "Create subscription service command validation failed",
-                ErrorCode = ErrorCodes.CreateSubscriptionServiceCommandValidationFailure.ToString(),
+                ErrorCode = ErrorCode.CreateSubscriptionServiceCommandValidationFailure.ToString(),
                 Content = Optional<SubscriptionServiceModel>.None
             };
         }

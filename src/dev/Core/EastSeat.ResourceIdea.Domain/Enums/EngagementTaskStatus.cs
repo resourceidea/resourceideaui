@@ -1,9 +1,9 @@
 ﻿namespace EastSeat.ResourceIdea.Domain.Enums;
 
 /// <summary>
-/// Represents the status of a task.
+/// Represents the status of a task on an engagement.
 /// </summary>
-public enum TaskStatus
+public enum EngagementTaskStatus
 {
     /// <summary>
     /// The task has not started yet.

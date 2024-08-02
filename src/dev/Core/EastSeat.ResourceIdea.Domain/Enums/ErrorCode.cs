@@ -1,7 +1,13 @@
 namespace EastSeat.ResourceIdea.Domain.Enums;
 
-public enum ErrorCodes
+public enum ErrorCode
 {
+
+    /// <summary>
+    /// Represents no error.
+    /// </summary>
+    None,
+    
     /// <summary>
     /// Validation of the create tenant command failed.
     /// </summary>
@@ -71,4 +77,14 @@ public enum ErrorCodes
     /// Validation of the cancel subscription command failed.
     /// </summary>
     SubscriptionCancelationFailure,
+
+    /// <summary>
+    /// Failure to get the expected repository type by the unit of work.
+    /// </summary>
+    GetRepositoryFailure,
+
+    /// <summary>
+    /// Empty entity returned from the repository.
+    /// </summary>
+    EmptyEntity,
 }

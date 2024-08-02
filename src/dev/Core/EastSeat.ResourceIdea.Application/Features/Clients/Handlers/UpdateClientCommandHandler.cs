@@ -33,7 +33,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers
                 {
                     Success = false,
                     Message = "Update client command validation failed",
-                    ErrorCode = ErrorCodes.UpdateClientCommandValidationFailure.ToString(),
+                    ErrorCode = ErrorCode.UpdateClientCommandValidationFailure.ToString(),
                     Content = Optional<ClientModel>.None
                 };
             }

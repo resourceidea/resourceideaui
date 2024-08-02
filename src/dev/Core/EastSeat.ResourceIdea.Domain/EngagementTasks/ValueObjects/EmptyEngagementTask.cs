@@ -18,7 +18,7 @@ public sealed record EmptyEngagementTask
         Description = string.Empty,
         Title = string.Empty,
         Status = EngagementTaskStatus.NotStarted,
-        Assigned = false        
+        IsAssigned = false
     };
 
     private EmptyEngagementTask() { }

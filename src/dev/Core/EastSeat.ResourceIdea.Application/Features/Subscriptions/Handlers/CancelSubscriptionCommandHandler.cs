@@ -37,7 +37,7 @@ public sealed class CancelSubscriptionCommandHandler(
             {
                 Success = false,
                 Message = "Subscription to cancel was not found.",
-                ErrorCode = ErrorCodes.ItemNotFound.ToString()
+                ErrorCode = ErrorCode.ItemNotFound.ToString()
             };
         }
 
@@ -55,7 +55,7 @@ public sealed class CancelSubscriptionCommandHandler(
             {
                 Success = false,
                 Message = "Subscription cancelation failed.",
-                ErrorCode = ErrorCodes.SubscriptionCancelationFailure.ToString()
+                ErrorCode = ErrorCode.SubscriptionCancelationFailure.ToString()
             };
         }
 

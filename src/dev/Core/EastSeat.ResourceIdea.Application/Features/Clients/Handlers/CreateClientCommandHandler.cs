@@ -31,7 +31,7 @@ public sealed class CreateClientCommandHandler(
             {
                 Success = false,
                 Message = "Create client command validation failed",
-                ErrorCode = ErrorCodes.CreateClientCommandValidationFailure.ToString(),
+                ErrorCode = ErrorCode.CreateClientCommandValidationFailure.ToString(),
                 Content = Optional<ClientModel>.None
             };
         }

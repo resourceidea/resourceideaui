@@ -31,7 +31,7 @@ public sealed class UpdateTenantCommandHandler(
             {
                 Success = false,
                 Message = "Update tenant command validation failed",
-                ErrorCode = ErrorCodes.UpdateTenantCommandValidationFailure.ToString(),
+                ErrorCode = ErrorCode.UpdateTenantCommandValidationFailure.ToString(),
                 Content = Optional<TenantModel>.None
             };
         }

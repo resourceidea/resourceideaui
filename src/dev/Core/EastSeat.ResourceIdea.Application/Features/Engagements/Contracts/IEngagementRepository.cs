@@ -1,6 +1,7 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Engagements.Entities;
+using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
 
@@ -20,10 +21,10 @@ public interface IEngagementRepository : IAsyncRepository<Engagement>
     /// <summary>
     /// Completes an engagement asynchronously.
     /// </summary>
-    /// <param name="engagement">The engagement to complete.</param>
+    /// <param name="engagementId">The ID of the engagement to complete.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The completed engagement.</returns>
-    Task<Optional<Engagement>> CompleteAsync(Engagement engagement, CancellationToken cancellationToken);
+    Task<Optional<Engagement>> CompleteAsync(EngagementId engagementId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Starts an engagement.

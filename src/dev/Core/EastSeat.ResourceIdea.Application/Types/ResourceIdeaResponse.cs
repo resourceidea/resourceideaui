@@ -62,7 +62,7 @@ public sealed class ResourceIdeaResponse<T> where T : class
         {
             Success = false,
             Message = "Resource not found.",
-            ErrorCode = ErrorCodes.ResourceNotFound.ToString()
+            ErrorCode = Domain.Enums.ErrorCode.ResourceNotFound.ToString()
         };
     }
 }

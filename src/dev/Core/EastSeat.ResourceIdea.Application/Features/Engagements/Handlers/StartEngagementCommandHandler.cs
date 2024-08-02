@@ -31,7 +31,7 @@ public sealed class StartEngagementCommandHandler (
             {
                 Success = false,
                 Message = "Invalid start engagement command. Please check the command and try again.",
-                ErrorCode = ErrorCodes.StartEngagementCommandValidationFailure.ToString(),
+                ErrorCode = ErrorCode.StartEngagementCommandValidationFailure.ToString(),
                 Content = Optional<EngagementModel>.None
             };
         }

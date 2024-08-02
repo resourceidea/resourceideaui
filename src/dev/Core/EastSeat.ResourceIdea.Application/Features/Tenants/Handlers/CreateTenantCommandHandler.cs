@@ -34,7 +34,7 @@ public sealed class CreateTenantCommandHandler (
             {
                 Success = false,
                 Message = "Create tenant command validation failed",
-                ErrorCode = ErrorCodes.CreateTenantCommandValidationFailure.ToString(),
+                ErrorCode = ErrorCode.CreateTenantCommandValidationFailure.ToString(),
                 Content = Optional<TenantModel>.None
             };
         }

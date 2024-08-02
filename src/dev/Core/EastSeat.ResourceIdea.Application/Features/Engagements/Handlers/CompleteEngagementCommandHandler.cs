@@ -31,17 +31,12 @@ public sealed class CompleteEngagementCommandHandler (
             {
                 Success = false,
                 Message = "Invalid complete engagement command. Please check the command and try again.",
-                ErrorCode = ErrorCodes.CompleteEngagementCommandValidationFailure.ToString(),
+                ErrorCode = ErrorCode.CompleteEngagementCommandValidationFailure.ToString(),
                 Content = Optional<EngagementModel>.None
             };
         }
 
-        Engagement engagement = new()
-        {
-            Id = request.EngagementId
-        };
-
-        var completedEngagement = await _engagementRepository.CompleteAsync(engagement, cancellationToken);
+        var completedEngagement = await _engagementRepository.CompleteAsync(request.EngagementId, cancellationToken);
 
         return new ResourceIdeaResponse<EngagementModel>
         {

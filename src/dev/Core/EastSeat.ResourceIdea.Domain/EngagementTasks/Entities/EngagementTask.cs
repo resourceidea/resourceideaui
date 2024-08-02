@@ -1,4 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Domain.Common.Entities;
+using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
@@ -21,7 +22,7 @@ public class EngagementTask : BaseEntity
     public string? Description { get; set; }
 
     /// <summary>
-    /// Gets or sets the title of the engagement task.
+    /// /// Gets or sets the title of the engagement task.
     /// </summary>
     public string? Title { get; set; }
 
@@ -43,5 +44,15 @@ public class EngagementTask : BaseEntity
     /// <summary>
     /// Gets or sets a value indicating whether the task is assigned.
     /// </summary>
-    public bool Assigned { get; set; }
+    public bool IsAssigned { get; set; }
+
+    /// <summary>
+    /// Engagement associated with the task.
+    /// </summary>
+    public Engagement? Engagement { get; set; }
+
+    /// <summary>
+    /// Assignments of the engagement task.
+    /// </summary>
+    public IReadOnlyCollection<EngagementTaskAssignment>? EngagementTaskAssignments { get; set; }
 }

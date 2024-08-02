@@ -29,7 +29,7 @@ public record EngagementTaskModel
     /// <summary>
     /// Gets or sets the title of the engagement task.
     /// </summary>
-    public string? Title { get; init; }
+    public required string Title { get; init; }
 
     /// <summary>
     /// Gets or sets the status of the engagement task.

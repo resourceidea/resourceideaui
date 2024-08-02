@@ -33,7 +33,7 @@ public sealed class UpdateSubscriptionServiceCommandHandler(
             {
                 Success = false,
                 Message = "Subscription service update command validation failed",
-                ErrorCode = ErrorCodes.UpdateSubscriptionServiceCommandValidationFailure.ToString(),
+                ErrorCode = ErrorCode.UpdateSubscriptionServiceCommandValidationFailure.ToString(),
                 Content = Optional<SubscriptionServiceModel>.None
             };
         }

@@ -1,6 +1,7 @@
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
+using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.Enums;
 
 namespace EastSeat.ResourceIdea.Domain.Engagements.Entities;
@@ -39,4 +40,9 @@ public class Engagement : BaseEntity
     /// Status of the engagement.
     /// </summary>
     public EngagementStatus EngagementStatus { get; set; }
+
+    /// <summary>
+    /// Engagement tasks associated with the engagement.
+    /// </summary>
+    public IReadOnlyCollection<EngagementTask>? EngagementTasks { get; set; }
 }

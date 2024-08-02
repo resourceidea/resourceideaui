@@ -40,7 +40,7 @@ public sealed class SuspendSubscriptionCommandHandler(
             {
                 Success = false,
                 Message = "Subscription to suspend was not found.",
-                ErrorCode = ErrorCodes.ItemNotFound.ToString()
+                ErrorCode = ErrorCode.ItemNotFound.ToString()
             };
         }
 
@@ -58,7 +58,7 @@ public sealed class SuspendSubscriptionCommandHandler(
             {
                 Success = false,
                 Message = "Subscription suspension failed.",
-                ErrorCode = ErrorCodes.SubscriptionSuspensionFailure.ToString()
+                ErrorCode = ErrorCode.SubscriptionSuspensionFailure.ToString()
             };
         }
 

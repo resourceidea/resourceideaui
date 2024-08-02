@@ -31,7 +31,7 @@ public sealed class UpdateEngagementCommandHandler (
             {
                 Success = false,
                 Message = "Invalid update engagement command. Please check the command and try again.",
-                ErrorCode = ErrorCodes.UpdateEngagementCommandValidationFailure.ToString(),
+                ErrorCode = ErrorCode.UpdateEngagementCommandValidationFailure.ToString(),
                 Content = Optional<EngagementModel>.None
             };
         }
