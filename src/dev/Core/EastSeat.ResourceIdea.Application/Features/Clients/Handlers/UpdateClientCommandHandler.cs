@@ -3,14 +3,13 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
+    using EastSeat.ResourceIdea.Application.Enums;
     using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
     using EastSeat.ResourceIdea.Application.Features.Clients.Validators;
     using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
     using EastSeat.ResourceIdea.Application.Types;
     using EastSeat.ResourceIdea.Domain.Clients.Entities;
     using EastSeat.ResourceIdea.Domain.Clients.Models;
-    using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
-    using EastSeat.ResourceIdea.Domain.Enums;
     using MediatR;
 
     /// <summary>
@@ -33,7 +32,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers
                 {
                     Success = false,
                     Message = "Update client command validation failed",
-                    ErrorCode = ErrorCodes.UpdateClientCommandValidationFailure.ToString(),
+                    ErrorCode = ErrorCode.UpdateClientCommandValidationFailure.ToString(),
                     Content = Optional<ClientModel>.None
                 };
             }

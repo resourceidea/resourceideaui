@@ -49,7 +49,7 @@ public readonly record struct ApplicationUserId
     }
 
     /// <summary>Application User Id is not empty.</summary>
-    public bool IsNotEmpty() => this != ApplicationUserId.Empty;
+    public bool IsNotEmpty() => this != Empty;
 
     /// <summary>
     /// Empty application user id.

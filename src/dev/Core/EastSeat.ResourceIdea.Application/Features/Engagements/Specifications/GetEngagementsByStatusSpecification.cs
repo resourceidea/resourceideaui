@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
-using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.Enums;
 

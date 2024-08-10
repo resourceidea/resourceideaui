@@ -1,4 +1,3 @@
-using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Exceptions;
 
 namespace EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;

@@ -9,8 +9,7 @@ using EastSeat.ResourceIdea.Domain.Tenants.Models;
 
 using MediatR;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
-
-using EastSeat.ResourceIdea.Domain.Enums;
+using EastSeat.ResourceIdea.Application.Enums;
 namespace EastSeat.ResourceIdea.Application.Features.Tenants.Handlers;
 
 public sealed class UpdateTenantCommandHandler(
@@ -31,7 +30,7 @@ public sealed class UpdateTenantCommandHandler(
             {
                 Success = false,
                 Message = "Update tenant command validation failed",
-                ErrorCode = ErrorCodes.UpdateTenantCommandValidationFailure.ToString(),
+                ErrorCode = ErrorCode.UpdateTenantCommandValidationFailure.ToString(),
                 Content = Optional<TenantModel>.None
             };
         }

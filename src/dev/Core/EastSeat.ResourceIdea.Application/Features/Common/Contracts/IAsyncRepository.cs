@@ -52,5 +52,5 @@ public interface IAsyncRepository<T> where T : BaseEntity
     /// </summary>
     /// <param name="entity">Entity to delete.</param>
     /// <returns>Entity.</returns>
-    Task<Optional<T>> DeleteAsync(T entity);
+    Task DeleteAsync(T entity);
 }

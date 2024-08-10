@@ -10,7 +10,7 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 using MediatR;
 
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Enums;
+using EastSeat.ResourceIdea.Application.Enums;
 
 namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManagement.Handlers;
 
@@ -33,7 +33,7 @@ public sealed class UpdateSubscriptionServiceCommandHandler(
             {
                 Success = false,
                 Message = "Subscription service update command validation failed",
-                ErrorCode = ErrorCodes.UpdateSubscriptionServiceCommandValidationFailure.ToString(),
+                ErrorCode = ErrorCode.UpdateSubscriptionServiceCommandValidationFailure.ToString(),
                 Content = Optional<SubscriptionServiceModel>.None
             };
         }

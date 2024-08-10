@@ -1,5 +1,3 @@
-using EastSeat.ResourceIdea.Domain.Enums;
-
 namespace EastSeat.ResourceIdea.Application.Types;
 
 public sealed class ResourceIdeaResponse<T> where T : class
@@ -56,13 +54,10 @@ public sealed class ResourceIdeaResponse<T> where T : class
         ErrorCode = errorCode;
     }
 
-    public static ResourceIdeaResponse<T> NotFound()
+    public static ResourceIdeaResponse<T> NotFound() => new()
     {
-        return new ResourceIdeaResponse<T>
-        {
-            Success = false,
-            Message = "Resource not found.",
-            ErrorCode = ErrorCodes.ResourceNotFound.ToString()
-        };
-    }
+        Success = false,
+        Message = "Resource not found.",
+        ErrorCode = Enums.ErrorCode.ResourceNotFound.ToString()
+    };
 }

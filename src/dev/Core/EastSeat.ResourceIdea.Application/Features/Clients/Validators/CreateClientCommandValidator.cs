@@ -4,7 +4,6 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Validators
 
     using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
     using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
-    using System;
 
     /// <summary>
     /// Validates the command to create a client.

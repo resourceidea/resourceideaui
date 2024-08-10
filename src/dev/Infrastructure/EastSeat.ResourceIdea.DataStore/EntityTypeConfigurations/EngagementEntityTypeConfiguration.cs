@@ -29,5 +29,6 @@ public class EngagementEntityTypeConfiguration : BaseEntityTypeConfiguration<Eng
                     value => ClientId.Create(value));
 
         builder.Property(engagement => engagement.Description).IsRequired().HasMaxLength(200);
+        builder.Property(engagement => engagement.EngagementStatus).IsRequired().HasConversion<string>().HasMaxLength(50);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Commands;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Validators;
@@ -31,7 +32,7 @@ public sealed class StartEngagementCommandHandler (
             {
                 Success = false,
                 Message = "Invalid start engagement command. Please check the command and try again.",
-                ErrorCode = ErrorCodes.StartEngagementCommandValidationFailure.ToString(),
+                ErrorCode = ErrorCode.StartEngagementCommandValidationFailure.ToString(),
                 Content = Optional<EngagementModel>.None
             };
         }

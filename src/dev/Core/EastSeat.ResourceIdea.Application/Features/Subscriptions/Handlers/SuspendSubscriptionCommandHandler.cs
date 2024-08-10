@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-
+using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Commands;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Specifications;
@@ -10,7 +10,6 @@ using EastSeat.ResourceIdea.Domain.Subscriptions.Models;
 using EastSeat.ResourceIdea.Domain.Subscriptions.ValueObjects;
 
 using MediatR;
-using EastSeat.ResourceIdea.Domain.Enums;
 
 namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Handlers;
 
@@ -40,7 +39,7 @@ public sealed class SuspendSubscriptionCommandHandler(
             {
                 Success = false,
                 Message = "Subscription to suspend was not found.",
-                ErrorCode = ErrorCodes.ItemNotFound.ToString()
+                ErrorCode = ErrorCode.ItemNotFound.ToString()
             };
         }
 
@@ -58,7 +57,7 @@ public sealed class SuspendSubscriptionCommandHandler(
             {
                 Success = false,
                 Message = "Subscription suspension failed.",
-                ErrorCode = ErrorCodes.SubscriptionSuspensionFailure.ToString()
+                ErrorCode = ErrorCode.SubscriptionSuspensionFailure.ToString()
             };
         }
 
