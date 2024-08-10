@@ -1,4 +1,3 @@
-using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;

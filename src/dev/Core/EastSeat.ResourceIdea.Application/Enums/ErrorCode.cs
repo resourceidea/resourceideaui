@@ -1,4 +1,4 @@
-namespace EastSeat.ResourceIdea.Domain.Enums;
+namespace EastSeat.ResourceIdea.Application.Enums;
 
 public enum ErrorCode
 {

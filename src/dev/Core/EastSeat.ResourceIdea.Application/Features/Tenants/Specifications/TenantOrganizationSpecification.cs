@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
-using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
 
 namespace EastSeat.ResourceIdea.Application.Features.Tenants.Specifications;

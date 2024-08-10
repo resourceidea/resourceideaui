@@ -1,5 +1,4 @@
-﻿using EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
-using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
+﻿using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
 using Microsoft.EntityFrameworkCore;

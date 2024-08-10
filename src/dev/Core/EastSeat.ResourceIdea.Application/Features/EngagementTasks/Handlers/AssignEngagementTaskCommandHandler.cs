@@ -1,4 +1,5 @@
 using AutoMapper;
+using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
@@ -6,7 +7,6 @@ using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Models;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 using MediatR;
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Commands;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Validators;

@@ -10,7 +10,7 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 using MediatR;
 
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Enums;
+using EastSeat.ResourceIdea.Application.Enums;
 
 namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManagement.Handlers;
 

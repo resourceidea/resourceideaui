@@ -1,6 +1,3 @@
-
-using EastSeat.ResourceIdea.Application.Types;
-using EastSeat.ResourceIdea.Domain.EngagementTasks.Models;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
 using MediatR;
 

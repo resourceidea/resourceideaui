@@ -1,12 +1,6 @@
 ﻿using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 
