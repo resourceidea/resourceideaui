@@ -9,7 +9,7 @@ namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
 /// <summary>
 /// Represents a command to remove an engagement task.
 /// </summary>
-public sealed class RemoveEngagementTaskCommand : IRequest<ResourceIdeaResponse<EngagementTaskModel>>
+public sealed class RemoveEngagementTaskCommand : IRequest
 {
     /// <summary>
     /// Gets or sets the ID of the engagement task to remove.

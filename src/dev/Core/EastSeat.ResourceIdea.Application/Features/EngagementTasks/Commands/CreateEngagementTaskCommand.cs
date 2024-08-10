@@ -24,4 +24,9 @@ public sealed class CreateEngagementTaskCommand : IRequest<ResourceIdeaResponse<
     /// Gets or sets the ID of the engagement associated with the task.
     /// </summary>
     public EngagementId EngagementId { get; set; }
+
+    /// <summary>
+    /// Date when the task is expected to be completed.
+    /// </summary>
+    public DateTimeOffset DueDate { get; set; }
 }
