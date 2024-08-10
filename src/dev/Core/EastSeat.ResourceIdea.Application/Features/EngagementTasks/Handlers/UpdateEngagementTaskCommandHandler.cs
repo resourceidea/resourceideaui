@@ -22,7 +22,6 @@ public sealed class UpdateEngagementTaskCommandHandler(IUnitOfWork unitOfWork, I
     {
         using (_unitOfWork)
         {
-            var specification = new GetEngagementTaskByIdSpecification(request.EngagementTaskId);
             var repository = _unitOfWork.GetRepository<EngagementTask>();
             if (repository is not IAsyncRepository<EngagementTask> engagementTaskRepository)
             {
