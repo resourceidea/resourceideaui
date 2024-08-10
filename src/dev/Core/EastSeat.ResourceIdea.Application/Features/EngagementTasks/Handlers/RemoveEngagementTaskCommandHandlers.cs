@@ -1,5 +1,6 @@
 using System;
 using AutoMapper;
+using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Specifications;
@@ -7,6 +8,7 @@ using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Models;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Enums;
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Handlers;
@@ -14,25 +16,41 @@ namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Handlers;
 /// <summary>
 /// Handles the command to remove an engagement task.
 /// </summary>
-public class RemoveEngagementTaskCommandHandlers(IEngagementTaskRepository repository)
+public class RemoveEngagementTaskCommandHandlers(IUnitOfWork unitOfWork)
     : IRequestHandler<RemoveEngagementTaskCommand>
 {
-    private readonly IEngagementTaskRepository _repository = repository;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task Handle(RemoveEngagementTaskCommand request, CancellationToken cancellationToken)
     {
-        var specification = new GetEngagementTaskByIdSpecification(request.EngagementTaskId);
-        var engagementTaskQueryResult = await _repository.GetByIdAsync(specification, cancellationToken);
-        EngagementTask engagementTask = engagementTaskQueryResult.Match(
-            some: engagementTask => engagementTask,
-            none: () => EmptyEngagementTask.Instance);
-        
-        if (engagementTask == EmptyEngagementTask.Instance)
+        using (_unitOfWork)
         {
-            // TODO: Log failure to find engagement task for removal.
-            return;
-        }
+            var specification = new GetEngagementTaskByIdSpecification(request.EngagementTaskId);
+            var repository = _unitOfWork.GetRepository<EngagementTask>();
+            if (repository is not IAsyncRepository<EngagementTask> engagementTaskRepository)
+            {
+                _unitOfWork.BeginTransaction();
 
-        await _repository.DeleteAsync(engagementTask);
+                var engagementTaskQueryResult = await repository.GetByIdAsync(specification, cancellationToken);
+                EngagementTask engagementTask = engagementTaskQueryResult.Match(
+                    some: engagementTask => engagementTask,
+                    none: () => EmptyEngagementTask.Instance);
+
+                if (engagementTask == EmptyEngagementTask.Instance)
+                {
+                    // TODO: Log failure to find engagement task for removal.
+                    _unitOfWork.Rollback();
+                    return;
+                }
+
+                engagementTask.Status = EngagementTaskStatus.Removed;
+                await repository.UpdateAsync(engagementTask, cancellationToken);
+
+                await repository.DeleteAsync(engagementTask);
+
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+                _unitOfWork.Commit();
+            }
+        }
     }
 }
