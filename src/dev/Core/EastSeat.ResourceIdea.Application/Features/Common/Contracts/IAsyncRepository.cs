@@ -1,7 +1,9 @@
+using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
+using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 
@@ -38,19 +40,19 @@ public interface IAsyncRepository<T> where T : BaseEntity
     /// <param name="entity">Entity to add.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Entity.</returns>
-    Task<T> AddAsync(T entity, CancellationToken cancellationToken);
+    Task<Either<ErrorCode, T>> AddAsync(T entity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Update entity.
     /// </summary>
     /// <param name="entity">Entity to update.</param>
     /// <returns>Entity.</returns>
-    Task<Optional<T>> UpdateAsync(T entity, CancellationToken cancellationToken);
+    Task<Either<ErrorCode, T>> UpdateAsync(T entity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete entity.
     /// </summary>
     /// <param name="entity">Entity to delete.</param>
     /// <returns>Entity.</returns>
-    Task DeleteAsync(T entity);
+    Task<Either<ErrorCode, Unit>> DeleteAsync(T entity);
 }

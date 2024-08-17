@@ -1,7 +1,9 @@
+using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
+using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
 
@@ -17,7 +19,7 @@ public interface IEngagementTaskAssignmentRepository
     /// <param name="applicationUserId">The ID of the user to assign the task to.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>An optional engagement task assignment.</returns>
-    Task<Optional<EngagementTaskAssignment>> AssignAsync(
+    Task<Either<ErrorCode, EngagementTaskAssignment>> AssignAsync(
         EngagementTaskId engagementTaskId,
         ApplicationUserId applicationUserId,
         CancellationToken cancellationToken);
@@ -29,7 +31,7 @@ public interface IEngagementTaskAssignmentRepository
     /// <param name="applicationUserId">The ID of the user to unassign the task from.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>An optional engagement task assignment.</returns>
-    Task<Optional<EngagementTaskAssignment>> UnassignAsync(
+    Task<Either<ErrorCode, EngagementTaskAssignment>> UnassignAsync(
         EngagementTaskId engagementTaskId,
         ApplicationUserId applicationUserId,
         CancellationToken cancellationToken);
@@ -41,7 +43,7 @@ public interface IEngagementTaskAssignmentRepository
     /// <param name="applicationUsers">The IDs of the users to unassign the task from.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task UnassignAsync(
+    Task<Either<ErrorCode, Unit>> UnassignAsync(
         EngagementTaskId engagementTaskId,
         IReadOnlyCollection<ApplicationUserId> applicationUsers,
         CancellationToken cancellationToken);
@@ -53,7 +55,7 @@ public interface IEngagementTaskAssignmentRepository
     /// <param name="applicationUsers">The IDs of the users to assign the task to.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task AssignAsync(
+    Task<Either<ErrorCode, Unit>> AssignAsync(
         EngagementTaskId engagementTaskId,
         IReadOnlyCollection<ApplicationUserId> applicationUsers,
         CancellationToken cancellationToken);
