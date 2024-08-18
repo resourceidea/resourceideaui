@@ -7,7 +7,7 @@ public readonly struct Optional<T> //where T : BaseModel<T>
     {
         get
         {
-            if (HasValue is false)
+            if (HasValue)
             {
                 return _value;
             }
