@@ -27,15 +27,9 @@ public sealed class UpdateSubscriptionServiceCommandHandler(
     {
         UpdateSubscriptionServiceCommandValidator validator = new();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (validationResult.IsValid || validationResult.Errors.Count > 0)
+        if (validationResult.IsValid is false || validationResult.Errors.Count > 0)
         {
-            return new ResourceIdeaResponse<SubscriptionServiceModel>
-            {
-                Success = false,
-                Message = "Subscription service update command validation failed",
-                ErrorCode = ErrorCode.UpdateSubscriptionServiceCommandValidationFailure.ToString(),
-                Content = Optional<SubscriptionServiceModel>.None
-            };
+            return ResourceIdeaResponse<SubscriptionServiceModel>.Failure(ErrorCode.UpdateSubscriptionServiceCommandValidationFailure);
         }
 
         SubscriptionService subscriptionService = new()
@@ -43,19 +37,13 @@ public sealed class UpdateSubscriptionServiceCommandHandler(
             Id = request.Id,
             Name = request.Name
         };
-
-        Optional<SubscriptionService> subscriptionServiceUpdateResult = await _subscriptionServiceRepository.UpdateAsync(
-            subscriptionService,
-            cancellationToken);
-        SubscriptionService updatedSubscriptionService = subscriptionServiceUpdateResult.Match(
-            some: subscriptionService => subscriptionService,
-            none: () => EmptySubscriptionService.Instance);
-
-        return new ResourceIdeaResponse<SubscriptionServiceModel>
+        var subscriptionServiceUpdateResult = await _subscriptionServiceRepository.UpdateAsync(subscriptionService, cancellationToken);
+        if (subscriptionServiceUpdateResult.IsFailure)
         {
-            Success = true,
-            Message = "Subscription service updated successfully",
-            Content = Optional<SubscriptionServiceModel>.Some(_mapper.Map<SubscriptionServiceModel>(updatedSubscriptionService))
-        };
+            return ResourceIdeaResponse<SubscriptionServiceModel>.Failure(subscriptionServiceUpdateResult.Error);
+        }
+
+        return ResourceIdeaResponse<SubscriptionServiceModel>.Success(Optional<SubscriptionServiceModel>
+                    .Some(_mapper.Map<SubscriptionServiceModel>(subscriptionServiceUpdateResult.Content.Value)));
     }
 }

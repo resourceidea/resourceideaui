@@ -29,11 +29,11 @@ public sealed class AssignEngagementTaskCommandHandler(IUnitOfWork unitOfWork, I
             var result = await AssignTaskAsync(_unitOfWork, request.EngagementTaskId, request.ApplicationUserId, cancellationToken);
             
             var response = result.Match(
-                onFailure: HandleTaskAssignmentFailure,
-                onSuccess: HandleTaskAssignmentSuccess
+                onSuccess: HandleTaskAssignmentSuccess,
+                onFailure: HandleTaskAssignmentFailure
             );
             
-            if (!response.Success)
+            if (response.IsFailure)
             {
                 _unitOfWork.Rollback();
                 
@@ -48,28 +48,23 @@ public sealed class AssignEngagementTaskCommandHandler(IUnitOfWork unitOfWork, I
         }
     }
 
-    private static async Task<Either<ErrorCode, Optional<EngagementTaskAssignment>>> AssignTaskAsync(
+    private static async Task<ResourceIdeaResponse<EngagementTaskAssignment>> AssignTaskAsync(
         IUnitOfWork unitOfWork,
         EngagementTaskId engagementTaskId,
         ApplicationUserId applicationUserId,
         CancellationToken cancellationToken)
     {
-        var iAsyncRepository = unitOfWork.GetRepository<EngagementTaskAssignment>();
-        if (iAsyncRepository is IEngagementTaskAssignmentRepository engagementTaskAssignmentRepository)
+        var repository = unitOfWork.GetRepository<EngagementTaskAssignment>();
+        if (repository is not IEngagementTaskAssignmentRepository engagementTaskAssignmentRepository)
         {
-            return new SuccessResponse<ErrorCode, Optional<EngagementTaskAssignment>>(
-                await engagementTaskAssignmentRepository.AssignAsync(engagementTaskId, applicationUserId, cancellationToken)
-            );
+            return ResourceIdeaResponse<EngagementTaskAssignment>.Failure(ErrorCode.GetRepositoryFailure);
         }
 
-        return new FailureResponse<ErrorCode, Optional<EngagementTaskAssignment>>(ErrorCode.GetRepositoryFailure);
+        return await engagementTaskAssignmentRepository.AssignAsync(engagementTaskId, applicationUserId, cancellationToken);
     }
 
-    private static ResourceIdeaResponse<EngagementTaskModel> HandleTaskAssignmentFailure(ErrorCode errorCode) => new()
-    {
-        Success = false,
-        ErrorCode = errorCode.ToString()
-    };
+    private static ResourceIdeaResponse<EngagementTaskModel> HandleTaskAssignmentFailure(ErrorCode error) 
+        => ResourceIdeaResponse<EngagementTaskModel>.Failure(error);
 
     private ResourceIdeaResponse<EngagementTaskModel> HandleTaskAssignmentSuccess(Optional<EngagementTaskAssignment> engagementTaskAssignment)
     {
@@ -77,22 +72,15 @@ public sealed class AssignEngagementTaskCommandHandler(IUnitOfWork unitOfWork, I
         var preconditionsCheckResult = MeetsPreconditions(repository, engagementTaskAssignment);
         if (preconditionsCheckResult.Success is false)
         {
-            return new ResourceIdeaResponse<EngagementTaskModel>
-            {
-                Success = false,
-                ErrorCode = preconditionsCheckResult.ErrorCode.ToString()
-            };
+            return ResourceIdeaResponse<EngagementTaskModel>.Failure(preconditionsCheckResult.ErrorCode);
         }
         
         var updatedEngagementTask = preconditionsCheckResult.Repository.SetAssignmentStatusFlagAsync(
             engagementTaskAssignment.Value.EngagementTaskId,
             CancellationToken.None);
 
-        return new ResourceIdeaResponse<EngagementTaskModel>
-        {
-            Success = true,
-            Content = Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(updatedEngagementTask))
-        };
+        return ResourceIdeaResponse<EngagementTaskModel>
+                    .Success(Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(updatedEngagementTask)));
     }
 
     private static PreconditionsCheckResult MeetsPreconditions(

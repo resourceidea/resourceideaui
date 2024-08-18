@@ -25,16 +25,11 @@ public sealed class CreateClientCommandHandler(
     {
         CreateClientCommandValidator validator = new();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (validationResult.IsValid || validationResult.Errors.Count > 0)
+        if (validationResult.IsValid is false || validationResult.Errors.Count > 0)
         {
-            return new ResourceIdeaResponse<ClientModel>
-            {
-                Success = false,
-                Message = "Create client command validation failed",
-                ErrorCode = ErrorCode.CreateClientCommandValidationFailure.ToString(),
-                Content = Optional<ClientModel>.None
-            };
+            return ResourceIdeaResponse<ClientModel>.Failure(ErrorCode.CreateClientCommandValidationFailure);
         }
+
 
         Client client = new()
         {
@@ -43,13 +38,12 @@ public sealed class CreateClientCommandHandler(
             Address = request.Address,
             TenantId = request.TenantId.Value
         };
-        var addedClient = await _clientRepository.AddAsync(client, cancellationToken);
-
-        return new ResourceIdeaResponse<ClientModel>
+        var addClientResult = await _clientRepository.AddAsync(client, cancellationToken);
+        if (addClientResult.IsFailure)
         {
-            Success = true,
-            Message = "Client created successfully",
-            Content = Optional<ClientModel>.Some(_mapper.Map<ClientModel>(addedClient))
-        };
+            return ResourceIdeaResponse<ClientModel>.Failure(addClientResult.Error);
+        }
+
+        return ResourceIdeaResponse<ClientModel>.Success(Optional<ClientModel>.Some(_mapper.Map<ClientModel>(addClientResult.Content.Value)));
     }
 }

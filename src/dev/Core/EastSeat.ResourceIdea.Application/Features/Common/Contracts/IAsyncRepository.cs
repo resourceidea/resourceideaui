@@ -30,7 +30,7 @@ public interface IAsyncRepository<T> where T : BaseEntity
     /// <param name="specification">Entity SubscriptionId.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Entity.</returns>
-    Task<Optional<T>> GetByIdAsync(BaseSpecification<T> specification, CancellationToken cancellationToken);
+    Task<ResourceIdeaResponse<T>> GetByIdAsync(BaseSpecification<T> specification, CancellationToken cancellationToken);
 
     /// <summary>
     /// Add entity.
@@ -38,19 +38,19 @@ public interface IAsyncRepository<T> where T : BaseEntity
     /// <param name="entity">Entity to add.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Entity.</returns>
-    Task<T> AddAsync(T entity, CancellationToken cancellationToken);
+    Task<ResourceIdeaResponse<T>> AddAsync(T entity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Update entity.
     /// </summary>
     /// <param name="entity">Entity to update.</param>
     /// <returns>Entity.</returns>
-    Task<Optional<T>> UpdateAsync(T entity, CancellationToken cancellationToken);
+    Task<ResourceIdeaResponse<T>> UpdateAsync(T entity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete entity.
     /// </summary>
     /// <param name="entity">Entity to delete.</param>
     /// <returns>Entity.</returns>
-    Task DeleteAsync(T entity);
+    Task<ResourceIdeaResponse<T>> DeleteAsync(T entity);
 }

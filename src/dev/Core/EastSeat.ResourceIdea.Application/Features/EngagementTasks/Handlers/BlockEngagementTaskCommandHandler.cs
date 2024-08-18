@@ -19,11 +19,7 @@ public sealed class BlockEngagementTaskCommandHandler(IEngagementTaskRepository 
     {
         var blockedEngagementTask = await _repository.BlockAsync(request.EngagementTaskId, request.Reason, cancellationToken);
 
-        return new ResourceIdeaResponse<EngagementTaskModel>
-        {
-            Success = true,
-            Message = $"Engagement task blocked successfully.",
-            Content = Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(blockedEngagementTask))
-        };
+        return ResourceIdeaResponse<EngagementTaskModel>
+                    .Success(Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(blockedEngagementTask)));
     }
 }

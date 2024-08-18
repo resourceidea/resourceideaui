@@ -25,15 +25,9 @@ public sealed class UpdateEngagementCommandHandler (
         UpdateEngagementCommandValidator updateEngagementValidator = new();
         var validationResult = updateEngagementValidator.Validate(request);
         
-        if (!validationResult.IsValid || validationResult.Errors.Count > 0)
+        if (validationResult.IsValid is false || validationResult.Errors.Count > 0)
         {
-            return new ResourceIdeaResponse<EngagementModel>
-            {
-                Success = false,
-                Message = "Invalid update engagement command. Please check the command and try again.",
-                ErrorCode = ErrorCode.UpdateEngagementCommandValidationFailure.ToString(),
-                Content = Optional<EngagementModel>.None
-            };
+            return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.UpdateEngagementCommandValidationFailure);
         }
 
         Engagement engagement = new()
@@ -46,11 +40,7 @@ public sealed class UpdateEngagementCommandHandler (
 
         var updatedEngagement = await _engagementRepository.UpdateAsync(engagement, cancellationToken);
 
-        return new ResourceIdeaResponse<EngagementModel>
-        {
-            Success = true,
-            Message = $"Engagement updated successfully.",
-            Content = Optional<EngagementModel>.Some(_mapper.Map<EngagementModel>(updatedEngagement))
-        };
+        return ResourceIdeaResponse<EngagementModel>
+                    .Success(Optional<EngagementModel>.Some(_mapper.Map<EngagementModel>(updatedEngagement)));
     }
 }

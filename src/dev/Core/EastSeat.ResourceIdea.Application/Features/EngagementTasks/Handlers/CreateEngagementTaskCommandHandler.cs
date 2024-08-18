@@ -36,11 +36,7 @@ public class CreateEngagementTaskCommandHandler (IEngagementTaskRepository repos
 
         var createdEngagementTask = await _repository.AddAsync(engagementTask, cancellationToken);
 
-        return new ResourceIdeaResponse<EngagementTaskModel>
-        {
-            Success = true,
-            Message = $"Engagement task created successfully.",
-            Content = Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(createdEngagementTask))
-        };
+        return ResourceIdeaResponse<EngagementTaskModel>
+                    .Success(Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(createdEngagementTask)));
     }
 }

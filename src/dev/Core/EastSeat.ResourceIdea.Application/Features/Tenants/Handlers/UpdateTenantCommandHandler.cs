@@ -8,7 +8,6 @@ using EastSeat.ResourceIdea.Domain.Tenants.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.Models;
 
 using MediatR;
-using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Application.Enums;
 namespace EastSeat.ResourceIdea.Application.Features.Tenants.Handlers;
 
@@ -24,15 +23,9 @@ public sealed class UpdateTenantCommandHandler(
     {
         UpdateTenantCommandValidator validator = new();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (validationResult.IsValid || validationResult.Errors.Count > 0)
+        if (validationResult.IsValid is false || validationResult.Errors.Count > 0)
         {
-            return new ResourceIdeaResponse<TenantModel>
-            {
-                Success = false,
-                Message = "Update tenant command validation failed",
-                ErrorCode = ErrorCode.UpdateTenantCommandValidationFailure.ToString(),
-                Content = Optional<TenantModel>.None
-            };
+            return ResourceIdeaResponse<TenantModel>.Failure(ErrorCode.UpdateClientCommandValidationFailure);
         }
 
         Tenant tenantUpdateDetails = new()
@@ -40,17 +33,13 @@ public sealed class UpdateTenantCommandHandler(
             TenantId = request.TenantId.Value,
             Organization = request.Organization
         };
-
-        var tenantUpdateResult = await _tenantRepository.UpdateAsync(tenantUpdateDetails, cancellationToken);
-        Tenant updatedTenant = tenantUpdateResult.Match(
-            some: tenant => tenant,
-            none: () => EmptyTenant.Instance);
-
-        return new ResourceIdeaResponse<TenantModel>
+        var updateTenantResult = await _tenantRepository.UpdateAsync(tenantUpdateDetails, cancellationToken);
+        if (updateTenantResult.IsFailure)
         {
-            Success = true,
-            Message = "Tenant updated successfully",
-            Content = Optional<TenantModel>.Some(_mapper.Map<TenantModel>(updatedTenant))
-        };
+            return ResourceIdeaResponse<TenantModel>.Failure(updateTenantResult.Error);
+        }
+
+        return ResourceIdeaResponse<TenantModel>
+                    .Success(Optional<TenantModel>.Some(_mapper.Map<TenantModel>(updateTenantResult.Content.Value)));
     }
 }

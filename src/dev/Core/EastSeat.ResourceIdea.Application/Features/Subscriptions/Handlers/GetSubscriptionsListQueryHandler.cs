@@ -46,11 +46,8 @@ public sealed class GetSubscriptionsListQueryHandler(
             specification,
             cancellationToken);
 
-        return new ResourceIdeaResponse<PagedListResponse<SubscriptionModel>>
-        {
-            Success = true,
-            Content = Optional<PagedListResponse<SubscriptionModel>>.Some(_mapper.Map<PagedListResponse<SubscriptionModel>>(subscriptions))
-        };
+        return ResourceIdeaResponse<PagedListResponse<SubscriptionModel>>
+                    .Success(Optional<PagedListResponse<SubscriptionModel>>.Some(_mapper.Map<PagedListResponse<SubscriptionModel>>(subscriptions)));
     }
 
     private static BaseSpecification<Subscription> GetSubscriptionBySubscriptionAfterDateSpecification(string queryFilters)

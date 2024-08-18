@@ -1,63 +1,66 @@
+using EastSeat.ResourceIdea.Application.Enums;
+
 namespace EastSeat.ResourceIdea.Application.Types;
 
-public sealed class ResourceIdeaResponse<T> where T : class
+/// <summary>
+/// Represents the response of an operation that can either succeed or fail.
+/// </summary>
+/// <typeparam name="T">The type of the content.</typeparam>
+/// <remarks>
+/// Initializes <see cref="ResourceIdeaResponse{T}"/>
+/// </remarks>
+/// <param name="value">Content from a successful response on an operation.</param>
+/// <param name="isSuccess">Response result. True if the response was a success; Otherwise, False.</param>
+/// <param name="errorCode">ErrorCode on an unsuccessful response.</param>
+public class ResourceIdeaResponse<T> where T : class
 {
-    /// <summary>True is the response is a success; Otherwise False.</summary>
-    public bool Success { get; set; }
-
-    /// <summary>Response message</summary>
-    public string Message { get; set; } = string.Empty;
-
-    /// <summary>ErrorCode if the operation failed.</summary>
-    public string ErrorCode { get; set; } = string.Empty;
-
     /// <summary>Content from a success response on an operation.</summary>
     public Optional<T> Content { get; set; }
 
-    /// <summary>Initializes <see cref="ResourceIdeaResponse{T}"/>.</summary>
-    public ResourceIdeaResponse()
+    /// <summary>True is the response is a success; Otherwise False.</summary>
+    public bool IsSuccess { get; set; }
+
+    /// <summary>True if the response is a failure; Otherwise False.</summary>
+    public bool IsFailure => !IsSuccess;
+
+    /// <summary>ErrorCode if the operation failed.</summary>
+    public ErrorCode Error { get; set; }
+
+    private ResourceIdeaResponse(Optional<T> value, bool isSuccess, ErrorCode error)
     {
-        Success = true;
+        Content = value;
+        IsSuccess = isSuccess;
+        Error = error;
     }
 
     /// <summary>
-    /// Initializes <see cref="ResourceIdeaResponse{T}"/>.
+    /// Creates a new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a successful response.
     /// </summary>
-    /// <param name="message">Response message.</param>
-    public ResourceIdeaResponse(string message)
-    {
-        Success = true;
-        Message = message;
-    }
+    /// <param name="value">Content from a successful response on an operation.</param>
+    /// <returns>A new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a successful response.</returns>
+    public static ResourceIdeaResponse<T> Success(Optional<T> value) => new(value, true, ErrorCode.None);
 
     /// <summary>
-    /// Initializes <see cref="ResourceIdeaResponse{T}"/>.
+    /// Creates a new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a failed response.
     /// </summary>
-    /// <param name="success">Response result. True if the response was a success; Otherwise, False.</param>
-    /// <param name="message">Response message.</param>
-    public ResourceIdeaResponse(bool success, string message)
-    {
-        Success = success;
-        Message = message;
-    }
+    /// <param name="errorCode">The error code.</param>
+    /// <returns>A new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a failed response.</returns>
+    public static ResourceIdeaResponse<T> Failure(ErrorCode errorCode) => new(Optional<T>.None, false, errorCode);
 
     /// <summary>
-    /// Initializes <see cref="ResourceIdeaResponse{T}"/>
+    /// Creates a new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a failed response.
     /// </summary>
-    /// <param name="success">Response result. True if the response was a success; Otherwise, False.</param>
-    /// <param name="message">Response message.</param>
-    /// <param name="errorCode">ErrorCode on an unsuccessful response.</param>
-    public ResourceIdeaResponse(bool success, string message, string errorCode)
-    {
-        Success = success;
-        Message = message;
-        ErrorCode = errorCode;
-    }
+    public static ResourceIdeaResponse<T> NotFound() => Failure(ErrorCode.NotFound);
 
-    public static ResourceIdeaResponse<T> NotFound() => new()
+    /// <summary>
+    /// Creates a new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a failed response.
+    /// </summary>
+    /// <typeparam name="TResult"></typeparam>
+    /// <param name="onSuccess"></param>
+    /// <param name="onFailure"></param>
+    /// <returns></returns>
+    public TResult Match<TResult>(Func<Optional<T>, TResult> onSuccess, Func<ErrorCode, TResult> onFailure)
     {
-        Success = false,
-        Message = "Resource not found.",
-        ErrorCode = Enums.ErrorCode.ResourceNotFound.ToString()
-    };
+        return IsSuccess ? onSuccess(Content) : onFailure(Error);
+    }
 }

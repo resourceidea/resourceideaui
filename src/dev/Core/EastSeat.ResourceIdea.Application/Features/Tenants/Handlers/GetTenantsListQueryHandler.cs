@@ -34,11 +34,8 @@ public sealed class GetTenantsListQueryHandler(
             specification,
             cancellationToken);
 
-        return new ResourceIdeaResponse<PagedListResponse<TenantModel>>
-        {
-            Success = true,
-            Content = Optional<PagedListResponse<TenantModel>>.Some(_mapper.Map<PagedListResponse<TenantModel>>(tenants))
-        };
+        return ResourceIdeaResponse<PagedListResponse<TenantModel>>
+                    .Success(Optional<PagedListResponse<TenantModel>>.Some(_mapper.Map<PagedListResponse<TenantModel>>(tenants)));
     }
 
     private static BaseSpecification<Tenant> GetTenantsQuerySpecification(string queryFilters)

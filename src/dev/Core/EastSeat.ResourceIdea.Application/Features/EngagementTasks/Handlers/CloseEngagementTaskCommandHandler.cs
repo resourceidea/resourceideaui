@@ -17,11 +17,7 @@ public sealed class CloseEngagementTaskCommandHandler (IEngagementTaskRepository
     {
         var closedEngagementTask = await _repository.CloseAsync(request.EngagementTaskId, cancellationToken);
 
-        return new ResourceIdeaResponse<EngagementTaskModel>
-        {
-            Success = true,
-            Message = $"Engagement task closed successfully.",
-            Content = Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(closedEngagementTask))
-        };
+        return ResourceIdeaResponse<EngagementTaskModel>
+                    .Success(Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(closedEngagementTask)));
     }
 }
