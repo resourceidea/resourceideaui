@@ -16,7 +16,7 @@ public interface IEngagementTaskRepository : IAsyncRepository<EngagementTask>
     /// <param name="engagementTaskId">The ID of the engagement task.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>An optional engagement task if the assignment was successful, otherwise None.</returns>
-    Task<Optional<EngagementTask>> SetAssignmentStatusFlagAsync(EngagementTaskId engagementTaskId, CancellationToken cancellationToken);
+    Task<ResourceIdeaResponse<EngagementTask>> SetAssignmentStatusFlagAsync(EngagementTaskId engagementTaskId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Blocks an engagement task.
@@ -25,7 +25,7 @@ public interface IEngagementTaskRepository : IAsyncRepository<EngagementTask>
     /// <param name="reason">The reason for blocking the task.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>An optional engagement task if the blocking was successful, otherwise None.</returns>
-    Task<Optional<EngagementTask>> BlockAsync(EngagementTaskId engagementTaskId, string? reason, CancellationToken cancellationToken);
+    Task<ResourceIdeaResponse<EngagementTask>> BlockAsync(EngagementTaskId engagementTaskId, string? reason, CancellationToken cancellationToken);
 
     /// <summary>
     /// Closes an engagement task.
@@ -33,7 +33,7 @@ public interface IEngagementTaskRepository : IAsyncRepository<EngagementTask>
     /// <param name="engagementTaskId">The ID of the engagement task.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>An optional engagement task if the closing was successful, otherwise None.</returns>
-    Task<Optional<EngagementTask>> CloseAsync(EngagementTaskId engagementTaskId, CancellationToken cancellationToken);
+    Task<ResourceIdeaResponse<EngagementTask>> CloseAsync(EngagementTaskId engagementTaskId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Completes an engagement task.
@@ -41,7 +41,7 @@ public interface IEngagementTaskRepository : IAsyncRepository<EngagementTask>
     /// <param name="engagementTaskId">The ID of the engagement task.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>An optional engagement task if the completion was successful, otherwise None.</returns>
-    Task<Optional<EngagementTask>> CompleteAsync(EngagementTaskId engagementTaskId, CancellationToken cancellationToken);
+    Task<ResourceIdeaResponse<EngagementTask>> CompleteAsync(EngagementTaskId engagementTaskId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Reopens a closed engagement task.
@@ -49,7 +49,7 @@ public interface IEngagementTaskRepository : IAsyncRepository<EngagementTask>
     /// <param name="engagementTaskId">The ID of the engagement task.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>An optional engagement task if the reopening was successful, otherwise None.</returns>
-    Task<Optional<EngagementTask>> ReopenAsync(EngagementTaskId engagementTaskId, CancellationToken cancellationToken);
+    Task<ResourceIdeaResponse<EngagementTask>> ReopenAsync(EngagementTaskId engagementTaskId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Starts an engagement task.
@@ -57,5 +57,5 @@ public interface IEngagementTaskRepository : IAsyncRepository<EngagementTask>
     /// <param name="engagementTaskId">The ID of the engagement task.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>An optional engagement task if the starting was successful, otherwise None.</returns>
-    Task<Optional<EngagementTask>> StartAsync(EngagementTaskId engagementTaskId, CancellationToken cancellationToken);
+    Task<ResourceIdeaResponse<EngagementTask>> StartAsync(EngagementTaskId engagementTaskId, CancellationToken cancellationToken);
 }

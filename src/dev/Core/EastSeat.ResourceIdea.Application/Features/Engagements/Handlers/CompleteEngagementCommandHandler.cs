@@ -26,22 +26,12 @@ public sealed class CompleteEngagementCommandHandler (
 
         if (!validationResult.IsValid || validationResult.Errors.Count > 0)
         {
-            return new ResourceIdeaResponse<EngagementModel>
-            {
-                Success = false,
-                Message = "Invalid complete engagement command. Please check the command and try again.",
-                ErrorCode = ErrorCode.CompleteEngagementCommandValidationFailure.ToString(),
-                Content = Optional<EngagementModel>.None
-            };
+            return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.CompleteEngagementCommandValidationFailure);
         }
 
         var completedEngagement = await _engagementRepository.CompleteAsync(request.EngagementId, cancellationToken);
 
-        return new ResourceIdeaResponse<EngagementModel>
-        {
-            Success = true,
-            Message = $"Engagement completed successfully.",
-            Content = Optional<EngagementModel>.Some(_mapper.Map<EngagementModel>(completedEngagement))
-        };
+        return ResourceIdeaResponse<EngagementModel>
+                    .Success(Optional<EngagementModel>.Some(_mapper.Map<EngagementModel>(completedEngagement)));
     }
 }

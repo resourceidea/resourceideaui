@@ -15,14 +15,13 @@ public sealed class StartEngagementTaskCommandHandler(IEngagementTaskRepository 
 
     public async Task<ResourceIdeaResponse<EngagementTaskModel>> Handle(StartEngagementTaskCommand request, CancellationToken cancellationToken)
     {
-        var engagementTask = await _repository.StartAsync(request.EngagementTaskId, cancellationToken);
+        var result = await _repository.StartAsync(request.EngagementTaskId, cancellationToken);
+        if (result.IsFailure)
+        {
+            return ResourceIdeaResponse<EngagementTaskModel>.Failure(result.Error);
+        }
 
-        return engagementTask.Match(
-            some: engagementTask => new ResourceIdeaResponse<EngagementTaskModel>()
-            {
-                Content = _mapper.Map<EngagementTaskModel>(engagementTask),
-            },
-            none: () => ResourceIdeaResponse<EngagementTaskModel>.NotFound()
-        );
+        return ResourceIdeaResponse<EngagementTaskModel>
+                    .Success(Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(result.Content)));
     }
 }

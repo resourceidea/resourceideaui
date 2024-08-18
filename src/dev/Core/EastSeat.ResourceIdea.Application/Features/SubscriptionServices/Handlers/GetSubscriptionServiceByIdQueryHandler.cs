@@ -10,7 +10,7 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 
 using MediatR;
 
-namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManagement.Handlers;
+namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Handlers;
 
 public sealed class GetSubscriptionServiceByIdQueryHandler(
     IAsyncRepository<SubscriptionService> subscriptionServiceRepository,
@@ -23,24 +23,13 @@ public sealed class GetSubscriptionServiceByIdQueryHandler(
         CancellationToken cancellationToken)
     {
         var getSubscriptionServiceByIdSpecification = new SubscriptionServiceGetByIdSpecification(request.SubscriptionServiceId);
-        Optional<SubscriptionService> subscriptionServiceQuery = await _subscriptionServiceRepository.GetByIdAsync(
-            getSubscriptionServiceByIdSpecification,
-            cancellationToken);
-
-        SubscriptionService subscriptionService = subscriptionServiceQuery.Match(
-            some: subscriptionService => subscriptionService,
-            none: () => EmptySubscriptionService.Instance
-        );
-
-        if (subscriptionService == EmptySubscriptionService.Instance)
+        var subscriptionServiceQueryResult = await _subscriptionServiceRepository.GetByIdAsync(getSubscriptionServiceByIdSpecification, cancellationToken);
+        if (subscriptionServiceQueryResult.IsFailure)
         {
-            return ResourceIdeaResponse<SubscriptionServiceModel>.NotFound();
+            return ResourceIdeaResponse<SubscriptionServiceModel>.Failure(subscriptionServiceQueryResult.Error);
         }
 
-        return new ResourceIdeaResponse<SubscriptionServiceModel>
-        {
-            Success = true,
-            Content = Optional<SubscriptionServiceModel>.Some(_mapper.Map<SubscriptionServiceModel>(subscriptionService))
-        };
+        return ResourceIdeaResponse<SubscriptionServiceModel>
+                    .Success(Optional<SubscriptionServiceModel>.Some(_mapper.Map<SubscriptionServiceModel>(subscriptionServiceQueryResult.Content.Value)));
     }
 }

@@ -10,7 +10,7 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 
 using MediatR;
 
-namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManagement.Handlers;
+namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Handlers;
 
 public sealed class CreateSubscriptionServiceCommandHandler(
     IAsyncRepository<SubscriptionService> subscriptionServiceRepository,
@@ -24,15 +24,9 @@ public sealed class CreateSubscriptionServiceCommandHandler(
     {
         CreateSubscriptionServiceCommandValidator validator = new();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (validationResult.IsValid || validationResult.Errors.Count > 0)
+        if (validationResult.IsValid is false || validationResult.Errors.Count > 0)
         {
-            return new ResourceIdeaResponse<SubscriptionServiceModel>
-            {
-                Success = false,
-                Message = "Create subscription service command validation failed",
-                ErrorCode = ErrorCode.CreateSubscriptionServiceCommandValidationFailure.ToString(),
-                Content = Optional<SubscriptionServiceModel>.None
-            };
+            return ResourceIdeaResponse<SubscriptionServiceModel>.Failure(ErrorCode.CreateSubscriptionServiceCommandValidationFailure);
         }
 
         SubscriptionService subscriptionService = new()
@@ -41,13 +35,13 @@ public sealed class CreateSubscriptionServiceCommandHandler(
             Name = request.Name
         };
 
-        SubscriptionService newSubscriptionService = await _subscriptionServiceRepository.AddAsync(subscriptionService, cancellationToken);
-
-        return new ResourceIdeaResponse<SubscriptionServiceModel>
+        var newSubscriptionServiceResult = await _subscriptionServiceRepository.AddAsync(subscriptionService, cancellationToken);
+        if (newSubscriptionServiceResult.IsFailure)
         {
-            Success = true,
-            Message = "Subscription service created successfully",
-            Content = Optional<SubscriptionServiceModel>.Some(_mapper.Map<SubscriptionServiceModel>(newSubscriptionService))
-        };
+            return ResourceIdeaResponse<SubscriptionServiceModel>.Failure(newSubscriptionServiceResult.Error);
+        }
+
+        return ResourceIdeaResponse<SubscriptionServiceModel>
+                    .Success(Optional<SubscriptionServiceModel>.Some(_mapper.Map<SubscriptionServiceModel>(newSubscriptionServiceResult)));
     }
 }

@@ -21,7 +21,7 @@ public enum ErrorCode
     /// <summary>
     /// Resource being queried was not found.
     /// </summary>
-    ResourceNotFound,
+    NotFound,
 
     /// <summary>
     /// Validation of the command to create a subscription service failed.

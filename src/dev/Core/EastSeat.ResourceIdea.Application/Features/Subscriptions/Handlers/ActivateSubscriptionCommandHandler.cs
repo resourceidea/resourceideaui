@@ -29,23 +29,22 @@ public sealed class ActivateSubscriptionCommandHandler(
         var querySpecification = new GetSubscriptionByIdSpecification(request.SubscriptionId);
         var subscriptionQueryResult = await _subscriptionRepository.GetByIdAsync(querySpecification, cancellationToken);
 
-        Subscription subscription = subscriptionQueryResult.Match(
-            some: subscription => subscription,
-            none: () => EmptySubscription.Instance);
+        if (subscriptionQueryResult.IsFailure)
+        {
+            return ResourceIdeaResponse<SubscriptionModel>.Failure(subscriptionQueryResult.Error);
+        }
 
+        var subscription = subscriptionQueryResult.Content.Value;
         subscription.Status = SubscriptionStatus.Active;
 
         var subscriptionUpdateResult = await _subscriptionRepository.UpdateAsync(subscription, cancellationToken);
-
-        var updatedSubscription = subscriptionUpdateResult.Match(
-            some: subscription => subscription,
-            none: () => EmptySubscription.Instance);
-
-        return new ResourceIdeaResponse<SubscriptionModel>
+        if (subscriptionUpdateResult.IsFailure)
         {
-            Success = true,
-            Content = Optional<SubscriptionModel>.Some(_mapper.Map<SubscriptionModel>(updatedSubscription)),
-            Message = "Subscription activated successfully."
-        };
+            return ResourceIdeaResponse<SubscriptionModel>.Failure(subscriptionUpdateResult.Error);
+        }
+        var updatedSubscription = subscriptionUpdateResult.Content.Value;
+
+        return ResourceIdeaResponse<SubscriptionModel>
+                    .Success(Optional<SubscriptionModel>.Some(_mapper.Map<SubscriptionModel>(updatedSubscription)));
     }
 }

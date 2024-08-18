@@ -22,20 +22,13 @@ public sealed class GetSubscriptionByIdQueryHandler(
     public async Task<ResourceIdeaResponse<SubscriptionModel>> Handle(GetSubscriptionByIdQuery request, CancellationToken cancellationToken)
     {
         GetSubscriptionByIdSpecification getSubscriptionByIdSpecification = new (request.SubscriptionId);
-        Optional<Subscription> getSubscriptionResult = await _subscriptionRepository.GetByIdAsync(getSubscriptionByIdSpecification, cancellationToken);
-        Subscription subscription = getSubscriptionResult.Match(
-            some: subscription => subscription,
-            none: () => EmptySubscription.Instance);
-
-        if (subscription == EmptySubscription.Instance)
+        var getSubscriptionByIdResult = await _subscriptionRepository.GetByIdAsync(getSubscriptionByIdSpecification, cancellationToken);
+        if (getSubscriptionByIdResult.IsFailure)
         {
-            return ResourceIdeaResponse<SubscriptionModel>.NotFound();
+            return ResourceIdeaResponse<SubscriptionModel>.Failure(getSubscriptionByIdResult.Error);
         }
 
-        return new ResourceIdeaResponse<SubscriptionModel>
-        {
-            Success = true,
-            Content = Optional<SubscriptionModel>.Some(_mapper.Map<SubscriptionModel>(subscription))
-        };
+        return ResourceIdeaResponse<SubscriptionModel>
+                    .Success(Optional<SubscriptionModel>.Some(_mapper.Map<SubscriptionModel>(getSubscriptionByIdResult.Content.Value)));
     }
 }

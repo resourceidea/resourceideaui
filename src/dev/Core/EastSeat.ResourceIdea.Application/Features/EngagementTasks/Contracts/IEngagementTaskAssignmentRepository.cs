@@ -17,7 +17,7 @@ public interface IEngagementTaskAssignmentRepository
     /// <param name="applicationUserId">The ID of the user to assign the task to.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>An optional engagement task assignment.</returns>
-    Task<Optional<EngagementTaskAssignment>> AssignAsync(
+    Task<ResourceIdeaResponse<EngagementTaskAssignment>> AssignAsync(
         EngagementTaskId engagementTaskId,
         ApplicationUserId applicationUserId,
         CancellationToken cancellationToken);

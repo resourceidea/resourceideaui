@@ -36,10 +36,7 @@ public sealed class CreateSubscriptionCommandHandler(
         
         var addedSubscription = await _subscriptionRepository.AddAsync(subscription, cancellationToken);
 
-        return new ResourceIdeaResponse<SubscriptionModel>
-        {
-            Success = true,
-            Content = Optional<SubscriptionModel>.Some(_mapper.Map<SubscriptionModel>(addedSubscription))
-        };
+        return ResourceIdeaResponse<SubscriptionModel>
+                    .Success(Optional<SubscriptionModel>.Some(_mapper.Map<SubscriptionModel>(addedSubscription)));
     }
 }

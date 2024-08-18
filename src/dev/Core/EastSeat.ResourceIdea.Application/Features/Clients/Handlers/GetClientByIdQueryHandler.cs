@@ -23,21 +23,12 @@ public sealed class GetClientByIdQueryHandler(IAsyncRepository<Client> clientRep
         CancellationToken cancellationToken)
     {
         var getClientByIdSpecification = new ClientGetByIdSpecification(request.ClientId);
-        Optional<Client> clientQuery = await _clientRepository.GetByIdAsync(getClientByIdSpecification, cancellationToken);
-
-        Client client = clientQuery.Match(
-            some: client => client,
-            none: () => EmptyClient.Instance);
-
-        if (client.IsEmpty())
+        var getClientQueryResult = await _clientRepository.GetByIdAsync(getClientByIdSpecification, cancellationToken);
+        if (getClientQueryResult.IsFailure)
         {
-            return ResourceIdeaResponse<ClientModel>.NotFound();
+            return ResourceIdeaResponse<ClientModel>.Failure(getClientQueryResult.Error);
         }
 
-        return new ResourceIdeaResponse<ClientModel>
-        {
-            Success = true,
-            Content = Optional<ClientModel>.Some(_mapper.Map<ClientModel>(client))
-        };
+        return ResourceIdeaResponse<ClientModel>.Success(Optional<ClientModel>.Some(_mapper.Map<ClientModel>(getClientQueryResult.Content.Value)));
     }
 }
