@@ -26,15 +26,9 @@ public sealed class StartEngagementCommandHandler (
         StartEngagementCommandValidator startEngagementValidator = new();
         var validationResult = startEngagementValidator.Validate(request);
         
-        if (!validationResult.IsValid || validationResult.Errors.Count > 0)
+        if (validationResult.IsValid is false || validationResult.Errors.Count > 0)
         {
-            return new ResourceIdeaResponse<EngagementModel>
-            {
-                Success = false,
-                Message = "Invalid start engagement command. Please check the command and try again.",
-                ErrorCode = ErrorCode.StartEngagementCommandValidationFailure.ToString(),
-                Content = Optional<EngagementModel>.None
-            };
+            return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.StartEngagementCommandValidationFailure);
         }
 
         Engagement engagement = new()
@@ -46,11 +40,7 @@ public sealed class StartEngagementCommandHandler (
 
         var startedEngagement = await _engagementRepository.StartAsync(engagement, cancellationToken);
 
-        return new ResourceIdeaResponse<EngagementModel>
-        {
-            Success = true,
-            Message = $"Engagement started successfully.",
-            Content = Optional<EngagementModel>.Some(_mapper.Map<EngagementModel>(startedEngagement))
-        };
+        return ResourceIdeaResponse<EngagementModel>
+                    .Success(Optional<EngagementModel>.Some(_mapper.Map<EngagementModel>(startedEngagement)));
     }
 }

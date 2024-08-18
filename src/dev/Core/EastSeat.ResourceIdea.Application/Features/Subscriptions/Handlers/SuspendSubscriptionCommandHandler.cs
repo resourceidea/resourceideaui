@@ -28,44 +28,20 @@ public sealed class SuspendSubscriptionCommandHandler(
     {
         var querySpecification = new GetSubscriptionByIdSpecification(request.SubscriptionId);
         var subscriptionQueryResult = await _subscriptionRepository.GetByIdAsync(querySpecification, cancellationToken);
-
-        Subscription subscription = subscriptionQueryResult.Match(
-            some: subscription => subscription,
-            none: () => EmptySubscription.Instance);
-
-        if (subscription == EmptySubscription.Instance)
+        if (subscriptionQueryResult.IsFailure)
         {
-            return new ResourceIdeaResponse<SubscriptionModel>
-            {
-                Success = false,
-                Message = "Subscription to suspend was not found.",
-                ErrorCode = ErrorCode.ItemNotFound.ToString()
-            };
+            return ResourceIdeaResponse<SubscriptionModel>.Failure(subscriptionQueryResult.Error);
         }
-
+        var subscription = subscriptionQueryResult.Content.Value;
         subscription.Status = SubscriptionStatus.Suspended;
 
         var subscriptionUpdateResult = await _subscriptionRepository.UpdateAsync(subscription, cancellationToken);
-
-        var updatedSubscription = subscriptionUpdateResult.Match(
-            some: subscription => subscription,
-            none: () => EmptySubscription.Instance);
-
-        if (updatedSubscription == EmptySubscription.Instance)
+        if (subscriptionUpdateResult.IsFailure)
         {
-            return new ResourceIdeaResponse<SubscriptionModel>
-            {
-                Success = false,
-                Message = "Subscription suspension failed.",
-                ErrorCode = ErrorCode.SubscriptionSuspensionFailure.ToString()
-            };
+            return ResourceIdeaResponse<SubscriptionModel>.Failure(subscriptionUpdateResult.Error);
         }
-
-        return new ResourceIdeaResponse<SubscriptionModel>
-        {
-            Success = true,
-            Content = Optional<SubscriptionModel>.Some(_mapper.Map<SubscriptionModel>(updatedSubscription)),
-            Message = "Subscription activated successfully."
-        };
+        
+        return ResourceIdeaResponse<SubscriptionModel>
+                    .Success(Optional<SubscriptionModel>.Some(_mapper.Map<SubscriptionModel>(subscriptionUpdateResult.Content.Value))); 
     }
 }

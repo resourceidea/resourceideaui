@@ -22,21 +22,13 @@ public sealed class GetTenantByIdQueryHandler(
     public async Task<ResourceIdeaResponse<TenantModel>> Handle(GetTenantByIdQuery request, CancellationToken cancellationToken)
     {
         var getTenantByIdSpecification = new TenantGetByIdSpecification(request.TenantId);
-        Optional<Tenant> tenantQuery = await _tenantRepository.GetByIdAsync(getTenantByIdSpecification, cancellationToken);
-        Tenant tenant = tenantQuery.Match(
-            some: tenant => tenant,
-            none: () => EmptyTenant.Instance
-        );
-
-        if (tenant == EmptyTenant.Instance)
+        var getTenantByIdResult = await _tenantRepository.GetByIdAsync(getTenantByIdSpecification, cancellationToken);
+        if (getTenantByIdResult.IsFailure)
         {
-            return ResourceIdeaResponse<TenantModel>.NotFound();
+            return ResourceIdeaResponse<TenantModel>.Failure(getTenantByIdResult.Error);
         }
 
-        return new ResourceIdeaResponse<TenantModel>
-        {
-            Success = true,
-            Content = Optional<TenantModel>.Some(_mapper.Map<TenantModel>(tenant))
-        };
+        return ResourceIdeaResponse<TenantModel>
+                    .Success(Optional<TenantModel>.Some(_mapper.Map<TenantModel>(getTenantByIdResult.Content.Value)));
     }
 }

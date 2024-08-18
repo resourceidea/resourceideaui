@@ -25,10 +25,7 @@ public class GetEngagementsByClientQueryHandler(
             getEngagementByIdSpecification,
             cancellationToken);
 
-        return new ResourceIdeaResponse<PagedListResponse<EngagementModel>>
-        {
-            Success = true,
-            Content = Optional<PagedListResponse<EngagementModel>>.Some(_mapper.Map<PagedListResponse<EngagementModel>>(engagements))
-        };
+        return ResourceIdeaResponse<PagedListResponse<EngagementModel>>
+                    .Success(Optional<PagedListResponse<EngagementModel>>.Some(_mapper.Map<PagedListResponse<EngagementModel>>(engagements)));
     }
 }

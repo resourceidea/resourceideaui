@@ -26,15 +26,9 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers
         {
             UpdateClientCommandValidator validator = new();
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
-            if (validationResult.IsValid || validationResult.Errors.Count > 0)
+            if (validationResult.IsValid is false || validationResult.Errors.Count > 0)
             {
-                return new ResourceIdeaResponse<ClientModel>
-                {
-                    Success = false,
-                    Message = "Update client command validation failed",
-                    ErrorCode = ErrorCode.UpdateClientCommandValidationFailure.ToString(),
-                    Content = Optional<ClientModel>.None
-                };
+                return ResourceIdeaResponse<ClientModel>.Failure(ErrorCode.UpdateClientCommandValidationFailure);
             }
 
             Client client = new()
@@ -46,12 +40,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers
             };
             var updatedClient = await _clientRepository.UpdateAsync(client, cancellationToken);
 
-            return new ResourceIdeaResponse<ClientModel>
-            {
-                Success = true,
-                Message = "Client updated successfully",
-                Content = Optional<ClientModel>.Some(_mapper.Map<ClientModel>(updatedClient))
-            };
+            return ResourceIdeaResponse<ClientModel>.Success(Optional<ClientModel>.Some(_mapper.Map<ClientModel>(updatedClient)));
         }
     }
 }

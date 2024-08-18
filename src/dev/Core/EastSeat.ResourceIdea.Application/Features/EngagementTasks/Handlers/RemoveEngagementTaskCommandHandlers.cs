@@ -27,9 +27,13 @@ public class RemoveEngagementTaskCommandHandlers(IUnitOfWork unitOfWork)
                 _unitOfWork.BeginTransaction();
 
                 var engagementTaskQueryResult = await repository.GetByIdAsync(specification, cancellationToken);
-                EngagementTask engagementTask = engagementTaskQueryResult.Match(
-                    some: engagementTask => engagementTask,
-                    none: () => EmptyEngagementTask.Instance);
+                if (engagementTaskQueryResult.IsFailure)
+                {
+                    _unitOfWork.Rollback();
+                    return;
+                }
+
+                EngagementTask engagementTask = engagementTaskQueryResult.Content.Value;
 
                 if (engagementTask == EmptyEngagementTask.Instance)
                 {

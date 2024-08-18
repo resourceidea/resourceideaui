@@ -1,5 +1,6 @@
 
 using AutoMapper;
+using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Specifications;
@@ -25,51 +26,32 @@ public sealed class UpdateEngagementTaskCommandHandler(IUnitOfWork unitOfWork, I
             var repository = _unitOfWork.GetRepository<EngagementTask>();
             if (repository is not IAsyncRepository<EngagementTask> engagementTaskRepository)
             {
-                return new ResourceIdeaResponse<EngagementTaskModel>
-                {
-                    Success = false,
-                    Message = "Repository not implemented.",
-                    ErrorCode = "REPOSITORY_NOT_IMPLEMENTED",
-                };
+                return ResourceIdeaResponse<EngagementTaskModel>.Failure(ErrorCode.GetRepositoryFailure);
             }
 
             _unitOfWork.BeginTransaction();
 
-                EngagementTask engagementTaskUpdate = new()
-                {
-                    Id = request.EngagementTaskId,
-                    Description = request.Description,
-                    Title = request.Title,
-                    DueDate = request.DueDate,
-                    EngagementId = request.EngagementId,
-                };
+            EngagementTask engagementTaskUpdate = new()
+            {
+                Id = request.EngagementTaskId,
+                Description = request.Description,
+                Title = request.Title,
+                DueDate = request.DueDate,
+                EngagementId = request.EngagementId,
+            };
 
-                var engagementTaskUpdateResult = await repository.UpdateAsync(engagementTaskUpdate, cancellationToken);
+            var engagementTaskUpdateResult = await repository.UpdateAsync(engagementTaskUpdate, cancellationToken);
+            if (engagementTaskUpdateResult.IsFailure)
+            {
+                _unitOfWork.Rollback();
+                return ResourceIdeaResponse<EngagementTaskModel>.Failure(engagementTaskUpdateResult.Error);
+            }
 
-                EngagementTask engagementTask = engagementTaskUpdateResult.Match(
-                    some: engagementTask => engagementTask,
-                    none: () => EmptyEngagementTask.Instance);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            _unitOfWork.Commit();
 
-                if (engagementTask == EmptyEngagementTask.Instance)
-                {
-                    _unitOfWork.Rollback();
-
-                    return new ResourceIdeaResponse<EngagementTaskModel>
-                    {
-                        Success = false,
-                        Message = "Engagement Task not found.",
-                        ErrorCode = "ENGAGEMENT_TASK_NOT_FOUND",
-                    };
-                }
-
-                await _unitOfWork.SaveChangesAsync(cancellationToken);
-                _unitOfWork.Commit();
-
-                return new ResourceIdeaResponse<EngagementTaskModel>
-                {
-                    Success = true,
-                    Content = _mapper.Map<EngagementTaskModel>(engagementTask),
-                };
+            return ResourceIdeaResponse<EngagementTaskModel>
+                        .Success(_mapper.Map<EngagementTaskModel>(engagementTaskUpdateResult.Content.Value));
         }
     }
 }

@@ -30,11 +30,8 @@ public sealed class GetClientsListQueryHandler(
             specification,
             cancellationToken);
 
-        return new ResourceIdeaResponse<PagedListResponse<ClientModel>>
-        {
-            Success = true,
-            Content = Optional<PagedListResponse<ClientModel>>.Some(_mapper.Map<PagedListResponse<ClientModel>>(clients))
-        };
+        return ResourceIdeaResponse<PagedListResponse<ClientModel>>
+                    .Success(Optional<PagedListResponse<ClientModel>>.Some(_mapper.Map<PagedListResponse<ClientModel>>(clients)));
     }
 
     private static BaseSpecification<Client> GetClientQuerySpecification(string combinedFilters)

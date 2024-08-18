@@ -22,7 +22,9 @@ public sealed class GetSubscriptionServicesListQueryHandler(
     private readonly IAsyncRepository<SubscriptionService> _subscriptionServiceRepository = subscriptionServiceRepository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<ResourceIdeaResponse<PagedListResponse<SubscriptionServiceModel>>> Handle(GetSubscriptionServicesListQuery request, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<PagedListResponse<SubscriptionServiceModel>>> Handle(
+        GetSubscriptionServicesListQuery request,
+        CancellationToken cancellationToken)
     {
         var specification = GetSubscriptionServicesQuerySpecification(request.Filter);
 
@@ -32,11 +34,8 @@ public sealed class GetSubscriptionServicesListQueryHandler(
             specification,
             cancellationToken);
 
-        return new ResourceIdeaResponse<PagedListResponse<SubscriptionServiceModel>>
-        {
-            Success = true,
-            Content = Optional<PagedListResponse<SubscriptionServiceModel>>.Some(_mapper.Map<PagedListResponse<SubscriptionServiceModel>>(subscriptionServices))
-        };
+        return ResourceIdeaResponse<PagedListResponse<SubscriptionServiceModel>>
+                    .Success(Optional<PagedListResponse<SubscriptionServiceModel>>.Some(_mapper.Map<PagedListResponse<SubscriptionServiceModel>>(subscriptionServices)));
     }
 
     private static BaseSpecification<SubscriptionService> GetSubscriptionServicesQuerySpecification(string queryFilters)

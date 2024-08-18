@@ -27,15 +27,9 @@ public sealed class CreateTenantCommandHandler (
     {
         CreateTenantCommandValidator validator = new();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (validationResult.IsValid || validationResult.Errors.Count > 0)
+        if (validationResult.IsValid is false || validationResult.Errors.Count > 0)
         {
-            return new ResourceIdeaResponse<TenantModel>
-            {
-                Success = false,
-                Message = "Create tenant command validation failed",
-                ErrorCode = ErrorCode.CreateTenantCommandValidationFailure.ToString(),
-                Content = Optional<TenantModel>.None
-            };
+            return ResourceIdeaResponse<TenantModel>.Failure(ErrorCode.CreateTenantCommandValidationFailure);
         }
 
         Tenant tenant = new()
@@ -43,14 +37,12 @@ public sealed class CreateTenantCommandHandler (
             TenantId = TenantId.Create(Guid.NewGuid()).Value,
             Organization = request.Organization
         };
-
-        Tenant newTenant = await _tenantRepository.AddAsync(tenant, cancellationToken);
-
-        return new ResourceIdeaResponse<TenantModel>
+        var addTenantResult = await _tenantRepository.AddAsync(tenant, cancellationToken);
+        if (addTenantResult.IsFailure)
         {
-            Success = true,
-            Message = "Tenant created successfully",
-            Content = Optional<TenantModel>.Some(_mapper.Map<TenantModel>(newTenant))
-        };
+            return ResourceIdeaResponse<TenantModel>.Failure(addTenantResult.Error);
+        }
+
+        return ResourceIdeaResponse<TenantModel>.Success(Optional<TenantModel>.Some(_mapper.Map<TenantModel>(addTenantResult)));
     }
 }

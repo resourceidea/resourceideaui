@@ -26,13 +26,13 @@ public sealed class CreateEngagementCommandHandler (
             Description = request.Description
         };
 
-        Engagement createdEngagement = await _engagementRepository.AddAsync(engagement, cancellationToken);
-
-        return new ResourceIdeaResponse<EngagementModel>
+        var addEngagementResult = await _engagementRepository.AddAsync(engagement, cancellationToken);
+        if (addEngagementResult.IsFailure)
         {
-            Success = true,
-            Message = $"Engagement created successfully.",
-            Content = Optional<EngagementModel>.Some(_mapper.Map<EngagementModel>(createdEngagement))
-        };
+            return ResourceIdeaResponse<EngagementModel>.Failure(addEngagementResult.Error);
+        }
+
+        return ResourceIdeaResponse<EngagementModel>
+                    .Success(Optional<EngagementModel>.Some(_mapper.Map<EngagementModel>(addEngagementResult.Content.Value)));
     }
 }
