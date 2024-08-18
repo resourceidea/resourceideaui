@@ -37,7 +37,6 @@ public class RemoveEngagementTaskCommandHandlers(IUnitOfWork unitOfWork)
 
                 if (engagementTask == EmptyEngagementTask.Instance)
                 {
-                    // TODO: Log failure to find engagement task for removal.
                     _unitOfWork.Rollback();
                     return;
                 }
