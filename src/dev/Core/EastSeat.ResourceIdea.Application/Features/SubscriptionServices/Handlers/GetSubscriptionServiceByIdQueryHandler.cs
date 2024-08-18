@@ -28,7 +28,6 @@ public sealed class GetSubscriptionServiceByIdQueryHandler(
         {
             return ResourceIdeaResponse<SubscriptionServiceModel>.Failure(subscriptionServiceQueryResult.Error);
         }
-        SubscriptionService subscriptionService = subscriptionServiceQueryResult.Content.Value;
 
         return ResourceIdeaResponse<SubscriptionServiceModel>
                     .Success(Optional<SubscriptionServiceModel>.Some(_mapper.Map<SubscriptionServiceModel>(subscriptionServiceQueryResult.Content.Value)));
