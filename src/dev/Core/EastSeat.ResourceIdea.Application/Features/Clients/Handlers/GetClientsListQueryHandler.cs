@@ -2,6 +2,7 @@
 
 using EastSeat.ResourceIdea.Application.Extensions;
 using EastSeat.ResourceIdea.Application.Features.Clients.Queries;
+using EastSeat.ResourceIdea.Application.Features.Clients.Services;
 using EastSeat.ResourceIdea.Application.Features.Clients.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
@@ -15,23 +16,19 @@ using MediatR;
 namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
 
 public sealed class GetClientsListQueryHandler(
-    IAsyncRepository<Client> clientRepository,
-    IMapper mapper) : IRequestHandler<GetClientsListQuery, ResourceIdeaResponse<PagedListResponse<ClientModel>>>
+    IClientsService clientsService)
+    : IRequestHandler<GetClientsListQuery, ResourceIdeaResponse<PagedListResponse<ClientModel>>>
 {
-    private readonly IAsyncRepository<Client> _clientRepository = clientRepository;
-    private readonly IMapper _mapper = mapper;
+    private readonly IClientsService _clientsService = clientsService;
 
     public async Task<ResourceIdeaResponse<PagedListResponse<ClientModel>>> Handle(GetClientsListQuery request, CancellationToken cancellationToken)
     {
         var specification = GetClientQuerySpecification(request.Filter);
-        var clients = await _clientRepository.GetPagedListAsync(
-            request.CurrentPageNumber,
-            request.PageSize,
+        return await _clientsService.GetPagedListAsync(
+            page: request.CurrentPageNumber,
+            pageSize: request.PageSize,
             specification,
             cancellationToken);
-
-        return ResourceIdeaResponse<PagedListResponse<ClientModel>>
-                    .Success(Optional<PagedListResponse<ClientModel>>.Some(_mapper.Map<PagedListResponse<ClientModel>>(clients)));
     }
 
     private static BaseSpecification<Client> GetClientQuerySpecification(string combinedFilters)

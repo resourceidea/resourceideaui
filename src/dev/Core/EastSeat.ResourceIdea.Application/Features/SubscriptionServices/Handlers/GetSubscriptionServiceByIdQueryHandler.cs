@@ -6,7 +6,6 @@ using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Specificat
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
-using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 
 using MediatR;
 
