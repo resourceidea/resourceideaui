@@ -6,7 +6,6 @@ using EastSeat.ResourceIdea.Application.Features.Tenants.Specifications;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.Models;
-using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 using MediatR;
 

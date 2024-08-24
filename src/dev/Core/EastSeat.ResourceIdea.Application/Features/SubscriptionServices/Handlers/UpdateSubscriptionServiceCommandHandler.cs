@@ -8,8 +8,6 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 
 using MediatR;
-
-using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 using EastSeat.ResourceIdea.Application.Enums;
 
 namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManagement.Handlers;

@@ -2,6 +2,7 @@ using AutoMapper;
 using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
 using EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
+using EastSeat.ResourceIdea.Application.Features.Clients.Services;
 using EastSeat.ResourceIdea.Application.Features.Clients.Validators;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Types;
@@ -16,17 +17,15 @@ namespace EastSeat.ResourceIdea.Application.UnitTests;
 
 public class TestCreateClientCommandHandler
 {
-    private readonly Mock<IAsyncRepository<Client>> _mockClientRepository;
-    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<IClientsService> _mockClientsService;
     private readonly CreateClientCommandHandler _handler;
     private readonly ClientId _clientId;
     private readonly TenantId _tenantId;
 
     public TestCreateClientCommandHandler()
     {
-        _mockClientRepository = new Mock<IAsyncRepository<Client>>();
-        _mockMapper = new Mock<IMapper>();
-        _handler = new CreateClientCommandHandler(_mockClientRepository.Object, _mockMapper.Object);
+        _mockClientsService = new Mock<IClientsService>();
+        _handler = new CreateClientCommandHandler(_mockClientsService.Object);
         _clientId = ClientId.Create(Guid.NewGuid());
         _tenantId = TenantId.Create(Guid.NewGuid());
     }
@@ -36,16 +35,12 @@ public class TestCreateClientCommandHandler
     {
         // Arrange
         var command = GetCreateClientCommand();
-        var client = GetCreatedClient(command);
-        var clientModel = GetExpectedResponseClientModel(client);
+        var clientModel = GetCreatedClient(command);
 
-        var successResponse = ResourceIdeaResponse<Client>.Success(client);
-        successResponse.Content = Optional<Client>.Some(client);
-        _mockClientRepository.Setup(repo => repo.AddAsync(It.IsAny<Client>(), It.IsAny<CancellationToken>()))
+        var successResponse = ResourceIdeaResponse<ClientModel>.Success(clientModel);
+        successResponse.Content = clientModel;
+        _mockClientsService.Setup(repo => repo.CreateClientAsync(It.IsAny<Client>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(successResponse);
-
-        _mockMapper.Setup(mapper => mapper.Map<ClientModel>(It.IsAny<Client>()))
-            .Returns(clientModel);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -75,8 +70,8 @@ public class TestCreateClientCommandHandler
         // Arrange
         var command = GetCreateClientCommand();
 
-        _mockClientRepository.Setup(repo => repo.AddAsync(It.IsAny<Client>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ResourceIdeaResponse<Client>.Failure(ErrorCode.GetRepositoryFailure));
+        _mockClientsService.Setup(repo => repo.CreateClientAsync(It.IsAny<Client>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResourceIdeaResponse<ClientModel>.Failure(ErrorCode.GetRepositoryFailure));
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -98,24 +93,16 @@ public class TestCreateClientCommandHandler
         return command;
     }
 
-    private Client GetCreatedClient(CreateClientCommand command)
+    private ClientModel GetCreatedClient(CreateClientCommand command)
     {
-        var client = new Client
+        var client = new ClientModel
         {
             Id = _clientId,
             Name = command.Name,
             Address = command.Address,
-            TenantId = command.TenantId.Value
+            TenantId = command.TenantId
         };
 
         return client;
     }
-
-    private ClientModel GetExpectedResponseClientModel(Client client) => new()
-    {
-        Id = _clientId,
-        Name = client.Name,
-        Address = client.Address,
-        TenantId = _tenantId
-    };
 }
