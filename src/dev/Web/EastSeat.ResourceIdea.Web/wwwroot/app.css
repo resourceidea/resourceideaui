@@ -27,3 +27,20 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+/*
+    App Styles
+*/
+#top-navbar {
+    background-color: #00879c;
+}
+
+#top-navbar .nav-link {
+    color: #fff;
+    font-size: 0.8rem;
+}
+
+#top-navbar .navbar-brand {
+    color: #FFFF99;
+    font-weight: 700;
+}

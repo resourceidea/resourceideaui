@@ -1,7 +1,24 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>ResourceIdea</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card p-4" style="width: 25rem;">
+        <div class="card-body">
+            <h5 class="card-title text-center">Enter your credentials to login</h5>
+            <form>
+                <div class="mb-3">
+                    <label for="inputEmail" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="inputEmail" placeholder="Enter email">
+                </div>
+                <div class="mb-3">
+                    <label for="inputPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
