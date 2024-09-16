@@ -31,12 +31,16 @@ h1:focus {
 /*
     App Styles
 */
+#top-navbar {
+    background-color: #00879c;
+}
 
 #top-navbar .nav-link {
     color: #fff;
-    font-size: 0.8rem; /* Added font-size property to reduce the font */
+    font-size: 0.8rem;
 }
 
 #top-navbar .navbar-brand {
-    color: #FFFF99; /* Set the font color to a lighter shade of yellow */
+    color: #FFFF99;
+    font-weight: 700;
 }
