@@ -36,7 +36,7 @@ public sealed class CreateClientCommandHandler(IClientsService clientService)
             Id = ClientId.Create(Guid.NewGuid()),
             Name = request.Name,
             Address = request.Address,
-            TenantId = request.TenantId.Value
+            TenantId = request.TenantId
         };
     }
 

@@ -4,6 +4,9 @@ using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Departments.Entities;
+using EastSeat.ResourceIdea.Domain.Departments.Models;
+using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Entities;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Models;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
@@ -24,7 +27,7 @@ public sealed class ResourceIdeaMappingProfile : Profile
 
         CreateMap<Tenant, TenantModel>()
             .ForMember(tenantModel => tenantModel.TenantId,
-                       opt => opt.MapFrom(tenant => TenantId.Create(tenant.TenantId)));
+                       opt => opt.MapFrom(tenant => TenantId.Create(tenant.TenantId.Value)));
 
         CreateMap<PagedListResponse<Tenant>, PagedListResponse<TenantModel>>()
             .ForMember(dest => dest.CurrentPage, opt => opt.MapFrom(src => src.CurrentPage))
@@ -36,7 +39,7 @@ public sealed class ResourceIdeaMappingProfile : Profile
         CreateMap<SubscriptionService, SubscriptionServiceModel>();
 
         CreateMap<Subscription, SubscriptionModel>()
-            .ForMember(dest => dest.TenantId, opt => opt.MapFrom(src => TenantId.Create(src.TenantId)))
+            .ForMember(dest => dest.TenantId, opt => opt.MapFrom(src => TenantId.Create(src.TenantId.Value)))
             .ForMember(dest => dest.SubscriptionServiceName, opt => opt.MapFrom(src => src.SubscriptionService != null
                                                                                      ? src.SubscriptionService.Name
                                                                                      : string.Empty));
@@ -49,7 +52,12 @@ public sealed class ResourceIdeaMappingProfile : Profile
                 src => src.Items.Select(item => _mapper.Map<SubscriptionModel>(item)).ToList()));
         
         CreateMap<Client, ClientModel>()
-            .ForMember(dest => dest.TenantId, opt => opt.MapFrom(src => TenantId.Create(src.TenantId)))
+            .ForMember(dest => dest.TenantId, opt => opt.MapFrom(src => TenantId.Create(src.TenantId.Value)))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => ClientId.Create(src.Id.Value)));
+
+        CreateMap<Department, DepartmentModel>()
+            .ForMember(dest => dest.TenantId, opt => opt.MapFrom(src => TenantId.Create(src.TenantId.Value)))
+            .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => DepartmentId.Create(src.DepartmentId.Value.ToString())))
+            .ReverseMap();
     }
 }

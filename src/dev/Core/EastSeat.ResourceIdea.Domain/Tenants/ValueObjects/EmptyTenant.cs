@@ -9,7 +9,7 @@ public sealed record EmptyTenant
 {
     public static Tenant Instance { get; } = new()
     {
-        TenantId = TenantId.Empty.Value,
+        TenantId = TenantId.Empty,
         Organization = string.Empty
     };
 

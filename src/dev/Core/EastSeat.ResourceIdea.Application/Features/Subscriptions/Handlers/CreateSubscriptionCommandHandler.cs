@@ -31,7 +31,7 @@ public sealed class CreateSubscriptionCommandHandler(
             SubscriptionDate = DateTimeOffset.UtcNow,
             SubscriptionType = SubscriptionType.Monthly,
             SubscriptionServiceId = request.SubscriptionServiceId,
-            TenantId = request.TenantId.Value
+            TenantId = request.TenantId
         };
         
         var addedSubscription = await _subscriptionRepository.AddAsync(subscription, cancellationToken);

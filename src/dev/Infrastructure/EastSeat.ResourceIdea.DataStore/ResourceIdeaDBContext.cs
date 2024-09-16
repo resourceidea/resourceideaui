@@ -32,5 +32,6 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
         builder.ApplyConfiguration(new EngagementEntityTypeConfiguration());
         builder.ApplyConfiguration(new EngagementTaskEntityTypeConfiguration());
         builder.ApplyConfiguration(new EngagementTaskAssignmentEntityTypeConfiguration());
+        builder.ApplyConfiguration(new DepartmentEntityTypeConfiguration());
     }
 }

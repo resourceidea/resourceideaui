@@ -1,4 +1,5 @@
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -13,7 +14,20 @@ public class TenantEntityTypeConfiguration : BaseEntityTypeConfiguration<Tenant>
 
         builder.ToTable("Tenants");
 
-        builder.HasKey(tenant => tenant.TenantId);
+        builder.HasKey(tenant => tenant.TenantId)
+               .HasName("PK_Tenants")
+               .IsClustered(false);
+
+        builder.Property(tenant => tenant.TenantId)
+               .IsRequired()
+               .HasConversion(
+                    tenantId => tenantId.Value.ToString(),
+                    value => TenantId.Create(value))
+               .HasColumnType("nvarchar(450)");
+
+        builder.HasKey(tenant => tenant.TenantId)
+               .HasName("PK_Tenants")
+               .IsClustered(false);
 
         builder.Property(tenant => tenant.Organization)
             .IsRequired()

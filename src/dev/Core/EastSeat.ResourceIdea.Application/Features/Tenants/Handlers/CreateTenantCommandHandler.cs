@@ -34,7 +34,7 @@ public sealed class CreateTenantCommandHandler (
 
         Tenant tenant = new()
         {
-            TenantId = TenantId.Create(Guid.NewGuid()).Value,
+            TenantId = TenantId.Create(Guid.NewGuid()),
             Organization = request.Organization
         };
         var addTenantResult = await _tenantRepository.AddAsync(tenant, cancellationToken);

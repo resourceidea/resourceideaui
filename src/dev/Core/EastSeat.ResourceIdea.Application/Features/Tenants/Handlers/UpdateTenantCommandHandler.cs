@@ -30,7 +30,7 @@ public sealed class UpdateTenantCommandHandler(
 
         Tenant tenantUpdateDetails = new()
         {
-            TenantId = request.TenantId.Value,
+            TenantId = request.TenantId,
             Organization = request.Organization
         };
         var updateTenantResult = await _tenantRepository.UpdateAsync(tenantUpdateDetails, cancellationToken);

@@ -40,7 +40,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers
                 Id = request.ClientId,
                 Name = request.Name,
                 Address = request.Address,
-                TenantId = request.TenantId.Value
+                TenantId = request.TenantId
             };
         }
 
