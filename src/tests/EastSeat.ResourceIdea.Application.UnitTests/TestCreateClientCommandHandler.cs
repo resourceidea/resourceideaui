@@ -1,10 +1,7 @@
-using AutoMapper;
 using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
 using EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
 using EastSeat.ResourceIdea.Application.Features.Clients.Services;
-using EastSeat.ResourceIdea.Application.Features.Clients.Validators;
-using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;

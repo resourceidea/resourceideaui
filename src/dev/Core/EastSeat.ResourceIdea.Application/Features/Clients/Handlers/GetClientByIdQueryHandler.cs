@@ -1,11 +1,7 @@
-using AutoMapper;
-
 using EastSeat.ResourceIdea.Application.Features.Clients.Queries;
 using EastSeat.ResourceIdea.Application.Features.Clients.Services;
 using EastSeat.ResourceIdea.Application.Features.Clients.Specifications;
-using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Types;
-using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 
 using MediatR;
