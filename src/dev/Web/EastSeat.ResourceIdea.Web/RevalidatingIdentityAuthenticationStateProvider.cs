@@ -26,7 +26,7 @@ public class RevalidatingIdentityAuthenticationStateProvider<TUser> : Revalidati
     protected override async Task<bool> ValidateAuthenticationStateAsync(AuthenticationState authenticationState, CancellationToken cancellationToken)
     {
         var user = authenticationState.User;
-        if (user.Identity == null || !user.Identity.IsAuthenticated)
+        if (user.Identity is null || user.Identity.IsAuthenticated is false)
         {
             return false;
         }
@@ -34,8 +34,12 @@ public class RevalidatingIdentityAuthenticationStateProvider<TUser> : Revalidati
         var scope = _scopeFactory.CreateScope();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<TUser>>();
         var userId = userManager.GetUserId(user);
+        if (userId is null)
+        {
+            return false;
+        }
         var userPrincipal = await userManager.FindByIdAsync(userId);
 
-        return userPrincipal != null;
+        return userPrincipal is not null;
     }
 }
