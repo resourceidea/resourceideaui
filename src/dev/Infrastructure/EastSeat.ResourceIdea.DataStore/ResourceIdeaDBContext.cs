@@ -1,5 +1,6 @@
 ﻿using EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
+using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
 
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +13,7 @@ namespace EastSeat.ResourceIdea.DataStore;
 public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<Tenant>? Tenants { get; set; }
+    public DbSet<SubscriptionService>? SubscriptionServices { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

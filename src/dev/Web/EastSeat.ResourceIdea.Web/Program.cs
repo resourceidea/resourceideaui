@@ -1,11 +1,13 @@
-using EastSeat.ResourceIdea.Web.Components;
-using EastSeat.ResourceIdea.DataStore;
-using EastSeat.ResourceIdea.Web;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Components.Authorization;
-using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.Application.Features.ApplicationUsers.Handlers;
+using EastSeat.ResourceIdea.DataStore;
+using EastSeat.ResourceIdea.DataStore.Configuration.DatabaseStartup;
+using EastSeat.ResourceIdea.DataStore.Identity.Entities;
+using EastSeat.ResourceIdea.Web;
+using EastSeat.ResourceIdea.Web.Components;
+
 using MediatR;
+
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,20 +17,17 @@ builder.Services.AddServerSideBlazor();
 
 // Add datastore service.
 var sqlServerConnectionString = StartupConfiguration.GetSqlServerConnectionString();
-builder.Services.AddResourceIdeaDataStore(sqlServerConnectionString);
+builder.Services.AddResourceIdeaDbContext(sqlServerConnectionString);
 
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
 
 builder.Services.AddMediatR(typeof(LoginCommandHandler).Assembly);
 
+builder.Services.Configure<DatabaseStartupTasksConfig>(builder.Configuration.GetSection("DatabaseStartupTasks"));
+
 var app = builder.Build();
 
-// Automatically apply migrations
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ResourceIdeaDBContext>();
-    dbContext.Database.Migrate();
-}
+app.RunDatabaseStartupTasks();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -45,8 +44,6 @@ app.UseAntiforgery();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.ApplyMigrations();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
