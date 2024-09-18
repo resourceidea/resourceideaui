@@ -1,24 +1,48 @@
 ﻿@page "/"
 
+@using EastSeat.ResourceIdea.Application.Features.ApplicationUsers.Commands
+
+@inject IMediator Mediator
+@inject NavigationManager NavigationManager
+@inject IMapper Mapper
+
 <PageTitle>ResourceIdea</PageTitle>
 
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     <div class="card p-4" style="width: 25rem;">
         <div class="card-body">
             <h5 class="card-title text-center">Enter your credentials to login</h5>
-            <form>
+            <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
                 <div class="mb-3">
                     <label for="inputEmail" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="inputEmail" placeholder="Enter email">
+                    <InputText type="email" class="form-control" id="inputEmail" @bind-Value="loginModel.Email" placeholder="Enter email" />
                 </div>
                 <div class="mb-3">
                     <label for="inputPassword" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                    <InputText type="password" class="form-control" id="inputPassword" @bind-Value="loginModel.Password" placeholder="Password" />
                 </div>
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">Login</button>
                 </div>
-            </form>
+            </EditForm>
         </div>
     </div>
 </div>
+
+@code {
+
+    private LoginModel loginModel = new LoginModel();
+    
+    private async Task HandleLogin()
+    {
+        var loginCommand = Mapper.Map<LoginCommand>(loginModel);
+        var result = await Mediator.Send(loginCommand);
+
+        if (result.IsSuccess)
+        {
+            NavigationManager.NavigateTo("/dashboard");
+        }
+    }
+}

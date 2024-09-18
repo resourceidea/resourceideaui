@@ -2,15 +2,24 @@ using EastSeat.ResourceIdea.Web.Components;
 using EastSeat.ResourceIdea.DataStore;
 using EastSeat.ResourceIdea.Web;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components.Authorization;
+using EastSeat.ResourceIdea.DataStore.Identity.Entities;
+using EastSeat.ResourceIdea.Application.Features.ApplicationUsers.Handlers;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+builder.Services.AddServerSideBlazor();
 
 // Add datastore service.
 var sqlServerConnectionString = StartupConfiguration.GetSqlServerConnectionString();
 builder.Services.AddResourceIdeaDataStore(sqlServerConnectionString);
+
+builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
+
+builder.Services.AddMediatR(typeof(LoginCommandHandler).Assembly);
 
 var app = builder.Build();
 
@@ -33,6 +42,11 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.ApplyMigrations();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

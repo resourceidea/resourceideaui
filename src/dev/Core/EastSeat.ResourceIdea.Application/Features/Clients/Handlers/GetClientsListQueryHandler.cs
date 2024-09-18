@@ -1,10 +1,7 @@
-﻿using AutoMapper;
-
-using EastSeat.ResourceIdea.Application.Extensions;
+﻿using EastSeat.ResourceIdea.Application.Extensions;
 using EastSeat.ResourceIdea.Application.Features.Clients.Queries;
 using EastSeat.ResourceIdea.Application.Features.Clients.Services;
 using EastSeat.ResourceIdea.Application.Features.Clients.Specifications;
-using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Types;

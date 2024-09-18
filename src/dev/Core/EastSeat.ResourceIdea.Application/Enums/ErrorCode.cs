@@ -87,4 +87,19 @@ public enum ErrorCode
     /// Empty entity returned from the repository.
     /// </summary>
     EmptyEntity,
+
+    /// <summary>
+    /// Validation of the login command failed.
+    /// </summary>
+    LoginCommandValidationFailure,
+
+    /// <summary>
+    /// Login failed because user was not found.
+    /// </summary>
+    UserNotFound,
+
+    /// <summary>
+    /// Login failed.
+    /// </summary>
+    LoginFailed,
 }

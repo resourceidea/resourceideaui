@@ -1,5 +1,5 @@
 using AutoMapper;
-
+using EastSeat.ResourceIdea.Application.Features.ApplicationUsers.Commands;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
@@ -11,6 +11,7 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.Models;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Users.Models;
 
 namespace EastSeat.ResourceIdea.Application.MappingProfiles;
 
@@ -51,5 +52,9 @@ public sealed class ResourceIdeaMappingProfile : Profile
         CreateMap<Client, ClientModel>()
             .ForMember(dest => dest.TenantId, opt => opt.MapFrom(src => TenantId.Create(src.TenantId)))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => ClientId.Create(src.Id.Value)));
+
+        CreateMap<LoginModel, LoginCommand>()
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+            .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password));
     }
 }
