@@ -22,6 +22,7 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
     public DbSet<Engagement> Engagements { get; set; }
     public DbSet<EngagementTask> EngagementTasks { get; set; }
     public DbSet<EngagementTaskAssignment> EngagementTaskAssignments { get; set; }
+    public DbSet<ApplicationRole> ApplicationRoles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -40,7 +41,9 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
 
             entity.Property(e => e.IsBackendRole).IsRequired(true);
 
-            entity.Property(e => e.RoleName).IsRequired(true).HasMaxLength(256);
+            entity.Property(e => e.Name).IsRequired(true).HasMaxLength(256);
+
+            entity.Property(e => e.NormalizedName).IsRequired(false).HasMaxLength(256);
         });
 
         builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims", "Identity");

@@ -5,9 +5,11 @@ using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.DataStore.Configuration.DatabaseStartup;
+using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.DataStore.Services;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -111,10 +113,46 @@ public static class DataStoreSetup
         return await dbContext.SubscriptionServices.Select(s => s.Name.ToLower()).ToListAsync();
     }
 
-    private static Task CreateSystemRolesAsync(ResourceIdeaDBContext dbContext)
+    private static async Task CreateSystemRolesAsync(ResourceIdeaDBContext dbContext)
     {
-        //TODO: Add logic for CreateSystemRoles
-        return Task.CompletedTask;
+        if (dbContext?.Roles == null)
+        {
+            return;
+        }
+
+        string[] systemRoles = ["Owner", "Administrator", "General User"];
+        List<ApplicationRole> rolesToCreate = systemRoles.Select(role => new ApplicationRole {
+            Id = Guid.NewGuid().ToString(),
+            Name = role,
+            NormalizedName = role.ToUpper(),
+            IsBackendRole = true,
+            TenantId = TenantId.Empty }).ToList();
+
+        var existingRoles = await GetExistingRoles(dbContext);
+        rolesToCreate = RemoveExistingRoles(rolesToCreate, existingRoles);
+        if (rolesToCreate.Count == 0)
+        {
+            return;
+        }
+
+        dbContext.ApplicationRoles.AddRange(rolesToCreate);
+        await dbContext.SaveChangesAsync();
+    }
+
+    private static List<ApplicationRole> RemoveExistingRoles(List<ApplicationRole> subscriptionServices, List<string> existingServiceNames)
+    {
+        subscriptionServices = subscriptionServices.Where(s => !existingServiceNames.Contains(s.Name!.ToLower())).ToList();
+        return subscriptionServices;
+    }
+
+    private static async Task<List<string>> GetExistingRoles(ResourceIdeaDBContext dbContext)
+    {
+        if (dbContext?.ApplicationRoles == null)
+        {
+            return [];
+        }
+
+        return await dbContext.ApplicationRoles.Where(s => !string.IsNullOrEmpty(s.Name)).Select(s => s.Name!.ToLower()).ToListAsync();
     }
 
     private static Task CreateSystemRolesClaimsAsync(ResourceIdeaDBContext dbContext)

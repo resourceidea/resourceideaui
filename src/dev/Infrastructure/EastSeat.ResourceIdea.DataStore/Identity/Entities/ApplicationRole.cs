@@ -2,12 +2,6 @@
 
 using Microsoft.AspNetCore.Identity;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace EastSeat.ResourceIdea.DataStore.Identity.Entities;
 
 
@@ -25,9 +19,4 @@ public class ApplicationRole : IdentityRole
     /// Gets or sets a value indicating whether the role is a backend role.
     /// </summary>
     public bool IsBackendRole { get; set; }
-
-    /// <summary>
-    /// Gets or sets the role name.
-    /// </summary>
-    public string RoleName { get; set; } = string.Empty;
 }
