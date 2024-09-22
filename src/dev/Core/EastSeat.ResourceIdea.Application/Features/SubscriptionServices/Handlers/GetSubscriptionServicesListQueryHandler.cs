@@ -4,6 +4,7 @@ using EastSeat.ResourceIdea.Application.Extensions;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
+using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Queries;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Specifications;
 using EastSeat.ResourceIdea.Application.Types;
@@ -12,30 +13,28 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 
 using MediatR;
 
-namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServiceManagement.Handlers;
+namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Handlers;
 
 public sealed class GetSubscriptionServicesListQueryHandler(
-    IAsyncRepository<SubscriptionService> subscriptionServiceRepository,
-    IMapper mapper)
-    : IRequestHandler<GetSubscriptionServicesListQuery, ResourceIdeaResponse<PagedListResponse<SubscriptionServiceModel>>>
+    ISubscriptionServicesService subscriptionServicesService,
+    IMapper mapper) : IRequestHandler<GetSubscriptionServicesListQuery, ResourceIdeaResponse<PagedListResponse<SubscriptionServiceModel>>>
 {
-    private readonly IAsyncRepository<SubscriptionService> _subscriptionServiceRepository = subscriptionServiceRepository;
+    private readonly ISubscriptionServicesService _subscriptionServicesService = subscriptionServicesService;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ResourceIdeaResponse<PagedListResponse<SubscriptionServiceModel>>> Handle(
         GetSubscriptionServicesListQuery request,
         CancellationToken cancellationToken)
     {
-        var specification = GetSubscriptionServicesQuerySpecification(request.Filter);
+        var querySpecification = GetSubscriptionServicesQuerySpecification(request.Filter);
 
-        PagedListResponse<SubscriptionService> subscriptionServices = await _subscriptionServiceRepository.GetPagedListAsync(
+        var response = await _subscriptionServicesService.GetPagedListAsync(
             request.CurrentPageNumber,
             request.PageSize,
-            specification,
+            querySpecification,
             cancellationToken);
 
-        return ResourceIdeaResponse<PagedListResponse<SubscriptionServiceModel>>
-                    .Success(Optional<PagedListResponse<SubscriptionServiceModel>>.Some(_mapper.Map<PagedListResponse<SubscriptionServiceModel>>(subscriptionServices)));
+        return _mapper.Map<ResourceIdeaResponse<PagedListResponse<SubscriptionServiceModel>>>(response);
     }
 
     private static BaseSpecification<SubscriptionService> GetSubscriptionServicesQuerySpecification(string queryFilters)

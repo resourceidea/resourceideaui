@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 
-using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
+using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Queries;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Specifications;
 using EastSeat.ResourceIdea.Application.Types;
-using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 
 using MediatR;
@@ -12,23 +11,21 @@ using MediatR;
 namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Handlers;
 
 public sealed class GetSubscriptionServiceByIdQueryHandler(
-    IAsyncRepository<SubscriptionService> subscriptionServiceRepository,
+    ISubscriptionServicesService subscriptionServicesService,
     IMapper mapper) : IRequestHandler<GetSubscriptionServiceByIdQuery, ResourceIdeaResponse<SubscriptionServiceModel>>
 {
-    private readonly IAsyncRepository<SubscriptionService> _subscriptionServiceRepository = subscriptionServiceRepository;
+    private readonly ISubscriptionServicesService _subscriptionServicesService = subscriptionServicesService;
     private readonly IMapper _mapper = mapper;
+
     public async Task<ResourceIdeaResponse<SubscriptionServiceModel>> Handle(
         GetSubscriptionServiceByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var getSubscriptionServiceByIdSpecification = new SubscriptionServiceGetByIdSpecification(request.SubscriptionServiceId);
-        var subscriptionServiceQueryResult = await _subscriptionServiceRepository.GetByIdAsync(getSubscriptionServiceByIdSpecification, cancellationToken);
-        if (subscriptionServiceQueryResult.IsFailure)
-        {
-            return ResourceIdeaResponse<SubscriptionServiceModel>.Failure(subscriptionServiceQueryResult.Error);
-        }
+        var querySpecification = new SubscriptionServiceGetByIdSpecification(request.SubscriptionServiceId);
+        var response = await _subscriptionServicesService.GetByIdAsync(
+            querySpecification,
+            cancellationToken);
 
-        return ResourceIdeaResponse<SubscriptionServiceModel>
-                    .Success(Optional<SubscriptionServiceModel>.Some(_mapper.Map<SubscriptionServiceModel>(subscriptionServiceQueryResult.Content.Value)));
+        return _mapper.Map<ResourceIdeaResponse<SubscriptionServiceModel>>(response);
     }
 }

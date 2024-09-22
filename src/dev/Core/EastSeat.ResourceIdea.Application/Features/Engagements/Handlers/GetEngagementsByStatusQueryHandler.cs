@@ -10,22 +10,21 @@ using MediatR;
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers;
 
 public class GetEngagementsByStatusQueryHandler(
-    IEngagementRepository engagementRepository,
+    IEngagementsService engagementsService,
     IMapper mapper) : IRequestHandler<GetEngagementsByStatusQuery, ResourceIdeaResponse<PagedListResponse<EngagementModel>>>
 {
-    private readonly IEngagementRepository _engagementRepository = engagementRepository;
+    private readonly IEngagementsService _engagementsService = engagementsService;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ResourceIdeaResponse<PagedListResponse<EngagementModel>>> Handle(GetEngagementsByStatusQuery request, CancellationToken cancellationToken)
     {
         var getEngagementByIdSpecification = new GetEngagementsByStatusSpecification(request.EngagementStatus);
-        var engagements = await _engagementRepository.GetPagedListAsync(
+        var engagements = await _engagementsService.GetPagedListAsync(
             request.PageNumber,
             request.PageSize,
             getEngagementByIdSpecification,
             cancellationToken);
 
-        return ResourceIdeaResponse<PagedListResponse<EngagementModel>>
-                    .Success(Optional<PagedListResponse<EngagementModel>>.Some(_mapper.Map<PagedListResponse<EngagementModel>>(engagements)));
+        return _mapper.Map<ResourceIdeaResponse<PagedListResponse<EngagementModel>>>(engagements);
     }
 }

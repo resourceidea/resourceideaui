@@ -12,95 +12,30 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Handlers;
 
-public sealed class AssignEngagementTaskCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
-    : IRequestHandler<AssignEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
+public sealed class AssignEngagementTaskCommandHandler(
+    IEngagementTasksService engagementTasksService,
+    IMapper mapper) : IRequestHandler<AssignEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IEngagementTasksService _engagementTasksService = engagementTasksService;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ResourceIdeaResponse<EngagementTaskModel>> Handle(
         AssignEngagementTaskCommand request,
         CancellationToken cancellationToken)
     {
-        using (_unitOfWork)
+        // TODO: Add validation of the command to assign engagement task.
+        var result = await _engagementTasksService.AssignAsync(
+            request.EngagementTaskId,
+            request.ApplicationUserIds,
+            request.StartDate,
+            request.EndDate,
+            cancellationToken);
+
+        if (result.IsFailure)
         {
-            _unitOfWork.BeginTransaction();
-
-            var result = await AssignTaskAsync(_unitOfWork, request.EngagementTaskId, request.ApplicationUserId, cancellationToken);
-            
-            var response = result.Match(
-                onSuccess: HandleTaskAssignmentSuccess,
-                onFailure: HandleTaskAssignmentFailure
-            );
-            
-            if (response.IsFailure)
-            {
-                _unitOfWork.Rollback();
-                
-                return response;
-            }
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            _unitOfWork.Commit();
-
-            return response;
-
+            return ResourceIdeaResponse<EngagementTaskModel>.Failure(ErrorCode.DataStoreCommandFailure);
         }
+
+        return _mapper.Map<ResourceIdeaResponse<EngagementTaskModel>>(result);
     }
-
-    private static async Task<ResourceIdeaResponse<EngagementTaskAssignment>> AssignTaskAsync(
-        IUnitOfWork unitOfWork,
-        EngagementTaskId engagementTaskId,
-        ApplicationUserId applicationUserId,
-        CancellationToken cancellationToken)
-    {
-        var repository = unitOfWork.GetRepository<EngagementTaskAssignment>();
-        if (repository is not IEngagementTaskAssignmentRepository engagementTaskAssignmentRepository)
-        {
-            return ResourceIdeaResponse<EngagementTaskAssignment>.Failure(ErrorCode.GetRepositoryFailure);
-        }
-
-        return await engagementTaskAssignmentRepository.AssignAsync(engagementTaskId, applicationUserId, cancellationToken);
-    }
-
-    private static ResourceIdeaResponse<EngagementTaskModel> HandleTaskAssignmentFailure(ErrorCode error) 
-        => ResourceIdeaResponse<EngagementTaskModel>.Failure(error);
-
-    private ResourceIdeaResponse<EngagementTaskModel> HandleTaskAssignmentSuccess(Optional<EngagementTaskAssignment> engagementTaskAssignment)
-    {
-        var repository = _unitOfWork.GetRepository<EngagementTask>();
-        var preconditionsCheckResult = MeetsPreconditions(repository, engagementTaskAssignment);
-        if (preconditionsCheckResult.Success is false)
-        {
-            return ResourceIdeaResponse<EngagementTaskModel>.Failure(preconditionsCheckResult.ErrorCode);
-        }
-        
-        var updatedEngagementTask = preconditionsCheckResult.Repository.SetAssignmentStatusFlagAsync(
-            engagementTaskAssignment.Value.EngagementTaskId,
-            CancellationToken.None);
-
-        return ResourceIdeaResponse<EngagementTaskModel>
-                    .Success(Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(updatedEngagementTask)));
-    }
-
-    private static PreconditionsCheckResult MeetsPreconditions(
-        IAsyncRepository<EngagementTask> repository,
-        Optional<EngagementTaskAssignment> engagementTaskAssignment)
-    {
-        if (repository is not IEngagementTaskRepository engagementTaskRepository)
-        {
-            // If the repository is not an instance of IEngagementTaskRepository, then the repository is not valid.
-            return new PreconditionsCheckResult(false, ErrorCode.GetRepositoryFailure, null!);
-        }
-
-        if (engagementTaskAssignment.HasValue is false)
-        {
-            // If the engagement task assignment is not present, then the entity is empty.
-            return new PreconditionsCheckResult(false, ErrorCode.EmptyEntity, null!);
-        }
-        
-        return new PreconditionsCheckResult(true, ErrorCode.None, engagementTaskRepository);
-    }
-
-    private record PreconditionsCheckResult(bool Success, ErrorCode ErrorCode, IEngagementTaskRepository Repository);
 }

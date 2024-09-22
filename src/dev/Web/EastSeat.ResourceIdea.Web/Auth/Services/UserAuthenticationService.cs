@@ -1,11 +1,11 @@
 using EastSeat.ResourceIdea.Application.Enums;
-using EastSeat.ResourceIdea.Application.Features.ApplicationUsers.Contracts;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.Domain.Users.Models;
+
 using Microsoft.AspNetCore.Identity;
 
-namespace EastSeat.ResourceIdea.DataStore.Services;
+namespace EastSeat.ResourceIdea.Web.Auth.Services;
 
 /// <summary>
 /// Service implementation for authenticating users.

@@ -53,6 +53,20 @@ public class ResourceIdeaResponse<T> where T : class
     public static ResourceIdeaResponse<T> NotFound() => Failure(ErrorCode.NotFound);
 
     /// <summary>
+    /// Creates a new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a failed response
+    /// due to a bad request to the application.
+    /// </summary>
+    /// <returns>An instance of <see cref="ResourceIdeaResponse{T}"/>.</returns>
+    public static ResourceIdeaResponse<T> BadRequest() => Failure(ErrorCode.BadRequest);
+
+    /// <summary>
+    /// Creates a new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a success response
+    /// and the content is <see cref="Optional{T}"/> None.
+    /// </summary>
+    /// <returns></returns>
+    public static ResourceIdeaResponse<T> Success() => Success(Optional<T>.None);
+
+    /// <summary>
     /// Creates a new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a failed response.
     /// </summary>
     /// <typeparam name="TResult"></typeparam>

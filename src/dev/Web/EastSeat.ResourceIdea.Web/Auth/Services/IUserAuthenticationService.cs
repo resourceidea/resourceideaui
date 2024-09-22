@@ -1,7 +1,7 @@
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Users.Models;
 
-namespace EastSeat.ResourceIdea.Application.Features.ApplicationUsers.Contracts;
+namespace EastSeat.ResourceIdea.Web.Auth.Services;
 
 /// <summary>
 /// User authentication service contract.

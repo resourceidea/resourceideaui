@@ -11,13 +11,13 @@ namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers;
 /// <summary>
 /// Handles the retrieval of an engagement by its identifier.
 /// </summary>
-/// <param name="engagementRepository">Engagement repository.</param>
+/// <param name="engagementsService">Engagement repository.</param>
 /// <param name="mapper">Object mapper.</param>
 public sealed class GetEngagementByIdQueryHandler (
-    IEngagementRepository engagementRepository,
+    IEngagementsService engagementsService,
     IMapper mapper) : IRequestHandler<GetEngagementByIdQuery, ResourceIdeaResponse<EngagementModel>>
 {
-    private readonly IEngagementRepository _engagementRepository = engagementRepository;
+    private readonly IEngagementsService _engagementsService = engagementsService;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ResourceIdeaResponse<EngagementModel>> Handle(
@@ -25,9 +25,8 @@ public sealed class GetEngagementByIdQueryHandler (
         CancellationToken cancellationToken)
     {
         var getEngagementByIdSpecification = new GetEngagementByIdSpecification(request.EngagementId);
-        var engagement = await _engagementRepository.GetByIdAsync(getEngagementByIdSpecification, cancellationToken);
+        var engagement = await _engagementsService.GetByIdAsync(getEngagementByIdSpecification, cancellationToken);
 
-        return ResourceIdeaResponse<EngagementModel>
-                    .Success(Optional<EngagementModel>.Some(_mapper.Map<EngagementModel>(engagement)));
+        return _mapper.Map<ResourceIdeaResponse<EngagementModel>>(engagement);
     }
 }

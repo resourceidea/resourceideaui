@@ -1,12 +1,15 @@
-using EastSeat.ResourceIdea.Application.Features.ApplicationUsers.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
+using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
+using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.DataStore.Configuration.DatabaseStartup;
-using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.DataStore.Services;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,28 +28,14 @@ public static class DataStoreSetup
     /// </summary>
     /// <param name="services">Service collection</param>
     /// <param name="sqlServerConnectionString">Sql Server connection string.</param>
-    public static IServiceCollection AddResourceIdeaDbContext(this IServiceCollection services, string sqlServerConnectionString)
+    public static IServiceCollection AddDataStoreServices(this IServiceCollection services, string sqlServerConnectionString)
     {
-        services.AddDbContext<ResourceIdeaDBContext>(options => options.UseSqlServer(sqlServerConnectionString));
-
-        services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ResourceIdeaDBContext>()
-                .AddDefaultTokenProviders();
-
-        services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
-            options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
-            options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-        }).AddIdentityCookies();
-
-        services.Configure<IdentityOptions>(options =>
-        {
-            options.Password.RequireDigit = true;
-            options.Password.RequiredLength = 6;
-        });
-
-        services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
+        services.AddTransient<IClientsService, ClientsService>();
+        services.AddTransient<IEngagementsService, EngagementsService>();
+        services.AddTransient<IEngagementTasksService, EngagementTasksService>();
+        services.AddTransient<ISubscriptionsService, SubscriptionsService>();
+        services.AddTransient<ISubscriptionServicesService, SubscriptionServicesService>();
+        services.AddTransient<ITenantsService, TenantsService>();
 
         return services;
     }
@@ -131,24 +120,6 @@ public static class DataStoreSetup
     private static Task CreateSystemRolesClaimsAsync(ResourceIdeaDBContext dbContext)
     {
         //TODO: Add logic for CreateSystemRolesClaims
-        return Task.CompletedTask;
-    }
-
-    private static Task CreateBackendSystemUsersAsync(ResourceIdeaDBContext dbContext)
-    {
-        //TODO: Add logic for CreateBackendSystemUsers
-        return Task.CompletedTask;
-    }
-
-    private static Task CreateBackendSystemUsersClaimsAsync(ResourceIdeaDBContext dbContext)
-    {
-        //TODO: Add logic for CreateBackendSystemUsersClaims
-        return Task.CompletedTask;
-    }
-
-    private static Task AssignBackendSystemUsersRolesAsync(ResourceIdeaDBContext dbContext)
-    {
-        //TODO: Add logic for AssignBackendSystemUsersRoles
         return Task.CompletedTask;
     }
 }

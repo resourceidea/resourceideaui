@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Queries;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Specifications;
 using EastSeat.ResourceIdea.Application.Types;
@@ -12,22 +13,17 @@ using MediatR;
 namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Handlers;
 
 public sealed class GetSubscriptionByIdQueryHandler(
-    IAsyncRepository<Subscription> subscriptionRepository,
+    ISubscriptionsService subscriptionsService,
     IMapper mapper) : IRequestHandler<GetSubscriptionByIdQuery, ResourceIdeaResponse<SubscriptionModel>>
 {
-    private readonly IAsyncRepository<Subscription> _subscriptionRepository = subscriptionRepository;
+    private readonly ISubscriptionsService _subscriptionsService = subscriptionsService;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ResourceIdeaResponse<SubscriptionModel>> Handle(GetSubscriptionByIdQuery request, CancellationToken cancellationToken)
     {
         GetSubscriptionByIdSpecification getSubscriptionByIdSpecification = new (request.SubscriptionId);
-        var getSubscriptionByIdResult = await _subscriptionRepository.GetByIdAsync(getSubscriptionByIdSpecification, cancellationToken);
-        if (getSubscriptionByIdResult.IsFailure)
-        {
-            return ResourceIdeaResponse<SubscriptionModel>.Failure(getSubscriptionByIdResult.Error);
-        }
+        var response = await _subscriptionsService.GetByIdAsync(getSubscriptionByIdSpecification, cancellationToken);
 
-        return ResourceIdeaResponse<SubscriptionModel>
-                    .Success(Optional<SubscriptionModel>.Some(_mapper.Map<SubscriptionModel>(getSubscriptionByIdResult.Content.Value)));
+        return _mapper.Map<ResourceIdeaResponse<SubscriptionModel>>(response.Content.Value);
     }
 }

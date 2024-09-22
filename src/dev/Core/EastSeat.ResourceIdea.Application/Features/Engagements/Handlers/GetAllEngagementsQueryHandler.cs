@@ -11,22 +11,26 @@ using MediatR;
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers;
 
 public class GetAllEngagementsQueryHandler(
-    IEngagementRepository engagementRepository,
+    IEngagementsService engagementsService,
     IMapper mapper
 ) : IRequestHandler<GetAllEngagementsQuery, ResourceIdeaResponse<PagedListResponse<EngagementModel>>>
 {
-    private readonly IEngagementRepository _engagementRepository = engagementRepository;
+    private readonly IEngagementsService _engagementsService = engagementsService;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ResourceIdeaResponse<PagedListResponse<EngagementModel>>> Handle(GetAllEngagementsQuery request, CancellationToken cancellationToken)
     {
-        var engagements = await _engagementRepository.GetPagedListAsync(
+        var result = await _engagementsService.GetPagedListAsync(
             request.PageNumber,
             request.PageSize,
             Optional<BaseSpecification<Engagement>>.None,
             cancellationToken);
 
-        return ResourceIdeaResponse<PagedListResponse<EngagementModel>>
-                    .Success(Optional<PagedListResponse<EngagementModel>>.Some(_mapper.Map<PagedListResponse<EngagementModel>>(engagements)));
+        if (result.IsFailure)
+        {
+            return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.Failure(result.Error);
+        }
+
+        return _mapper.Map<ResourceIdeaResponse<PagedListResponse<EngagementModel>>>(result);
     }
 }

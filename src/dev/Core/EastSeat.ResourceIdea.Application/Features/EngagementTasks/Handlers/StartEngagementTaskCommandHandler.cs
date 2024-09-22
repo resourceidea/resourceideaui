@@ -7,21 +7,21 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Handlers;
 
-public sealed class StartEngagementTaskCommandHandler(IEngagementTaskRepository repository, IMapper mapper)
-    : IRequestHandler<StartEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
+public sealed class StartEngagementTaskCommandHandler(
+    IEngagementTasksService engagementTasksService,
+    IMapper mapper) : IRequestHandler<StartEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
 {
-    private readonly IEngagementTaskRepository _repository = repository;
+    private readonly IEngagementTasksService _engagementTasksService = engagementTasksService;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ResourceIdeaResponse<EngagementTaskModel>> Handle(StartEngagementTaskCommand request, CancellationToken cancellationToken)
     {
-        var result = await _repository.StartAsync(request.EngagementTaskId, cancellationToken);
+        var result = await _engagementTasksService.StartAsync(request.EngagementTaskId, cancellationToken);
         if (result.IsFailure)
         {
             return ResourceIdeaResponse<EngagementTaskModel>.Failure(result.Error);
         }
 
-        return ResourceIdeaResponse<EngagementTaskModel>
-                    .Success(Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(result.Content)));
+        return _mapper.Map<ResourceIdeaResponse<EngagementTaskModel>>(result.Content);
     }
 }

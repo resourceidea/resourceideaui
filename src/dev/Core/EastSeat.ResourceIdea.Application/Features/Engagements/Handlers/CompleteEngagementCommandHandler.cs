@@ -10,10 +10,10 @@ using MediatR;
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers;
 
 public sealed class CompleteEngagementCommandHandler (
-    IEngagementRepository engagementRepository,
+    IEngagementsService engagementsService,
     IMapper mapper): IRequestHandler<CompleteEngagementCommand, ResourceIdeaResponse<EngagementModel>>
 {
-    private readonly IEngagementRepository _engagementRepository = engagementRepository;
+    private readonly IEngagementsService _engagementsService = engagementsService;
     private readonly IMapper _mapper = mapper;
 
     /// <inheritdoc />
@@ -26,12 +26,14 @@ public sealed class CompleteEngagementCommandHandler (
 
         if (!validationResult.IsValid || validationResult.Errors.Count > 0)
         {
-            return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.CompleteEngagementCommandValidationFailure);
+            return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.DataStoreCommandFailure);
         }
 
-        var completedEngagement = await _engagementRepository.CompleteAsync(request.EngagementId, cancellationToken);
+        var completedEngagement = await _engagementsService.CompleteAsync(
+            request.EngagementId,
+            request.CompletionDate,
+            cancellationToken);
 
-        return ResourceIdeaResponse<EngagementModel>
-                    .Success(Optional<EngagementModel>.Some(_mapper.Map<EngagementModel>(completedEngagement)));
+        return ResourceIdeaResponse<EngagementModel>.Success(_mapper.Map<EngagementModel>(completedEngagement));
     }
 }

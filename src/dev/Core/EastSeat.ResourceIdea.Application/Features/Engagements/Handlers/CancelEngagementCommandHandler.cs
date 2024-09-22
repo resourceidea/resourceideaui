@@ -14,24 +14,18 @@ namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers
     /// Handles the cancellation of an engagement.
     /// </summary>
     public sealed class CancelEngagementCommandHandler(
-        IEngagementRepository engagementRepository,
+        IEngagementsService engagementsService,
         IMapper mapper) : IRequestHandler<CancelEngagementCommand, ResourceIdeaResponse<EngagementModel>>
     {
-        private readonly IEngagementRepository _engagementRepository = engagementRepository;
+        private readonly IEngagementsService _engagementsService = engagementsService;
         private readonly IMapper _mapper = mapper;
 
         /// <inheritdoc />
         public async Task<ResourceIdeaResponse<EngagementModel>> Handle(CancelEngagementCommand request, CancellationToken cancellationToken)
         {
-            Engagement engagement = new()
-            {
-                Id = request.EngagementId
-            };
+            var canceledEngagement = await _engagementsService.CancelAsync(request.EngagementId, cancellationToken);
 
-            var canceledEngagement = await _engagementRepository.CancelAsync(engagement, cancellationToken);
-
-            return ResourceIdeaResponse<EngagementModel>
-                        .Success(Optional<EngagementModel>.Some(_mapper.Map<EngagementModel>(canceledEngagement)));
+            return ResourceIdeaResponse<EngagementModel>.Success(_mapper.Map<EngagementModel>(canceledEngagement));
         }
     }
 }

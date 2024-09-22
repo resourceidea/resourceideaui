@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+
+using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
 using EastSeat.ResourceIdea.Application.Types;
@@ -7,17 +9,23 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Handlers;
 
-public sealed class CloseEngagementTaskCommandHandler (IEngagementTaskRepository repository, IMapper mapper)
-    : IRequestHandler<CloseEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
+public sealed class CloseEngagementTaskCommandHandler (
+    IEngagementTasksService engagementTasksService,
+    IMapper mapper) : IRequestHandler<CloseEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
 {
     private readonly IMapper _mapper = mapper;
-    private readonly IEngagementTaskRepository _repository = repository;
+    private readonly IEngagementTasksService _engagementTasksService = engagementTasksService;
 
     public async Task<ResourceIdeaResponse<EngagementTaskModel>> Handle(CloseEngagementTaskCommand request, CancellationToken cancellationToken)
     {
-        var closedEngagementTask = await _repository.CloseAsync(request.EngagementTaskId, cancellationToken);
+        var result = await _engagementTasksService.CloseAsync(request.EngagementTaskId, cancellationToken);
 
-        return ResourceIdeaResponse<EngagementTaskModel>
-                    .Success(Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(closedEngagementTask)));
+        // TODO: Add error handling for the result to return the error on the result.
+        if (result.IsFailure)
+        {
+            return ResourceIdeaResponse<EngagementTaskModel>.Failure(result.Error);
+        }
+
+        return _mapper.Map<ResourceIdeaResponse<EngagementTaskModel>>(result);
     }
 }

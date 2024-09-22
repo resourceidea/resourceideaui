@@ -1,8 +1,9 @@
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Users.Models;
+
 using MediatR;
 
-namespace EastSeat.ResourceIdea.Application.Features.ApplicationUsers.Commands;
+namespace EastSeat.ResourceIdea.Web.Auth.Models;
 
 /// <summary>
 /// Command for logging in a user.

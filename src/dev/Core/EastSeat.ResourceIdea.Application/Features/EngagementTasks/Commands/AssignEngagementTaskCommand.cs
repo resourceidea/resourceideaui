@@ -19,5 +19,15 @@ public sealed class AssignEngagementTaskCommand : IRequest<ResourceIdeaResponse<
     /// <summary>
     /// Gets or sets the ID of the user to whom the engagement task is assigned.
     /// </summary>
-    public required ApplicationUserId ApplicationUserId { get; init; }
+    public required IReadOnlyList<ApplicationUserId> ApplicationUserIds { get; init; }
+
+    /// <summary>
+    /// Gets or sets the start date of the engagement task.
+    /// </summary>
+    public DateTimeOffset StartDate { get; init; }
+
+    /// <summary>
+    /// Gets or sets the end date of the engagement task.
+    /// </summary>
+    public DateTimeOffset EndDate { get; init; }
 }

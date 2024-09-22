@@ -1,23 +1,29 @@
 namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers
 {
-    using System.Threading;
-    using System.Threading.Tasks;
+    using AutoMapper;
+
     using EastSeat.ResourceIdea.Application.Enums;
     using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
-    using EastSeat.ResourceIdea.Application.Features.Clients.Services;
+    using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
     using EastSeat.ResourceIdea.Application.Features.Clients.Validators;
     using EastSeat.ResourceIdea.Application.Types;
     using EastSeat.ResourceIdea.Domain.Clients.Entities;
     using EastSeat.ResourceIdea.Domain.Clients.Models;
+
     using MediatR;
+
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Command handler for updating client.
     /// </summary>
     public sealed class UpdateClientCommandHandler(
-        IClientsService clientsService) : IRequestHandler<UpdateClientCommand, ResourceIdeaResponse<ClientModel>>
+        IClientsService clientsService,
+        IMapper mapper) : IRequestHandler<UpdateClientCommand, ResourceIdeaResponse<ClientModel>>
     {
         private readonly IClientsService _clientsService = clientsService;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<ResourceIdeaResponse<ClientModel>> Handle(UpdateClientCommand request, CancellationToken cancellationToken)
         {
@@ -28,7 +34,13 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers
             }
 
             Client client = GetClientUpdate(request);
-            return await _clientsService.UpdateClientAsync(client, cancellationToken);
+            var response = await _clientsService.UpdateAsync(client, cancellationToken);
+            if (response.IsFailure)
+            {
+                return ResourceIdeaResponse<ClientModel>.Failure(ErrorCode.DataStoreCommandFailure);
+            }
+
+            return ResourceIdeaResponse<ClientModel>.Success(_mapper.Map<ClientModel>(response));
         }
 
         private static Client GetClientUpdate(UpdateClientCommand request)
