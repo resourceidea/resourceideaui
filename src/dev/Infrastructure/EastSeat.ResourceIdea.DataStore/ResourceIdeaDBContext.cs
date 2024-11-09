@@ -46,12 +46,38 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
             entity.Property(e => e.NormalizedName).IsRequired(false).HasMaxLength(256);
         });
 
-        builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims", "Identity");
-        builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles", "Identity");
+        builder.Entity<ApplicationIdentityUserRole>(entity =>
+        {
+            entity.ToTable("UserRoles", "Identity");
+
+            entity.HasOne(e => e.Role)
+                .WithMany()
+                .HasForeignKey(e => e.RoleId)
+                .IsRequired(true)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .IsRequired(true)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // builder.Entity<ApplicationIdentityRoleClaim>(entity =>
+        // {
+        //     entity.ToTable("RoleClaims", "Identity");
+
+        //     entity.HasOne(e => e.Role)
+        //         .WithMany()
+        //         .HasForeignKey(e => e.RoleId)
+        //         .IsRequired(true)
+        //         .OnDelete(DeleteBehavior.Restrict);
+        // });
+
         builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims", "Identity");
+        builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims", "Identity");
         builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins", "Identity");
         builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens", "Identity");
-        builder.Entity<IdentityRole<string>>().ToTable("ApplicationRole", "Identity");
 
         builder.ApplyConfiguration(new ApplicationUserEntityTypeConfiguration());
         builder.ApplyConfiguration(new TenantEntityTypeConfiguration());

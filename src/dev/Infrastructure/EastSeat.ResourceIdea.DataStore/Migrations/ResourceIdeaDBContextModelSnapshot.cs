@@ -510,25 +510,6 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                     b.UseTptMappingStrategy();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<string>", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ApplicationRole", "Identity");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -613,7 +594,9 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRoles", "Identity");
+                    b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -648,6 +631,13 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.ToTable("Roles", "Identity");
+                });
+
+            modelBuilder.Entity("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationIdentityUserRole", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserRole<string>");
+
+                    b.ToTable("UserRoles", "Identity");
                 });
 
             modelBuilder.Entity("EastSeat.ResourceIdea.Domain.Clients.Entities.Client", b =>
@@ -751,12 +741,6 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -775,6 +759,31 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                         .HasForeignKey("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationRole", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationIdentityUserRole", b =>
+                {
+                    b.HasOne("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationRole", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", null)
+                        .WithOne()
+                        .HasForeignKey("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationIdentityUserRole", "UserId", "RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EastSeat.ResourceIdea.Domain.EngagementTasks.Entities.EngagementTask", b =>
