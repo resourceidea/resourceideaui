@@ -51,6 +51,7 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
         builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims", "Identity");
         builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins", "Identity");
         builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens", "Identity");
+        builder.Entity<IdentityRole<string>>().ToTable("ApplicationRole", "Identity");
 
         builder.ApplyConfiguration(new ApplicationUserEntityTypeConfiguration());
         builder.ApplyConfiguration(new TenantEntityTypeConfiguration());
