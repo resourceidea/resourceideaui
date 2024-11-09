@@ -9,14 +9,14 @@ using EastSeat.ResourceIdea.Domain.Tenants.Models;
 
 using MediatR;
 using EastSeat.ResourceIdea.Application.Enums;
+using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 namespace EastSeat.ResourceIdea.Application.Features.Tenants.Handlers;
 
 public sealed class UpdateTenantCommandHandler(
-    IAsyncRepository<Tenant> tenantRepository,
-    IMapper mapper)
-    : IRequestHandler<UpdateTenantCommand, ResourceIdeaResponse<TenantModel>>
+    ITenantsService tenantsService,
+    IMapper mapper) : IRequestHandler<UpdateTenantCommand, ResourceIdeaResponse<TenantModel>>
 {
-    private readonly IAsyncRepository<Tenant> _tenantRepository = tenantRepository;
+    private readonly ITenantsService _tenantsService = tenantsService;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ResourceIdeaResponse<TenantModel>> Handle(UpdateTenantCommand request, CancellationToken cancellationToken)
@@ -33,13 +33,8 @@ public sealed class UpdateTenantCommandHandler(
             TenantId = request.TenantId.Value,
             Organization = request.Organization
         };
-        var updateTenantResult = await _tenantRepository.UpdateAsync(tenantUpdateDetails, cancellationToken);
-        if (updateTenantResult.IsFailure)
-        {
-            return ResourceIdeaResponse<TenantModel>.Failure(updateTenantResult.Error);
-        }
+        var response = await _tenantsService.UpdateAsync(tenantUpdateDetails, cancellationToken);
 
-        return ResourceIdeaResponse<TenantModel>
-                    .Success(Optional<TenantModel>.Some(_mapper.Map<TenantModel>(updateTenantResult.Content.Value)));
+        return _mapper.Map<ResourceIdeaResponse<TenantModel>>(response);
     }
 }

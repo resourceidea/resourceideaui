@@ -4,11 +4,13 @@ using EastSeat.ResourceIdea.Application.Extensions;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
+using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Queries;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Specifications;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Entities;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Models;
+using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 
 using MediatR;
 
@@ -17,14 +19,13 @@ namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Handlers;
 /// <summary>
 /// Handles the query to get a list of subscriptions.
 /// </summary>
-/// <param name="subscriptionRepository">Subscriptions repository.</param>
+/// <param name="subscriptionsService">Subscriptions repository.</param>
 /// <param name="mapper"><see cref="IMapper"/> for the <see cref="SubscriptionModel"/></param>
 public sealed class GetSubscriptionsListQueryHandler(
-    IAsyncRepository<Subscription> subscriptionRepository,
-    IMapper mapper) 
-    : IRequestHandler<GetSubscriptionsListQuery, ResourceIdeaResponse<PagedListResponse<SubscriptionModel>>>
+    ISubscriptionsService subscriptionsService,
+    IMapper mapper) : IRequestHandler<GetSubscriptionsListQuery, ResourceIdeaResponse<PagedListResponse<SubscriptionModel>>>
 {
-    private readonly IAsyncRepository<Subscription> _subscriptionRepository = subscriptionRepository;
+    private readonly ISubscriptionsService _subscriptionsService = subscriptionsService;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ResourceIdeaResponse<PagedListResponse<SubscriptionModel>>> Handle(
@@ -40,14 +41,13 @@ public sealed class GetSubscriptionsListQueryHandler(
             .Or(GetSubscriptionBySubscribedOnDateSpecification(request.Query.Filter))
             .Or(periodSpecification);
 
-        PagedListResponse<Subscription> subscriptions = await _subscriptionRepository.GetPagedListAsync(
+        var response = await _subscriptionsService.GetPagedListAsync(
             request.Query.PageNumber,
             request.Query.PageSize,
             specification,
             cancellationToken);
 
-        return ResourceIdeaResponse<PagedListResponse<SubscriptionModel>>
-                    .Success(Optional<PagedListResponse<SubscriptionModel>>.Some(_mapper.Map<PagedListResponse<SubscriptionModel>>(subscriptions)));
+        return _mapper.Map<ResourceIdeaResponse<PagedListResponse<SubscriptionModel>>>(response);
     }
 
     private static BaseSpecification<Subscription> GetSubscriptionBySubscriptionAfterDateSpecification(string queryFilters)

@@ -13,13 +13,14 @@ namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Handlers;
 /// <summary>
 /// Handles the command to create an engagement task.
 /// </summary>
-/// <param name="repository"></param>
+/// <param name="engagementTasksService"></param>
 /// <param name="mapper"></param>
-public class CreateEngagementTaskCommandHandler (IEngagementTaskRepository repository, IMapper mapper)
-    : IRequestHandler<CreateEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
+public class CreateEngagementTaskCommandHandler (
+    IEngagementTasksService engagementTasksService,
+    IMapper mapper) : IRequestHandler<CreateEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
 {
     private readonly IMapper _mapper = mapper;
-    private readonly IEngagementTaskRepository _repository = repository;
+    private readonly IEngagementTasksService _engagementTasksService = engagementTasksService;
 
     public async Task<ResourceIdeaResponse<EngagementTaskModel>> Handle(CreateEngagementTaskCommand request, CancellationToken cancellationToken)
     {
@@ -34,7 +35,7 @@ public class CreateEngagementTaskCommandHandler (IEngagementTaskRepository repos
             DueDate = request.DueDate
         };
 
-        var createdEngagementTask = await _repository.AddAsync(engagementTask, cancellationToken);
+        var createdEngagementTask = await _engagementTasksService.AddAsync(engagementTask, cancellationToken);
 
         return ResourceIdeaResponse<EngagementTaskModel>
                     .Success(Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(createdEngagementTask)));

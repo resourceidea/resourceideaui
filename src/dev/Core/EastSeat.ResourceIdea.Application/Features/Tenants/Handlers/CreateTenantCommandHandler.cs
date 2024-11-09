@@ -2,6 +2,7 @@ using AutoMapper;
 using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Commands;
+using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Validators;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
@@ -16,11 +17,10 @@ namespace EastSeat.ResourceIdea.Application.Features.Tenants.Handlers;
 /// Handles the operations required to create a tenant.
 /// </summary>
 public sealed class CreateTenantCommandHandler (
-    IAsyncRepository<Tenant> tenantRepository,
-    IMapper mapper)
-    : IRequestHandler<CreateTenantCommand, ResourceIdeaResponse<TenantModel>>
+    ITenantsService tenantsService,
+    IMapper mapper) : IRequestHandler<CreateTenantCommand, ResourceIdeaResponse<TenantModel>>
 {
-    private readonly IAsyncRepository<Tenant> _tenantRepository = tenantRepository;
+    private readonly ITenantsService _tenantsService = tenantsService;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ResourceIdeaResponse<TenantModel>> Handle(CreateTenantCommand request, CancellationToken cancellationToken)
@@ -37,12 +37,12 @@ public sealed class CreateTenantCommandHandler (
             TenantId = TenantId.Create(Guid.NewGuid()).Value,
             Organization = request.Organization
         };
-        var addTenantResult = await _tenantRepository.AddAsync(tenant, cancellationToken);
-        if (addTenantResult.IsFailure)
+        var response = await _tenantsService.AddAsync(tenant, cancellationToken);
+        if (response.IsFailure)
         {
-            return ResourceIdeaResponse<TenantModel>.Failure(addTenantResult.Error);
+            return ResourceIdeaResponse<TenantModel>.Failure(response.Error);
         }
 
-        return ResourceIdeaResponse<TenantModel>.Success(Optional<TenantModel>.Some(_mapper.Map<TenantModel>(addTenantResult)));
+        return _mapper.Map<ResourceIdeaResponse<TenantModel>>(response);
     }
 }

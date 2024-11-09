@@ -24,9 +24,9 @@ public enum ErrorCode
     NotFound,
 
     /// <summary>
-    /// Validation of the command to create a subscription service failed.
+    /// Validation of the command failed.
     /// </summary>
-    CreateSubscriptionServiceCommandValidationFailure,
+    CommandValidationFailure,
 
     /// <summary>
     /// Validation of the command to update a subscription service failed.
@@ -102,4 +102,19 @@ public enum ErrorCode
     /// Login failed.
     /// </summary>
     LoginFailed,
+
+    /// <summary>
+    /// Bad request made to the application.
+    /// </summary>
+    BadRequest,
+
+    /// <summary>
+    /// Query to the data store failed.
+    /// </summary>
+    DataStoreQueryFailure,
+    
+    /// <summary>
+    /// Command to the data store failed.
+    /// </summary>
+    DataStoreCommandFailure,
 }

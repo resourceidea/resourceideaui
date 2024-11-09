@@ -2,6 +2,7 @@ using AutoMapper;
 using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Commands;
+using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Validators;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
@@ -13,11 +14,11 @@ using MediatR;
 namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Handlers;
 
 public sealed class CreateSubscriptionServiceCommandHandler(
-    IAsyncRepository<SubscriptionService> subscriptionServiceRepository,
+    ISubscriptionServicesService subscriptionServicesService,
     IMapper mapper)
         : IRequestHandler<CreateSubscriptionServiceCommand, ResourceIdeaResponse<SubscriptionServiceModel>>
 {
-    private readonly IAsyncRepository<SubscriptionService> _subscriptionServiceRepository = subscriptionServiceRepository;
+    private readonly ISubscriptionServicesService _subscriptionServicesService = subscriptionServicesService;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ResourceIdeaResponse<SubscriptionServiceModel>> Handle(CreateSubscriptionServiceCommand request, CancellationToken cancellationToken)
@@ -26,22 +27,13 @@ public sealed class CreateSubscriptionServiceCommandHandler(
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
         if (validationResult.IsValid is false || validationResult.Errors.Count > 0)
         {
-            return ResourceIdeaResponse<SubscriptionServiceModel>.Failure(ErrorCode.CreateSubscriptionServiceCommandValidationFailure);
+            return ResourceIdeaResponse<SubscriptionServiceModel>.Failure(ErrorCode.CommandValidationFailure);
         }
 
-        SubscriptionService subscriptionService = new()
-        {
-            Id = SubscriptionServiceId.Create(Guid.NewGuid()),
-            Name = request.Name
-        };
+        // TODO: Map CreateSubscriptionServiceCommand class to the SubscriptionService class.
+        var subscriptionService = _mapper.Map<SubscriptionService>(request);
+        var response = await _subscriptionServicesService.AddAsync(subscriptionService, cancellationToken);
 
-        var newSubscriptionServiceResult = await _subscriptionServiceRepository.AddAsync(subscriptionService, cancellationToken);
-        if (newSubscriptionServiceResult.IsFailure)
-        {
-            return ResourceIdeaResponse<SubscriptionServiceModel>.Failure(newSubscriptionServiceResult.Error);
-        }
-
-        return ResourceIdeaResponse<SubscriptionServiceModel>
-                    .Success(Optional<SubscriptionServiceModel>.Some(_mapper.Map<SubscriptionServiceModel>(newSubscriptionServiceResult)));
+        return _mapper.Map<ResourceIdeaResponse<SubscriptionServiceModel>>(response);
     }
 }
