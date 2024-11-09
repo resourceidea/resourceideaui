@@ -1,21 +1,19 @@
 <Solution>
   <Folder Name="/src/" />
-  <Folder Name="/src/dev/" />
-  <Folder Name="/src/dev/Core/">
-    <Project Path="src\dev\Core\EastSeat.ResourceIdea.Application\EastSeat.ResourceIdea.Application.csproj" />
-    <Project Path="src\dev\Core\EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj" />
+  <Folder Name="/src/dev/" Id="d2956ba6-1817-c0db-5fbc-fefb97b115f9" />
+  <Folder Name="/src/dev/Core/" Id="39c4e47c-9ce5-d6f2-ab97-49796ac48130">
+    <Project Path="src/dev/Core/EastSeat.ResourceIdea.Application/EastSeat.ResourceIdea.Application.csproj" />
+    <Project Path="src/dev/Core/EastSeat.ResourceIdea.Domain/EastSeat.ResourceIdea.Domain.csproj" />
   </Folder>
-  <Folder Name="/src/dev/Infrastructure/">
-    <Project Path="src\dev\Infrastructure\EastSeat.ResourceIdea.DataStore\EastSeat.ResourceIdea.DataStore.csproj" />
+  <Folder Name="/src/dev/Infrastructure/" Id="cc01883f-2039-4a7a-bf8b-30abac8c6c68">
+    <Project Path="src/dev/Infrastructure/EastSeat.ResourceIdea.DataStore/EastSeat.ResourceIdea.DataStore.csproj" />
   </Folder>
-  <Folder Name="/src/dev/Web/">
-    <Project Path="src\dev\Web\EastSeat.ResourceIdea.Web\EastSeat.ResourceIdea.Web.csproj" />
+  <Folder Name="/src/dev/Web/" Id="28662963-f0c0-b3eb-484e-ef7a7de7053d">
+    <Project Path="src/dev/Web/EastSeat.ResourceIdea.Web/EastSeat.ResourceIdea.Web.csproj" />
   </Folder>
-  <Folder Name="/src/tests/">
-    <Project Path="src\tests\EastSeat.ResourceIdea.Application.UnitTests\EastSeat.ResourceIdea.Application.UnitTests.csproj" Type="C#" />
-    <Project Path="src\tests\EastSeat.ResourceIdea.Domain.UnitTests\EastSeat.ResourceIdea.Domain.UnitTests.csproj" />
+  <Folder Name="/src/tests/" Id="cea09484-30f6-4d44-02f6-822e06dbc57c">
+    <Project Path="src/tests/EastSeat.ResourceIdea.Application.UnitTests/EastSeat.ResourceIdea.Application.UnitTests.csproj" />
+    <Project Path="src/tests/EastSeat.ResourceIdea.DataStore.UnitTests/EastSeat.ResourceIdea.DataStore.UnitTests.csproj" Id="3b895267-2416-e4f9-f30f-a3ada29a07a6" />
+    <Project Path="src/tests/EastSeat.ResourceIdea.Domain.UnitTests/EastSeat.ResourceIdea.Domain.UnitTests.csproj" />
   </Folder>
-  <Properties Name="Visual Studio">
-    <Property Name="OpenWith" Value="Visual Studio Version 17" />
-  </Properties>
 </Solution>

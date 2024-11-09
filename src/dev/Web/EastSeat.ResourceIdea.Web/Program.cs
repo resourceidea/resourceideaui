@@ -31,13 +31,6 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => option
 
 builder.Services.AddTransient<IUserAuthenticationService, UserAuthenticationService>();
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
-    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
-    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-}).AddIdentityCookies();
-
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.Password.RequireDigit = true;

@@ -12,6 +12,7 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,8 @@ public static class DataStoreSetup
     private const string CreateSubscriptionServicesTaskType = "EastSeat.ResourceIdea.Web.StartupTasks.CreateSubscriptionServices";
     private const string CreateSystemRolesTaskType = "EastSeat.ResourceIdea.Web.StartupTasks.CreateSystemRoles";
     private const string CreateSystemRolesClaimsTaskType = "EastSeat.ResourceIdea.Web.StartupTasks.CreateSystemRolesClaims";
+
+    private static readonly string[] _systemRoles = { "Owner", "Administrator", "General User" };
 
     /// <summary>
     /// Add the ResourceIdeaDBContext to the service collection
@@ -64,7 +67,7 @@ public static class DataStoreSetup
                     CreateSubscriptionServicesTaskType => new Func<ResourceIdeaDBContext, Task>(CreateSubscriptionServicesAsync),
                     CreateSystemRolesTaskType => new Func<ResourceIdeaDBContext, Task>(CreateSystemRolesAsync),
                     CreateSystemRolesClaimsTaskType => new Func<ResourceIdeaDBContext, Task>(CreateSystemRolesClaimsAsync),
-                    _ => throw new InvalidOperationException($"Unknown startup task type: {task.Type}")
+                    _ => new Func<ResourceIdeaDBContext, Task>(LogUnknownStartupTaskType)
                 })
                 .Select(startupTask => startupTask(dbContext));
 
@@ -72,6 +75,12 @@ public static class DataStoreSetup
         }
 
         return app;
+    }
+
+    private static Task LogUnknownStartupTaskType(ResourceIdeaDBContext _)
+    {
+        // TODO: Log unknown startup task type.
+        return Task.CompletedTask;
     }
 
     private static async Task CreateSubscriptionServicesAsync(ResourceIdeaDBContext dbContext)
@@ -97,9 +106,13 @@ public static class DataStoreSetup
         await dbContext.SaveChangesAsync();
     }
 
-    private static List<SubscriptionService> RemoveExistingServiceNames(List<SubscriptionService> subscriptionServices, List<string> existingServiceNames)
+    private static List<SubscriptionService> RemoveExistingServiceNames(
+        List<SubscriptionService> subscriptionServices,
+        List<string> existingServiceNames)
     {
-        subscriptionServices = subscriptionServices.Where(s => !existingServiceNames.Contains(s.Name.ToLower())).ToList();
+        subscriptionServices = subscriptionServices
+            .Where(s => !existingServiceNames.Contains(s.Name.ToLower()))
+            .ToList();
         return subscriptionServices;
     }
 
@@ -115,18 +128,19 @@ public static class DataStoreSetup
 
     private static async Task CreateSystemRolesAsync(ResourceIdeaDBContext dbContext)
     {
-        if (dbContext?.Roles == null)
+        if (dbContext?.ApplicationRoles == null)
         {
             return;
         }
 
-        string[] systemRoles = ["Owner", "Administrator", "General User"];
-        List<ApplicationRole> rolesToCreate = systemRoles.Select(role => new ApplicationRole {
+        List<ApplicationRole> rolesToCreate = _systemRoles.Select(role => new ApplicationRole
+        {
             Id = Guid.NewGuid().ToString(),
             Name = role,
             NormalizedName = role.ToUpper(),
             IsBackendRole = true,
-            TenantId = TenantId.Empty }).ToList();
+            TenantId = TenantId.Empty
+        }).ToList();
 
         var existingRoles = await GetExistingRoles(dbContext);
         rolesToCreate = RemoveExistingRoles(rolesToCreate, existingRoles);
@@ -155,9 +169,52 @@ public static class DataStoreSetup
         return await dbContext.ApplicationRoles.Where(s => !string.IsNullOrEmpty(s.Name)).Select(s => s.Name!.ToLower()).ToListAsync();
     }
 
-    private static Task CreateSystemRolesClaimsAsync(ResourceIdeaDBContext dbContext)
+    private static async Task CreateSystemRolesClaimsAsync(ResourceIdeaDBContext dbContext)
     {
-        //TODO: Add logic for CreateSystemRolesClaims
-        return Task.CompletedTask;
+        if (dbContext?.ApplicationRoles is null || dbContext?.RoleClaims is null)
+        {
+            return;
+        }
+
+        var roleClaims = new Dictionary<string, List<string>>
+        {
+            { "Owner", new List<string> { "Permission.AccessAll", "Permission.ManageUsers" } },
+            { "Administrator", new List<string> { "Permission.ManageUsers", "Permission.ViewReports" } },
+            { "General User", new List<string> { "Permission.AccessBasic" } }
+        };
+
+        var roles = await dbContext.ApplicationRoles
+            .Where(r => _systemRoles.Contains(r.Name))
+            .ToListAsync();
+
+        foreach (var role in roles)
+        {
+            // Get existing claims for the role to avoid duplicates
+            var existingClaims = await dbContext.RoleClaims
+                .Where(rc => rc.RoleId == role.Id)
+                .Select(rc => new { rc.ClaimType, rc.ClaimValue })
+                .ToListAsync();
+
+            if (roleClaims.TryGetValue(role.Name!, out var claims))
+            {
+                foreach (var claimValue in claims)
+                {
+                    const string claimType = "Permission";
+
+                    if (!existingClaims.Any(ec => ec.ClaimType == claimType && ec.ClaimValue == claimValue))
+                    {
+                        var roleClaim = new IdentityRoleClaim<string>
+                        {
+                            RoleId = role.Id!,
+                            ClaimType = claimType,
+                            ClaimValue = claimValue
+                        };
+                        dbContext.RoleClaims.Add(roleClaim);
+                    }
+                }
+            }
+        }
+
+        await dbContext.SaveChangesAsync();
     }
 }

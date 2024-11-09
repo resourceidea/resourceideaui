@@ -23,22 +23,13 @@ namespace EastSeat.ResourceIdea.Application.MappingProfiles;
 
 public sealed class ResourceIdeaMappingProfile : Profile
 {
-    private readonly IMapper _mapper;
-
-    public ResourceIdeaMappingProfile(IMapper mapper)
-    {
-        _mapper = mapper;
-        
+    public ResourceIdeaMappingProfile()
+    {        
         ConfigureTenantMappings();
-
         ConfigureSubscriptionServiceMappings();
-
         ConfigureSubscriptionMappings();
-
         ConfigureClientMappings();
-
         ConfigureEngagementMappings();
-
         ConfigureEngagementTaskMappings();
     }
 
@@ -49,14 +40,19 @@ public sealed class ResourceIdeaMappingProfile : Profile
                                opt => opt.MapFrom(tenant => TenantId.Create(tenant.TenantId)));
 
         CreateMap<PagedListResponse<Tenant>, PagedListResponse<TenantModel>>()
-            .ForMember(dest => dest.Items, opt => opt.MapFrom(
-                src => src.Items.Select(item => _mapper.Map<TenantModel>(item)).ToList()));
+            .ForMember(
+                dest => dest.Items,
+                opt => opt.MapFrom((src, dest, destMember, context) => src.Items.Select(item => context.Mapper.Map<TenantModel>(item)).ToList()));
 
         CreateMap<ResourceIdeaResponse<Tenant>, ResourceIdeaResponse<TenantModel>>()
-            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => _mapper.Map<TenantModel>(src.Content)));
+            .ForMember(
+                dest => dest.Content,
+                opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<TenantModel>(src.Content)));
 
         CreateMap<ResourceIdeaResponse<PagedListResponse<Engagement>>, ResourceIdeaResponse<PagedListResponse<EngagementModel>>>()
-            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => _mapper.Map<PagedListResponse<EngagementModel>>(src.Content)));
+            .ForMember(
+                dest => dest.Content,
+                opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<PagedListResponse<EngagementModel>>(src.Content)));
     }
 
     private void ConfigureSubscriptionServiceMappings()
@@ -65,14 +61,19 @@ public sealed class ResourceIdeaMappingProfile : Profile
                     .ForMember(dest => dest.Id, opt => opt.MapFrom(src => SubscriptionServiceId.Create(src.Id.Value)));
 
         CreateMap<ResourceIdeaResponse<SubscriptionService>, ResourceIdeaResponse<SubscriptionServiceModel>>()
-            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => _mapper.Map<SubscriptionServiceModel>(src.Content)));
+            .ForMember(
+                dest => dest.Content,
+                opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<SubscriptionServiceModel>(src.Content)));
 
         CreateMap<PagedListResponse<SubscriptionService>, PagedListResponse<SubscriptionServiceModel>>()
-            .ForMember(dest => dest.Items, opt => opt.MapFrom(
-                src => src.Items.Select(item => _mapper.Map<SubscriptionServiceModel>(item)).ToList()));
+            .ForMember(
+                dest => dest.Items,
+                opt => opt.MapFrom((src, dest, destMember, context) => src.Items.Select(item => context.Mapper.Map<SubscriptionServiceModel>(item)).ToList()));
 
         CreateMap<ResourceIdeaResponse<PagedListResponse<SubscriptionService>>, ResourceIdeaResponse<PagedListResponse<SubscriptionServiceModel>>>()
-            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => _mapper.Map<PagedListResponse<SubscriptionServiceModel>>(src.Content)));
+            .ForMember(
+                dest => dest.Content,
+                opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<PagedListResponse<SubscriptionServiceModel>>(src.Content)));
     }
 
     private void ConfigureSubscriptionMappings()
@@ -84,15 +85,19 @@ public sealed class ResourceIdeaMappingProfile : Profile
                                                                                              : string.Empty));
 
         CreateMap<PagedListResponse<Subscription>, PagedListResponse<SubscriptionModel>>()
-            .ForMember(dest => dest.Items, opt => opt.MapFrom(
-                src => src.Items.Select(item => _mapper.Map<SubscriptionModel>(item)).ToList()));
+            .ForMember(
+                dest => dest.Items,
+                opt => opt.MapFrom((src, dest, destMember, context) => src.Items.Select(item => context.Mapper.Map<SubscriptionModel>(item)).ToList()));
 
         CreateMap<PagedListResponse<Subscription>, PagedListResponse<SubscriptionModel>>()
-            .ForMember(dest => dest.Items, opt => opt.MapFrom(
-                src => src.Items.Select(item => _mapper.Map<SubscriptionModel>(item)).ToList()));
+            .ForMember(
+                dest => dest.Items,
+                opt => opt.MapFrom((src, dest, destMember, context) => src.Items.Select(item => context.Mapper.Map<SubscriptionModel>(item)).ToList()));
 
         CreateMap<ResourceIdeaResponse<PagedListResponse<Subscription>>, ResourceIdeaResponse<PagedListResponse<SubscriptionModel>>>()
-            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => _mapper.Map<PagedListResponse<SubscriptionModel>>(src.Content)));
+            .ForMember(
+                dest => dest.Content,
+                opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<PagedListResponse<SubscriptionModel>>(src.Content)));
     }
 
     private void ConfigureClientMappings()
@@ -102,14 +107,19 @@ public sealed class ResourceIdeaMappingProfile : Profile
                     .ForMember(dest => dest.Id, opt => opt.MapFrom(src => ClientId.Create(src.Id.Value)));
 
         CreateMap<ResourceIdeaResponse<Client>, ResourceIdeaResponse<ClientModel>>()
-            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => _mapper.Map<ClientModel>(src.Content)));
+            .ForMember(
+                dest => dest.Content,
+                opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<ClientModel>(src.Content)));
 
         CreateMap<PagedListResponse<Client>, PagedListResponse<ClientModel>>()
-            .ForMember(dest => dest.Items, opt => opt.MapFrom(
-                src => src.Items.Select(item => _mapper.Map<ClientModel>(item)).ToList()));
+            .ForMember(
+                dest => dest.Items,
+                opt => opt.MapFrom((src, dest, destMember, context) => src.Items.Select(item => context.Mapper.Map<ClientModel>(item)).ToList()));
 
         CreateMap<ResourceIdeaResponse<PagedListResponse<Client>>, ResourceIdeaResponse<PagedListResponse<ClientModel>>>()
-            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => _mapper.Map<PagedListResponse<ClientModel>>(src.Content)));
+            .ForMember(
+                dest => dest.Content,
+                opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<PagedListResponse<ClientModel>>(src.Content)));
     }
 
     private void ConfigureEngagementMappings()
@@ -119,14 +129,19 @@ public sealed class ResourceIdeaMappingProfile : Profile
                     .ForMember(dest => dest.Id, opt => opt.MapFrom(src => EngagementId.Create(src.Id.Value)));
 
         CreateMap<PagedListResponse<Engagement>, PagedListResponse<EngagementModel>>()
-            .ForMember(dest => dest.Items, opt => opt.MapFrom(
-                src => src.Items.Select(item => _mapper.Map<EngagementModel>(item)).ToList()));
+            .ForMember(
+                dest => dest.Items,
+                opt => opt.MapFrom((src, dest, destMember, context) => src.Items.Select(item => context.Mapper.Map<EngagementModel>(item)).ToList()));
 
         CreateMap<ResourceIdeaResponse<Engagement>, ResourceIdeaResponse<EngagementModel>>()
-            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => _mapper.Map<EngagementModel>(src.Content)));
+            .ForMember(
+                dest => dest.Content,
+                opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<EngagementModel>(src.Content)));
 
         CreateMap<ResourceIdeaResponse<PagedListResponse<Engagement>>, ResourceIdeaResponse<PagedListResponse<EngagementModel>>>()
-            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => _mapper.Map<PagedListResponse<EngagementModel>>(src.Content)));
+            .ForMember(
+                dest => dest.Content,
+                opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<PagedListResponse<EngagementModel>>(src.Content)));
     }
 
     private void ConfigureEngagementTaskMappings()
@@ -136,13 +151,18 @@ public sealed class ResourceIdeaMappingProfile : Profile
                     .ForMember(dest => dest.Id, opt => opt.MapFrom(src => EngagementId.Create(src.Id.Value)));
 
         CreateMap<PagedListResponse<Engagement>, PagedListResponse<EngagementModel>>()
-            .ForMember(dest => dest.Items, opt => opt.MapFrom(
-                src => src.Items.Select(item => _mapper.Map<EngagementModel>(item)).ToList()));
+            .ForMember(
+                dest => dest.Items,
+                opt => opt.MapFrom((src, dest, destMember, context) => src.Items.Select(item => context.Mapper.Map<EngagementModel>(item)).ToList()));
 
         CreateMap<ResourceIdeaResponse<Engagement>, ResourceIdeaResponse<EngagementModel>>()
-            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => _mapper.Map<EngagementModel>(src.Content)));
+            .ForMember(
+                dest => dest.Content,
+                opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<EngagementModel>(src.Content)));
 
         CreateMap<ResourceIdeaResponse<PagedListResponse<Engagement>>, ResourceIdeaResponse<PagedListResponse<EngagementModel>>>()
-            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => _mapper.Map<PagedListResponse<EngagementModel>>(src.Content)));
+            .ForMember(
+                dest => dest.Content,
+                opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<PagedListResponse<EngagementModel>>(src.Content)));
     }
 }
