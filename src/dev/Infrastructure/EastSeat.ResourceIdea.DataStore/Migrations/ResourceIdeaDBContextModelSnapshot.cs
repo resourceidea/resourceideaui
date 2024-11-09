@@ -17,7 +17,7 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -594,9 +594,7 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.UseTptMappingStrategy();
+                    b.ToTable("UserRoles", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -633,16 +631,9 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                     b.ToTable("Roles", "Identity");
                 });
 
-            modelBuilder.Entity("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationIdentityUserRole", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserRole<string>");
-
-                    b.ToTable("UserRoles", "Identity");
-                });
-
             modelBuilder.Entity("EastSeat.ResourceIdea.Domain.Clients.Entities.Client", b =>
                 {
-                    b.OwnsOne("EastSeat.ResourceIdea.Domain.Clients.ValueObjects.Address", "Address", b1 =>
+                    b.OwnsOne("EastSeat.ResourceIdea.Domain.Clients.Entities.Client.Address#EastSeat.ResourceIdea.Domain.Clients.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<string>("ClientId")
                                 .HasColumnType("nvarchar(450)");
@@ -664,7 +655,7 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
 
                             b1.HasKey("ClientId");
 
-                            b1.ToTable("Clients");
+                            b1.ToTable("Clients", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ClientId");
@@ -741,6 +732,12 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -759,31 +756,6 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                         .HasForeignKey("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationRole", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationIdentityUserRole", b =>
-                {
-                    b.HasOne("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationRole", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", null)
-                        .WithOne()
-                        .HasForeignKey("EastSeat.ResourceIdea.DataStore.Identity.Entities.ApplicationIdentityUserRole", "UserId", "RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EastSeat.ResourceIdea.Domain.EngagementTasks.Entities.EngagementTask", b =>
