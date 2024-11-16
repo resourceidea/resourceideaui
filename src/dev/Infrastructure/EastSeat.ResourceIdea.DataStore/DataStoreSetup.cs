@@ -65,8 +65,8 @@ public static class DataStoreSetup
                 {
                     ApplyMigrationTaskType => new Func<ResourceIdeaDBContext, Task>(context => context.Database.MigrateAsync()),
                     CreateSubscriptionServicesTaskType => new Func<ResourceIdeaDBContext, Task>(CreateSubscriptionServicesAsync),
-                    CreateSystemRolesTaskType => new Func<ResourceIdeaDBContext, Task>(CreateSystemRolesAsync),
-                    CreateSystemRolesClaimsTaskType => new Func<ResourceIdeaDBContext, Task>(CreateSystemRolesClaimsAsync),
+                    // CreateSystemRolesTaskType => new Func<ResourceIdeaDBContext, Task>(CreateSystemRolesAsync),
+                    // CreateSystemRolesClaimsTaskType => new Func<ResourceIdeaDBContext, Task>(CreateSystemRolesClaimsAsync),
                     _ => new Func<ResourceIdeaDBContext, Task>(LogUnknownStartupTaskType)
                 })
                 .Select(startupTask => startupTask(dbContext));
@@ -126,95 +126,94 @@ public static class DataStoreSetup
         return await dbContext.SubscriptionServices.Select(s => s.Name.ToLower()).ToListAsync();
     }
 
-    private static async Task CreateSystemRolesAsync(ResourceIdeaDBContext dbContext)
-    {
-        if (dbContext?.ApplicationRoles == null)
-        {
-            return;
-        }
+    // private static async Task CreateSystemRolesAsync(ResourceIdeaDBContext dbContext)
+    // {
+    //     if (dbContext?.ApplicationRoles == null)
+    //     {
+    //         return;
+    //     }
 
-        List<ApplicationRole> rolesToCreate = _systemRoles.Select(role => new ApplicationRole
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = role,
-            NormalizedName = role.ToUpper(),
-            IsBackendRole = true,
-            TenantId = TenantId.Empty
-        }).ToList();
+    //     List<ApplicationRole> rolesToCreate = _systemRoles.Select(role => new ApplicationRole
+    //     {
+    //         Id = Guid.NewGuid().ToString(),
+    //         Name = role,
+    //         NormalizedName = role.ToUpper(),
+    //         IsBackendRole = true,
+    //         TenantId = TenantId.Empty
+    //     }).ToList();
 
-        var existingRoles = await GetExistingRoles(dbContext);
-        rolesToCreate = RemoveExistingRoles(rolesToCreate, existingRoles);
-        if (rolesToCreate.Count == 0)
-        {
-            return;
-        }
+    //     var existingRoles = await GetExistingRoles(dbContext);
+    //     rolesToCreate = RemoveExistingRoles(rolesToCreate, existingRoles);
+    //     if (rolesToCreate.Count == 0)
+    //     {
+    //         return;
+    //     }
 
-        dbContext.ApplicationRoles.AddRange(rolesToCreate);
-        await dbContext.SaveChangesAsync();
-    }
+    //     dbContext.ApplicationRoles.AddRange(rolesToCreate);
+    //     await dbContext.SaveChangesAsync();
+    // }
 
-    private static List<ApplicationRole> RemoveExistingRoles(List<ApplicationRole> subscriptionServices, List<string> existingServiceNames)
-    {
-        subscriptionServices = subscriptionServices.Where(s => !existingServiceNames.Contains(s.Name!.ToLower())).ToList();
-        return subscriptionServices;
-    }
+    // private static List<ApplicationRole> RemoveExistingRoles(List<ApplicationRole> subscriptionServices, List<string> existingServiceNames)
+    // {
+    //     subscriptionServices = subscriptionServices.Where(s => !existingServiceNames.Contains(s.Name!.ToLower())).ToList();
+    //     return subscriptionServices;
+    // }
 
-    private static async Task<List<string>> GetExistingRoles(ResourceIdeaDBContext dbContext)
-    {
-        if (dbContext?.ApplicationRoles == null)
-        {
-            return [];
-        }
+    // private static async Task<List<string>> GetExistingRoles(ResourceIdeaDBContext dbContext)
+    // {
+    //     if (dbContext?.ApplicationRoles == null)
+    //     {
+    //         return [];
+    //     }
 
-        return await dbContext.ApplicationRoles.Where(s => !string.IsNullOrEmpty(s.Name)).Select(s => s.Name!.ToLower()).ToListAsync();
-    }
+    //     return await dbContext.ApplicationRoles.Where(s => !string.IsNullOrEmpty(s.Name)).Select(s => s.Name!.ToLower()).ToListAsync();
+    // }
 
-    private static async Task CreateSystemRolesClaimsAsync(ResourceIdeaDBContext dbContext)
-    {
-        if (dbContext?.ApplicationRoles is null || dbContext?.RoleClaims is null)
-        {
-            return;
-        }
+    // private static async Task CreateSystemRolesClaimsAsync(ResourceIdeaDBContext dbContext)
+    // {
+    //     if (dbContext?.ApplicationRoles is null || dbContext?.RoleClaims is null)
+    //     {
+    //         return;
+    //     }
 
-        var roleClaims = new Dictionary<string, List<string>>
-        {
-            { "Owner", new List<string> { "Permission.AccessAll", "Permission.ManageUsers" } },
-            { "Administrator", new List<string> { "Permission.ManageUsers", "Permission.ViewReports" } },
-            { "General User", new List<string> { "Permission.AccessBasic" } }
-        };
+    //     var roleClaims = new Dictionary<string, List<string>>
+    //     {
+    //         { "Owner", new List<string> { "Permission.AccessAll", "Permission.ManageUsers" } },
+    //         { "Administrator", new List<string> { "Permission.ManageUsers", "Permission.ViewReports" } },
+    //         { "General User", new List<string> { "Permission.AccessBasic" } }
+    //     };
 
-        var roles = await dbContext.ApplicationRoles
-            .Where(r => _systemRoles.Contains(r.Name))
-            .ToListAsync();
+    //     var roles = await dbContext.ApplicationRoles
+    //         .Where(r => _systemRoles.Contains(r.Name))
+    //         .ToListAsync();
 
-        foreach (var role in roles)
-        {
-            // Get existing claims for the role to avoid duplicates
-            var existingClaims = await dbContext.RoleClaims
-                .Where(rc => rc.RoleId == role.Id)
-                .Select(rc => new { rc.ClaimType, rc.ClaimValue })
-                .ToListAsync();
+    //     foreach (var role in roles)
+    //     {
+    //         var existingClaims = await dbContext.RoleClaims
+    //             .Where(rc => rc.RoleId == role.Id)
+    //             .Select(rc => new { rc.ClaimType, rc.ClaimValue })
+    //             .ToListAsync();
 
-            if (roleClaims.TryGetValue(role.Name!, out var claims))
-            {
-                foreach (var claimValue in claims)
-                {
-                    const string claimType = "Permission";
+    //         if (roleClaims.TryGetValue(role.Name!, out var claims))
+    //         {
+    //             foreach (var claimValue in claims)
+    //             {
+    //                 const string claimType = "Permission";
 
-                    if (!existingClaims.Any(ec => ec.ClaimType == claimType && ec.ClaimValue == claimValue))
-                    {
-                        var roleClaim = new IdentityRoleClaim<string>
-                        {
-                            RoleId = role.Id!,
-                            ClaimType = claimType,
-                            ClaimValue = claimValue
-                        };
-                        dbContext.RoleClaims.Add(roleClaim);
-                    }
-                }
-            }
-        }
+    //                 if (!existingClaims.Any(ec => ec.ClaimType == claimType && ec.ClaimValue == claimValue))
+    //                 {
+    //                     var roleClaim = new IdentityRoleClaim<string>
+    //                     {
+    //                         RoleId = role.Id!,
+    //                         ClaimType = claimType,
+    //                         ClaimValue = claimValue
+    //                     };
+    //                     dbContext.RoleClaims.Add(roleClaim);
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        await dbContext.SaveChangesAsync();
-    }
+    //     await dbContext.SaveChangesAsync();
+    // }
 }
