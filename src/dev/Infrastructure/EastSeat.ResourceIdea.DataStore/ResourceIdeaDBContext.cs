@@ -14,7 +14,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EastSeat.ResourceIdea.DataStore;
 
-public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> options) : IdentityDbContext<ApplicationUser>(options)
+public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> options)
+    : IdentityDbContext<ApplicationUser, ApplicationRole, string>(options)
 {
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<SubscriptionService> SubscriptionServices { get; set; }
@@ -22,37 +23,20 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
     public DbSet<Engagement> Engagements { get; set; }
     public DbSet<EngagementTask> EngagementTasks { get; set; }
     public DbSet<EngagementTaskAssignment> EngagementTaskAssignments { get; set; }
-    public DbSet<ApplicationRole> ApplicationRoles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<ApplicationRole>(entity =>
-        {
-            entity.ToTable("Roles", "Identity");
+        builder.ApplyConfiguration(new ApplicationUserEntityTypeConfiguration());
+        builder.ApplyConfiguration(new ApplicationRoleConfiguration());
 
-            entity.Property(e => e.TenantId)
-            .IsRequired(true)
-            .HasMaxLength(256)
-            .HasConversion(
-                tenantId => tenantId.Value.ToString(),
-                value => TenantId.Create(value));
-
-            entity.Property(e => e.IsBackendRole).IsRequired(true);
-
-            entity.Property(e => e.Name).IsRequired(true).HasMaxLength(256);
-
-            entity.Property(e => e.NormalizedName).IsRequired(false).HasMaxLength(256);
-        });
-
-        builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims", "Identity");
         builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles", "Identity");
         builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims", "Identity");
+        builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims", "Identity");
         builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins", "Identity");
         builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens", "Identity");
 
-        builder.ApplyConfiguration(new ApplicationUserEntityTypeConfiguration());
         builder.ApplyConfiguration(new TenantEntityTypeConfiguration());
         builder.ApplyConfiguration(new SubscriptionServiceEntityTypeConfiguration());
         builder.ApplyConfiguration(new SubscriptionEntityTypeConfiguration());
