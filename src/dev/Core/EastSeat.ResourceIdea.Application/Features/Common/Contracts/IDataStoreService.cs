@@ -3,8 +3,6 @@ using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
 
-using MediatR;
-
 namespace EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 
 /// <summary>

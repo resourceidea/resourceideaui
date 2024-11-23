@@ -1,7 +1,5 @@
 
 using AutoMapper;
-using EastSeat.ResourceIdea.Application.Enums;
-using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
 using EastSeat.ResourceIdea.Application.Types;

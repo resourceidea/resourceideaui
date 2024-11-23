@@ -1,5 +1,3 @@
-using System;
-
 namespace EastSeat.ResourceIdea.DataStore.Configuration.DatabaseStartup;
 
 /// <summary>

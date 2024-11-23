@@ -1,6 +1,3 @@
-using System;
-using System.Data;
-
 using EastSeat.ResourceIdea.Web.Auth.Models;
 
 using FluentValidation;

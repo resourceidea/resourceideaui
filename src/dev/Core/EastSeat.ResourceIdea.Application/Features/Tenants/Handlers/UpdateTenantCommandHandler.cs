@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-
-using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Commands;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Validators;
 using EastSeat.ResourceIdea.Application.Types;

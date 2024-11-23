@@ -1,8 +1,6 @@
 ﻿using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EastSeat.ResourceIdea.DataStore.Identity.Entities;
 

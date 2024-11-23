@@ -1,5 +1,4 @@
-﻿using AutoMapper.Configuration.Annotations;
-using EastSeat.ResourceIdea.DataStore.Configuration.DatabaseStartup;
+﻿using EastSeat.ResourceIdea.DataStore.Configuration.DatabaseStartup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

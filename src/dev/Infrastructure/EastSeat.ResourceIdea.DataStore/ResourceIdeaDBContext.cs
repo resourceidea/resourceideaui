@@ -5,7 +5,6 @@ using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
-using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

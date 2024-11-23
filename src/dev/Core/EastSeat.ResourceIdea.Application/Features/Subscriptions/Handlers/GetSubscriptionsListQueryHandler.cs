@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 
 using EastSeat.ResourceIdea.Application.Extensions;
-using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
@@ -10,7 +9,6 @@ using EastSeat.ResourceIdea.Application.Features.Subscriptions.Specifications;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Entities;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Models;
-using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
 
 using MediatR;
 

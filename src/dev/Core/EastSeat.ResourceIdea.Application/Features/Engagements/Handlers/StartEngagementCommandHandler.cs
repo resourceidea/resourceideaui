@@ -4,9 +4,7 @@ using EastSeat.ResourceIdea.Application.Features.Engagements.Commands;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Validators;
 using EastSeat.ResourceIdea.Application.Types;
-using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.Models;
-using EastSeat.ResourceIdea.Domain.Enums;
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers;

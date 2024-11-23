@@ -5,12 +5,6 @@ using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace EastSeat.ResourceIdea.DataStore.Services;
 
 /// <summary>

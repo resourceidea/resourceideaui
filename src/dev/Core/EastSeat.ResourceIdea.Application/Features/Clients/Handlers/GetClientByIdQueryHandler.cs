@@ -1,6 +1,4 @@
 using AutoMapper;
-
-using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Clients.Queries;
 using EastSeat.ResourceIdea.Application.Features.Clients.Specifications;

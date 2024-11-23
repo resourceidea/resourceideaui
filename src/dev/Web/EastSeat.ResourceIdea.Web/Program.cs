@@ -9,8 +9,6 @@ using EastSeat.ResourceIdea.Web.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
-using MediatR;
 using EastSeat.ResourceIdea.Application.MappingProfiles;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,12 +20,15 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpContextAccessor();
 
 var sqlServerConnectionString = StartupConfiguration.GetSqlServerConnectionString();
-builder.Services.AddDbContext<ResourceIdeaDBContext>(options => options.UseSqlServer(
-    sqlServerConnectionString));
+builder.Services.AddDbContext<ResourceIdeaDBContext>(options => options.UseSqlServer(sqlServerConnectionString));
 
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
-.AddEntityFrameworkStores<ResourceIdeaDBContext>()
-.AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(TokenOptions.DefaultProvider);
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(
+    options => 
+    {
+        options.SignIn.RequireConfirmedAccount = true;
+    })
+    .AddEntityFrameworkStores<ResourceIdeaDBContext>()
+    .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(TokenOptions.DefaultProvider);
 
 builder.Services.AddTransient<IUserAuthenticationService, UserAuthenticationService>();
 
@@ -38,6 +39,11 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 builder.Services.AddDataStoreServices(sqlServerConnectionString);
+
+builder.Services.AddAuthentication().AddCookie();
+builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
 
 // Add logging for diagnostics
 builder.Services.AddLogging(config =>
