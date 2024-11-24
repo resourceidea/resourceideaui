@@ -1,17 +1,13 @@
-﻿@page "/"
-@using EastSeat.ResourceIdea.Web.Auth.Models
-@using Microsoft.AspNetCore.Authorization
+﻿@page "/account/login"
 
-@inject IMediator Mediator
+@using EastSeat.ResourceIdea.DataStore.Identity.Entities
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
 @inject NavigationManager NavigationManager
-@inject IMapper Mapper
-
-@attribute [Authorize]
-
-<PageTitle>ResourceIdea</PageTitle>
 
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="card p-4" style="width: 25rem;">
+    <div class="card p-3" style="width: 25rem;">
         <div class="card-body">
             <h5 class="card-title text-center">Enter your credentials to login</h5>
             <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
@@ -34,17 +30,23 @@
 </div>
 
 @code {
+    private LoginModel loginModel = new();
 
-    private LoginModel loginModel = new LoginModel();
-    
     private async Task HandleLogin()
     {
-        var loginCommand = Mapper.Map<LoginCommand>(loginModel);
-        var result = await Mediator.Send(loginCommand);
+        var result = await SignInManager.PasswordSignInAsync(
+            loginModel.Email,
+            loginModel.Password,
+            isPersistent: false,
+            lockoutOnFailure: false);
 
-        if (result.IsSuccess)
+        if (result.Succeeded)
         {
-            NavigationManager.NavigateTo("/dashboard");
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            // Display error message
         }
     }
 }

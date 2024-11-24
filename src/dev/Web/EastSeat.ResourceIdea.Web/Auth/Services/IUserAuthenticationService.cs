@@ -1,6 +1,8 @@
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Users.Models;
 
+using MediatR;
+
 namespace EastSeat.ResourceIdea.Web.Auth.Services;
 
 /// <summary>
@@ -13,5 +15,12 @@ public interface IUserAuthenticationService
     /// </summary>
     /// <param name="loginModel">Login request.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    public Task<ResourceIdeaResponse<LoginModel>> LoginAsync(LoginModel loginModel, CancellationToken cancellationToken);
+    public Task<ResourceIdeaResponse<LoginModel>> LoginAsync(
+        LoginModel loginModel,
+        CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Logout a user.
+    /// </summary>
+    public Task LogoutAsync();
 }

@@ -19,6 +19,7 @@ public class UserAuthenticationService(
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
 
+    /// <inheritdoc/>
     public async Task<ResourceIdeaResponse<LoginModel>> LoginAsync(
         LoginModel loginModel,
         CancellationToken cancellationToken)
@@ -36,5 +37,11 @@ public class UserAuthenticationService(
         }
 
         return ResourceIdeaResponse<LoginModel>.Failure(ErrorCode.LoginFailed);
+    }
+
+    /// <inheritdoc/>
+    public async Task LogoutAsync()
+    {
+        await _signInManager.SignOutAsync();
     }
 }
