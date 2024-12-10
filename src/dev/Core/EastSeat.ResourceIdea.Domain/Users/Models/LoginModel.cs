@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace EastSeat.ResourceIdea.Domain.Users.Models;
 
 /// <summary>
@@ -6,8 +8,11 @@ namespace EastSeat.ResourceIdea.Domain.Users.Models;
 public class LoginModel
 {
     /// <summary>Email of the user.</summary>
-    public string Email { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Email address is required")]
+    [EmailAddress]
+    public string? Email { get; set; }
 
     /// <summary>Password of the user.</summary>
-    public string Password { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Password is required.")]
+    public string? Password { get; set; }
 }

@@ -5,12 +5,20 @@ using MediatR;
 namespace EastSeat.ResourceIdea.Web.Auth.Handlers;
 
 public class LogoutCommandHandler(
-    IUserAuthenticationService userAuthenticationService) : IRequestHandler<LogoutCommand>
+    IUserAuthenticationService userAuthenticationService) : IRequestHandler<LogoutCommand, bool>
 {
     private readonly IUserAuthenticationService _userAuthenticationService = userAuthenticationService;
 
-    public async Task Handle(LogoutCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(LogoutCommand request, CancellationToken cancellationToken)
     {
-        await _userAuthenticationService.LogoutAsync();
+		try
+		{
+			await _userAuthenticationService.LogoutAsync();
+			return true;
+		}
+		catch
+		{
+			return false;
+		}
     }
 }
