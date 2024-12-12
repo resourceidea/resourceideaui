@@ -54,3 +54,14 @@ h1:focus {
         color: #FFFF99;
         font-weight: 700;
     }
+
+/* Add this CSS to ensure all cards have equal height */
+.equal-height-home {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.equal-height-home .card-body {
+    flex-grow: 1;
+}
