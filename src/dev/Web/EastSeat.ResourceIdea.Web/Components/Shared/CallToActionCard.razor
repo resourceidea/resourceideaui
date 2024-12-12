@@ -11,9 +11,19 @@
 </div>
 
 @code {
-    [Parameter] public string Icon { get; set; } = string.Empty;
-    [Parameter] public string Title { get; set; } = string.Empty;
-    [Parameter] public string Description { get; set; } = string.Empty;
-    [Parameter] public string Link { get; set; } = string.Empty;
-    [Parameter] public string ButtonText { get; set; } = string.Empty;
+
+    [Parameter, EditorRequired] public string Icon { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string Title { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string Description { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string Link { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string ButtonText { get; set; } = string.Empty;
+
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrEmpty(Link) && !Uri.IsWellFormedUriString(Link, UriKind.RelativeOrAbsolute))
+        {
+            throw new ArgumentException(ErrorMessages.InvalidUrlFormat.ToString(), nameof(Link));
+        }
+        base.OnParametersSet();
+    }
 }
