@@ -4,35 +4,8 @@
 
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-4 mb-3">
-            <div class="card text-center equal-height-home">
-                <div class="card-body">
-                    <i class="fa-solid fa-calendar-check fa-2x mb-3"></i>
-                    <h5 class="card-title">View your schedule</h5>
-                    <p class="card-text">Check your personal schedule and manage your tasks.</p>
-                    <a href="/your-schedule" class="btn btn-primary">View your schedule</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card text-center equal-height-home">
-                <div class="card-body">
-                    <i class="fa-solid fa-users fa-2x mb-3"></i>
-                    <h5 class="card-title">View team's schedule</h5>
-                    <p class="card-text">See what your team is up to and collaborate effectively.</p>
-                    <a href="/team-schedule" class="btn btn-primary">View team's schedule</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card text-center equal-height-home">
-                <div class="card-body">
-                    <i class="fa-solid fa-calendar-alt fa-2x mb-3"></i>
-                    <h5 class="card-title">View schedule for all resources</h5>
-                    <p class="card-text">Get an overview of all resources and employees and their schedules.</p>
-                    <a href="/all-resources-schedule" class="btn btn-primary">View schedule for all resources</a>
-                </div>
-            </div>
-        </div>
+        <CallToActionCard Icon="fa-solid fa-calendar-check" Title="View your schedule" Description="Check your personal schedule and manage your tasks." Link="/your-schedule" ButtonText="View your schedule" />
+        <CallToActionCard Icon="fa-solid fa-users" Title="View team's schedule" Description="See what your team is up to and collaborate effectively." Link="/team-schedule" ButtonText="View team's schedule" />
+        <CallToActionCard Icon="fa-solid fa-calendar-alt" Title="View schedule for all employees" Description="Get an overview of all resources and employees and their schedules." Link="/all-resources-schedule" ButtonText="View schedule for all resources" />
     </div>
 </div>
