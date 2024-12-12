@@ -30,7 +30,7 @@ public static class DataStoreSetup
     /// </summary>
     /// <param name="services">Service collection</param>
     /// <param name="sqlServerConnectionString">Sql Server connection string.</param>
-    public static IServiceCollection AddDataStoreServices(this IServiceCollection services, string sqlServerConnectionString)
+    public static IServiceCollection AddDataAccessServices(this IServiceCollection services, string sqlServerConnectionString)
     {
         services.AddTransient<IClientsService, ClientsService>();
         services.AddTransient<IEngagementsService, EngagementsService>();
