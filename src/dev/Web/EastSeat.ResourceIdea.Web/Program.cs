@@ -1,9 +1,15 @@
 using EastSeat.ResourceIdea.Web.Components;
+using EastSeat.ResourceIdea.DataStore;
+using Microsoft.EntityFrameworkCore;
+using EastSeat.ResourceIdea.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents();
+
+// Add DbContext
+builder.Services.AddResourceIdeaDbContext();
 
 var app = builder.Build();
 
@@ -16,7 +22,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.UseAntiforgery();
 

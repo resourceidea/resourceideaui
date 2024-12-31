@@ -1,6 +1,7 @@
 ﻿using EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
+using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
@@ -22,6 +23,7 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
     public DbSet<Engagement> Engagements { get; set; }
     public DbSet<EngagementTask> EngagementTasks { get; set; }
     public DbSet<EngagementTaskAssignment> EngagementTaskAssignments { get; set; }
+    public DbSet<Department> Departments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -43,5 +45,6 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
         builder.ApplyConfiguration(new EngagementEntityTypeConfiguration());
         builder.ApplyConfiguration(new EngagementTaskEntityTypeConfiguration());
         builder.ApplyConfiguration(new EngagementTaskAssignmentEntityTypeConfiguration());
+        builder.ApplyConfiguration(new DepartmentConfiguration());
     }
 }
