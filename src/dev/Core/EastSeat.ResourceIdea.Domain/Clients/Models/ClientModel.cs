@@ -9,12 +9,12 @@ namespace EastSeat.ResourceIdea.Domain.Clients.Models;
 public record ClientModel
 {
     /// <summary>
-    /// Client Id.
+    /// Client DepartmentId.
     /// </summary>
     public ClientId Id { get; set; }
 
     /// <summary>
-    /// Owning tenant's Id.
+    /// Owning tenant's DepartmentId.
     /// </summary>
     public TenantId TenantId { get; set; }
 

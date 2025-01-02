@@ -1,8 +1,11 @@
-using EastSeat.ResourceIdea.Domain.Departments.Entities;
+﻿using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
 
-namespace EastSeat.ResourceIdea.Domain.Departments.Mappers;
+namespace EastSeat.ResourceIdea.Application.Mappers;
 
+/// <summary>
+/// Mapper for the department entity and models.
+/// </summary>
 public static class DepartmentMapper
 {
     /// <summary>
@@ -13,12 +16,11 @@ public static class DepartmentMapper
     /// <returns>Mapped department model</returns>
     /// <exception cref="InvalidCastException">Thrown when the casting to department model fails.</exception>
     /// <exception cref="NotSupportedException">Thrown when the mapping is not supported.</exception>
-    public static TModel ToModel<TModel>(this Department department) where TModel : BaseDepartmentModel
+    public static TModel ToModel<TModel>(this Department department) where TModel : class
     {
         return typeof(TModel) switch
         {
-            _ when typeof(TModel) == typeof(DepartmentListModel) => ToDepartmentListModel(department) as TModel ?? throw new InvalidCastException(),
-            _ when typeof(TModel) == typeof(DepartmentUpdateModel) => ToDepartmentUpdateModel(department) as TModel ?? throw new InvalidCastException(),
+            _ when typeof(TModel) == typeof(DepartmentViewModel) => ToDepartmentViewModel(department) as TModel ?? throw new InvalidCastException(),
             _ => throw new NotSupportedException($"Mapping to type {typeof(TModel).Name} is not supported.")
         };
     }
@@ -38,11 +40,11 @@ public static class DepartmentMapper
     }
 
     /// <summary>
-    /// Map <see cref="DepartmentUpdateModel"/> to <see cref="Department"/> entity.
+    /// Map <see cref="DepartmentViewModel"/> to <see cref="Department"/> entity.
     /// </summary>
     /// <param name="model">Model to be mapped to the entity.</param>
     /// <returns>Instance of <see cref="Department"/></returns>
-    public static Department ToEntity(this DepartmentUpdateModel model)
+    public static Department ToEntity(this DepartmentViewModel model)
     {
         return new Department
         {
@@ -52,20 +54,20 @@ public static class DepartmentMapper
         };
     }
 
-    private static DepartmentListModel ToDepartmentListModel(Department department)
+    /// <summary>
+    /// Map <see cref="IEnumerable{Department}"/> to <see cref="DepartmentListModel"/>.
+    /// </summary>
+    /// <param name="departments">Collection of department entities.</param>
+    /// <returns>Instance of <see cref="DepartmentListModel"/></returns>
+    public static DepartmentListModel ToDepartmentListModel(this IEnumerable<Department> departments)
     {
-        return new DepartmentListModel
-        {
-            DepartmentId = department.Id,
-            Name = department.Name,
-            TenantId = department.TenantId,
-            IsDeleted = department.IsDeleted
-        };
+        var departmentViewModels = departments.Select(department => department.ToModel<DepartmentViewModel>()).ToList();
+        return new DepartmentListModel(departmentViewModels);
     }
 
-    private static DepartmentUpdateModel ToDepartmentUpdateModel(Department department)
+    private static DepartmentViewModel ToDepartmentViewModel(Department department)
     {
-        return new DepartmentUpdateModel
+        return new DepartmentViewModel
         {
             DepartmentId = department.Id,
             Name = department.Name,

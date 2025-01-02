@@ -14,7 +14,7 @@ namespace EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects
         /// <summary>
         /// Create a new subscription service id.
         /// </summary>
-        /// <param name="value">Subscription service Id as a Guid.</param>
+        /// <param name="value">Subscription service DepartmentId as a Guid.</param>
         /// <returns>Instance of <see cref="SubscriptionServiceId"/>.</returns>
         /// <exception cref="InvalidEntityIdException">Thrown when creating a new SubscriptionServiceId
         /// from an empty Guid.</exception>

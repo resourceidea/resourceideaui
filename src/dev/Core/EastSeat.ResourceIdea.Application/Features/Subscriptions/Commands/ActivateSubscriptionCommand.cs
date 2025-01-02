@@ -12,7 +12,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Commands;
 public sealed class ActivateSubscriptionCommand : IRequest<ResourceIdeaResponse<SubscriptionModel>>
 {
     /// <summary>
-    /// Id of the subscription to activate.
+    /// DepartmentId of the subscription to activate.
     /// </summary>
     public SubscriptionId SubscriptionId { get; set; }
 }

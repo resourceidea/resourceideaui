@@ -15,9 +15,9 @@ public readonly record struct SubscriptionId
     }
 
     /// <summary>
-    /// Create a new Subscription Id.
+    /// Create a new Subscription DepartmentId.
     /// </summary>
-    /// <param name="value">Subscription Id as a Guid.</param>
+    /// <param name="value">Subscription DepartmentId as a Guid.</param>
     /// <returns>Instance of <see cref="SubscriptionId"/>.</returns>
     /// <exception cref="InvalidEntityIdException">Thrown when creating a new <see cref="SubscriptionId"/>
     /// from an empty Guid.</exception>
@@ -32,9 +32,9 @@ public readonly record struct SubscriptionId
     }
 
     /// <summary>
-    /// Create a new Subscription Id from a string value.
+    /// Create a new Subscription DepartmentId from a string value.
     /// </summary>
-    /// <param name="value">Subscription Id as a string value.</param>
+    /// <param name="value">Subscription DepartmentId as a string value.</param>
     /// <returns>Instance of <see cref="SubscriptionId"/>.</returns>
     /// <exception cref="InvalidEntityIdException">Thrown when creating a new <see cref="SubscriptionId"/>
     /// from a string value that can't be converted to a Guid.</exception>

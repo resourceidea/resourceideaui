@@ -5,7 +5,7 @@
 
 <h3>Departments</h3>
 
-@if (Departments == null || Departments.Count == 0)
+@if (Model.Value == null || Model.Value.Count == 0)
 {
     <p>No departments available.</p>
 }
@@ -16,15 +16,15 @@ else
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Status</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var department in Departments)
+                @foreach (var department in Model.Value)
                 {
                     <tr>
                         <td>@department.Name</td>
-                        <td>@(department.IsDeleted ? "Deleted" : "Active")</td>
+                        <td></td>
                     </tr>
                 }
             </tbody>
@@ -33,33 +33,17 @@ else
 }
 
 @code {
-    private List<DepartmentListModel> Departments { get; set; } = new();
+    private DepartmentListModel Model { get; set; } = new DepartmentListModel(Enumerable.Empty<DepartmentViewModel>());
 
     protected override void OnInitialized()
     {
-        Departments = new List<DepartmentListModel>
+        var dummyData = new List<DepartmentViewModel>
         {
-            new DepartmentListModel
-            {
-                DepartmentId = DepartmentId.Create(Guid.NewGuid()),
-                Name = "Human Resources",
-                TenantId = Guid.NewGuid(),
-                IsDeleted = false
-            },
-            new DepartmentListModel
-            {
-                DepartmentId = DepartmentId.Create(Guid.NewGuid()),
-                Name = "Finance",
-                TenantId = Guid.NewGuid(),
-                IsDeleted = false
-            },
-            new DepartmentListModel
-            {
-                DepartmentId = DepartmentId.Create(Guid.NewGuid()),
-                Name = "IT",
-                TenantId = Guid.NewGuid(),
-                IsDeleted = true
-            }
+            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "HR", TenantId = Guid.NewGuid() },
+            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "IT", TenantId = Guid.NewGuid() },
+            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "Finance", TenantId = Guid.NewGuid() }
         };
+
+        Model = new DepartmentListModel(dummyData);
     }
 }

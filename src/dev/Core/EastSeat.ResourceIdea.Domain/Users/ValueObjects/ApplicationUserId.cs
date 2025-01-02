@@ -48,7 +48,7 @@ public readonly record struct ApplicationUserId
         return Create(guid);
     }
 
-    /// <summary>Application User Id is not empty.</summary>
+    /// <summary>Application User DepartmentId is not empty.</summary>
     public bool IsNotEmpty() => this != Empty;
 
     /// <summary>

@@ -1,19 +1,18 @@
 ﻿using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 
+using System.Collections.ObjectModel;
+
 namespace EastSeat.ResourceIdea.Domain.Departments.Models;
 
 /// <summary>
 /// Model representing department listing data.
 /// </summary>
-public sealed record DepartmentListModel : BaseDepartmentModel
+public sealed record DepartmentListModel
 {
-    /// <summary>
-    /// Department ID.
-    /// </summary>
-    public DepartmentId DepartmentId { get; init; }
+    public ReadOnlyCollection<DepartmentViewModel> Value { get; init; }
 
-    /// <summary>
-    /// Flag indicating whether the department has been deleted or not.
-    /// </summary>
-    public bool IsDeleted { get; init; }
+    public DepartmentListModel(IEnumerable<DepartmentViewModel> departments)
+    {
+        Value = new ReadOnlyCollection<DepartmentViewModel>([.. departments]);
+    }
 }

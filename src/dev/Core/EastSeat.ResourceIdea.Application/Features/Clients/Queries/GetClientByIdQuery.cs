@@ -7,10 +7,10 @@ using MediatR;
 namespace EastSeat.ResourceIdea.Application.Features.Clients.Queries;
 
 /// <summary>
-/// Query to get a client by Id.
+/// Query to get a client by DepartmentId.
 /// </summary>
 public sealed class GetClientByIdQuery : IRequest<ResourceIdeaResponse<ClientModel>>
 {
-    /// <summary>Client Id.</summary>
+    /// <summary>Client DepartmentId.</summary>
     public ClientId ClientId { get; set; }
 }

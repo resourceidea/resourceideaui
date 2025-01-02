@@ -8,7 +8,7 @@ namespace EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 /// </summary>
 public class SubscriptionService : BaseEntity
 {
-    /// <summary>Service Id.</summary>
+    /// <summary>Service DepartmentId.</summary>
     public SubscriptionServiceId Id { get; set; }
 
     /// <summary>Service name.</summary>

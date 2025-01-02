@@ -8,7 +8,7 @@ namespace EastSeat.ResourceIdea.Domain.Tenants.Models;
 public record TenantModel
 {
     /// <summary>
-    /// Tenant Id.
+    /// Tenant DepartmentId.
     /// </summary>
     public TenantId TenantId { get; set; }
 

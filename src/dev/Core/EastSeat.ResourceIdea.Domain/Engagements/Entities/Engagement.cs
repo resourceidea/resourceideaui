@@ -12,7 +12,7 @@ namespace EastSeat.ResourceIdea.Domain.Engagements.Entities;
 public class Engagement : BaseEntity
 {
     /// <summary>
-    /// Id of an engagement.
+    /// DepartmentId of an engagement.
     /// </summary>
     public EngagementId Id { get; set; }
 
@@ -22,7 +22,7 @@ public class Engagement : BaseEntity
     public string? Description { get; set; }
 
     /// <summary>
-    /// Id of the client that the engagement is for.
+    /// DepartmentId of the client that the engagement is for.
     /// </summary>
     public ClientId ClientId { get; set; }
 

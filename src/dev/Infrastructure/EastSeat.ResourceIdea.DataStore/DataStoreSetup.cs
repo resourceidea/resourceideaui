@@ -132,7 +132,7 @@ public static class DataStoreSetup
 
     //     List<ApplicationRole> rolesToCreate = _systemRoles.Select(role => new ApplicationRole
     //     {
-    //         Id = Guid.NewGuid().ToString(),
+    //         DepartmentId = Guid.NewGuid().ToString(),
     //         Name = role,
     //         NormalizedName = role.ToUpper(),
     //         IsBackendRole = true,
@@ -187,7 +187,7 @@ public static class DataStoreSetup
     //     foreach (var role in roles)
     //     {
     //         var existingClaims = await dbContext.RoleClaims
-    //             .Where(rc => rc.RoleId == role.Id)
+    //             .Where(rc => rc.RoleId == role.DepartmentId)
     //             .Select(rc => new { rc.ClaimType, rc.ClaimValue })
     //             .ToListAsync();
 
@@ -201,7 +201,7 @@ public static class DataStoreSetup
     //                 {
     //                     var roleClaim = new IdentityRoleClaim<string>
     //                     {
-    //                         RoleId = role.Id!,
+    //                         RoleId = role.DepartmentId!,
     //                         ClaimType = claimType,
     //                         ClaimValue = claimValue
     //                     };

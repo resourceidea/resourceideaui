@@ -11,7 +11,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Commands;
 /// </summary>
 public sealed class UpdateClientCommand : IRequest<ResourceIdeaResponse<ClientModel>>
 {
-    /// <summary>Id of the client to update.</summary>
+    /// <summary>DepartmentId of the client to update.</summary>
     public ClientId ClientId { get; set; }
 
     /// <summary>Client's name.</summary>
@@ -20,6 +20,6 @@ public sealed class UpdateClientCommand : IRequest<ResourceIdeaResponse<ClientMo
     /// <summary>Client address.</summary>
     public Address Address { get; set; } = Address.Empty;
 
-    /// <summary>Client owning tenant's Id.</summary>
+    /// <summary>Client owning tenant's DepartmentId.</summary>
     public TenantId TenantId { get; set; }    
 }

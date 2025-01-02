@@ -12,7 +12,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Commands;
 public sealed class CancelSubscriptionCommand : IRequest<ResourceIdeaResponse<SubscriptionModel>>
 {
     /// <summary>
-    /// Id of the subcription to be canceled.
+    /// DepartmentId of the subcription to be canceled.
     /// </summary>
     public SubscriptionId SubscriptionId { get; set; }
 }

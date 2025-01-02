@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 namespace EastSeat.ResourceIdea.Application.Features.Clients.Specifications;
 
 /// <summary>
-/// Specification to get a client by Id.
+/// Specification to get a client by DepartmentId.
 /// </summary>
 public sealed class ClientGetByIdSpecification(ClientId clientId) : BaseSpecification<Client>
 {
