@@ -5,6 +5,45 @@
 
 <h3>Departments</h3>
 
-@code {
+@if (Model.Value == null || Model.Value.Count == 0)
+{
+    <p>No departments available.</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var department in Model.Value)
+                {
+                    <tr>
+                        <td>@department.Name</td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
 
+@code {
+    private DepartmentListModel Model { get; set; } = new DepartmentListModel(Enumerable.Empty<DepartmentViewModel>());
+
+    protected override void OnInitialized()
+    {
+        var dummyData = new List<DepartmentViewModel>
+        {
+            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "HR", TenantId = Guid.NewGuid() },
+            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "IT", TenantId = Guid.NewGuid() },
+            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "Finance", TenantId = Guid.NewGuid() }
+        };
+
+        Model = new DepartmentListModel(dummyData);
+    }
 }

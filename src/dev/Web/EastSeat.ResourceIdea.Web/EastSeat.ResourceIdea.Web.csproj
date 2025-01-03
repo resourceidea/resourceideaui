@@ -8,6 +8,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\EastSeat.ResourceIdea.DataStore\EastSeat.ResourceIdea.DataStore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
   </ItemGroup>
 
 </Project>

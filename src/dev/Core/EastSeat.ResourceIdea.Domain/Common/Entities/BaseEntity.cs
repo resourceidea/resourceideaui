@@ -6,7 +6,7 @@ namespace EastSeat.ResourceIdea.Domain.Common.Entities;
 public class BaseEntity
 {
     /// <summary>
-    /// Tenant Id for the entity.
+    /// Tenant DepartmentId for the entity.
     /// </summary>
     public Guid TenantId { get; set; }
     

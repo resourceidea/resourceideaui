@@ -67,4 +67,11 @@ public sealed class TenantsService : ITenantsService
     {
         throw new NotImplementedException();
     }
+
+    /// <inheritdoc/>
+    public Guid GetTenantIdFromLoginSession()
+    {
+        // TODO: Implement logic that will read the tenant ID from the login session.
+        return Guid.Empty;
+    }
 }

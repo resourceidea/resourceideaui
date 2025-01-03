@@ -32,7 +32,7 @@ public class Subscription : BaseEntity
     public DateTimeOffset? SubscriptionCancellationDate { get; set; }
 
     /// <summary>
-    /// Id of the service subscribed to by the tenant.
+    /// DepartmentId of the service subscribed to by the tenant.
     /// </summary>
     public SubscriptionServiceId SubscriptionServiceId { get; set; }
     

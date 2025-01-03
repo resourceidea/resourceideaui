@@ -10,17 +10,17 @@ namespace EastSeat.ResourceIdea.Domain.Subscriptions.Models;
 public record SubscriptionModel
 {
     /// <summary>
-    /// Subscription Id.
+    /// Subscription DepartmentId.
     /// </summary>
     public SubscriptionId Id { get; set; }
 
     /// <summary>
-    /// Tenant Id.
+    /// Tenant DepartmentId.
     /// </summary>
     public TenantId TenantId { get; set; }
 
     /// <summary>
-    /// Id of the service subscribed to by the tenant.
+    /// DepartmentId of the service subscribed to by the tenant.
     /// </summary>
     public SubscriptionServiceId SubscriptionServiceId { get; set; }
 

@@ -9,7 +9,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Specification
 /// <summary>
 /// Specification used to filter subscriptions that belong to a specific subscription service.
 /// </summary>
-/// <param name="subscriptionServiceId">Subscription service Id.</param>
+/// <param name="subscriptionServiceId">Subscription service DepartmentId.</param>
 public sealed class GetSubscriptionBySubscriptionServiceIdSpecification(
     Dictionary<string, string>? filters) : BaseSpecification<Subscription>
 {

@@ -12,7 +12,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Commands;
 public sealed class SuspendSubscriptionCommand : IRequest<ResourceIdeaResponse<SubscriptionModel>>
 {
     /// <summary>
-    /// Id of the subscription to be suspended.
+    /// DepartmentId of the subscription to be suspended.
     /// </summary>
     public SubscriptionId SubscriptionId { get; set; }
 }

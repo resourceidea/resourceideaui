@@ -8,7 +8,7 @@ namespace EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 public readonly record struct EngagementId
 {
     /// <summary>
-    /// Client Id value.
+    /// Client DepartmentId value.
     /// </summary>
     public Guid Value { get; }
 

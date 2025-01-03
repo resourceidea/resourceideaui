@@ -7,10 +7,10 @@ using MediatR;
 namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Queries;
 
 /// <summary>
-/// Query to get a subscription by Id.
+/// Query to get a subscription by DepartmentId.
 /// </summary>
 public sealed class GetSubscriptionByIdQuery : IRequest<ResourceIdeaResponse<SubscriptionModel>>
 {
-    /// <summary>Subscription Id.</summary>
+    /// <summary>Subscription DepartmentId.</summary>
     public SubscriptionId SubscriptionId { get; set; }
 }

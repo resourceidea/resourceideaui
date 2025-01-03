@@ -48,7 +48,7 @@ public readonly record struct TenantId
         return Create(tenantId);
     }
 
-    /// <summary>Tenant Id is not empty.</summary>
+    /// <summary>Tenant DepartmentId is not empty.</summary>
     public bool IsNotEmpty() => this != TenantId.Empty;
 
     /// <summary>

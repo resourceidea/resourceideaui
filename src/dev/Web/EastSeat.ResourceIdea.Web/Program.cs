@@ -1,9 +1,20 @@
 using EastSeat.ResourceIdea.Web.Components;
+using EastSeat.ResourceIdea.Web;
+using EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents();
+
+// Add DbContext
+builder.Services.AddResourceIdeaDbContext();
+
+// Add ResourceIdea Services
+builder.Services.AddResourceIdeaServices();
+
+// Add MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateDepartmentCommandHandler).Assembly));
 
 var app = builder.Build();
 
@@ -16,7 +27,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.UseAntiforgery();
 
