@@ -1,4 +1,13 @@
-﻿using EastSeat.ResourceIdea.DataStore;
+﻿using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Departments.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
+using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
+using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
+using EastSeat.ResourceIdea.DataStore;
+using EastSeat.ResourceIdea.DataStore.Services;
+
 using Microsoft.EntityFrameworkCore;
 
 using System.Diagnostics;
@@ -16,6 +25,17 @@ namespace EastSeat.ResourceIdea.Web
         {
             string sqlServerConnectionString = GetDbContextConnectionString();
             services.AddDbContext<ResourceIdeaDBContext>(options => options.UseSqlServer(sqlServerConnectionString));
+        }
+
+        public static void AddResourceIdeaServices(this IServiceCollection services)
+        {
+            services.AddScoped<ITenantsService, TenantsService>();
+            services.AddScoped<IClientsService, ClientsService>();
+            services.AddScoped<IDepartmentsService, DepartmentsService>();
+            services.AddScoped<IEngagementsService, EngagementsService>();
+            services.AddScoped<IEngagementTasksService, EngagementTasksService>();
+            services.AddScoped<ISubscriptionServicesService, SubscriptionServicesService>();
+            services.AddScoped<ISubscriptionsService, SubscriptionsService>();
         }
 
         private static string GetDbContextConnectionString()

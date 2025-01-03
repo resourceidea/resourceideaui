@@ -1,7 +1,6 @@
 using EastSeat.ResourceIdea.Web.Components;
-using EastSeat.ResourceIdea.DataStore;
-using Microsoft.EntityFrameworkCore;
 using EastSeat.ResourceIdea.Web;
+using EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +9,12 @@ builder.Services.AddRazorComponents();
 
 // Add DbContext
 builder.Services.AddResourceIdeaDbContext();
+
+// Add ResourceIdea Services
+builder.Services.AddResourceIdeaServices();
+
+// Add MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateDepartmentCommandHandler).Assembly));
 
 var app = builder.Build();
 

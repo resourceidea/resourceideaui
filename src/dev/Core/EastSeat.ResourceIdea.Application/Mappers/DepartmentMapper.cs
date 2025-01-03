@@ -1,4 +1,5 @@
-﻿using EastSeat.ResourceIdea.Domain.Departments.Entities;
+﻿using EastSeat.ResourceIdea.Application.Types;
+using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
 
 namespace EastSeat.ResourceIdea.Application.Mappers;
@@ -26,20 +27,6 @@ public static class DepartmentMapper
     }
 
     /// <summary>
-    /// Map <see cref="DepartmentCreateModel"/> to <see cref="Department"/>.
-    /// </summary>
-    /// <param name="model">Model to be mapped to the entity.</param>
-    /// <returns>Instance of <see cref="Department"/></returns>
-    public static Department ToEntity(this DepartmentCreateModel model)
-    {
-        return new Department
-        {
-            Name = model.Name,
-            TenantId = model.TenantId
-        };
-    }
-
-    /// <summary>
     /// Map <see cref="DepartmentViewModel"/> to <see cref="Department"/> entity.
     /// </summary>
     /// <param name="model">Model to be mapped to the entity.</param>
@@ -63,6 +50,17 @@ public static class DepartmentMapper
     {
         var departmentViewModels = departments.Select(department => department.ToModel<DepartmentViewModel>()).ToList();
         return new DepartmentListModel(departmentViewModels);
+    }
+
+    /// <summary>
+    /// Map <see cref="Department"/> entity to <see cref="ResourceIdeaResponse{DepartmentViewModel}"/>.
+    /// </summary>
+    /// <param name="department">Department entity</param>
+    /// <returns>Instance of <see cref="ResourceIdeaResponse{DepartmentViewModel}"/></returns>
+    public static ResourceIdeaResponse<DepartmentViewModel> ToResourceIdeaResponse(this Department department)
+    {
+        DepartmentViewModel departmentViewModel = department.ToModel<DepartmentViewModel>();
+        return ResourceIdeaResponse<DepartmentViewModel>.Success(departmentViewModel);
     }
 
     private static DepartmentViewModel ToDepartmentViewModel(Department department)

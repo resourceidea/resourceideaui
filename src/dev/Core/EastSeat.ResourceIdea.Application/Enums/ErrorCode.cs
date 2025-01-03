@@ -117,4 +117,9 @@ public enum ErrorCode
     /// Command to the data store failed.
     /// </summary>
     DataStoreCommandFailure,
+
+    /// <summary>
+    /// Empty entity returned from the repository on create department.
+    /// </summary>
+    EmptyEntityOnCreateDepartment,
 }

@@ -1,0 +1,42 @@
+﻿@page "/departments/new"
+@using EastSeat.ResourceIdea.Application.Types
+
+@layout AdminLayout
+
+@inject IMediator Mediator
+@inject NavigationManager NavigationManager
+
+<h3>Create Department</h3>
+
+<EditForm Model="@command" OnValidSubmit="HandleValidSubmit" FormName="CreateDepartment">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Department Name</label>
+        <InputText id="name" class="form-control" @bind-Value="command.Name" />
+        <ValidationMessage For="@(() => command.Name)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
+@code {
+    private CreateDepartmentCommand command = new();
+
+    private async Task HandleValidSubmit()
+    {
+        var result = await Mediator.Send(command);
+        if (result != null && result.IsSuccess)
+        {
+            // Handle success (e.g., navigate to the department list page)
+            NavigationManager.NavigateTo("/departments");
+        }
+
+        // TODO: Display error message on failure.
+        // else
+        // {
+        //     // Handle failure (e.g., display error messages)
+        // }
+    }
+}
