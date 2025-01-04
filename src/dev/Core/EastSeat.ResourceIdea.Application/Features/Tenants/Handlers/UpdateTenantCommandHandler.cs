@@ -24,11 +24,8 @@ public sealed class UpdateTenantCommandHandler(ITenantsService tenantsService)
             return ResourceIdeaResponse<TenantModel>.Failure(ErrorCode.UpdateClientCommandValidationFailure);
         }
 
-        Tenant tenantUpdateDetails = new()
-        {
-            TenantId = _tenantsService.GetTenantIdFromLoginSession(),
-            Organization = request.Organization
-        };
+        Tenant tenantUpdateDetails = request.ToEntity();
+        tenantUpdateDetails.TenantId = _tenantsService.GetTenantIdFromLoginSession();
         var response = await _tenantsService.UpdateAsync(tenantUpdateDetails, cancellationToken);
 
         if (response.IsFailure)
