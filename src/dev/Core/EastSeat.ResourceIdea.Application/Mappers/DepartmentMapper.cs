@@ -52,6 +52,12 @@ public static class DepartmentMapper
         return new DepartmentListModel(departmentViewModels);
     }
 
+    public static ResourceIdeaResponse<DepartmentListModel> ToResourceIdeaResponse(this IEnumerable<Department> departments)
+    {
+        DepartmentListModel departmentListModel = ToDepartmentListModel(departments);
+        return ResourceIdeaResponse<DepartmentListModel>.Success(departmentListModel);
+    }
+
     /// <summary>
     /// Map <see cref="Department"/> entity to <see cref="ResourceIdeaResponse{DepartmentViewModel}"/>.
     /// </summary>
@@ -59,8 +65,7 @@ public static class DepartmentMapper
     /// <returns>Instance of <see cref="ResourceIdeaResponse{DepartmentViewModel}"/></returns>
     public static ResourceIdeaResponse<DepartmentViewModel> ToResourceIdeaResponse(this Department department)
     {
-        DepartmentViewModel departmentViewModel = department.ToModel<DepartmentViewModel>();
-        return ResourceIdeaResponse<DepartmentViewModel>.Success(departmentViewModel);
+        return ResourceIdeaResponse<DepartmentViewModel>.Success(ToDepartmentViewModel(department));
     }
 
     private static DepartmentViewModel ToDepartmentViewModel(Department department)

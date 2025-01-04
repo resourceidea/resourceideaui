@@ -122,4 +122,14 @@ public enum ErrorCode
     /// Empty entity returned from the repository on create department.
     /// </summary>
     EmptyEntityOnCreateDepartment,
+
+    /// <summary>
+    /// Empty entity returned from repository on create tenant.
+    /// </summary>  
+    EmptyEntityOnCreateTenant,
+
+    /// <summary>
+    /// Empty entity returned from repository on update tenant.
+    /// </summary>
+    EmptyEntityOnUpdateTenant,
 }
