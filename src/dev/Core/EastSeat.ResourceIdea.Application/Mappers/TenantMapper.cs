@@ -126,10 +126,6 @@ public static class TenantMapper
         ArgumentException.ThrowIfNullOrEmpty(tenant.Organization);
         ArgumentException.ThrowIfNullOrWhiteSpace(tenant.Organization);
 
-        return new TenantModel
-        {
-            TenantId = TenantId.Create(tenant.TenantId),
-            Organization = tenant.Organization
-        };
+        return tenant.ToModel<TenantModel>();
     }
 }

@@ -130,11 +130,6 @@ public static class ClientMapper
     /// <returns>The mapped client model.</returns>
     private static ClientModel ToClientModel(Client client)
     {
-        return new ClientModel
-        {
-            ClientId = client.Id,
-            Name = client.Name,
-            Address = client.Address
-        };
+        return client.ToModel<ClientModel>();
     }
 }

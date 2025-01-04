@@ -2,6 +2,7 @@ using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
 using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Clients.Validators;
+using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Application.Mappers;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
@@ -11,10 +12,11 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
 
-public sealed class CreateClientCommandHandler(IClientsService clientService)
+public sealed class CreateClientCommandHandler(IClientsService clientService, ITenantsService tenantsService)
     : IRequestHandler<CreateClientCommand, ResourceIdeaResponse<ClientModel>>
 {
     private readonly IClientsService _clientService = clientService;
+    private readonly ITenantsService _tenantsService = tenantsService;
 
     public async Task<ResourceIdeaResponse<ClientModel>> Handle(
         CreateClientCommand request,
@@ -27,6 +29,7 @@ public sealed class CreateClientCommandHandler(IClientsService clientService)
         }
 
         Client client = request.ToEntity();
+        client.TenantId = _tenantsService.GetTenantIdFromLoginSession(cancellationToken);
         var result = await _clientService.AddAsync(client, cancellationToken);
 
         if (result.IsFailure)

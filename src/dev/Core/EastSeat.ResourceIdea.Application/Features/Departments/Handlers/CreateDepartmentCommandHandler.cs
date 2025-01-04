@@ -38,7 +38,7 @@ public sealed class CreateDepartmentCommandHandler (ITenantsService tenantsServi
         }
 
         Department departmentToCreate = command.ToEntity();
-        departmentToCreate.TenantId = _tenantsService.GetTenantIdFromLoginSession();
+        departmentToCreate.TenantId = _tenantsService.GetTenantIdFromLoginSession(cancellationToken);
         ResourceIdeaResponse<Department> result = await _departmentsService.AddAsync(departmentToCreate, cancellationToken);
 
         if (result.IsFailure)

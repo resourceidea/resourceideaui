@@ -2,6 +2,7 @@ using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
 using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Clients.Validators;
+using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Application.Mappers;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
@@ -14,10 +15,11 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
 /// <summary>
 /// Command handler for updating client.
 /// </summary>
-public sealed class UpdateClientCommandHandler (IClientsService clientsService)
+public sealed class UpdateClientCommandHandler (IClientsService clientsService, ITenantsService tenantsService)
     : IRequestHandler<UpdateClientCommand, ResourceIdeaResponse<ClientModel>>
 {
     private readonly IClientsService _clientsService = clientsService;
+    private readonly ITenantsService _tenantsService = tenantsService;
 
     public async Task<ResourceIdeaResponse<ClientModel>> Handle(UpdateClientCommand request, CancellationToken cancellationToken)
     {
@@ -28,6 +30,7 @@ public sealed class UpdateClientCommandHandler (IClientsService clientsService)
         }
 
         Client client = request.ToEntity();
+        client.TenantId = _tenantsService.GetTenantIdFromLoginSession(cancellationToken);
         var response = await _clientsService.UpdateAsync(client, cancellationToken);
         if (response.IsFailure)
         {
