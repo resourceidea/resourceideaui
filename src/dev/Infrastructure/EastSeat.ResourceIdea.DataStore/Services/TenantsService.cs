@@ -69,7 +69,7 @@ public sealed class TenantsService : ITenantsService
     }
 
     /// <inheritdoc/>
-    public Guid GetTenantIdFromLoginSession()
+    public Guid GetTenantIdFromLoginSession(CancellationToken cancellationToken)
     {
         // TODO: Implement logic that will read the tenant ID from the login session.
         return Guid.Empty;

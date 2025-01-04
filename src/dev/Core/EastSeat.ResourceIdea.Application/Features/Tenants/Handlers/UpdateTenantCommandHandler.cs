@@ -25,7 +25,7 @@ public sealed class UpdateTenantCommandHandler(ITenantsService tenantsService)
         }
 
         Tenant tenantUpdateDetails = request.ToEntity();
-        tenantUpdateDetails.TenantId = _tenantsService.GetTenantIdFromLoginSession();
+        tenantUpdateDetails.TenantId = _tenantsService.GetTenantIdFromLoginSession(cancellationToken);
         var response = await _tenantsService.UpdateAsync(tenantUpdateDetails, cancellationToken);
 
         if (response.IsFailure)

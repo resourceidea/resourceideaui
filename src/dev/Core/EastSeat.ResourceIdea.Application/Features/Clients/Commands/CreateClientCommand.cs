@@ -12,11 +12,8 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Commands;
 public class CreateClientCommand : IRequest<ResourceIdeaResponse<ClientModel>>
 {
     /// <summary>Client name</summary>
-    public required string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>Client address</summary>
     public Address Address { get; set; } = Address.Empty;
-
-    /// <summary>Client's owning tenant</summary>
-    public TenantId TenantId { get; set; }
 }

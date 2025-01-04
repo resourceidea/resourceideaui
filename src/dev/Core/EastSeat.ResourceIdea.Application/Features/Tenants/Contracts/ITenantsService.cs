@@ -12,5 +12,5 @@ public interface ITenantsService : IDataStoreService<Tenant>
     /// Get the tenant ID from the login session.
     /// </summary>
     /// <returns></returns>
-    Guid GetTenantIdFromLoginSession();
+    Guid GetTenantIdFromLoginSession(CancellationToken cancellationToken);
 }
