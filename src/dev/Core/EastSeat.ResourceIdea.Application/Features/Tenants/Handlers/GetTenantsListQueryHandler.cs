@@ -1,5 +1,4 @@
-﻿using EastSeat.ResourceIdea.Application.Enums;
-using EastSeat.ResourceIdea.Application.Extensions;
+﻿using EastSeat.ResourceIdea.Application.Extensions;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
