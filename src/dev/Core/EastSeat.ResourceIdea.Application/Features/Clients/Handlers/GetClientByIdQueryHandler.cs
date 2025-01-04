@@ -9,6 +9,10 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
 
+/// <summary>
+/// Handles the query to get a client by id.
+/// </summary>
+/// <param name="clientsService"></param>
 public sealed class GetClientByIdQueryHandler(IClientsService clientsService)
     : IRequestHandler<GetClientByIdQuery, ResourceIdeaResponse<ClientModel>>
 {

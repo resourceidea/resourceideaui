@@ -13,6 +13,10 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
 
+/// <summary>
+/// Handles query to get a list of clients.
+/// </summary>
+/// <param name="clientsService"></param>
 public sealed class GetClientsListQueryHandler(IClientsService clientsService)
     : IRequestHandler<GetClientsListQuery, ResourceIdeaResponse<PagedListResponse<ClientModel>>>
 {

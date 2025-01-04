@@ -12,6 +12,11 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
 
+/// <summary>
+/// Handles the command to create a client.
+/// </summary>
+/// <param name="clientService"></param>
+/// <param name="tenantsService"></param>
 public sealed class CreateClientCommandHandler(IClientsService clientService, ITenantsService tenantsService)
     : IRequestHandler<CreateClientCommand, ResourceIdeaResponse<ClientModel>>
 {

@@ -13,7 +13,7 @@ using MediatR;
 namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
 
 /// <summary>
-/// Command handler for updating client.
+/// Handles command to update a client.
 /// </summary>
 public sealed class UpdateClientCommandHandler (IClientsService clientsService, ITenantsService tenantsService)
     : IRequestHandler<UpdateClientCommand, ResourceIdeaResponse<ClientModel>>

@@ -2,6 +2,7 @@ using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
 using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
+using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
@@ -16,13 +17,15 @@ namespace EastSeat.ResourceIdea.Application.UnitTests;
 public class TestCreateClientCommandHandler
 {
     private readonly Mock<IClientsService> _mockClientsService;
+    private readonly Mock<ITenantsService> _mockTenantsService;
     private readonly CreateClientCommandHandler _handler;
     private readonly ClientId _clientId;
 
     public TestCreateClientCommandHandler()
     {
         _mockClientsService = new Mock<IClientsService>();
-        _handler = new CreateClientCommandHandler(_mockClientsService.Object);
+        _mockTenantsService = new Mock<ITenantsService>();
+        _handler = new CreateClientCommandHandler(_mockClientsService.Object, _mockTenantsService.Object);
         _clientId = ClientId.Create(Guid.NewGuid());
     }
 
