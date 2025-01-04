@@ -11,7 +11,7 @@ public record ClientModel
     /// <summary>
     /// Client DepartmentId.
     /// </summary>
-    public ClientId Id { get; set; }
+    public ClientId ClientId { get; set; }
 
     /// <summary>
     /// Owning tenant's DepartmentId.

@@ -132,4 +132,9 @@ public enum ErrorCode
     /// Empty entity returned from repository on update tenant.
     /// </summary>
     EmptyEntityOnUpdateTenant,
+
+    /// <summary>
+    /// Empty entity returned from repository on update client.
+    /// </summary>
+    EmptyEntityOnUpdateClient,
 }

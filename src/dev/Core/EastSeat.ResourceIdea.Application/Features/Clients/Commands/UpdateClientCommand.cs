@@ -15,11 +15,8 @@ public sealed class UpdateClientCommand : IRequest<ResourceIdeaResponse<ClientMo
     public ClientId ClientId { get; set; }
 
     /// <summary>Client's name.</summary>
-    public required string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>Client address.</summary>
-    public Address Address { get; set; } = Address.Empty;
-
-    /// <summary>Client owning tenant's DepartmentId.</summary>
-    public TenantId TenantId { get; set; }    
+    public Address Address { get; set; } = Address.Empty; 
 }

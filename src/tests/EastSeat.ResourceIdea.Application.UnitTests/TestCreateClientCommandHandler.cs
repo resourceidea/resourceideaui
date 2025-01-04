@@ -1,5 +1,3 @@
-using AutoMapper;
-
 using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
 using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
@@ -8,7 +6,6 @@ using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 using FluentAssertions;
 
@@ -20,17 +17,13 @@ public class TestCreateClientCommandHandler
 {
     private readonly Mock<IClientsService> _mockClientsService;
     private readonly CreateClientCommandHandler _handler;
-    private readonly Mock<IMapper> _mockMapper;
     private readonly ClientId _clientId;
-    private readonly TenantId _tenantId;
 
     public TestCreateClientCommandHandler()
     {
         _mockClientsService = new Mock<IClientsService>();
-        _mockMapper = new Mock<IMapper>();
-        _handler = new CreateClientCommandHandler(_mockClientsService.Object, _mockMapper.Object);
+        _handler = new CreateClientCommandHandler(_mockClientsService.Object);
         _clientId = ClientId.Create(Guid.NewGuid());
-        _tenantId = TenantId.Create(Guid.NewGuid());
     }
 
     [Fact(Skip = "To be implemented")]
@@ -87,8 +80,7 @@ public class TestCreateClientCommandHandler
         var command = new CreateClientCommand
         {
             Name = isInvalidCommand ? string.Empty : "Test Client",
-            Address = isInvalidCommand ? Address.Empty : Address.Create("Building", "Street name", "City"),
-            TenantId = _tenantId
+            Address = isInvalidCommand ? Address.Empty : Address.Create("Building", "Street name", "City")
         };
 
         return command;
@@ -98,10 +90,9 @@ public class TestCreateClientCommandHandler
     {
         var client = new ClientModel
         {
-            Id = _clientId,
+            ClientId = _clientId,
             Name = command.Name,
-            Address = command.Address,
-            TenantId = command.TenantId
+            Address = command.Address
         };
 
         return client;

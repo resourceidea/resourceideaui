@@ -104,7 +104,7 @@ public sealed class ResourceIdeaMappingProfile : Profile
     {
         CreateMap<Client, ClientModel>()
                     .ForMember(dest => dest.TenantId, opt => opt.MapFrom(src => TenantId.Create(src.TenantId)))
-                    .ForMember(dest => dest.Id, opt => opt.MapFrom(src => ClientId.Create(src.Id.Value)));
+                    .ForMember(dest => dest.ClientId, opt => opt.MapFrom(src => ClientId.Create(src.Id.Value)));
 
         CreateMap<ResourceIdeaResponse<Client>, ResourceIdeaResponse<ClientModel>>()
             .ForMember(

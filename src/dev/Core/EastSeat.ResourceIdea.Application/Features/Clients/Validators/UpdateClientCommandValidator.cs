@@ -15,14 +15,9 @@ public sealed class UpdateClientCommandValidator : AbstractValidator<UpdateClien
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required.");
 
-        RuleFor(x => x.TenantId)
-            .Must(BeValidTenantId).WithMessage("Client Tenant Id must be valid.");
-
         RuleFor(x => x.Address)
             .Must(BeValidAddress).WithMessage("Client address must be valid.");
     }
-
-    private bool BeValidTenantId(TenantId id) => id.IsNotEmpty();
 
     private bool BeValidAddress(Address address) => address.IsNotEmpty();
 }
