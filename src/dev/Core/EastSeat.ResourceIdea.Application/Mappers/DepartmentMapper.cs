@@ -65,8 +65,7 @@ public static class DepartmentMapper
     /// <returns>Instance of <see cref="ResourceIdeaResponse{DepartmentViewModel}"/></returns>
     public static ResourceIdeaResponse<DepartmentViewModel> ToResourceIdeaResponse(this Department department)
     {
-        DepartmentViewModel departmentViewModel = department.ToModel<DepartmentViewModel>();
-        return ResourceIdeaResponse<DepartmentViewModel>.Success(departmentViewModel);
+        return ResourceIdeaResponse<DepartmentViewModel>.Success(ToDepartmentViewModel(department));
     }
 
     private static DepartmentViewModel ToDepartmentViewModel(Department department)

@@ -15,5 +15,5 @@ public record TenantModel
     /// <summary>
     /// Tenant's organization name.
     /// </summary>
-    public string Organization { get; set; } = string.Empty;
+    public required string Organization { get; set; }
 }
