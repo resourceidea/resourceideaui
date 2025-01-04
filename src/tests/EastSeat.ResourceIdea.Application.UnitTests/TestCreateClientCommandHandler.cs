@@ -58,7 +58,7 @@ public class TestCreateClientCommandHandler
 
         // Assert
         result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Be(ErrorCode.CreateClientCommandValidationFailure);
+        result.Error.Should().Be(ErrorCode.EmptyEntityOnCreateClient);
     }
 
     [Fact(Skip = "To be implemented")]

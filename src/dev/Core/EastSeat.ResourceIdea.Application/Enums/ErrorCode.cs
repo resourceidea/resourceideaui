@@ -51,7 +51,7 @@ public enum ErrorCode
     /// <summary>
     /// Validation of the command to create a client failed.
     /// </summary>
-    CreateClientCommandValidationFailure,
+    EmptyEntityOnCreateClient,
 
     /// <summary>
     /// Validation of the command to update a client failed.

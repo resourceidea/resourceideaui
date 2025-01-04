@@ -44,7 +44,7 @@ public sealed class CreateClientCommandHandler(IClientsService clientService, IT
 
         if (result.Content.HasValue is false)
         {
-            return ResourceIdeaResponse<ClientModel>.Failure(ErrorCode.CreateClientCommandValidationFailure);
+            return ResourceIdeaResponse<ClientModel>.Failure(ErrorCode.EmptyEntityOnCreateClient);
         }
 
         return result.Content.Value.ToResourceIdeaResponse();
@@ -61,7 +61,7 @@ public sealed class CreateClientCommandHandler(IClientsService clientService, IT
         if (validationResult.IsValid is false || validationResult.Errors.Count > 0)
         {
             commandValidationResponse = ResourceIdeaResponse<ClientModel>.Failure(
-                ErrorCode.CreateClientCommandValidationFailure);
+                ErrorCode.EmptyEntityOnCreateClient);
         }
 
         return commandValidationResponse;
