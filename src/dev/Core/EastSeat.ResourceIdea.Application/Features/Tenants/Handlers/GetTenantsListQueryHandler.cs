@@ -1,4 +1,5 @@
-﻿using EastSeat.ResourceIdea.Application.Extensions;
+﻿using EastSeat.ResourceIdea.Application.Enums;
+using EastSeat.ResourceIdea.Application.Extensions;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
@@ -30,6 +31,16 @@ public sealed class GetTenantsListQueryHandler(ITenantsService tenantsService)
             request.PageSize,
             specification,
             cancellationToken);
+
+        if (response.IsFailure)
+        {
+            return ResourceIdeaResponse<PagedListResponse<TenantModel>>.Failure(response.Error);
+        }
+
+        if (response.Content.HasValue is false)
+        {
+            return ResourceIdeaResponse<PagedListResponse<TenantModel>>.NotFound();
+        }
 
         return response.Content.Value.ToResourceIdeaResponse();
     }

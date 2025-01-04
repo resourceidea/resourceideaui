@@ -33,7 +33,7 @@ public sealed class UpdateTenantCommandHandler(ITenantsService tenantsService)
             return ResourceIdeaResponse<TenantModel>.Failure(response.Error);
         }
 
-        if (!response.Content.HasValue)
+        if (response.Content.HasValue is false)
         {
             return ResourceIdeaResponse<TenantModel>.Failure(ErrorCode.EmptyEntityOnUpdateTenant);
         }
