@@ -1,4 +1,5 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
+﻿using EastSeat.ResourceIdea.Application.Extensions;
+using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Commands;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
@@ -111,7 +112,7 @@ public static class TenantMapper
             PageSize = tenants.PageSize,
             CurrentPage = tenants.CurrentPage,
             TotalCount = tenants.TotalCount,
-            Items = [.. tenants.Items.Select(ToTenantModel)]
+            Items = tenants.Items.Select(ToTenantModel).ToList()
         };
     }
 
@@ -123,9 +124,12 @@ public static class TenantMapper
     private static TenantModel ToTenantModel(Tenant tenant)
     {
         ArgumentNullException.ThrowIfNull(tenant);
-        ArgumentException.ThrowIfNullOrEmpty(tenant.Organization);
-        ArgumentException.ThrowIfNullOrWhiteSpace(tenant.Organization);
+        tenant.Organization.ThrowIfNullOrEmptyOrWhiteSpace();
 
-        return tenant.ToModel<TenantModel>();
+        return new TenantModel
+        {
+            TenantId = TenantId.Create(tenant.TenantId),
+            Organization = tenant.Organization
+        };
     }
 }

@@ -29,12 +29,12 @@ public class Engagement : BaseEntity
     /// <summary>
     /// Date when the engagement work is started.
     /// </summary>
-    public DateTimeOffset CommencementDate { get; set; }
+    public DateTimeOffset? CommencementDate { get; set; }
 
     /// <summary>
     /// Date when the engagement work is completed.
     /// </summary>
-    public DateTimeOffset CompletionDate { get; set; }
+    public DateTimeOffset? CompletionDate { get; set; }
 
     /// <summary>
     /// Status of the engagement.
