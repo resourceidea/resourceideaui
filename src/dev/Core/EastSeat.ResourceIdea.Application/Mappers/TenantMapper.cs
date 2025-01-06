@@ -112,7 +112,7 @@ public static class TenantMapper
             PageSize = tenants.PageSize,
             CurrentPage = tenants.CurrentPage,
             TotalCount = tenants.TotalCount,
-            Items = [.. tenants.Items.Select(ToTenantModel)]
+            Items = tenants.Items.Select(ToTenantModel).ToList()
         };
     }
 

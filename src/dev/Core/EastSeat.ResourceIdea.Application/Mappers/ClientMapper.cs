@@ -122,7 +122,7 @@ public static class ClientMapper
             CurrentPage = clients.CurrentPage,
             PageSize = clients.PageSize,
             TotalCount = clients.TotalCount,
-            Items = [.. clients.Items.Select(ToClientModel)]
+            Items = clients.Items.Select(ToClientModel).ToList()
         };
     }
 

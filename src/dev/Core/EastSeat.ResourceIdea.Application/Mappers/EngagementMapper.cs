@@ -64,7 +64,7 @@ public static class EngagementMapper
             Id = EngagementId.Create(Guid.NewGuid()),
             ClientId = command.ClientId,
             EngagementStatus = EngagementStatus.NotStarted,
-            Description = command.Description
+            Description = command.Description ?? string.Empty
         };
     }
 
@@ -82,7 +82,7 @@ public static class EngagementMapper
             EngagementStatus = command.Status,
             CommencementDate = command.CommencementDate,
             CompletionDate = command.CompletionDate,
-            Description = command.Description
+            Description = command.Description ?? string.Empty
         };
     }
 
@@ -134,7 +134,7 @@ public static class EngagementMapper
     {
         return new()
         {
-            Items = [.. engagements.Items.Select(ToEngagementModel)],
+            Items = engagements.Items.Select(ToEngagementModel).ToList(),
             CurrentPage = engagements.CurrentPage,
             PageSize = engagements.PageSize,
             TotalCount = engagements.TotalCount
