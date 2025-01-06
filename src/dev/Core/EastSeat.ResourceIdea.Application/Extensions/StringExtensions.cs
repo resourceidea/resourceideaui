@@ -26,18 +26,39 @@ public static class StringExtensions
             .Select(part => part.Split(keyValueSeparator, StringSplitOptions.RemoveEmptyEntries))
             .Where(parts => parts.Length == 2)
             .ToDictionary(parts => parts[0].Trim(), parts => parts[1].Trim(), StringComparer.OrdinalIgnoreCase);
-        
+
         ValidateFiltersDictionary(filterDictionary);
 
         return filterDictionary;
     }
 
+    /// <summary>
+    /// Throws an exception if the string argument is null, empty, or consists only of white-space characters.
+    /// </summary>
+    /// <param name="argument">The string argument to validate.</param>
+    /// <exception cref="ArgumentException">Thrown when the argument is null, empty, or white-space.</exception>
+    public static void ThrowIfNullOrEmptyOrWhiteSpace(this string argument)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(argument);
+        ArgumentException.ThrowIfNullOrWhiteSpace(argument);
+    }
+
+    /// <summary>
+    /// Validates the filters dictionary for any malformed subscription date or period filters.
+    /// </summary>
+    /// <param name="filterDictionary">The dictionary of filters to validate.</param>
+    /// <exception cref="MalformedQueryFilterException">Thrown when the filters are malformed.</exception>
     private static void ValidateFiltersDictionary(Dictionary<string, string> filterDictionary)
     {
         ThrowIfMalformedSubscriptionDateFilters(filterDictionary);
         ThrowIfMalformedSubscriptionPeriodFilters(filterDictionary);
     }
 
+    /// <summary>
+    /// Throws an exception if the subscription period filters are malformed.
+    /// </summary>
+    /// <param name="filterDictionary">The dictionary of filters to validate.</param>
+    /// <exception cref="MalformedQueryFilterException">Thrown when the subscription period filters are malformed.</exception>
     private static void ThrowIfMalformedSubscriptionPeriodFilters(Dictionary<string, string> filterDictionary)
     {
         bool hasSubscribedBeforeDateFilter = filterDictionary.ContainsKey("subbefore");
@@ -51,6 +72,11 @@ public static class StringExtensions
         throw new MalformedQueryFilterException("Must have 'subbefore' and 'subafter' filters in the same query.");
     }
 
+    /// <summary>
+    /// Throws an exception if the subscription date filters are malformed.
+    /// </summary>
+    /// <param name="filterDictionary">The dictionary of filters to validate.</param>
+    /// <exception cref="MalformedQueryFilterException">Thrown when the subscription date filters are malformed.</exception>
     private static void ThrowIfMalformedSubscriptionDateFilters(Dictionary<string, string> filterDictionary)
     {
         bool hasSubscribedOnDateFilter = filterDictionary.ContainsKey("subon");

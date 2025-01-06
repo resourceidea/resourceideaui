@@ -1,20 +1,19 @@
-﻿using AutoMapper;
-using EastSeat.ResourceIdea.Application.Enums;
+﻿using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Commands;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Validators;
+using EastSeat.ResourceIdea.Application.Mappers;
 using EastSeat.ResourceIdea.Application.Types;
+using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.Models;
+
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers;
 
-public sealed class CompleteEngagementCommandHandler (
-    IEngagementsService engagementsService,
-    IMapper mapper): IRequestHandler<CompleteEngagementCommand, ResourceIdeaResponse<EngagementModel>>
+public sealed class CompleteEngagementCommandHandler (IEngagementsService engagementsService): IRequestHandler<CompleteEngagementCommand, ResourceIdeaResponse<EngagementModel>>
 {
     private readonly IEngagementsService _engagementsService = engagementsService;
-    private readonly IMapper _mapper = mapper;
 
     /// <inheritdoc />
     public async Task<ResourceIdeaResponse<EngagementModel>> Handle(
@@ -29,11 +28,20 @@ public sealed class CompleteEngagementCommandHandler (
             return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.DataStoreCommandFailure);
         }
 
-        var completedEngagement = await _engagementsService.CompleteAsync(
+        ResourceIdeaResponse<Engagement> result = await _engagementsService.CompleteAsync(
             request.EngagementId,
             request.CompletionDate,
             cancellationToken);
+        if (result.IsFailure)
+        {
+            return ResourceIdeaResponse<EngagementModel>.Failure(result.Error);
+        }
 
-        return ResourceIdeaResponse<EngagementModel>.Success(_mapper.Map<EngagementModel>(completedEngagement));
+        if (result.Content.HasValue is false)
+        {
+            return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.EmptyEntityOnCompleteEngagement);
+        }
+
+        return result.Content.Value.ToResourceIdeaResponse();
     }
 }

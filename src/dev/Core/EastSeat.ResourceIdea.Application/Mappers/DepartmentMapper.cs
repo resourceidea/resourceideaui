@@ -1,4 +1,5 @@
-﻿using EastSeat.ResourceIdea.Application.Types;
+﻿using EastSeat.ResourceIdea.Application.Extensions;
+using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
 
@@ -70,6 +71,9 @@ public static class DepartmentMapper
 
     private static DepartmentViewModel ToDepartmentViewModel(Department department)
     {
+        ArgumentNullException.ThrowIfNull(department);
+        department.Name.ThrowIfNullOrEmptyOrWhiteSpace();
+
         return new DepartmentViewModel
         {
             DepartmentId = department.Id,

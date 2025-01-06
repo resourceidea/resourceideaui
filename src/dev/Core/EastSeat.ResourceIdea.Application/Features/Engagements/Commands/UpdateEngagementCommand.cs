@@ -37,4 +37,9 @@ public sealed class UpdateEngagementCommand : IRequest<ResourceIdeaResponse<Enga
     /// Gets or sets the completion date of the engagement.
     /// </summary>
     public DateTimeOffset CompletionDate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the description of the engagement.
+    /// </summary>
+    public string? Description { get; set; }
 }
