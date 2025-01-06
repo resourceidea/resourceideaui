@@ -1,21 +1,20 @@
-﻿using AutoMapper;
-using EastSeat.ResourceIdea.Application.Enums;
+﻿using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Commands;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Validators;
+using EastSeat.ResourceIdea.Application.Mappers;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.Models;
+
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers;
 
-public sealed class UpdateEngagementCommandHandler (
-    IEngagementsService engagementsService,
-    IMapper mapper) : IRequestHandler<UpdateEngagementCommand, ResourceIdeaResponse<EngagementModel>>
+public sealed class UpdateEngagementCommandHandler (IEngagementsService engagementsService)
+    : IRequestHandler<UpdateEngagementCommand, ResourceIdeaResponse<EngagementModel>>
 {
     private readonly IEngagementsService _engagementsService = engagementsService;
-    private readonly IMapper _mapper = mapper;
     
     /// <inheritdoc />
     public async Task<ResourceIdeaResponse<EngagementModel>> Handle(
@@ -30,12 +29,18 @@ public sealed class UpdateEngagementCommandHandler (
             return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.UpdateEngagementCommandValidationFailure);
         }
 
-        // TODO: Add mapper for UpdateEngagementCommand to Engagement.
-        Engagement engagement = _mapper.Map<Engagement>(request);
+        Engagement engagement = request.ToEntity();
+        ResourceIdeaResponse<Engagement> response = await _engagementsService.UpdateAsync(engagement, cancellationToken);
+        if (response.IsFailure)
+        {
+            return ResourceIdeaResponse<EngagementModel>.Failure(response.Error);
+        }
 
-        var result = await _engagementsService.UpdateAsync(engagement, cancellationToken);
+        if (response.Content.HasValue is false)
+        {
+            return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.EmptyEntityOnUpdateEngagement);
+        }
 
-        // TODO: Add mapper for Engagement to EngagementModel.
-        return _mapper.Map<ResourceIdeaResponse<EngagementModel>>(result);
+        return response.Content.Value.ToResourceIdeaResponse();
     }
 }

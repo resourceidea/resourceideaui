@@ -137,4 +137,29 @@ public enum ErrorCode
     /// Empty entity returned from repository on update client.
     /// </summary>
     EmptyEntityOnUpdateClient,
+
+    /// <summary>
+    /// Empty entity returned from repository on cancel engagement.
+    /// </summary>
+    EmptyEntityOnCancelEngagement,
+
+    /// <summary>
+    /// Empty entity returned from repository on complete engagement.
+    /// </summary>
+    EmptyEntityOnCompleteEngagement,
+
+    /// <summary>
+    /// Empty entity returned from repository on create engagement.
+    /// </summary>
+    EmptyEntityOnCreateEngagement,
+
+    /// <summary>
+    /// Empty entity returned from repository on start engagement.
+    /// </summary>
+    EmptyEntityOnStartEngagement,
+
+    /// <summary>
+    /// Empty entity returned from repository on update engagement.
+    /// </summary>
+    EmptyEntityOnUpdateEngagement,
 }

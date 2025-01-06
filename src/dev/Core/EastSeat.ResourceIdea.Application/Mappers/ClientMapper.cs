@@ -1,9 +1,12 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
+﻿using EastSeat.ResourceIdea.Application.Extensions;
+using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Tenants.Entities;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Mappers;
 
@@ -119,7 +122,7 @@ public static class ClientMapper
             CurrentPage = clients.CurrentPage,
             PageSize = clients.PageSize,
             TotalCount = clients.TotalCount,
-            Items = [.. clients.Items.Select(ToClientModel)]
+            Items = clients.Items.Select(ToClientModel).ToList()
         };
     }
 
@@ -130,6 +133,15 @@ public static class ClientMapper
     /// <returns>The mapped client model.</returns>
     private static ClientModel ToClientModel(Client client)
     {
-        return client.ToModel<ClientModel>();
+        ArgumentNullException.ThrowIfNull(client);
+        client.Name.ThrowIfNullOrEmptyOrWhiteSpace();
+
+        return new ClientModel
+        {
+            Name = client.Name,
+            Address = client.Address,
+            ClientId = client.Id,
+            TenantId = TenantId.Create(client.TenantId)
+        };
     }
 }

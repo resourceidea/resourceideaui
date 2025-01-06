@@ -16,6 +16,11 @@ public record EngagementModel
     public EngagementId Id { get; init; }
 
     /// <summary>
+    /// Gets or sets the description of the engagement.
+    /// </summary>
+    public string Description { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets the client ID.
     /// </summary>
     public ClientId ClientId { get; init; }
@@ -28,12 +33,12 @@ public record EngagementModel
     /// <summary>
     /// Gets or sets the commencement date of the engagement.
     /// </summary>
-    public DateTimeOffset CommencementDate { get; init; }
+    public DateTimeOffset? CommencementDate { get; init; }
 
     /// <summary>
     /// Gets or sets the completion date of the engagement.
     /// </summary>
-    public DateTimeOffset CompletionDate { get; init; }
+    public DateTimeOffset? CompletionDate { get; init; }
 
     /// <summary>
     /// Gets or sets the status of the engagement.

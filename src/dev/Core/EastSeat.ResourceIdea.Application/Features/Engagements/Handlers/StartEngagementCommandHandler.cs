@@ -1,20 +1,20 @@
-﻿using AutoMapper;
-using EastSeat.ResourceIdea.Application.Enums;
+﻿using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Commands;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Validators;
+using EastSeat.ResourceIdea.Application.Mappers;
 using EastSeat.ResourceIdea.Application.Types;
+using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.Models;
+
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers;
 
-public sealed class StartEngagementCommandHandler (
-    IEngagementsService engagementsService,
-    IMapper mapper) : IRequestHandler<StartEngagementCommand, ResourceIdeaResponse<EngagementModel>>
+public sealed class StartEngagementCommandHandler (IEngagementsService engagementsService)
+    : IRequestHandler<StartEngagementCommand, ResourceIdeaResponse<EngagementModel>>
 {
     private readonly IEngagementsService _engagementsService = engagementsService;
-    private readonly IMapper _mapper = mapper;
     
     /// <inheritdoc />
     public async Task<ResourceIdeaResponse<EngagementModel>> Handle(
@@ -26,15 +26,23 @@ public sealed class StartEngagementCommandHandler (
         
         if (validationResult.IsValid is false || validationResult.Errors.Count > 0)
         {
-            return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.DataStoreCommandFailure);
+            return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.StartEngagementCommandValidationFailure);
         }
 
-        var startedEngagement = await _engagementsService.StartAsync(
+        ResourceIdeaResponse<Engagement> response = await _engagementsService.StartAsync(
             request.EngagementId,
             request.CommencementDate,
             cancellationToken);
+        if (response.IsFailure)
+        {
+            return ResourceIdeaResponse<EngagementModel>.Failure(response.Error);
+        }
 
-        return ResourceIdeaResponse<EngagementModel>
-                    .Success(Optional<EngagementModel>.Some(_mapper.Map<EngagementModel>(startedEngagement)));
+        if (response.Content.HasValue is false)
+        {
+            return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.EmptyEntityOnStartEngagement);
+        }
+
+        return response.Content.Value.ToResourceIdeaResponse();
     }
 }
