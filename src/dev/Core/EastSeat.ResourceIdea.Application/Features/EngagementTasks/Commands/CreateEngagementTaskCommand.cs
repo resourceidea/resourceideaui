@@ -1,6 +1,7 @@
-using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Models;
+using EastSeat.ResourceIdea.Domain.Types;
+
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
@@ -13,12 +14,12 @@ public sealed class CreateEngagementTaskCommand : IRequest<ResourceIdeaResponse<
     /// <summary>
     /// Gets or sets the title of the engagement task.
     /// </summary>
-    public required string Title { get; init; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the description of the engagement task.
     /// </summary>
-    public string? Description { get; init; }
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the ID of the engagement associated with the task.
@@ -28,5 +29,5 @@ public sealed class CreateEngagementTaskCommand : IRequest<ResourceIdeaResponse<
     /// <summary>
     /// Date when the task is expected to be completed.
     /// </summary>
-    public DateTimeOffset DueDate { get; set; }
+    public DateTimeOffset? DueDate { get; set; }
 }

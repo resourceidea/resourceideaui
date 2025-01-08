@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
 
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
-using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
+using EastSeat.ResourceIdea.Domain.Types;
 
 namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Specifications;
 

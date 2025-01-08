@@ -2,8 +2,8 @@
 using EastSeat.ResourceIdea.Application.Features.Tenants.Queries;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Specifications;
 using EastSeat.ResourceIdea.Application.Mappers;
-using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Tenants.Models;
+using EastSeat.ResourceIdea.Domain.Types;
 
 using MediatR;
 

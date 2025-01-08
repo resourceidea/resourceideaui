@@ -1,4 +1,4 @@
-namespace EastSeat.ResourceIdea.Application.Enums;
+namespace EastSeat.ResourceIdea.Domain.Enums;
 
 public enum ErrorCode
 {
@@ -7,7 +7,7 @@ public enum ErrorCode
     /// Represents no error.
     /// </summary>
     None,
-    
+
     /// <summary>
     /// Validation of the create tenant command failed.
     /// </summary>
@@ -62,7 +62,7 @@ public enum ErrorCode
     /// Validation of the complete engagement command failed.
     /// </summary>
     CompleteEngagementCommandValidationFailure,
-    
+
     /// <summary>
     /// Validation of the start engagement command failed.
     /// </summary>
@@ -112,7 +112,7 @@ public enum ErrorCode
     /// Query to the data store failed.
     /// </summary>
     DataStoreQueryFailure,
-    
+
     /// <summary>
     /// Command to the data store failed.
     /// </summary>
@@ -162,4 +162,27 @@ public enum ErrorCode
     /// Empty entity returned from repository on update engagement.
     /// </summary>
     EmptyEntityOnUpdateEngagement,
+
+    /// <summary>
+    /// Empty entity returned from repository on create engagement task.
+    /// </summary>
+    EmptyEntityOnCreateEngagementTask,
+
+    /// <summary>
+    /// Empty entity returned from repository on start engagement task.
+    /// </summary>
+    EmptyEntityOnStartEngagementTask,
+
+    /// <summary>
+    /// Empty entity returned from repository on update engagement task.
+    /// </summary>
+    EmptyEntityOnUpdateEngagementTask,
+
+    /// <summary>
+    /// Empty entity returned from repository on remove engagement task.
+    /// </summary>
+    EmptyEntityOnRemoveEngagementTask,
+    EmptyEntityOnCloseEngagementTask,
+    EmptyEntityOnBlockEngagementTask,
+    EmptyEntityOnAssignEngagementTask,
 }

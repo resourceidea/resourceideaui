@@ -6,9 +6,9 @@ using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Queries;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Specifications;
-using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
+using EastSeat.ResourceIdea.Domain.Types;
 
 using MediatR;
 

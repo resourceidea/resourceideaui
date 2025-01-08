@@ -1,37 +1,44 @@
-using AutoMapper;
-using EastSeat.ResourceIdea.Application.Enums;
+using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
-using EastSeat.ResourceIdea.Application.Types;
+using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Models;
+using EastSeat.ResourceIdea.Domain.Types;
+
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Handlers;
 
-public sealed class AssignEngagementTaskCommandHandler(
-    IEngagementTasksService engagementTasksService,
-    IMapper mapper) : IRequestHandler<AssignEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
+
+/// <summary>
+/// Handles the command to assign an engagement task.
+/// </summary>
+/// <param name="engagementTasksService">The service for managing engagement tasks.</param>
+public sealed class AssignEngagementTaskCommandHandler(IEngagementTasksService engagementTasksService)
+    : BaseHandler, IRequestHandler<AssignEngagementTaskCommand, ResourceIdeaResponse<IReadOnlyList<EngagementTaskAssignmentModel>>>
 {
     private readonly IEngagementTasksService _engagementTasksService = engagementTasksService;
-    private readonly IMapper _mapper = mapper;
 
-    public async Task<ResourceIdeaResponse<EngagementTaskModel>> Handle(
+    /// <summary>
+    /// Handles the command to assign an engagement task.
+    /// </summary>
+    /// <param name="request">The command request containing the details of the engagement task assignment.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A response containing the result of the engagement task assignment.</returns>
+    public async Task<ResourceIdeaResponse<IReadOnlyList<EngagementTaskAssignmentModel>>> Handle(
         AssignEngagementTaskCommand request,
         CancellationToken cancellationToken)
     {
         // TODO: Add validation of the command to assign engagement task.
-        var result = await _engagementTasksService.AssignAsync(
+        ResourceIdeaResponse<IReadOnlyList<EngagementTaskAssignment>> response = await _engagementTasksService.AssignAsync(
             request.EngagementTaskId,
             request.ApplicationUserIds,
             request.StartDate,
             request.EndDate,
             cancellationToken);
 
-        if (result.IsFailure)
-        {
-            return ResourceIdeaResponse<EngagementTaskModel>.Failure(ErrorCode.DataStoreCommandFailure);
-        }
+        var handlerResponse = GetHandlerResponse<EngagementTaskAssignment, EngagementTaskAssignmentModel>(response);
 
-        return _mapper.Map<ResourceIdeaResponse<EngagementTaskModel>>(result);
+        return handlerResponse;
     }
 }

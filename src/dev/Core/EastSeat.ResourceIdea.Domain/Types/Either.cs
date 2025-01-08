@@ -1,4 +1,4 @@
-namespace EastSeat.ResourceIdea.Application.Types;
+namespace EastSeat.ResourceIdea.Domain.Types;
 
 /// <summary>
 /// Represents an abstract class for the Either type, which can hold either a value of type TLeft or a value of type TRight.

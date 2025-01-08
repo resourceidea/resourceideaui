@@ -5,9 +5,9 @@ using EastSeat.ResourceIdea.Application.Features.Clients.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Mappers;
-using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
+using EastSeat.ResourceIdea.Domain.Types;
 
 using MediatR;
 

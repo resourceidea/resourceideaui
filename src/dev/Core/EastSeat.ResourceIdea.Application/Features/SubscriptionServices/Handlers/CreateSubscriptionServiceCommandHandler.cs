@@ -1,11 +1,12 @@
 using AutoMapper;
-using EastSeat.ResourceIdea.Application.Enums;
+
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Commands;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Validators;
-using EastSeat.ResourceIdea.Application.Types;
+using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Models;
+using EastSeat.ResourceIdea.Domain.Types;
 
 using MediatR;
 

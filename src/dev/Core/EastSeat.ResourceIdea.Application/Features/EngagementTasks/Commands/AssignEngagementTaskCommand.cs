@@ -1,7 +1,8 @@
-﻿using EastSeat.ResourceIdea.Application.Types;
-using EastSeat.ResourceIdea.Domain.EngagementTasks.Models;
+﻿using EastSeat.ResourceIdea.Domain.EngagementTasks.Models;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
+
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
@@ -9,7 +10,7 @@ namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
 /// <summary>
 /// Represents a command to assign an engagement task to a user.
 /// </summary>
-public sealed class AssignEngagementTaskCommand : IRequest<ResourceIdeaResponse<EngagementTaskModel>>
+public sealed class AssignEngagementTaskCommand : IRequest<ResourceIdeaResponse<IReadOnlyList<EngagementTaskAssignmentModel>>>
 {
     /// <summary>
     /// Gets or sets the ID of the engagement task to be assigned.

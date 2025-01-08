@@ -1,6 +1,6 @@
-using EastSeat.ResourceIdea.Application.Enums;
+using EastSeat.ResourceIdea.Domain.Enums;
 
-namespace EastSeat.ResourceIdea.Application.Types;
+namespace EastSeat.ResourceIdea.Domain.Types;
 
 /// <summary>
 /// Represents the response of an operation that can either succeed or fail.

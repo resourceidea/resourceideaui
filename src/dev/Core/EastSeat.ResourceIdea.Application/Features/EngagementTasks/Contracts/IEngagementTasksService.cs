@@ -1,5 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
-using EastSeat.ResourceIdea.Application.Types;
+using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
@@ -72,7 +72,7 @@ public interface IEngagementTasksService : IDataStoreService<EngagementTask>
     /// <param name="engagementTaskId">The ID of the engagement task.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{Engagement}"/>.</returns>
-    Task<ResourceIdeaResponse<Engagement>> StartAsync(
+    Task<ResourceIdeaResponse<EngagementTask>> StartAsync(
         EngagementTaskId engagementTaskId,
         CancellationToken cancellationToken);
 
