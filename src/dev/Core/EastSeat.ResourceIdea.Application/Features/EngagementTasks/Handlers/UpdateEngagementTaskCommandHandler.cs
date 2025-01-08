@@ -1,28 +1,48 @@
-
-using AutoMapper;
+using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
-using EastSeat.ResourceIdea.Application.Types;
+using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Validators;
+using EastSeat.ResourceIdea.Application.Mappers;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Models;
+using EastSeat.ResourceIdea.Domain.Enums;
+using EastSeat.ResourceIdea.Domain.Types;
+
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Handlers;
-public sealed class UpdateEngagementTaskCommandHandler(
-    IEngagementTasksService engagementTasksService, IMapper mapper)
-    : IRequestHandler<UpdateEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
+
+
+/// <summary>
+/// Handles the command to update an engagement task.
+/// </summary>
+/// <param name="engagementTasksService">The service for managing engagement tasks.</param>
+public sealed class UpdateEngagementTaskCommandHandler(IEngagementTasksService engagementTasksService)
+    : BaseHandler, IRequestHandler<UpdateEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
 {
     private readonly IEngagementTasksService _engagementTasksService = engagementTasksService;
-    private readonly IMapper _mapper = mapper;
 
+    /// <summary>
+    /// Handles the update engagement task command.
+    /// </summary>
+    /// <param name="request">The update engagement task command request.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the response with the updated engagement task model.</returns>
     public async Task<ResourceIdeaResponse<EngagementTaskModel>> Handle(
         UpdateEngagementTaskCommand request,
         CancellationToken cancellationToken)
     {
-        // TODO: Map UpdateEngagementTaskCommand to the EngagementTask.
-        var engagementTask = _mapper.Map<EngagementTask>(request);
-        var response = await _engagementTasksService.UpdateAsync(engagementTask, cancellationToken);
+        UpdateEngagementTaskCommandValidator _validator = new();
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+        if (validationResult.IsValid is false)
+        {
+            return ResourceIdeaResponse<EngagementTaskModel>.BadRequest();
+        }
 
-        return _mapper.Map<ResourceIdeaResponse<EngagementTaskModel>>(response);
+        EngagementTask engagementTask = request.ToEntity();
+        ResourceIdeaResponse<EngagementTask> response = await _engagementTasksService.UpdateAsync(engagementTask, cancellationToken);
+        var handlerResponse = GetHandlerResponse<EngagementTask, EngagementTaskModel>(response, ErrorCode.EmptyEntityOnUpdateEngagementTask);
+
+        return handlerResponse;
     }
 }

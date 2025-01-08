@@ -1,13 +1,13 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.Tenants.Commands;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Validators;
-using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.Models;
 
 using MediatR;
-using EastSeat.ResourceIdea.Application.Enums;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Application.Mappers;
+using EastSeat.ResourceIdea.Domain.Types;
+using EastSeat.ResourceIdea.Domain.Enums;
 namespace EastSeat.ResourceIdea.Application.Features.Tenants.Handlers;
 
 public sealed class UpdateTenantCommandHandler(ITenantsService tenantsService)

@@ -1,7 +1,8 @@
-using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Models;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Types;
+
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Commands;

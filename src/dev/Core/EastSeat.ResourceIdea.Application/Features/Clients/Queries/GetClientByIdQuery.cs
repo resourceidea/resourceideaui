@@ -1,6 +1,6 @@
-using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Types;
 
 using MediatR;
 

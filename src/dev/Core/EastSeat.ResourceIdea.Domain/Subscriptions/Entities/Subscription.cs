@@ -3,6 +3,7 @@ using EastSeat.ResourceIdea.Domain.Subscriptions.Enums;
 using EastSeat.ResourceIdea.Domain.Subscriptions.ValueObjects;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Types;
 
 namespace EastSeat.ResourceIdea.Domain.Subscriptions.Entities;
 
@@ -45,4 +46,14 @@ public class Subscription : BaseEntity
     /// Subscription service.
     /// </summary>
     public SubscriptionService? SubscriptionService { get; set; }
+
+    public override TModel ToModel<TModel>()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()
+    {
+        throw new NotImplementedException();
+    }
 }

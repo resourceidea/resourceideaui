@@ -1,35 +1,41 @@
-﻿using AutoMapper;
-
-using EastSeat.ResourceIdea.Application.Enums;
+﻿using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
-using EastSeat.ResourceIdea.Application.Types;
+using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Models;
+using EastSeat.ResourceIdea.Domain.Enums;
+using EastSeat.ResourceIdea.Domain.Types;
+
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Handlers;
 
-public sealed class BlockEngagementTaskCommandHandler(
-    IEngagementTasksService engagementTasksService,
-    IMapper mapper) : IRequestHandler<BlockEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
+/// <summary>
+/// Handles the command to block an engagement task.
+/// </summary>
+/// <param name="engagementTasksService">The service for managing engagement tasks.</param>
+public sealed class BlockEngagementTaskCommandHandler(IEngagementTasksService engagementTasksService)
+    : BaseHandler, IRequestHandler<BlockEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
 {
-    private readonly IMapper _mapper = mapper;
     private readonly IEngagementTasksService _engagementTasksService = engagementTasksService;
 
+    /// <summary>
+    /// Handles the command to block an engagement task.
+    /// </summary>
+    /// <param name="request">The command request containing the engagement task ID and reason for blocking.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A response containing the blocked engagement task model or an error code.</returns>
     public async Task<ResourceIdeaResponse<EngagementTaskModel>> Handle(
         BlockEngagementTaskCommand request,
         CancellationToken cancellationToken)
     {
-        var result = await _engagementTasksService.BlockAsync(
+        ResourceIdeaResponse<EngagementTask> result = await _engagementTasksService.BlockAsync(
             request.EngagementTaskId,
             request.Reason,
             cancellationToken);
 
-        if (result.IsFailure)
-        {
-            return ResourceIdeaResponse<EngagementTaskModel>.Failure(ErrorCode.DataStoreCommandFailure);
-        }
+        var handlerResponse = GetHandlerResponse<EngagementTask, EngagementTaskModel>(result, ErrorCode.EmptyEntityOnBlockEngagementTask);
 
-        return _mapper.Map<ResourceIdeaResponse<EngagementTaskModel>>(result);
+        return handlerResponse;
     }
 }

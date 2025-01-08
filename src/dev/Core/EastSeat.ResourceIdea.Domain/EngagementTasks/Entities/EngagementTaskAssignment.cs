@@ -1,6 +1,7 @@
 using EastSeat.ResourceIdea.Domain.Common.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
+using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
@@ -44,4 +45,14 @@ public class EngagementTaskAssignment : BaseEntity
     /// Gets or sets the Engagement task.
     /// </summary>
     public EngagementTask? EngagementTask { get; set; }
+
+    public override TModel ToModel<TModel>()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()
+    {
+        throw new NotImplementedException();
+    }
 }

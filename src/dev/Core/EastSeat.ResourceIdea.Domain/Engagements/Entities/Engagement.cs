@@ -3,6 +3,7 @@ using EastSeat.ResourceIdea.Domain.Common.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.Enums;
+using EastSeat.ResourceIdea.Domain.Types;
 
 namespace EastSeat.ResourceIdea.Domain.Engagements.Entities;
 
@@ -45,4 +46,14 @@ public class Engagement : BaseEntity
     /// Engagement tasks associated with the engagement.
     /// </summary>
     public IReadOnlyCollection<EngagementTask>? EngagementTasks { get; set; }
+
+    public override TModel ToModel<TModel>()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()
+    {
+        throw new NotImplementedException();
+    }
 }

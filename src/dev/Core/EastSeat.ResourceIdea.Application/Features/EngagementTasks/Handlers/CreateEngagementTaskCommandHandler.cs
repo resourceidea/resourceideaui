@@ -1,11 +1,13 @@
-﻿using AutoMapper;
+﻿using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
-using EastSeat.ResourceIdea.Application.Types;
+using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Validators;
+using EastSeat.ResourceIdea.Application.Mappers;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Models;
-using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
+using EastSeat.ResourceIdea.Domain.Types;
+
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Handlers;
@@ -14,30 +16,26 @@ namespace EastSeat.ResourceIdea.Application.Features.EngagementTasks.Handlers;
 /// Handles the command to create an engagement task.
 /// </summary>
 /// <param name="engagementTasksService"></param>
-/// <param name="mapper"></param>
-public class CreateEngagementTaskCommandHandler (
-    IEngagementTasksService engagementTasksService,
-    IMapper mapper) : IRequestHandler<CreateEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
+public class CreateEngagementTaskCommandHandler (IEngagementTasksService engagementTasksService)
+    : BaseHandler, IRequestHandler<CreateEngagementTaskCommand, ResourceIdeaResponse<EngagementTaskModel>>
 {
-    private readonly IMapper _mapper = mapper;
     private readonly IEngagementTasksService _engagementTasksService = engagementTasksService;
 
-    public async Task<ResourceIdeaResponse<EngagementTaskModel>> Handle(CreateEngagementTaskCommand request, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<EngagementTaskModel>> Handle(
+        CreateEngagementTaskCommand request,
+        CancellationToken cancellationToken)
     {
-        var engagementTask = new EngagementTask
+        CreateEngagementTaskCommandValidator _validator = new();
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+        if (validationResult.IsValid is false)
         {
-            Id = EngagementTaskId.Create(Guid.NewGuid()),
-            Description = request.Description,
-            Title = request.Title,
-            EngagementId = request.EngagementId,
-            IsAssigned = false,
-            Status = EngagementTaskStatus.NotStarted,
-            DueDate = request.DueDate
-        };
+            return ResourceIdeaResponse<EngagementTaskModel>.BadRequest();
+        }
 
-        var createdEngagementTask = await _engagementTasksService.AddAsync(engagementTask, cancellationToken);
+        ResourceIdeaResponse<EngagementTask> response = await _engagementTasksService.AddAsync(request.ToEntity(), cancellationToken);
 
-        return ResourceIdeaResponse<EngagementTaskModel>
-                    .Success(Optional<EngagementTaskModel>.Some(_mapper.Map<EngagementTaskModel>(createdEngagementTask)));
+        var handlerResponse = GetHandlerResponse<EngagementTask, EngagementTaskModel>(response, ErrorCode.EmptyEntityOnCreateEngagementTask);
+
+        return handlerResponse;
     }
 }

@@ -1,10 +1,10 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
-using EastSeat.ResourceIdea.Application.Types;
 using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 
 namespace EastSeat.ResourceIdea.DataStore.Services;
@@ -81,7 +81,7 @@ public sealed class EngagementTasksService : IEngagementTasksService
     }
 
     /// <inheritdoc />
-    public Task<ResourceIdeaResponse<Engagement>> StartAsync(EngagementTaskId engagementTaskId, CancellationToken cancellationToken)
+    public Task<ResourceIdeaResponse<EngagementTask>> StartAsync(EngagementTaskId engagementTaskId, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

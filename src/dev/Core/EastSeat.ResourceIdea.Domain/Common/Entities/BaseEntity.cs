@@ -1,9 +1,11 @@
+using EastSeat.ResourceIdea.Domain.Types;
+
 namespace EastSeat.ResourceIdea.Domain.Common.Entities;
 
 /// <summary>
 /// Common properties for all entities in the system.
 /// </summary>
-public class BaseEntity
+public abstract class BaseEntity
 {
     /// <summary>
     /// Tenant DepartmentId for the entity.
@@ -44,4 +46,15 @@ public class BaseEntity
     /// User who deleted the entity.
     /// </summary>
     public string DeletedBy { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Maps the entity to a model class.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model class.</typeparam>
+    /// <returns>The model class instance.</returns>
+    public abstract TModel ToModel<TModel>();
+
+    public abstract ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()
+        where TEntity : BaseEntity
+        where TModel : class;
 }

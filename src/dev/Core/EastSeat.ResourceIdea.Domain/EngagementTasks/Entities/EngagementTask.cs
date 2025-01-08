@@ -1,8 +1,10 @@
 ﻿using EastSeat.ResourceIdea.Domain.Common.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
+using EastSeat.ResourceIdea.Domain.EngagementTasks.Models;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
+using EastSeat.ResourceIdea.Domain.Types;
 
 namespace EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 
@@ -34,7 +36,7 @@ public class EngagementTask : BaseEntity
     /// <summary>
     /// Gets or sets the due date of the engagement task.
     /// </summary>
-    public DateTimeOffset DueDate { get; set; }
+    public DateTimeOffset? DueDate { get; set; }
 
     /// <summary>
     /// Gets or sets the ID of the engagement associated with the task.
@@ -55,4 +57,43 @@ public class EngagementTask : BaseEntity
     /// Assignments of the engagement task.
     /// </summary>
     public IReadOnlyCollection<EngagementTaskAssignment>? EngagementTaskAssignments { get; set; }
+
+    /// <summary>
+    /// Maps the entity to a model class.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model class.</typeparam>
+    /// <returns>The model class instance.</returns>
+    public override TModel ToModel<TModel>()
+    {
+        if (typeof(TModel) == typeof(EngagementTaskModel))
+        {
+            return (TModel)(object)new EngagementTaskModel
+            {
+                Id = Id,
+                Description = Description,
+                Title = Title ?? string.Empty,
+                EngagementId = EngagementId,
+                Assigned = IsAssigned,
+                Status = Status,
+                DueDate = DueDate
+            };
+        }
+
+        throw new InvalidOperationException($"Cannot map {nameof(EngagementTask)} to {typeof(TModel).Name}");
+    }
+
+    public override ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()
+    {
+        if (typeof(TEntity) != typeof(EngagementTask))
+        {
+            throw new InvalidOperationException($"Cannot map {nameof(EngagementTask)} to {typeof(TEntity).Name}");
+        }
+
+        if (typeof(TModel) != typeof(EngagementTaskModel))
+        {
+            throw new InvalidOperationException($"Cannot map {nameof(EngagementTaskModel)} to {typeof(TModel).Name}");
+        }
+
+        return ResourceIdeaResponse<TModel>.Success(ToModel<TModel>());
+    }
 }

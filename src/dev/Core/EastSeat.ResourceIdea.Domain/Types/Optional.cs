@@ -1,4 +1,4 @@
-namespace EastSeat.ResourceIdea.Application.Types;
+namespace EastSeat.ResourceIdea.Domain.Types;
 
 public readonly struct Optional<T> //where T : BaseModel<T>
 {

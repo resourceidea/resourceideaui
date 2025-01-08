@@ -1,5 +1,6 @@
-﻿using EastSeat.ResourceIdea.Application.Types;
-using EastSeat.ResourceIdea.Domain.Common.Entities;
+﻿using EastSeat.ResourceIdea.Domain.Common.Entities;
+using EastSeat.ResourceIdea.Domain.Types;
+
 using System.Linq.Expressions;
 
 namespace EastSeat.ResourceIdea.Application.Features.Common.Specifications;

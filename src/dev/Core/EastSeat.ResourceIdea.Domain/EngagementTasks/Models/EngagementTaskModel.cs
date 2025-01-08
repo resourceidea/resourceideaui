@@ -19,7 +19,7 @@ public record EngagementTaskModel
     /// <summary>
     /// Gets or sets the due date of the engagement task.
     /// </summary>
-    public DateTimeOffset DueDate { get; init; }
+    public DateTimeOffset? DueDate { get; init; }
 
     /// <summary>
     /// Gets or sets the description of the engagement task.
