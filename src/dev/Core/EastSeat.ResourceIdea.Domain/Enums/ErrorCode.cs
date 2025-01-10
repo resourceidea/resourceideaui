@@ -182,7 +182,25 @@ public enum ErrorCode
     /// Empty entity returned from repository on remove engagement task.
     /// </summary>
     EmptyEntityOnRemoveEngagementTask,
+
+    /// <summary>
+    /// Empty entity returned from repository on closing and engagement task.
+    /// </summary>
     EmptyEntityOnCloseEngagementTask,
+
+    /// <summary>
+    /// Empty entity returned from repository on blocking and engagement task.
+    /// </summary>
     EmptyEntityOnBlockEngagementTask,
+
+    /// <summary>
+    /// Empty entity returned from repository on assignment engagement task.
+    /// </summary>
     EmptyEntityOnAssignEngagementTask,
+
+    /// <summary>
+    /// Empty entity returned from repository on creating a subscription
+    /// </summary>
+    EmptyEntityOnCreateSubscriptionService,
+    EmptyEntityOnUpdateSubscriptionService,
 }
