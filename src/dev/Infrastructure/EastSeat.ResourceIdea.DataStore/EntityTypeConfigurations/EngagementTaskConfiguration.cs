@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
 
-public class EngagementTaskEntityTypeConfiguration : BaseEntityTypeConfiguration<EngagementTask>
+public class EngagementTaskConfiguration : BaseEntityConfiguration<EngagementTask>
 {
     public override void Configure(EntityTypeBuilder<EngagementTask> builder)
     {

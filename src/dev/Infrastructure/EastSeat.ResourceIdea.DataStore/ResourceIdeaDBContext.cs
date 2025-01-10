@@ -29,7 +29,7 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
     {
         base.OnModelCreating(builder);
 
-        builder.ApplyConfiguration(new ApplicationUserEntityTypeConfiguration());
+        builder.ApplyConfiguration(new ApplicationUserConfiguration());
         builder.ApplyConfiguration(new ApplicationRoleConfiguration());
 
         builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles", "Identity");
@@ -38,13 +38,13 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
         builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins", "Identity");
         builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens", "Identity");
 
-        builder.ApplyConfiguration(new TenantEntityTypeConfiguration());
-        builder.ApplyConfiguration(new SubscriptionServiceEntityTypeConfiguration());
-        builder.ApplyConfiguration(new SubscriptionEntityTypeConfiguration());
-        builder.ApplyConfiguration(new ClientEntityTypeConfiguration());
-        builder.ApplyConfiguration(new EngagementEntityTypeConfiguration());
-        builder.ApplyConfiguration(new EngagementTaskEntityTypeConfiguration());
-        builder.ApplyConfiguration(new EngagementTaskAssignmentEntityTypeConfiguration());
+        builder.ApplyConfiguration(new TenantConfiguration());
+        builder.ApplyConfiguration(new SubscriptionServiceConfiguration());
+        builder.ApplyConfiguration(new SubscriptionConfiguration());
+        builder.ApplyConfiguration(new ClientConfiguration());
+        builder.ApplyConfiguration(new EngagementConfiguration());
+        builder.ApplyConfiguration(new EngagementTaskConfiguration());
+        builder.ApplyConfiguration(new EngagementTaskAssignmentConfiguration());
         builder.ApplyConfiguration(new DepartmentConfiguration());
     }
 }

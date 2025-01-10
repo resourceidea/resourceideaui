@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
 
-public class EngagementEntityTypeConfiguration : BaseEntityTypeConfiguration<Engagement>
+public class EngagementConfiguration : BaseEntityConfiguration<Engagement>
 {
     public override void Configure(EntityTypeBuilder<Engagement> builder)
     {

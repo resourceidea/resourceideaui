@@ -44,7 +44,7 @@ public static class ClientMapper
             Id = model.ClientId,
             Name = model.Name,
             Address = model.Address,
-            TenantId = model.TenantId.Value
+            TenantId = model.TenantId
         };
     }
 
@@ -141,7 +141,7 @@ public static class ClientMapper
             Name = client.Name,
             Address = client.Address,
             ClientId = client.Id,
-            TenantId = TenantId.Create(client.TenantId)
+            TenantId = client.TenantId
         };
     }
 }

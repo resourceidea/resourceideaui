@@ -14,5 +14,5 @@ public sealed class TenantGetByIdSpecification(TenantId tenantId) : BaseSpecific
 {
     private readonly TenantId _tenantId = tenantId;
 
-    public override Expression<Func<Tenant, bool>> Criteria => tenant => tenant.TenantId == _tenantId.Value;
+    public override Expression<Func<Tenant, bool>> Criteria => tenant => tenant.TenantId == _tenantId;
 }

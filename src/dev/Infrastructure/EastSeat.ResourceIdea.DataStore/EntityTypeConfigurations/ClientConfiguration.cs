@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
 
-public class ClientEntityTypeConfiguration : BaseEntityTypeConfiguration<Client>
+public class ClientConfiguration : BaseEntityConfiguration<Client>
 {
     public override void Configure(EntityTypeBuilder<Client> builder)
     {

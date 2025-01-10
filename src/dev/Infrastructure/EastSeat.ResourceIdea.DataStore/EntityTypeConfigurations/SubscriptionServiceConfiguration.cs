@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
 
-public class SubscriptionServiceEntityTypeConfiguration : BaseEntityTypeConfiguration<SubscriptionService>
+public class SubscriptionServiceConfiguration : BaseEntityConfiguration<SubscriptionService>
 {
     public override void Configure(EntityTypeBuilder<SubscriptionService> builder)
     {

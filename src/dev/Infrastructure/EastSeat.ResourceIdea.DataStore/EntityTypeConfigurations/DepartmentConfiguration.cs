@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
 
-public sealed class DepartmentConfiguration : BaseEntityTypeConfiguration<Department>
+public sealed class DepartmentConfiguration : BaseEntityConfiguration<Department>
 {
     public override void Configure(EntityTypeBuilder<Department> builder)
     {

@@ -2,6 +2,7 @@
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 
 namespace EastSeat.ResourceIdea.DataStore.Services;
@@ -69,9 +70,9 @@ public sealed class TenantsService : ITenantsService
     }
 
     /// <inheritdoc/>
-    public Guid GetTenantIdFromLoginSession(CancellationToken cancellationToken)
+    public TenantId GetTenantIdFromLoginSession(CancellationToken cancellationToken)
     {
         // TODO: Implement logic that will read the tenant ID from the login session.
-        return Guid.Empty;
+        return TenantId.Empty;
     }
 }
