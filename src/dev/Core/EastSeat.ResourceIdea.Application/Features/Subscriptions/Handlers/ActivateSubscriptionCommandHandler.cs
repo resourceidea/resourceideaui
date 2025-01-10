@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-
+﻿using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Commands;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
 using EastSeat.ResourceIdea.Domain.Subscriptions.Models;
@@ -12,12 +11,10 @@ namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Handlers;
 /// <summary>
 /// Handles the activation of a subscription.
 /// </summary>
-public sealed class ActivateSubscriptionCommandHandler(
-    ISubscriptionsService subscriptionService,
-    IMapper mapper) : IRequestHandler<ActivateSubscriptionCommand, ResourceIdeaResponse<SubscriptionModel>>
+public sealed class ActivateSubscriptionCommandHandler(ISubscriptionsService subscriptionService)
+    : BaseHandler, IRequestHandler<ActivateSubscriptionCommand, ResourceIdeaResponse<SubscriptionModel>>
 {
     private readonly ISubscriptionsService _subscriptionService = subscriptionService;
-    private readonly IMapper _mapper = mapper;
 
     public Task<ResourceIdeaResponse<SubscriptionModel>> Handle(ActivateSubscriptionCommand request, CancellationToken cancellationToken)
     {

@@ -1,7 +1,7 @@
 ﻿using EastSeat.ResourceIdea.Domain.Common.Entities;
-using EastSeat.ResourceIdea.Application.Extensions;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.Enums;
+using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 
@@ -52,5 +52,30 @@ public class BaseHandler
         var models = items.Select(item => item.ToModel<TModel>()).ToList();
 
         return ResourceIdeaResponse<IReadOnlyList<TModel>>.Success(models);
+    }
+
+    public static ResourceIdeaResponse<PagedListResponse<TModel>> GetHandlerResponse<TEntity, TModel>(ResourceIdeaResponse<PagedListResponse<TEntity>> response)
+        where TEntity : BaseEntity
+        where TModel : class
+    {
+        if (response.IsFailure)
+        {
+            return ResourceIdeaResponse<PagedListResponse<TModel>>.Failure(response.Error);
+        }
+        if (response.Content.HasValue is false || response.Content.Value.TotalCount == 0)
+        {
+            return ResourceIdeaResponse<PagedListResponse<TModel>>.Failure(ErrorCode.NotFound);
+        }
+
+        var items = response.Content.Value.Items;
+        PagedListResponse<TModel> pagedListResponse = new()
+        {
+            Items = items.Select(item => item.ToModel<TModel>()).ToList(),
+            TotalCount = response.Content.Value.TotalCount,
+            CurrentPage = response.Content.Value.CurrentPage,
+            PageSize = response.Content.Value.PageSize
+        };
+
+        return ResourceIdeaResponse<PagedListResponse<TModel>>.Success(pagedListResponse);
     }
 }

@@ -1,6 +1,5 @@
-﻿using AutoMapper;
-
-using EastSeat.ResourceIdea.Application.Extensions;
+﻿using EastSeat.ResourceIdea.Application.Extensions;
+using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
@@ -18,13 +17,10 @@ namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Handlers;
 /// Handles the query to get a list of subscriptions.
 /// </summary>
 /// <param name="subscriptionsService">Subscriptions repository.</param>
-/// <param name="mapper"><see cref="IMapper"/> for the <see cref="SubscriptionModel"/></param>
-public sealed class GetSubscriptionsListQueryHandler(
-    ISubscriptionsService subscriptionsService,
-    IMapper mapper) : IRequestHandler<GetSubscriptionsListQuery, ResourceIdeaResponse<PagedListResponse<SubscriptionModel>>>
+public sealed class GetSubscriptionsListQueryHandler(ISubscriptionsService subscriptionsService)
+    : BaseHandler, IRequestHandler<GetSubscriptionsListQuery, ResourceIdeaResponse<PagedListResponse<SubscriptionModel>>>
 {
     private readonly ISubscriptionsService _subscriptionsService = subscriptionsService;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<ResourceIdeaResponse<PagedListResponse<SubscriptionModel>>> Handle(
         GetSubscriptionsListQuery request,
@@ -45,7 +41,9 @@ public sealed class GetSubscriptionsListQueryHandler(
             specification,
             cancellationToken);
 
-        return _mapper.Map<ResourceIdeaResponse<PagedListResponse<SubscriptionModel>>>(response);
+        var handlerResponse = GetHandlerResponse<Subscription, SubscriptionModel>(response);
+
+        return handlerResponse;
     }
 
     private static BaseSpecification<Subscription> GetSubscriptionBySubscriptionAfterDateSpecification(string queryFilters)
