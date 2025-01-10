@@ -39,7 +39,7 @@ public static class TenantMapper
     {
         return new Tenant
         {
-            TenantId = model.TenantId.Value,
+            TenantId = model.TenantId,
             Organization = model.Organization
         };
     }
@@ -57,7 +57,7 @@ public static class TenantMapper
 
         return new Tenant
         {
-            TenantId = Guid.NewGuid(),
+            TenantId = TenantId.Create(Guid.NewGuid()),
             Organization = command.Organization
         };
     }
@@ -128,7 +128,7 @@ public static class TenantMapper
 
         return new TenantModel
         {
-            TenantId = TenantId.Create(tenant.TenantId),
+            TenantId = tenant.TenantId,
             Organization = tenant.Organization
         };
     }

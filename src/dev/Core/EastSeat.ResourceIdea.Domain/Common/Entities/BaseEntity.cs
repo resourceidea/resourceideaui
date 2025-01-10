@@ -1,3 +1,4 @@
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 
 namespace EastSeat.ResourceIdea.Domain.Common.Entities;
@@ -10,7 +11,7 @@ public abstract class BaseEntity
     /// <summary>
     /// Tenant DepartmentId for the entity.
     /// </summary>
-    public Guid TenantId { get; set; }
+    public TenantId TenantId { get; set; }
     
     /// <summary>
     /// Date when the entity was created.

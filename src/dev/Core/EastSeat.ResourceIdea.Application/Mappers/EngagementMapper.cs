@@ -44,7 +44,7 @@ public static class EngagementMapper
         {
             Id = model.Id,
             ClientId = model.ClientId,
-            TenantId = model.TenantId.Value,
+            TenantId = model.TenantId,
             CommencementDate = model.CommencementDate,
             CompletionDate = model.CompletionDate,
             EngagementStatus = model.Status,
@@ -117,7 +117,7 @@ public static class EngagementMapper
         {
             Id = engagement.Id,
             ClientId = engagement.ClientId,
-            TenantId = TenantId.Create(engagement.TenantId),
+            TenantId = engagement.TenantId,
             CommencementDate = engagement.CommencementDate,
             CompletionDate = engagement.CompletionDate,
             Status = engagement.EngagementStatus,

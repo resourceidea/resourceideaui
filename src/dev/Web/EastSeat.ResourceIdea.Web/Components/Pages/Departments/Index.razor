@@ -39,9 +39,9 @@ else
     {
         var dummyData = new List<DepartmentViewModel>
         {
-            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "HR", TenantId = Guid.NewGuid() },
-            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "IT", TenantId = Guid.NewGuid() },
-            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "Finance", TenantId = Guid.NewGuid() }
+            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "HR", TenantId = TenantId.Create(Guid.NewGuid()) },
+            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "IT", TenantId = TenantId.Create(Guid.NewGuid()) },
+            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "Finance", TenantId = TenantId.Create(Guid.NewGuid()) }
         };
 
         Model = new DepartmentListModel(dummyData);

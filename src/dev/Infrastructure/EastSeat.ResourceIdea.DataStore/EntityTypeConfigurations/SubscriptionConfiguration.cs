@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
 
-public class SubscriptionEntityTypeConfiguration : BaseEntityTypeConfiguration<Subscription>
+public class SubscriptionConfiguration : BaseEntityConfiguration<Subscription>
 {
     public override void Configure(EntityTypeBuilder<Subscription> builder)
     {

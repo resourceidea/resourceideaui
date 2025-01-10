@@ -1,4 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Domain.Departments.Models;
 
@@ -20,5 +21,5 @@ public sealed record DepartmentViewModel
     /// <summary>
     /// ID of tenant owning the department information.
     /// </summary>
-    public Guid TenantId { get; set; }
+    public TenantId TenantId { get; set; }
 }

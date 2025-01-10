@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
 
-public class TenantEntityTypeConfiguration : BaseEntityTypeConfiguration<Tenant>
+public class TenantConfiguration : BaseEntityConfiguration<Tenant>
 {
     public override void Configure(EntityTypeBuilder<Tenant> builder)
     {

@@ -1,14 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 namespace EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
 
-public class BaseEntityTypeConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
+public class BaseEntityConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
 {
     public virtual void Configure(EntityTypeBuilder<T> builder)
     {
         builder.HasKey(tenant => tenant.TenantId);
+
+        builder.Property(tenant => tenant.TenantId)
+            .IsRequired()
+            .HasConversion(
+                tenantId => tenantId.Value.ToString(),
+                value => TenantId.Create(value));
 
         builder.Property(tenant => tenant.Created)
             .IsRequired();
