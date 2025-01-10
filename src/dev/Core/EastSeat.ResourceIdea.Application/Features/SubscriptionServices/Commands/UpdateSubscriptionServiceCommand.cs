@@ -13,7 +13,7 @@ public sealed record UpdateSubscriptionServiceCommand : IRequest<ResourceIdeaRes
     /// <summary>
     /// Gets the identifier of the subscription service to update.
     /// </summary>
-    public SubscriptionServiceId Id { get; init; }
+    public SubscriptionServiceId SubscriptionServiceId { get; init; }
 
     /// <summary>
     /// Gets the new name of the subscription service.
