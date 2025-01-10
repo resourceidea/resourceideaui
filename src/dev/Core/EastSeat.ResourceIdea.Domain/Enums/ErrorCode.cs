@@ -199,8 +199,12 @@ public enum ErrorCode
     EmptyEntityOnAssignEngagementTask,
 
     /// <summary>
-    /// Empty entity returned from repository on creating a subscription
+    /// Empty entity returned from repository on creating a subscription.
     /// </summary>
     EmptyEntityOnCreateSubscriptionService,
+
+    /// <summary>
+    /// Empty entity returned from repository on updating a subscription.
+    /// </summary>
     EmptyEntityOnUpdateSubscriptionService,
 }
