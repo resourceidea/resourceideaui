@@ -11,7 +11,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Departments.Commands;
 /// <summary>
 /// Command to create a department.
 /// </summary>
-public sealed class CreateDepartmentCommand : IRequest<ResourceIdeaResponse<DepartmentViewModel>>
+public sealed class CreateDepartmentCommand : IRequest<ResourceIdeaResponse<DepartmentModel>>
 {
     /// <summary>
     /// Name of the department to be created.

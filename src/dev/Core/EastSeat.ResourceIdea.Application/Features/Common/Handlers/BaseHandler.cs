@@ -2,6 +2,7 @@
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 
@@ -77,5 +78,11 @@ public class BaseHandler
         };
 
         return ResourceIdeaResponse<PagedListResponse<TModel>>.Success(pagedListResponse);
+    }
+
+    public static TenantId GetTenantIdFromLoginSession()
+    {
+        // TODO: Implement logic to get the tenant id from the login session.
+        return TenantId.Create("841C6122-59E8-4294-93B8-D21C0BEB6724");
     }
 }

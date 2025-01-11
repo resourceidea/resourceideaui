@@ -22,19 +22,19 @@ namespace EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
 /// Handles the command to create a department.
 /// </summary>
 public sealed class CreateDepartmentCommandHandler (ITenantsService tenantsService, IDepartmentsService departmentsService)
-     : IRequestHandler<CreateDepartmentCommand, ResourceIdeaResponse<DepartmentViewModel>>
+     : IRequestHandler<CreateDepartmentCommand, ResourceIdeaResponse<DepartmentModel>>
 {
     private readonly ITenantsService _tenantsService = tenantsService;
     private readonly IDepartmentsService _departmentsService = departmentsService;
 
-    public async Task<ResourceIdeaResponse<DepartmentViewModel>> Handle(CreateDepartmentCommand command, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<DepartmentModel>> Handle(CreateDepartmentCommand command, CancellationToken cancellationToken)
     {
         CreateDepartmentCommandValidator _validator = new();
         ValidationResult validationResult = await _validator.ValidateAsync(command, cancellationToken);
 
         if (!validationResult.IsValid)
         {
-            return ResourceIdeaResponse<DepartmentViewModel>.BadRequest();
+            return ResourceIdeaResponse<DepartmentModel>.BadRequest();
         }
 
         Department departmentToCreate = command.ToEntity();
@@ -43,12 +43,12 @@ public sealed class CreateDepartmentCommandHandler (ITenantsService tenantsServi
 
         if (result.IsFailure)
         {
-            return ResourceIdeaResponse<DepartmentViewModel>.Failure(result.Error);
+            return ResourceIdeaResponse<DepartmentModel>.Failure(result.Error);
         }
 
         if (!result.Content.HasValue)
         {
-            return ResourceIdeaResponse<DepartmentViewModel>.Failure(ErrorCode.EmptyEntityOnCreateDepartment);
+            return ResourceIdeaResponse<DepartmentModel>.Failure(ErrorCode.EmptyEntityOnCreateDepartment);
         }
 
         return result.Content.Value.ToResourceIdeaResponse();

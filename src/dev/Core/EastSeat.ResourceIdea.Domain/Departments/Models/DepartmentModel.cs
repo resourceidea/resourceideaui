@@ -6,7 +6,7 @@ namespace EastSeat.ResourceIdea.Domain.Departments.Models;
 /// <summary>
 /// Department view model.
 /// </summary>
-public sealed record DepartmentViewModel
+public sealed record DepartmentModel
 {
     /// <summary>
     /// Department ID.

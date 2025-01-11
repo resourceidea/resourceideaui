@@ -73,6 +73,6 @@ public sealed class TenantsService : ITenantsService
     public TenantId GetTenantIdFromLoginSession(CancellationToken cancellationToken)
     {
         // TODO: Implement logic that will read the tenant ID from the login session.
-        return TenantId.Empty;
+        return TenantId.Create("841C6122-59E8-4294-93B8-D21C0BEB6724");
     }
 }

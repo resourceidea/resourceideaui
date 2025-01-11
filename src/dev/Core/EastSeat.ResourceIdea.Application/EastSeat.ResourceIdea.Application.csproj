@@ -11,8 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Departments\Specifications\" />
-    <Folder Include="Features\Departments\Queries\" />
     <Folder Include="Features\Engagements\Specifications\" />
   </ItemGroup>
 

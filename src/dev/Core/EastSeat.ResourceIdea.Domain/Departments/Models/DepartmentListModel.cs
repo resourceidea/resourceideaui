@@ -9,10 +9,10 @@ namespace EastSeat.ResourceIdea.Domain.Departments.Models;
 /// </summary>
 public sealed record DepartmentListModel
 {
-    public ReadOnlyCollection<DepartmentViewModel> Value { get; init; }
+    public ReadOnlyCollection<DepartmentModel> Value { get; init; }
 
-    public DepartmentListModel(IEnumerable<DepartmentViewModel> departments)
+    public DepartmentListModel(IEnumerable<DepartmentModel> departments)
     {
-        Value = new ReadOnlyCollection<DepartmentViewModel>([.. departments]);
+        Value = new ReadOnlyCollection<DepartmentModel>([.. departments]);
     }
 }

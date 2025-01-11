@@ -1,11 +1,14 @@
 @page "/departments"
 @page "/departments/index"
+@using EastSeat.ResourceIdea.Application.Features.Departments.Queries
 
 @layout AdminLayout
 
+@inject IMediator Mediator
+
 <h3>Departments</h3>
 
-@if (Model.Value == null || Model.Value.Count == 0)
+@if (Model == null || Model.Count == 0)
 {
     <p>No departments available.</p>
 }
@@ -20,7 +23,7 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach (var department in Model.Value)
+                @foreach (var department in Model)
                 {
                     <tr>
                         <td>@department.Name</td>
@@ -33,17 +36,16 @@ else
 }
 
 @code {
-    private DepartmentListModel Model { get; set; } = new DepartmentListModel(Enumerable.Empty<DepartmentViewModel>());
+    private IReadOnlyList<DepartmentModel> Model { get; set; } = new List<DepartmentModel>();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        var dummyData = new List<DepartmentViewModel>
-        {
-            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "HR", TenantId = TenantId.Create(Guid.NewGuid()) },
-            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "IT", TenantId = TenantId.Create(Guid.NewGuid()) },
-            new DepartmentViewModel { DepartmentId = DepartmentId.Create(Guid.NewGuid()), Name = "Finance", TenantId = TenantId.Create(Guid.NewGuid()) }
-        };
+        var query = new GetAllDepartmentsQuery();
+        var response = await Mediator.Send(query);
 
-        Model = new DepartmentListModel(dummyData);
+        if (response.IsSuccess && response.Content.HasValue)
+        {
+            Model = response.Content.Value.Items;
+        }
     }
 }

@@ -22,17 +22,17 @@ public static class DepartmentMapper
     {
         return typeof(TModel) switch
         {
-            _ when typeof(TModel) == typeof(DepartmentViewModel) => ToDepartmentViewModel(department) as TModel ?? throw new InvalidCastException(),
+            _ when typeof(TModel) == typeof(DepartmentModel) => ToDepartmentViewModel(department) as TModel ?? throw new InvalidCastException(),
             _ => throw new NotSupportedException($"Mapping to type {typeof(TModel).Name} is not supported.")
         };
     }
 
     /// <summary>
-    /// Map <see cref="DepartmentViewModel"/> to <see cref="Department"/> entity.
+    /// Map <see cref="DepartmentModel"/> to <see cref="Department"/> entity.
     /// </summary>
     /// <param name="model">Model to be mapped to the entity.</param>
     /// <returns>Instance of <see cref="Department"/></returns>
-    public static Department ToEntity(this DepartmentViewModel model)
+    public static Department ToEntity(this DepartmentModel model)
     {
         return new Department
         {
@@ -49,7 +49,7 @@ public static class DepartmentMapper
     /// <returns>Instance of <see cref="DepartmentListModel"/></returns>
     public static DepartmentListModel ToDepartmentListModel(this IEnumerable<Department> departments)
     {
-        var departmentViewModels = departments.Select(department => department.ToModel<DepartmentViewModel>()).ToList();
+        var departmentViewModels = departments.Select(department => department.ToModel<DepartmentModel>()).ToList();
         return new DepartmentListModel(departmentViewModels);
     }
 
@@ -64,17 +64,17 @@ public static class DepartmentMapper
     /// </summary>
     /// <param name="department">Department entity</param>
     /// <returns>Instance of <see cref="ResourceIdeaResponse{DepartmentViewModel}"/></returns>
-    public static ResourceIdeaResponse<DepartmentViewModel> ToResourceIdeaResponse(this Department department)
+    public static ResourceIdeaResponse<DepartmentModel> ToResourceIdeaResponse(this Department department)
     {
-        return ResourceIdeaResponse<DepartmentViewModel>.Success(ToDepartmentViewModel(department));
+        return ResourceIdeaResponse<DepartmentModel>.Success(ToDepartmentViewModel(department));
     }
 
-    private static DepartmentViewModel ToDepartmentViewModel(Department department)
+    private static DepartmentModel ToDepartmentViewModel(Department department)
     {
         ArgumentNullException.ThrowIfNull(department);
         department.Name.ThrowIfNullOrEmptyOrWhiteSpace();
 
-        return new DepartmentViewModel
+        return new DepartmentModel
         {
             DepartmentId = department.Id,
             Name = department.Name,

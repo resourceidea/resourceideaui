@@ -13,14 +13,9 @@ namespace EastSeat.ResourceIdea.DataStore.Services;
 /// <summary>
 /// Service to perform CRUD operations on Department entities.
 /// </summary>
-public sealed class DepartmentsService : IDepartmentsService
+public sealed class DepartmentsService(ResourceIdeaDBContext dbContext) : IDepartmentsService
 {
-    private readonly ResourceIdeaDBContext _dbContext;
-
-    public DepartmentsService(ResourceIdeaDBContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    private readonly ResourceIdeaDBContext _dbContext = dbContext;
 
     /// <inheritdoc/>
     public async Task<ResourceIdeaResponse<Department>> AddAsync(Department department, CancellationToken cancellationToken)
@@ -62,9 +57,35 @@ public sealed class DepartmentsService : IDepartmentsService
     }
 
     /// <inheritdoc/>
-    public Task<ResourceIdeaResponse<PagedListResponse<Department>>> GetPagedListAsync(int page, int size, Optional<BaseSpecification<Department>> specification, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<PagedListResponse<Department>>> GetPagedListAsync(int page, int size, Optional<BaseSpecification<Department>> specification, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            IQueryable<Department> query = _dbContext.Departments.AsQueryable();
+
+            if (specification.HasValue)
+            {
+                query = query.Where(specification.Value.Criteria);
+            }
+
+            int totalCount = await query.CountAsync(cancellationToken);
+            List<Department> items = await query.Skip((page - 1) * size).Take(size).ToListAsync(cancellationToken);
+
+            PagedListResponse<Department> pagedList = new()
+            {
+                Items = items,
+                TotalCount = totalCount,
+                CurrentPage = page,
+                PageSize = size
+            };
+
+            return ResourceIdeaResponse<PagedListResponse<Department>>.Success(Optional<PagedListResponse<Department>>.Some(pagedList));
+        }
+        catch (Exception)
+        {
+            // TODO: Log the exception here if logging is available
+            return ResourceIdeaResponse<PagedListResponse<Department>>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
     }
 
     /// <inheritdoc/>

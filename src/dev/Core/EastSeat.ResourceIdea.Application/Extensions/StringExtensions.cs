@@ -25,7 +25,7 @@ public static class StringExtensions
             .Split(delimiter, StringSplitOptions.RemoveEmptyEntries)
             .Select(part => part.Split(keyValueSeparator, StringSplitOptions.RemoveEmptyEntries))
             .Where(parts => parts.Length == 2)
-            .ToDictionary(parts => parts[0].Trim(), parts => parts[1].Trim(), StringComparer.OrdinalIgnoreCase);
+            .ToDictionary(parts => parts[0].Trim().ToLower(), parts => parts[1].Trim().ToLower(), StringComparer.OrdinalIgnoreCase);
 
         ValidateFiltersDictionary(filterDictionary);
 
