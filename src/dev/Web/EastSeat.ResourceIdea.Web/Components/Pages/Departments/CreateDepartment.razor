@@ -12,6 +12,14 @@
     </div>
 </div>
 
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        @errorMessage
+        <button type="button" class="btn-close" @onclick="@(() => errorMessage = null)" aria-label="Close"></button>
+    </div>
+}
+
 <EditForm Model="@command" OnValidSubmit="HandleValidSubmit" FormName="CreateDepartment">
     <DataAnnotationsValidator />
     <ValidationSummary />
@@ -32,6 +40,7 @@
 
 @code {
     private CreateDepartmentCommand command = new();
+    private string? errorMessage;
 
     private async Task HandleValidSubmit()
     {
@@ -42,8 +51,7 @@
         }
         else
         {
-            // TODO: Display error message on failure.
-            // Handle failure (e.g., display error messages)
+            errorMessage = result?.Error?.Message ?? "Failed to create department. Please try again.";
         }
     }
 }
