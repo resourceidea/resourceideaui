@@ -1,17 +1,13 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
-using EastSeat.ResourceIdea.Application.Features.Departments.Commands;
+﻿using EastSeat.ResourceIdea.Application.Features.Departments.Commands;
 using EastSeat.ResourceIdea.Application.Features.Departments.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Departments.Validators;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Application.Mappers;
-using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
-using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 
-using FluentValidation;
 using FluentValidation.Results;
 
 using MediatR;

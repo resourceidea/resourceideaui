@@ -1,4 +1,4 @@
-@page "/departments"
+﻿@page "/departments"
 @page "/departments/index"
 @using EastSeat.ResourceIdea.Application.Features.Departments.Queries
 
@@ -7,6 +7,8 @@
 @inject IMediator Mediator
 
 <h3>Departments</h3>
+
+<NavLink class="btn btn-primary btn-sm mb-3" href="/departments/new">Create Department</NavLink>
 
 @if (Model == null || Model.Count == 0)
 {

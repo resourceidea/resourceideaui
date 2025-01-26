@@ -2,6 +2,7 @@
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Departments.Contracts;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
+using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 
@@ -23,24 +24,19 @@ public sealed class DepartmentsService(ResourceIdeaDBContext dbContext) : IDepar
         try
         {
             EntityEntry<Department> result = await _dbContext.Departments.AddAsync(department, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
-
-            if (result.Entity is null)
+            int changes = await _dbContext.SaveChangesAsync(cancellationToken);
+            if (!DepartmentCreatedSuccessfully(result, changes))
             {
-                return ResourceIdeaResponse<Department>.Failure(ErrorCode.EmptyEntityOnCreateDepartment);
-            }
-
-            if (result.State != EntityState.Added)
-            {
-                return ResourceIdeaResponse<Department>.Failure(ErrorCode.DataStoreCommandFailure);
+                // TODO: Log failure to create department.
+                return ResourceIdeaResponse<Department>.Failure(ErrorCode.DbInsertFailureOnCreateDepartment);
             }
 
             return ResourceIdeaResponse<Department>.Success(Optional<Department>.Some(result.Entity));
         }
         catch (Exception)
         {
-            // TODO: Log the exception here if logging is available
-            return ResourceIdeaResponse<Department>.Failure(ErrorCode.DataStoreCommandFailure);
+            // TODO: Log exception on failure to create department.
+            return ResourceIdeaResponse<Department>.Failure(ErrorCode.DbInsertFailureOnCreateDepartment);
         }
     }
 
@@ -93,4 +89,7 @@ public sealed class DepartmentsService(ResourceIdeaDBContext dbContext) : IDepar
     {
         throw new NotImplementedException();
     }
+
+    private static bool DepartmentCreatedSuccessfully(EntityEntry<Department> result, int changes)
+        => result.Entity != null && changes > 0;
 }
