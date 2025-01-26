@@ -207,4 +207,9 @@ public enum ErrorCode
     /// Empty entity returned from repository on updating a subscription.
     /// </summary>
     EmptyEntityOnUpdateSubscriptionService,
+
+    /// <summary>
+    /// Database insert operation failed on attempt to create department.
+    /// </summary>
+    DbInsertFailureOnCreateDepartment,
 }

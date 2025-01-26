@@ -6,19 +6,28 @@
 @inject IMediator Mediator
 @inject NavigationManager NavigationManager
 
-<h3>Create Department</h3>
+<div class="card text-bg-light mt-1 mb-5">
+    <div class="card-body">
+        <h5 class="card-title">Add New Department</h5>
+    </div>
+</div>
 
 <EditForm Model="@command" OnValidSubmit="HandleValidSubmit" FormName="CreateDepartment">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
     <div class="form-group">
-        <label for="name">Department Name</label>
-        <InputText id="name" class="form-control" @bind-Value="command.Name" />
-        <ValidationMessage For="@(() => command.Name)" />
+        <div class="row mb-1">
+            <div class="col-md-6">
+                <label for="Name">Department name</label>
+                <InputText id="Name" class="form-control" @bind-Value="command.Name" />
+                <ValidationMessage For="@(() => command.Name)" />
+            </div>
+        </div>
     </div>
+    
+    <button type="submit" class="btn btn-primary btn-sm">Create</button>
 
-    <button type="submit" class="btn btn-primary">Create</button>
 </EditForm>
 
 @code {
@@ -29,14 +38,12 @@
         var result = await Mediator.Send(command);
         if (result != null && result.IsSuccess)
         {
-            // Handle success (e.g., navigate to the department list page)
             NavigationManager.NavigateTo("/departments");
         }
-
-        // TODO: Display error message on failure.
-        // else
-        // {
-        //     // Handle failure (e.g., display error messages)
-        // }
+        else
+        {
+            // TODO: Display error message on failure.
+            // Handle failure (e.g., display error messages)
+        }
     }
 }
