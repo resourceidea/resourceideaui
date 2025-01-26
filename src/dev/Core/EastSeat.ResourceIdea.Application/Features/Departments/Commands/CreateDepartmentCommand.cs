@@ -10,7 +10,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Departments.Commands;
 /// <summary>
 /// Command to create a department.
 /// </summary>
-public class CreateDepartmentCommand : IRequest<ResourceIdeaResponse<DepartmentModel>>
+public sealed class CreateDepartmentCommand : IRequest<ResourceIdeaResponse<DepartmentModel>>
 {
     /// <summary>Name of the department to be created.</summary>
     public string Name { get; set; } = string.Empty;
