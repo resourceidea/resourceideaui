@@ -2,7 +2,6 @@
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Departments.Contracts;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
-using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 
@@ -47,9 +46,23 @@ public sealed class DepartmentsService(ResourceIdeaDBContext dbContext) : IDepar
     }
 
     /// <inheritdoc/>
-    public Task<ResourceIdeaResponse<Department>> GetByIdAsync(BaseSpecification<Department> specification, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<Department>> GetByIdAsync(BaseSpecification<Department> specification, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            Department? department = await _dbContext.Departments.FirstOrDefaultAsync(specification.Criteria, cancellationToken);
+            if (department == null)
+            {
+                return ResourceIdeaResponse<Department>.NotFound();
+            }
+
+            return ResourceIdeaResponse<Department>.Success(Optional<Department>.Some(department));
+        }
+        catch (Exception)
+        {
+            // TODO: Log the exception here if logging is available
+            return ResourceIdeaResponse<Department>.Failure(ErrorCode.QueryForDepartmentFailure);
+        }
     }
 
     /// <inheritdoc/>

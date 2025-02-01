@@ -16,7 +16,7 @@ public sealed record DepartmentModel
     /// <summary>
     /// Name of the department.
     /// </summary>
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// ID of tenant owning the department information.

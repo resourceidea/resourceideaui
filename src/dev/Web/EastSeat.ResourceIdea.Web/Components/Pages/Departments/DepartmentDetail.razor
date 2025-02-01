@@ -1,7 +1,66 @@
-﻿@page "/departments/{id}"
+﻿@page "/departments/{Id:guid}"
 
-<h3>Department details</h3>
+@layout AdminLayout
+
+@inject IMediator Mediator
+
+<ResourceIdeaPageTitle Title="Department details" />
+
+<div class="card text-bg-light mt-1">
+    <div class="card-body">
+        <h5 class="card-title">Department details</h5>
+    </div>
+</div>
+
+<NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2" href="/departments">Back</NavLink>
+
+@if (IsLoadingModelData)
+{
+    <p>Loading data, please wait...</p>
+}
+else
+{
+    <EditForm Model="@department" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label for="departmentName" class="form-label">Department Name</label>
+            <InputText id="departmentName" class="form-control" @bind-Value="department.Name" />
+        </div>
+
+        <button type="submit" class="btn btn-danger btn-sm">Save changes</button>
+    </EditForm>
+}
 
 @code {
+    private bool IsLoadingModelData { get; set; } = true;
+    private DepartmentModel department = new DepartmentModel();
 
+    [Parameter]
+    public Guid Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoadingModelData = true;
+
+        var query = new GetDepartmentByIdQuery { DepartmentId = DepartmentId.Create(Id) };
+        var response = await Mediator.Send(query);
+
+        if (response.IsSuccess && response.Content.HasValue)
+        {
+            department = response.Content.Value;
+        }
+        else
+        {
+            // Handle error
+        }
+
+        IsLoadingModelData = false;
+    }
+
+    private void HandleValidSubmit()
+    {
+        // Handle form submission logic here
+    }
 }

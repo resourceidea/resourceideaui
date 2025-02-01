@@ -6,11 +6,15 @@
 @inject IMediator Mediator
 @inject NavigationManager NavigationManager
 
-<div class="card text-bg-light mt-1 mb-5">
+<ResourceIdeaPageTitle Title="Add new department" />
+
+<div class="card text-bg-light mt-1">
     <div class="card-body">
-        <h5 class="card-title">Add New Department</h5>
+        <h5 class="card-title">Add new department</h5>
     </div>
 </div>
+
+<NavLink class="btn btn-secondary btn-sm mt-2 mb-2" href="/departments">Back</NavLink>
 
 @if (!string.IsNullOrEmpty(errorMessage))
 {

@@ -24,7 +24,7 @@ jobs:
         languages: csharp
         queries: +security-and-quality
 
-    - name: Install .NET 8 SDK
+    - name: Install .NET 9 SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '9.0.x'
