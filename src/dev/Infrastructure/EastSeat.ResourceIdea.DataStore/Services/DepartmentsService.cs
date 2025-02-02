@@ -78,7 +78,11 @@ public sealed class DepartmentsService(ResourceIdeaDBContext dbContext) : IDepar
             }
 
             int totalCount = await query.CountAsync(cancellationToken);
-            List<Department> items = await query.Skip((page - 1) * size).Take(size).ToListAsync(cancellationToken);
+            List<Department> items = await query
+                                          .Skip((page - 1) * size)
+                                          .Take(size)
+                                          .OrderBy(d => d.Name)
+                                          .ToListAsync(cancellationToken);
 
             PagedListResponse<Department> pagedList = new()
             {
@@ -98,9 +102,35 @@ public sealed class DepartmentsService(ResourceIdeaDBContext dbContext) : IDepar
     }
 
     /// <inheritdoc/>
-    public Task<ResourceIdeaResponse<Department>> UpdateAsync(Department entity, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<Department>> UpdateAsync(
+        Department entity,
+        CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            Department? department = await _dbContext.Departments
+                                                     .FirstOrDefaultAsync(d => d.Id == entity.Id, cancellationToken);
+            if (department == null)
+            {
+                return ResourceIdeaResponse<Department>.NotFound();
+            }
+            
+            department.Name = entity.Name;
+            _dbContext.Departments.Update(department);
+            int changes = await _dbContext.SaveChangesAsync(cancellationToken);
+            if (changes <= 0)
+            {
+                // TODO: Log failure to update department.
+                return ResourceIdeaResponse<Department>.Failure(ErrorCode.DbUpdateFailureOnUpdateDepartment);
+            }
+
+            return ResourceIdeaResponse<Department>.Success(Optional<Department>.Some(department));
+        }
+        catch (Exception)
+        {
+            // TODO: Log exception on failure to update department.
+            return ResourceIdeaResponse<Department>.Failure(ErrorCode.DbUpdateFailureOnUpdateDepartment);
+        }
     }
 
     private static bool DepartmentCreatedSuccessfully(EntityEntry<Department> result, int changes)

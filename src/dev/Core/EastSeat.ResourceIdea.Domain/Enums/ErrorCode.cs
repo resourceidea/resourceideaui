@@ -213,4 +213,6 @@ public enum ErrorCode
     /// </summary>
     DbInsertFailureOnCreateDepartment,
     QueryForDepartmentFailure,
+    EmptyEntityOnUpdateDepartment,
+    DbUpdateFailureOnUpdateDepartment,
 }

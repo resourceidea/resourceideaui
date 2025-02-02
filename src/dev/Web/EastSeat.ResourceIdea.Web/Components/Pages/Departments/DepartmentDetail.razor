@@ -2,8 +2,6 @@
 
 @layout AdminLayout
 
-@inject IMediator Mediator
-
 <ResourceIdeaPageTitle Title="Department details" />
 
 <div class="card text-bg-light mt-1">
@@ -20,47 +18,29 @@
 }
 else
 {
-    <EditForm Model="@department" OnValidSubmit="HandleValidSubmit">
+    if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert @(isErrorMessage ? "alert-danger" : "alert-success") alert-dismissible fade show mt-3" role="alert">
+            @errorMessage
+            <button type="button" class="btn-close" @onclick="@(() => errorMessage = null)" aria-label="Close"></button>
+        </div>
+    }
+    <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
-        <div class="mb-3">
-            <label for="departmentName" class="form-label">Department Name</label>
-            <InputText id="departmentName" class="form-control" @bind-Value="department.Name" />
+        <input type="hidden" @bind="Model.DepartmentId" />
+
+        <div class="form-group">
+        <div class="row mb-1">
+            <div class="col-md-6">
+                <label for="departmentName" class="form-label">Department Name</label>
+                <InputText id="departmentName" class="form-control" @bind-Value="Model.Name" />
+                <ValidationMessage For="@(() => Model.Name)" />
+            </div>
         </div>
+    </div>
 
         <button type="submit" class="btn btn-danger btn-sm">Save changes</button>
     </EditForm>
-}
-
-@code {
-    private bool IsLoadingModelData { get; set; } = true;
-    private DepartmentModel department = new DepartmentModel();
-
-    [Parameter]
-    public Guid Id { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        IsLoadingModelData = true;
-
-        var query = new GetDepartmentByIdQuery { DepartmentId = DepartmentId.Create(Id) };
-        var response = await Mediator.Send(query);
-
-        if (response.IsSuccess && response.Content.HasValue)
-        {
-            department = response.Content.Value;
-        }
-        else
-        {
-            // Handle error
-        }
-
-        IsLoadingModelData = false;
-    }
-
-    private void HandleValidSubmit()
-    {
-        // Handle form submission logic here
-    }
 }
