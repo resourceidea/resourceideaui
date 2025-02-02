@@ -6,11 +6,15 @@
 @inject IMediator Mediator
 @inject NavigationManager NavigationManager
 
-<div class="card text-bg-light mt-1 mb-5">
+<ResourceIdeaPageTitle Title="Add new department" />
+
+<div class="card text-bg-light mt-1">
     <div class="card-body">
-        <h5 class="card-title">Add New Department</h5>
+        <h5 class="card-title">Add new department</h5>
     </div>
 </div>
+
+<NavLink class="btn btn-secondary btn-sm mt-2 mb-2" href="/departments">Back</NavLink>
 
 @if (!string.IsNullOrEmpty(errorMessage))
 {
@@ -20,7 +24,7 @@
     </div>
 }
 
-<EditForm Model="@command" OnValidSubmit="HandleValidSubmit" FormName="CreateDepartment">
+<EditForm Model="@Model" OnValidSubmit="HandleValidSubmit" FormName="CreateDepartment">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
@@ -28,8 +32,8 @@
         <div class="row mb-1">
             <div class="col-md-6">
                 <label for="Name">Department name</label>
-                <InputText id="Name" class="form-control" @bind-Value="command.Name" />
-                <ValidationMessage For="@(() => command.Name)" />
+                <InputText id="Name" class="form-control" @bind-Value="Model.Name" />
+                <ValidationMessage For="@(() => Model.Name)" />
             </div>
         </div>
     </div>
@@ -39,12 +43,12 @@
 </EditForm>
 
 @code {
-    private CreateDepartmentCommand command = new();
+    public CreateDepartmentCommand Model { get; set; } = new();
     private string? errorMessage;
 
     private async Task HandleValidSubmit()
     {
-        var result = await Mediator.Send(command);
+        var result = await Mediator.Send(Model);
         if (result != null && result.IsSuccess)
         {
             NavigationManager.NavigateTo("/departments");

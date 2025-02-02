@@ -1,10 +1,13 @@
-﻿using EastSeat.ResourceIdea.Domain.Exceptions;
+﻿using System.ComponentModel;
+using EastSeat.ResourceIdea.Domain.Exceptions;
+using EastSeat.ResourceIdea.Domain.TypeConverters;
 
 namespace EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 
 /// <summary>
 /// Department ID type.
 /// </summary>
+[TypeConverter(typeof(DepartmentIdConverter))]
 public readonly record struct DepartmentId
 {
     /// <summary>
@@ -48,4 +51,7 @@ public readonly record struct DepartmentId
 
         return Create(departmentId);
     }
+
+    /// <inheritdoc />
+    public override string ToString() => Value.ToString();
 }

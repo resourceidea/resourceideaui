@@ -212,4 +212,7 @@ public enum ErrorCode
     /// Database insert operation failed on attempt to create department.
     /// </summary>
     DbInsertFailureOnCreateDepartment,
+    QueryForDepartmentFailure,
+    EmptyEntityOnUpdateDepartment,
+    DbUpdateFailureOnUpdateDepartment,
 }

@@ -6,11 +6,21 @@
 
 @inject IMediator Mediator
 
-<h3>Departments</h3>
+<ResourceIdeaPageTitle Title="Departments" />
 
-<NavLink class="btn btn-primary btn-sm mb-3" href="/departments/new">Create Department</NavLink>
+<div class="card text-bg-light mt-1">
+    <div class="card-body">
+        <h5 class="card-title">Departments</h5>
+    </div>
+</div>
 
-@if (Model == null || Model.Count == 0)
+<NavLink class="btn btn-primary btn-sm mt-2 mb-2" href="/departments/new">Create Department</NavLink>
+
+@if (IsLoadingModelData)
+{
+    <p>Loading data, please wait...</p>
+}
+else if (Model == null || Model.Count == 0)
 {
     <p>No departments available.</p>
 }
@@ -29,7 +39,12 @@ else
                 {
                     <tr>
                         <td>@department.Name</td>
-                        <td></td>
+                        <td>
+                            <NavLink class="btn btn-outline-primary btn-sm"
+                                     href="@($"/departments/{department.DepartmentId.Value}")">
+                                Details
+                            </NavLink>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -38,10 +53,14 @@ else
 }
 
 @code {
+    private bool IsLoadingModelData { get; set; } = true;
     private IReadOnlyList<DepartmentModel> Model { get; set; } = new List<DepartmentModel>();
 
     protected override async Task OnInitializedAsync()
     {
+        // Start loading of the model data.
+        IsLoadingModelData = true;
+
         var query = new GetAllDepartmentsQuery();
         var response = await Mediator.Send(query);
 
@@ -49,5 +68,8 @@ else
         {
             Model = response.Content.Value.Items;
         }
+
+        // Complete loading of the model data.
+        IsLoadingModelData = false;
     }
 }
