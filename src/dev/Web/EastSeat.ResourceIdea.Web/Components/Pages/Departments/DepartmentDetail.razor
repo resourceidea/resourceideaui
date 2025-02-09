@@ -4,13 +4,11 @@
 
 <ResourceIdeaPageTitle Title="Department details" />
 
-<div class="card text-bg-light mt-1">
+<div class="card text-bg-light mt-1 mb-2">
     <div class="card-body">
         <h5 class="card-title">Department details</h5>
     </div>
 </div>
-
-<NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2" href="/departments">Back</NavLink>
 
 @if (IsLoadingModelData)
 {
@@ -25,22 +23,48 @@ else
             <button type="button" class="btn-close" @onclick="@(() => errorMessage = null)" aria-label="Close"></button>
         </div>
     }
+
     <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit">
         <DataAnnotationsValidator />
-        <ValidationSummary />
+        <ValidationSummary />        
+
+        <NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2" href="/departments">Back</NavLink>
+        <button type="submit" class="btn btn-danger btn-sm">Save changes</button>
 
         <input type="hidden" @bind="Model.DepartmentId" />
 
         <div class="form-group">
-        <div class="row mb-1">
-            <div class="col-md-6">
-                <label for="departmentName" class="form-label">Department Name</label>
-                <InputText id="departmentName" class="form-control" @bind-Value="Model.Name" />
-                <ValidationMessage For="@(() => Model.Name)" />
+            <div class="row mb-1">
+                <div class="col-md-6">
+                    <label for="departmentName" class="form-label">Name</label>
+                    <InputText id="departmentName" class="form-control" @bind-Value="Model.Name" />
+                    <ValidationMessage For="@(() => Model.Name)" />
+                </div>
             </div>
         </div>
-    </div>
-
-        <button type="submit" class="btn btn-danger btn-sm">Save changes</button>
     </EditForm>
+    
+    <NavLink href="#" class="btn btn-primary btn-sm mt-4">Add Job Position</NavLink>
+    <div class="card mt-1">
+        <div class="card-header">
+            Job Positions
+        </div>
+        <table class="table table-sm table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Software Developer</td>
+                    <td>
+                        <NavLink class="btn btn-outline-primary btn-sm" href="/job-positions/1">View</NavLink>
+                        <NavLink class="btn btn-outline-primary btn-sm" href="/job-positions/1/edit">Edit</NavLink>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 }

@@ -1,10 +1,7 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
-using EastSeat.ResourceIdea.Domain.EngagementTasks.Models;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
-using EastSeat.ResourceIdea.Application.Extensions;
-using EastSeat.ResourceIdea.Domain.Types;
 
 namespace EastSeat.ResourceIdea.Application.Mappers;
 
