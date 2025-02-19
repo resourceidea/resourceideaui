@@ -1,6 +1,11 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
+﻿// ----------------------------------------------------------------------------------
+// File: IEngagementTasksService.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Application\Features\EngagementTasks\Contracts\IEngagementTasksService.cs
+// Description: Represents the interface for managing engagement tasks.
+// ----------------------------------------------------------------------------------
+
+using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Domain.Types;
-using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Users.ValueObjects;

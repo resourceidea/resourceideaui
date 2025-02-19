@@ -1,7 +1,12 @@
+// ----------------------------------------------------------------------------------
+// File: StartEngagementTaskCommandHandler.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Application\Features\EngagementTasks\Handlers\StartEngagementTaskCommandHandler.cs
+// Description: Handles the command to start an engagement task.
+// ----------------------------------------------------------------------------------
+
 using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Commands;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
-using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Models;
 using EastSeat.ResourceIdea.Domain.Enums;

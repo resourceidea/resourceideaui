@@ -1,5 +1,10 @@
-﻿using EastSeat.ResourceIdea.Domain.Tenants.Models;
-using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
+﻿// ----------------------------------------------------------------------------------
+// File: UpdateTenantCommand.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Application\Features\Tenants\Commands\UpdateTenantCommand.cs
+// Description: Command to update a tenant.
+// ----------------------------------------------------------------------------------
+
+using EastSeat.ResourceIdea.Domain.Tenants.Models;
 using EastSeat.ResourceIdea.Domain.Types;
 
 using MediatR;

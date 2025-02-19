@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------
+// File: JobPositionConfiguration.cs
+// Path: src\dev\Infrastructure\EastSeat.ResourceIdea.DataStore\EntityTypeConfigurations\JobPositionConfiguration.cs
+// Description: Entity type configuration for JobPosition entity.
+// --------------------------------------------------------------------------------------
+
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
@@ -6,6 +12,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
 
+/// <summary>
+/// Entity type configuration for JobPosition entity.
+/// </summary>
 public sealed class JobPositionConfiguration
     : BaseEntityConfiguration<JobPosition>
 {
@@ -30,7 +39,7 @@ public sealed class JobPositionConfiguration
                 value => DepartmentId.Create(value))
             .HasMaxLength(450);
 
-        builder.Property(jobPosition => jobPosition.Name)
+        builder.Property(jobPosition => jobPosition.Title)
                .IsRequired()
                .HasMaxLength(250);
 

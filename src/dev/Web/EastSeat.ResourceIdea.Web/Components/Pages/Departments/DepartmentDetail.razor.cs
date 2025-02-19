@@ -5,7 +5,6 @@ using EastSeat.ResourceIdea.Application.Features.Departments.Commands;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
-using System.Threading.Tasks;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.Departments;
 

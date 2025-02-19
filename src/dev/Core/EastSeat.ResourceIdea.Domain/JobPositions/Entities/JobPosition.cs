@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------------------
+// File: JobPosition.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Domain\JobPositions\Entities\JobPosition.cs
+// Description: JobPosition entity.
+// ----------------------------------------------------------------------------------
+
 using EastSeat.ResourceIdea.Domain.Common.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
@@ -10,10 +16,6 @@ namespace EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 /// </summary>
 public class JobPosition : BaseEntity
 {
-    private JobPosition()
-    {
-    }
-
     /// <summary>
     /// JobPosition ID.
     /// </summary>
@@ -22,7 +24,7 @@ public class JobPosition : BaseEntity
     /// <summary>
     /// JobPosition name.
     /// </summary>
-    public string? Name { get; set; }
+    public string? Title { get; set; }
 
     /// <summary>
     /// JobPosition description.

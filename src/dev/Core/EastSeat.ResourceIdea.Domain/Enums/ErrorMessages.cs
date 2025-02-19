@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// ----------------------------------------------------------------------------------
+// File: ErrorMessages.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Domain\Enums\ErrorMessages.cs
+// Description: Error messages.
+// ----------------------------------------------------------------------------------
 
 namespace EastSeat.ResourceIdea.Domain.Enums;
 
