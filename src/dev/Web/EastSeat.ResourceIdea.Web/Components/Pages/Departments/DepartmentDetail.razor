@@ -44,7 +44,10 @@ else
         </div>
     </EditForm>
     
-    <NavLink href="#" class="btn btn-primary btn-sm mt-4">Add Job Position</NavLink>
+    <NavLink href="@($"/jobpositions/new?DepartmentId={Model.DepartmentId}")"
+             class="btn btn-primary btn-sm mt-4">
+        Add Job Position</NavLink>
+    
     <div class="card mt-1">
         <div class="card-header">
             Job Positions
@@ -60,7 +63,8 @@ else
                 <tr>
                     <td>Software Developer</td>
                     <td>
-                        <NavLink class="btn btn-outline-primary btn-sm" href="/job-positions/1">View</NavLink>
+                        <NavLink 
+                            class="btn btn-outline-primary btn-sm" href="/jobpositions/1">View</NavLink>
                         <NavLink class="btn btn-outline-primary btn-sm" href="/job-positions/1/edit">Edit</NavLink>
                     </td>
                 </tr>
