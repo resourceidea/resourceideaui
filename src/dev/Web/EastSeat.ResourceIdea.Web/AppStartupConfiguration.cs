@@ -2,6 +2,7 @@
 using EastSeat.ResourceIdea.Application.Features.Departments.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
+using EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
@@ -36,6 +37,7 @@ namespace EastSeat.ResourceIdea.Web
             services.AddScoped<IEngagementTasksService, EngagementTasksService>();
             services.AddScoped<ISubscriptionServicesService, SubscriptionServicesService>();
             services.AddScoped<ISubscriptionsService, SubscriptionsService>();
+            services.AddScoped<IJobPositionService, JobPositionsService>();
         }
 
         private static string GetDbContextConnectionString()

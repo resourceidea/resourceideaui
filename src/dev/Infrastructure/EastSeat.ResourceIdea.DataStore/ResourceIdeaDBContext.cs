@@ -25,7 +25,7 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
     public DbSet<EngagementTask> EngagementTasks { get; set; }
     public DbSet<EngagementTaskAssignment> EngagementTaskAssignments { get; set; }
     public DbSet<Department> Departments { get; set; }
-    public DbSet<JobPosition>? JobPositions { get; set; }
+    public DbSet<JobPosition> JobPositions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -53,7 +53,7 @@ public sealed class CreateJobPositionCommand : IRequest<ResourceIdeaResponse<Job
     /// Validates the command.
     /// </summary>
     /// <returns><see cref="ValidationResponse"/></returns>
-    public ValidationResponse IsValid()
+    public ValidationResponse Validate()
     {
         var validationFailureMessages = new[]
         {

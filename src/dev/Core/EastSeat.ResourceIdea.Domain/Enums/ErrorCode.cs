@@ -215,4 +215,6 @@ public enum ErrorCode
     QueryForDepartmentFailure,
     EmptyEntityOnUpdateDepartment,
     DbUpdateFailureOnUpdateDepartment,
+    DbInsertFailureOnCreateJobPosition,
+    InvalidCreateJobPositionCommand,
 }
