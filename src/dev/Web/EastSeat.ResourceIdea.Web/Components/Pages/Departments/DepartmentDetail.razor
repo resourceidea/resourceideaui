@@ -16,13 +16,7 @@
 }
 else
 {
-    if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <div class="alert @(isErrorMessage ? "alert-danger" : "alert-success") alert-dismissible fade show mt-3" role="alert">
-            @errorMessage
-            <button type="button" class="btn-close" @onclick="@(() => errorMessage = null)" aria-label="Close"></button>
-        </div>
-    }
+    <DismissibleAlert ErrorMessage="@errorMessage" IsErrorMessage="@isErrorMessage" />
 
     <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit">
         <DataAnnotationsValidator />
@@ -44,7 +38,7 @@ else
         </div>
     </EditForm>
     
-    <NavLink href="@($"/jobpositions/new?DepartmentId={Model.DepartmentId}")"
+    <NavLink href="@($"/jobpositions/new?department={Model.DepartmentId}")"
              class="btn btn-primary btn-sm mt-4">
         Add Job Position</NavLink>
     

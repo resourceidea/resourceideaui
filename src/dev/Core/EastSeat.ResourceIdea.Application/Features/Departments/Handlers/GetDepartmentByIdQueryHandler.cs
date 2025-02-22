@@ -4,7 +4,6 @@ using EastSeat.ResourceIdea.Application.Features.Departments.Queries;
 using EastSeat.ResourceIdea.Application.Features.Departments.Specifications;
 using EastSeat.ResourceIdea.Application.Mappers;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
-using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 
 using MediatR;
@@ -21,10 +20,9 @@ public sealed class GetDepartmentByIdQueryHandler(IDepartmentsService department
     private readonly IDepartmentsService _departmentsService = departmentsService;
 
     /// <inheritdoc />
-    public async Task<ResourceIdeaResponse<DepartmentModel>> Handle(GetDepartmentByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<DepartmentModel>> Handle(GetDepartmentByIdQuery query, CancellationToken cancellationToken)
     {
-        TenantId tenantId = GetTenantIdFromLoginSession();
-        var departmentIdSpecification = new DepartmentIdSpecification(request.DepartmentId, tenantId);
+        var departmentIdSpecification = new DepartmentIdSpecification(query.DepartmentId, query.TenantId);
         var response = await _departmentsService.GetByIdAsync(departmentIdSpecification, cancellationToken);
         if (response.IsFailure)
         {

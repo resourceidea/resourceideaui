@@ -1,10 +1,12 @@
 ﻿@page "/departments"
 @page "/departments/index"
 @using EastSeat.ResourceIdea.Application.Features.Departments.Queries
+@using EastSeat.ResourceIdea.Web.RequestContext
 
 @layout AdminLayout
 
 @inject IMediator Mediator
+@inject IResourceIdeaRequestContext ResourceIdeaRequestContext
 
 <ResourceIdeaPageTitle Title="Departments" />
 
@@ -41,7 +43,7 @@ else
                         <td>@department.Name</td>
                         <td>
                             <NavLink class="btn btn-outline-primary btn-sm"
-                                     href="@($"/departments/{department.DepartmentId.Value}")">
+                            href="@($"/departments/{department.DepartmentId.Value}")">
                                 Details
                             </NavLink>
                         </td>
@@ -61,7 +63,7 @@ else
         // Start loading of the model data.
         IsLoadingModelData = true;
 
-        var query = new GetAllDepartmentsQuery();
+        var query = new GetAllDepartmentsQuery { TenantId = ResourceIdeaRequestContext.Tenant };
         var response = await Mediator.Send(query);
 
         if (response.IsSuccess && response.Content.HasValue)

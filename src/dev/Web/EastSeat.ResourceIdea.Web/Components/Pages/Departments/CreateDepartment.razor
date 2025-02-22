@@ -1,18 +1,10 @@
 ﻿@page "/departments/new"
-@using EastSeat.ResourceIdea.Domain.Types
 
 @layout AdminLayout
 
-@inject IMediator Mediator
-@inject NavigationManager NavigationManager
+<ResourceIdeaPageTitle Title="Add Department" />
 
-<ResourceIdeaPageTitle Title="Add new department" />
-
-<div class="card text-bg-light mt-1">
-    <div class="card-body">
-        <h5 class="card-title">Add new department</h5>
-    </div>
-</div>
+<PageHeader Text="Add Department" />
 
 <NavLink class="btn btn-secondary btn-sm mt-2 mb-2" href="/departments">Back</NavLink>
 
@@ -24,7 +16,7 @@
     </div>
 }
 
-<EditForm Model="@Model" OnValidSubmit="HandleValidSubmit" FormName="CreateDepartment">
+<EditForm Model="@Command" OnValidSubmit="HandleValidSubmit" FormName="CreateDepartment">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
@@ -32,8 +24,8 @@
         <div class="row mb-1">
             <div class="col-md-6">
                 <label for="Name">Department name</label>
-                <InputText id="Name" class="form-control" @bind-Value="Model.Name" />
-                <ValidationMessage For="@(() => Model.Name)" />
+                <InputText id="Name" class="form-control" @bind-Value="Command.Name" />
+                <ValidationMessage For="@(() => Command.Name)" />
             </div>
         </div>
     </div>
@@ -41,21 +33,3 @@
     <button type="submit" class="btn btn-primary btn-sm">Create</button>
 
 </EditForm>
-
-@code {
-    public CreateDepartmentCommand Model { get; set; } = new();
-    private string? errorMessage;
-
-    private async Task HandleValidSubmit()
-    {
-        var result = await Mediator.Send(Model);
-        if (result != null && result.IsSuccess)
-        {
-            NavigationManager.NavigateTo("/departments");
-        }
-        else
-        {
-            errorMessage = "Failed to create department. Please try again.";
-        }
-    }
-}

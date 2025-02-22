@@ -1,15 +1,13 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
+﻿using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
-using EastSeat.ResourceIdea.Domain.Types;
-
-using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Departments.Queries;
 
 /// <summary>
 /// Query to get all departments with pagination and optional filtering.
 /// </summary>
-public sealed class GetAllDepartmentsQuery : IRequest<ResourceIdeaResponse<PagedListResponse<DepartmentModel>>>
+public sealed class GetAllDepartmentsQuery : BaseRequest<PagedListResponse<DepartmentModel>>
 {
     /// <summary>
     /// Gets or sets the page number for pagination.
