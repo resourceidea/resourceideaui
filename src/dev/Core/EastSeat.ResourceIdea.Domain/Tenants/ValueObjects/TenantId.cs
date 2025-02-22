@@ -4,15 +4,20 @@ namespace EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 public readonly record struct TenantId
 {
+    private TenantId(Guid value)
+    {
+        Value = value;
+    }
+
     /// <summary>
     /// Tenant id value.
     /// </summary>
     public Guid Value { get; }
 
-    private TenantId(Guid value)
-    {
-        Value = value;
-    }
+    /// <summary>
+    /// Empty tenant id.
+    /// </summary>
+    public static TenantId Empty => new(Guid.Empty);
 
     /// <summary>
     /// Create a new Tenant id.
@@ -50,9 +55,13 @@ public readonly record struct TenantId
 
     /// <summary>Tenant DepartmentId is not empty.</summary>
     public bool IsNotEmpty() => this != TenantId.Empty;
-
+    
     /// <summary>
-    /// Empty tenant id.
+    /// Validate that the Tenant ID is not empty.
     /// </summary>
-    public static TenantId Empty => new (Guid.Empty);
+    /// <returns>Message on validation failure, otherwise empty string.</returns>
+    public string ValidateRequired()
+    {
+        return Value == Guid.Empty ? "TenantId is required." : string.Empty;
+    }
 }

@@ -6,6 +6,7 @@
 
 using EastSeat.ResourceIdea.Domain.Common.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
+using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 
@@ -41,19 +42,36 @@ public class JobPosition : BaseEntity
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
     /// <returns>TModel</returns>
-    public override TModel ToModel<TModel>()
+    public override TModel ToModel<TModel>() where TModel : class
+    {
+        return typeof(TModel) switch
+        {
+            var t when t == typeof(JobPositionModel) => (TModel)(object)MapToJobPositionModel(),
+            _ => throw new InvalidOperationException($"Mapping for {typeof(TModel).Name} is not configured."),
+        };
+    }
+
+    /// <summary>
+    /// Maps this entity to a <see cref="ResourceIdeaResponse{TModel} />.
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TModel"></typeparam>
+    /// <returns><see cref="ResourceIdeaResponse{TModel}"/> instance.</returns>
+    public override ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()
     {
         throw new NotImplementedException();
     }
 
     /// <summary>
-    /// Maps the entity to a ResourceIdeaResponse.
+    /// Maps this entity to a <see cref="JobPositionModel"/>.
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <typeparam name="TModel"></typeparam>
-    /// <returns></returns>
-    public override ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()
-    {
-        throw new NotImplementedException();
-    }
+    /// <returns><see cref="JobPositionModel"/> instance.</returns>
+    private JobPositionModel MapToJobPositionModel() =>
+        new()
+        {
+            Id = Id,
+            Title = Title ?? string.Empty,
+            Description = Description ?? string.Empty,
+            DepartmentId = DepartmentId
+        };
 }

@@ -1,0 +1,16 @@
+@* ---------------------------------------------------------------------
+    File: PageHeader.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Shared/Cards/PageHeader.razor
+    Description: A simple header component for pages.
+    --------------------------------------------------------------------- *@
+
+<div class="card text-bg-light mt-1">
+    <div class="card-body">
+        <h5 class="card-title">@Text</h5>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+}

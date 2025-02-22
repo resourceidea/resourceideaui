@@ -4,8 +4,10 @@
 // Description: Command handler for creating a job position.
 // ------------------------------------------------------------------
 
+using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Commands;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
@@ -18,23 +20,22 @@ namespace EastSeat.ResourceIdea.Application.Features.JobPositions.Handlers;
 /// Command handler for creating a job position.
 /// </summary>
 /// <param name="jobPositionService"></param>
-public sealed class CreateJobPositionCommandHandler(IJobPositionService jobPositionService)
-    : IRequestHandler<CreateJobPositionCommand, ResourceIdeaResponse<JobPositionModel>>
+/// <param name="tenantsService"></param>
+public sealed class CreateJobPositionCommandHandler(
+    IJobPositionService jobPositionService,
+    ITenantsService tenantsService)
+    : BaseHandler, IRequestHandler<CreateJobPositionCommand, ResourceIdeaResponse<JobPositionModel>>
 {
     private readonly IJobPositionService _jobPositionService = jobPositionService;
+    private readonly ITenantsService _tenantsService = tenantsService;
 
     public async Task<ResourceIdeaResponse<JobPositionModel>> Handle(
         CreateJobPositionCommand command,
         CancellationToken cancellationToken)
     {
-        ValidationResponse validationResponse = command.Validate();
-        if (validationResponse is { IsValid: false })
-        {
-            return await InvalidCommandResponse(validationResponse.ValidationFailureMessages);
-        }
-
+        JobPosition newJobPosition = command.ToEntity();
         ResourceIdeaResponse<JobPosition> response = await _jobPositionService.AddAsync(
-            command.ToEntity(),
+            newJobPosition,
             cancellationToken);
 
         if (response is { IsSuccess: false } || response.Content.HasValue == false)
@@ -45,13 +46,5 @@ public sealed class CreateJobPositionCommandHandler(IJobPositionService jobPosit
         var responseModel = response.Content.Value.ToModel<JobPositionModel>();
 
         return ResourceIdeaResponse<JobPositionModel>.Success(Optional<JobPositionModel>.Some(responseModel));
-    }
-
-    private static Task<ResourceIdeaResponse<JobPositionModel>> InvalidCommandResponse(
-        IEnumerable<string> validationFailureMessages)
-    {
-        // TODO: Log validation failure messages.
-        return Task.FromResult(
-            ResourceIdeaResponse<JobPositionModel>.Failure(ErrorCode.InvalidCreateJobPositionCommand));
     }
 }

@@ -4,20 +4,20 @@
 // Description: Command to create a job position.
 // ----------------------------------------------------------------------------------
 
+using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Extensions;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
-using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.JobPositions.Commands;
 
 /// <summary>
 /// Command to create a job position.
 /// </summary>
-public sealed class CreateJobPositionCommand : IRequest<ResourceIdeaResponse<JobPositionModel>>
+public sealed class CreateJobPositionCommand : BaseRequest<JobPositionModel>
 {
     /// <summary>
     /// Title of the job position to create.
@@ -42,10 +42,13 @@ public sealed class CreateJobPositionCommand : IRequest<ResourceIdeaResponse<Job
     {
         return new JobPosition
         {
+            Id = JobPositionId.Create(Guid.NewGuid()),
             Title = Title,
             Description = Description,
             DepartmentId = DepartmentId,
-            Id = JobPositionId.Create(Guid.NewGuid())
+            TenantId = TenantId,
+            Created = DateTimeOffset.UtcNow,
+            LastModified = DateTimeOffset.UtcNow,
         };
     }
 
@@ -60,6 +63,7 @@ public sealed class CreateJobPositionCommand : IRequest<ResourceIdeaResponse<Job
             Title.ValidateRequired(nameof(Title)),
             Description.ValidateRequired(nameof(Description)),
             DepartmentId.ValidateRequired(),
+            TenantId.ValidateRequired(),
         }
         .Where(message => !string.IsNullOrWhiteSpace(message));
 

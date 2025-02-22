@@ -10,6 +10,7 @@ public static class StringExtensions
 {
     public static string ValidateRequired(this string value, string propertyName)
     {
+        value = value.Trim();
         return string.IsNullOrEmpty(value)
             ? $"{propertyName} is required."
             : string.Empty;
