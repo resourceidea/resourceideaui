@@ -6,12 +6,18 @@ using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
+using EastSeat.ResourceIdea.Application.Features.JobPositions.Queries;
+using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
+using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.Departments;
 
 public partial class DepartmentDetail : ComponentBase
 {
     [Parameter] public Guid Id { get; set; }
+
+    IReadOnlyList<JobPositionModel> JobPositions { get; set; } = [];
 
     public UpdateDepartmentCommand Model { get; set; } = new();
 
@@ -26,6 +32,39 @@ public partial class DepartmentDetail : ComponentBase
     {
         IsLoadingModelData = true;
 
+        await LoadDepartmentDetails();
+        await LoadDepartmentJobPositions();
+
+        IsLoadingModelData = false;
+    }
+
+    private async Task LoadDepartmentJobPositions()
+    {
+        GetJobPositionsByDepartmentIdQuery query = new()
+        {
+            DepartmentId = DepartmentId.Create(Id),
+            TenantId = ResourceIdeaRequestContext.Tenant
+        };
+
+        var validationResponse = query.Validate();
+        if (!validationResponse.IsValid)
+        {
+            // TODO: Log validation failure.
+            errorMessage = string.Join(
+                Environment.NewLine,
+                validationResponse.ValidationFailureMessages.FirstOrDefault());
+            DisplayMessage(message: errorMessage, isError: true);
+        }
+
+        ResourceIdeaResponse<PagedListResponse<JobPositionModel>> response = await Mediator.Send(query);
+        if (response.IsSuccess && response.Content.HasValue)
+        {
+            JobPositions = [.. response.Content.Value.Items];
+        }
+    }
+
+    private async Task LoadDepartmentDetails()
+    {
         GetDepartmentByIdQuery query = new()
         {
             DepartmentId = DepartmentId.Create(Id),
@@ -57,8 +96,6 @@ public partial class DepartmentDetail : ComponentBase
             // TODO: Log failure to query for department.                
             DisplayMessage(message: "Failed to query for department.", isError: true);
         }
-
-        IsLoadingModelData = false;
     }
 
     protected async Task HandleValidSubmit()

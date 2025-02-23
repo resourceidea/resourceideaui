@@ -1,0 +1,41 @@
+@* ------------------------------------------------------------------------------
+    File: JobPositionsList.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Shared/Lists
+    Description: JobPositionsList component
+   ------------------------------------------------------------------------------ *@
+
+<div class="card mt-1">
+    <div class="card-header">
+        Job Positions
+    </div>
+    <table class="table table-sm table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th class="col-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (List != null && List.Count > 0)
+            {
+                foreach (var jobPosition in List)
+                {
+                    <tr>
+                        <td>@jobPosition.Title</td>
+                        <td class="col-2">
+                            <NavLink class="btn btn-outline-primary btn-sm"
+                                     href=@($"/jobpositions/{jobPosition.Id}")>
+                                View
+                            </NavLink>
+                        </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+
+    @code {
+        [Parameter]
+        public IReadOnlyList<JobPositionModel>? List { get; set; }
+    }

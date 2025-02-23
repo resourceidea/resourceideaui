@@ -10,6 +10,7 @@ using EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.Types;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EastSeat.ResourceIdea.DataStore.Services;
@@ -50,13 +51,36 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
     }
 
     /// <inheritdoc/>
-    public Task<ResourceIdeaResponse<PagedListResponse<JobPosition>>> GetPagedListAsync(
+    public async Task<ResourceIdeaResponse<PagedListResponse<JobPosition>>> GetPagedListAsync(
         int page,
         int size,
         Optional<BaseSpecification<JobPosition>> specification,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        IQueryable<JobPosition> query = _dbContext.JobPositions.AsQueryable();
+
+            if (specification.HasValue)
+            {
+                query = query.Where(specification.Value.Criteria);
+            }
+
+            int totalCount = await query.CountAsync(cancellationToken);
+            List<JobPosition> items = await query
+                                          .Skip((page - 1) * size)
+                                          .Take(size)
+                                          .OrderBy(d => d.Title)
+                                          .ToListAsync(cancellationToken);
+
+            PagedListResponse<JobPosition> pagedList = new()
+            {
+                Items = items,
+                TotalCount = totalCount,
+                CurrentPage = page,
+                PageSize = size
+            };
+
+            return ResourceIdeaResponse<PagedListResponse<JobPosition>>.Success(
+                Optional<PagedListResponse<JobPosition>>.Some(pagedList));
     }
 
     /// <inheritdoc/>

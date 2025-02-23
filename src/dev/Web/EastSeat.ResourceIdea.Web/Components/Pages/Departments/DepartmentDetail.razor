@@ -42,27 +42,5 @@ else
              class="btn btn-primary btn-sm mt-4">
         Add Job Position</NavLink>
     
-    <div class="card mt-1">
-        <div class="card-header">
-            Job Positions
-        </div>
-        <table class="table table-sm table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>Position</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Software Developer</td>
-                    <td>
-                        <NavLink 
-                            class="btn btn-outline-primary btn-sm" href="/jobpositions/1">View</NavLink>
-                        <NavLink class="btn btn-outline-primary btn-sm" href="/job-positions/1/edit">Edit</NavLink>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <JobPositionsList List="@JobPositions" />
 }
