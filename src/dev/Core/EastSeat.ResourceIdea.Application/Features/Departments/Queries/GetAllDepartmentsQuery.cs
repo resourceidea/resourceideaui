@@ -1,6 +1,7 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
+using EastSeat.ResourceIdea.Domain.Types;
 
 namespace EastSeat.ResourceIdea.Application.Features.Departments.Queries;
 
@@ -23,4 +24,20 @@ public sealed class GetAllDepartmentsQuery : BaseRequest<PagedListResponse<Depar
     /// Gets or sets the filter string to filter the departments.
     /// </summary>
     public string Filter { get; set; } = string.Empty;
+
+    /// <inheritdoc/>
+    override public ValidationResponse Validate()
+    {
+        var validationFailureMessages = new[]
+        {
+            TenantId.ValidateRequired(),
+            PageNumber < 1 ? "Page number must be greater than 0." : string.Empty,
+            PageSize < 1 ? "Page size must be greater than 0." : string.Empty,
+        }
+        .Where(message => !string.IsNullOrWhiteSpace(message));
+
+        return validationFailureMessages.Any()
+            ? new ValidationResponse(false, validationFailureMessages)
+            : new ValidationResponse(true, []);
+    }
 }

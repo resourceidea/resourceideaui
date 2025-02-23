@@ -8,6 +8,7 @@ using EastSeat.ResourceIdea.Application.Features.JobPositions.Commands;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.Types;
+using EastSeat.ResourceIdea.Web.RequestContext;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 
@@ -20,6 +21,7 @@ public partial class CreateJobPosition : ComponentBase
 
     [Inject] private IMediator Mediator { get; set; } = null!;    
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
     private string? errorMessage;
     private bool isErrorMessage;
     
@@ -28,6 +30,7 @@ public partial class CreateJobPosition : ComponentBase
     private async Task HandleValidSubmit()
     {
         Command.DepartmentId = DepartmentId.Create(Department);
+        Command.TenantId = ResourceIdeaRequestContext.Tenant;
         ValidationResponse commandValidationResponse = Command.Validate();
         if (!commandValidationResponse.IsValid)
         {

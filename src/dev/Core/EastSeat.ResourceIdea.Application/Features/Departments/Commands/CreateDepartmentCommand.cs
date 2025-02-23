@@ -2,9 +2,8 @@
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Extensions;
 using EastSeat.ResourceIdea.Domain.Types;
-
-using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Departments.Commands;
 
@@ -33,13 +32,11 @@ public sealed class CreateDepartmentCommand : BaseRequest<DepartmentModel>
     /// Validates the command.
     /// </summary>
     /// <returns><see cref="ValidationResponse"/></returns>
-    public ValidationResponse Validate()
+    public override ValidationResponse Validate()
     {
         var validationFailureMessages = new[]
         {
-            Title.ValidateRequired(nameof(Title)),
-            Description.ValidateRequired(nameof(Description)),
-            TenantId.ValidateRequired(),
+            Name.ValidateRequired(nameof(Name)),
         }
         .Where(message => !string.IsNullOrWhiteSpace(message));
 

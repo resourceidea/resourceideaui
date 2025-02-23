@@ -1,4 +1,3 @@
-using MediatR;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
@@ -37,7 +36,7 @@ public class UpdateDepartmentCommand : BaseRequest<DepartmentModel>
     /// Validates the command.
     /// </summary>
     /// <returns><see cref="ValidationResponse"/></returns>
-    public ValidationResponse Validate()
+    public override ValidationResponse Validate()
     {
         var validationFailureMessages = new[]
         {
