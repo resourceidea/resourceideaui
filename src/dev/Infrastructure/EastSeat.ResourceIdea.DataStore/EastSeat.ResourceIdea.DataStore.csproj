@@ -15,7 +15,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.2" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.2" />
         <PackageReference Include="Microsoft.Identity.Client" Version="4.67.2" />
         <PackageReference Include="System.Formats.Asn1" Version="9.0.2" />
