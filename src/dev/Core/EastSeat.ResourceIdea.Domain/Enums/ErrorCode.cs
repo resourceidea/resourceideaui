@@ -212,9 +212,39 @@ public enum ErrorCode
     /// Database insert operation failed on attempt to create department.
     /// </summary>
     DbInsertFailureOnCreateDepartment,
+
+    /// <summary>
+    /// Failure on querying for department.
+    /// </summary>
     QueryForDepartmentFailure,
+
+    /// <summary>
+    /// Empty entity returned from repository on update department.
+    /// </summary>
     EmptyEntityOnUpdateDepartment,
+
+    /// <summary>
+    /// Database update operation failed on attempt to update department.
+    /// </summary>
     DbUpdateFailureOnUpdateDepartment,
+
+    /// <summary>
+    /// Database insert operation failed on attempt to create job position.
+    /// </summary>
     DbInsertFailureOnCreateJobPosition,
+
+    /// <summary>
+    /// Invalid create job position command.
+    /// </summary>
     InvalidCreateJobPositionCommand,
+
+    /// <summary>
+    /// Database update operation failed on attempt to update job position.
+    /// </summary>
+    DbUpdateFailureOnUpdateJobPosition,
+
+    /// <summary>
+    /// Empty entity returned from repository on update job position.
+    /// </summary>
+    EmptyEntityOnUpdateJobPosition,
 }

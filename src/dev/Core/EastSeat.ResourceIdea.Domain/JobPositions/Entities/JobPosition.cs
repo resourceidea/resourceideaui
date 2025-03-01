@@ -5,6 +5,7 @@
 // ----------------------------------------------------------------------------------
 
 using EastSeat.ResourceIdea.Domain.Common.Entities;
+using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
@@ -38,6 +39,11 @@ public class JobPosition : BaseEntity
     public DepartmentId DepartmentId { get; set; }
 
     /// <summary>
+    /// Job position department.
+    /// </summary>
+    public Department? Department { get; set; }
+
+    /// <summary>
     /// Maps the entity to a model.
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
@@ -47,19 +53,26 @@ public class JobPosition : BaseEntity
         return typeof(TModel) switch
         {
             var t when t == typeof(JobPositionModel) => (TModel)(object)MapToJobPositionModel(),
+            var t when t == typeof(TenantJobPositionModel) => (TModel)(object)MapToTenantJobPositionModel(),
             _ => throw new InvalidOperationException($"Mapping for {typeof(TModel).Name} is not configured."),
         };
     }
 
     /// <summary>
-    /// Maps this entity to a <see cref="ResourceIdeaResponse{TModel} />.
+    /// Maps this entity to a <see cref="ResourceIdeaResponse{TModel}" />.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TModel"></typeparam>
     /// <returns><see cref="ResourceIdeaResponse{TModel}"/> instance.</returns>
     public override ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()
     {
-        throw new NotImplementedException();
+        return typeof(TModel) switch
+        {
+            var t when t == typeof(JobPositionModel) => ResourceIdeaResponse<TModel>.Success(ToModel<TModel>()),
+            var t when t == typeof(TenantJobPositionModel) => ResourceIdeaResponse<TModel>.Success(ToModel<TModel>()),
+            // Add additional model type cases here as needed
+            _ => throw new InvalidOperationException($"Cannot map {nameof(JobPosition)} to {typeof(TModel).Name}")
+        };
     }
 
     /// <summary>
@@ -72,6 +85,19 @@ public class JobPosition : BaseEntity
             Id = Id,
             Title = Title ?? string.Empty,
             Description = Description ?? string.Empty,
+            DepartmentId = DepartmentId
+        };
+    
+    /// <summary>
+    /// Maps this entity to a <see cref="TenantJobPositionModel"/>.
+    /// </summary>
+    /// <returns><see cref="TenantJobPositionModel"/> instance.</returns>
+    private TenantJobPositionModel MapToTenantJobPositionModel() =>
+        new()
+        {
+            Id = Id,
+            Title = Title ?? string.Empty,
+            DepartmentName = Department?.Name ?? string.Empty,
             DepartmentId = DepartmentId
         };
 }

@@ -68,7 +68,7 @@ public class BaseHandler
         var items = response.Content.Value.Items;
         PagedListResponse<TModel> pagedListResponse = new()
         {
-            Items = items.Select(item => item.ToModel<TModel>()).ToList(),
+            Items = [.. items.Select(item => item.ToModel<TModel>())],
             TotalCount = response.Content.Value.TotalCount,
             CurrentPage = response.Content.Value.CurrentPage,
             PageSize = response.Content.Value.PageSize

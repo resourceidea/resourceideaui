@@ -1,10 +1,58 @@
 @page "/job-positions"
 @page "/job-positions/index"
 
-@layout AdminLayout
+@using EastSeat.ResourceIdea.Application.Features.JobPositions.Queries
+@using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects
+@using EastSeat.ResourceIdea.Domain.JobPositions.Models
+@using MediatR
+@using EastSeat.ResourceIdea.Web.RequestContext
 
-<h3>Job Positions</h3>
+@layout AdminLayout
+@inject IMediator Mediator
+@inject IResourceIdeaRequestContext ResourceIdeaRequestContext
+
+<PageHeader Text="Job Positions" />
+
+@if (IsLoadingModelData)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else
+{
+    <TenantJobPositionsList List="@JobPositions" />
+}
 
 @code {
+    private IReadOnlyList<TenantJobPositionModel> JobPositions { get; set; } = [];
+    private bool IsLoadingModelData;
     
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoadingModelData = true;
+
+        var query = new GetAllJobPositionsQuery
+        {
+            TenantId = ResourceIdeaRequestContext.Tenant,
+            PageNumber = 1,
+            PageSize = 100 // Adjust based on your needs
+        };
+        
+        var response = await Mediator.Send(query);
+        
+        if (response.IsSuccess && response.Content.HasValue)
+        {
+            JobPositions = response.Content.Value.Items;
+        }
+        else
+        {
+            // Handle error (could log or display a message)
+            JobPositions = [];
+        }
+
+        IsLoadingModelData = false;
+    }
 }

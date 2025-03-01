@@ -71,4 +71,17 @@ public readonly record struct JobPositionId
     /// </summary>
     /// <returns>True if JobPositionId is empty, otherwise False.</returns>
     public bool IsEmpty() => this == JobPositionId.Empty;
+    
+    /// <summary>
+    /// Validates that the job position ID is not empty.
+    /// </summary>
+    /// <returns>
+    /// Empty string if the ID is valid, otherwise a validation error message.
+    /// </returns>
+    public string ValidateRequired()
+    {
+        return IsEmpty() 
+            ? "Job position ID is required."
+            : string.Empty;
+    }
 }

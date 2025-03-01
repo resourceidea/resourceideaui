@@ -43,11 +43,21 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
     }
 
     /// <inheritdoc/>
-    public Task<ResourceIdeaResponse<JobPosition>> GetByIdAsync(
+    public async Task<ResourceIdeaResponse<JobPosition>> GetByIdAsync(
         BaseSpecification<JobPosition> specification,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        JobPosition? jobPosition = await _dbContext.JobPositions
+                                                   .AsQueryable()
+                                                   .Where(specification.Criteria)
+                                                   .FirstOrDefaultAsync(cancellationToken);
+
+        if (jobPosition == null)
+        {
+            return ResourceIdeaResponse<JobPosition>.NotFound();
+        }
+
+        return ResourceIdeaResponse<JobPosition>.Success(Optional<JobPosition>.Some(jobPosition));
     }
 
     /// <inheritdoc/>
@@ -59,28 +69,29 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
     {
         IQueryable<JobPosition> query = _dbContext.JobPositions.AsQueryable();
 
-            if (specification.HasValue)
-            {
-                query = query.Where(specification.Value.Criteria);
-            }
+        if (specification.HasValue)
+        {
+            query = query.Where(specification.Value.Criteria);
+        }
 
-            int totalCount = await query.CountAsync(cancellationToken);
-            List<JobPosition> items = await query
-                                          .Skip((page - 1) * size)
-                                          .Take(size)
-                                          .OrderBy(d => d.Title)
-                                          .ToListAsync(cancellationToken);
+        int totalCount = await query.CountAsync(cancellationToken);
+        List<JobPosition> items = await query
+                                      .Skip((page - 1) * size)
+                                      .Take(size)
+                                      .Include(d => d.Department)
+                                      .OrderBy(d => d.Title)
+                                      .ToListAsync(cancellationToken);
 
-            PagedListResponse<JobPosition> pagedList = new()
-            {
-                Items = items,
-                TotalCount = totalCount,
-                CurrentPage = page,
-                PageSize = size
-            };
+        PagedListResponse<JobPosition> pagedList = new()
+        {
+            Items = items,
+            TotalCount = totalCount,
+            CurrentPage = page,
+            PageSize = size
+        };
 
-            return ResourceIdeaResponse<PagedListResponse<JobPosition>>.Success(
-                Optional<PagedListResponse<JobPosition>>.Some(pagedList));
+        return ResourceIdeaResponse<PagedListResponse<JobPosition>>.Success(
+            Optional<PagedListResponse<JobPosition>>.Some(pagedList));
     }
 
     /// <inheritdoc/>
