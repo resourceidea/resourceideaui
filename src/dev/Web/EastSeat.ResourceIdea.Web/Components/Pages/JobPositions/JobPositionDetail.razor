@@ -28,7 +28,8 @@ else
         <DataAnnotationsValidator />
         <ValidationSummary />        
 
-        <NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2" href=@($"/departments/{Model.DepartmentId}")>Back</NavLink>
+        <NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2"
+                 href=@($"/departments/{Model.DepartmentId}")>View Department</NavLink>
         <button type="submit" class="btn btn-danger btn-sm">Save changes</button>
 
         <input type="hidden" @bind="Model.Id" />

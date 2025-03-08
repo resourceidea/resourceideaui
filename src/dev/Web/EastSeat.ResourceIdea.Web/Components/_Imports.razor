@@ -1,4 +1,10 @@
-﻿@using System.Net.Http
+﻿@* ----------------------------------------------------------------------------------
+    File: _Imports.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components
+    Description: Shared Imports for Razor Components
+   ---------------------------------------------------------------------------------- *@
+
+@using System.Net.Http
 @using System.Net.Http.Json
 
 @using Microsoft.AspNetCore.Components.Forms
@@ -14,6 +20,7 @@
 @using EastSeat.ResourceIdea.Application.Features.Departments.Commands
 @using EastSeat.ResourceIdea.Application.Features.Departments.Queries
 @using EastSeat.ResourceIdea.Application.Features.JobPositions.Commands
+@using EastSeat.ResourceIdea.Application.Features.JobPositions.Queries
 
 @using EastSeat.ResourceIdea.Domain.Departments.Models
 @using EastSeat.ResourceIdea.Domain.Departments.ValueObjects
@@ -32,3 +39,4 @@
 @using EastSeat.ResourceIdea.Web.Components.Shared.Lists
 @using EastSeat.ResourceIdea.Web.Components.Shared.Menus
 @using EastSeat.ResourceIdea.Web.Components.Shared.PageTitles
+@using EastSeat.ResourceIdea.Web.RequestContext

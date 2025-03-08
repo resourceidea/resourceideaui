@@ -1,0 +1,17 @@
+﻿/* --------------------------------------------------------------------------
+    File: Index.razor.css
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Pages/JobPositions/Index.razor.css
+    Description: Styles for JobPositions index page
+   --------------------------------------------------------------------------
+*/
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.content-container {
+    flex: 1;
+    overflow-y: auto;
+}

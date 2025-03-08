@@ -1,56 +1,32 @@
+@* ---------------------------------------------------------------------------------
+    File: Index.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Pages/JobPositions/Index.razor
+    Description: This file contains the Razor component for displaying a list of job positions.
+   ---------------------------------------------------------------------------------*@
+
 @page "/job-positions"
 @page "/job-positions/index"
-
-@using EastSeat.ResourceIdea.Application.Features.JobPositions.Queries
-@using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects
-@using EastSeat.ResourceIdea.Domain.JobPositions.Models
-@using MediatR
-@using EastSeat.ResourceIdea.Web.RequestContext
 
 @layout AdminLayout
 @inject IMediator Mediator
 @inject IResourceIdeaRequestContext ResourceIdeaRequestContext
 
-<PageHeader Text="Job Positions" />
+<div class="page-container">
+    <PageHeader Text="Job Positions" />
 
-@if (IsLoadingModelData)
-{
-    <div class="d-flex justify-content-center">
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
-}
-else
-{
-    <TenantJobPositionsList PagedTenantsList="@JobPositions" />
-}
-
-@code {
-    private PagedListResponse<TenantJobPositionModel> JobPositions { get; set; } = new();
-    private bool IsLoadingModelData;
-
-    protected override async Task OnInitializedAsync()
-    {
-        IsLoadingModelData = true;
-
-        var query = new GetAllJobPositionsQuery
+    <div class="content-container">
+        @if (IsLoadingModelData)
         {
-            TenantId = ResourceIdeaRequestContext.Tenant,
-            PageNumber = 1,
-            PageSize = 10
-        };
-
-        var response = await Mediator.Send(query);
-        if (response.IsSuccess && response.Content.HasValue)
-        {
-            JobPositions = response.Content.Value;
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
         }
         else
         {
-            // TODO: Display message for failure to get job positions
+            <TenantJobPositionsList PagedJobPositionsList="@JobPositions"
+                                    OnPageChange="HandlePageChangeAsync" />
         }
-
-        IsLoadingModelData = false;
-    }
-}
+    </div>
+</div>

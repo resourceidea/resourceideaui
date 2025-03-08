@@ -1,4 +1,10 @@
-﻿@page "/departments/{Id:guid}"
+﻿@* -----------------------------------------------------------------------------------
+    File: DepartmentDetail.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Pages/Departments/DepartmentDetail.razor
+    Description: Department Detail Page
+   ------------------------------------------------------------------------------------ *@
+
+@page "/departments/{Id:guid}"
 
 @layout AdminLayout
 
@@ -18,11 +24,12 @@ else
 {
     <DismissibleAlert ErrorMessage="@errorMessage" IsErrorMessage="@isErrorMessage" />
 
-    <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit">
+    <EditForm Model="@Model" OnValidSubmit="HandleValidSubmitAsync">
         <DataAnnotationsValidator />
-        <ValidationSummary />        
+        <ValidationSummary />
 
-        <NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2" href="/departments">Back</NavLink>
+        <NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2"
+                 href="/departments">Departments List</NavLink>
         <button type="submit" class="btn btn-danger btn-sm">Save changes</button>
 
         <input type="hidden" @bind="Model.DepartmentId" />
@@ -41,6 +48,8 @@ else
     <NavLink href="@($"/jobpositions/new?department={Model.DepartmentId}")"
              class="btn btn-primary btn-sm mt-4">
         Add Job Position</NavLink>
-    
-    <JobPositionsList List="@JobPositions" />
+
+    <JobPositionsList
+        PagedJobPositionsList="@JobPositions"
+        OnPageChange="HandlePageChangeAsync"/>
 }
