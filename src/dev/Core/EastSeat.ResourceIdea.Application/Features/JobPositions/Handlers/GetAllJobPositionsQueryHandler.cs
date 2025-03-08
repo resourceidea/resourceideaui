@@ -15,14 +15,22 @@ using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.Types;
 using MediatR;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
+using EastSeat.ResourceIdea.Application.Mappers;
 
 namespace EastSeat.ResourceIdea.Application.Features.JobPositions.Handlers;
 
 /// <summary>
 /// Handler for retrieving all job positions with department information.
 /// </summary>
-public sealed class GetAllJobPositionsQueryHandler (IJobPositionService jobPositionService): BaseHandler, 
-    IRequestHandler<GetAllJobPositionsQuery, ResourceIdeaResponse<PagedListResponse<TenantJobPositionModel>>>
+/// <remarks>
+/// Initializes a new instance of the <see cref="GetAllJobPositionsQueryHandler"/> class.
+/// </remarks>
+/// <param name="jobPositionService">The job position service.</param>
+/// <param name="departmentService">The department service.</param>
+public sealed class GetAllJobPositionsQueryHandler(
+    IJobPositionService jobPositionService)
+    : BaseHandler,
+      IRequestHandler<GetAllJobPositionsQuery, ResourceIdeaResponse<PagedListResponse<TenantJobPositionModel>>>
 {
     private readonly IJobPositionService _jobPositionService = jobPositionService;
 
@@ -36,13 +44,18 @@ public sealed class GetAllJobPositionsQueryHandler (IJobPositionService jobPosit
         GetAllJobPositionsQuery query,
         CancellationToken cancellationToken)
     {
-        var specification = new TenantIdSpecification<JobPosition>(query.TenantId);
-        var jobPositionsQueryResponse = await _jobPositionService.GetPagedListAsync(
+        var tenantIdSpec = new TenantIdSpecification<JobPosition>(query.TenantId);
+        var jobPositionsResponse = await _jobPositionService.GetPagedListAsync(
             query.PageNumber,
             query.PageSize,
-            specification,
+            tenantIdSpec,
             cancellationToken);
-        
-        return GetHandlerResponse<JobPosition, TenantJobPositionModel>(jobPositionsQueryResponse);
+
+        if (!jobPositionsResponse.IsSuccess || !jobPositionsResponse.Content.HasValue)
+        {
+            return ResourceIdeaResponse<PagedListResponse<TenantJobPositionModel>>.Failure(jobPositionsResponse.Error);
+        }
+
+        return jobPositionsResponse.ToResourceIdeaResponse<TenantJobPositionModel>();
     }
 }

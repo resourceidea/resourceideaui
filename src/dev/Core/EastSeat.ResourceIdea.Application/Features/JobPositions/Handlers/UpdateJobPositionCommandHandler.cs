@@ -4,6 +4,7 @@
 // Description: Handler for UpdateJobPositionCommand
 // ------------------------------------------------------------------------------
 
+using System.Runtime.CompilerServices;
 using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Commands;
@@ -12,6 +13,8 @@ using EastSeat.ResourceIdea.Application.Features.JobPositions.Specifications;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
+using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 using MediatR;
 
@@ -31,35 +34,25 @@ public sealed class UpdateJobPositionCommandHandler(IJobPositionService jobPosit
         UpdateJobPositionCommand command,
         CancellationToken cancellationToken)
     {
-        // First, verify the job position exists
-        var specification = new JobPositionByIdSpecification(command.Id, command.TenantId);
-        var jobPositionQueryResponse = await _jobPositionService.GetByIdAsync(specification, cancellationToken);
-        if (jobPositionQueryResponse.IsFailure)
+        var validationResponse = command.Validate();
+        if (validationResponse.IsValid is false)
         {
-            return ResourceIdeaResponse<JobPositionModel>.Failure(jobPositionQueryResponse.Error);
+            // TODO: Log the validation errors.
+            return ResourceIdeaResponse<JobPositionModel>.Failure(ErrorCode.BadRequest);
         }
 
-        if (!jobPositionQueryResponse.Content.HasValue)
-        {
-            return ResourceIdeaResponse<JobPositionModel>.NotFound();
-        }
-        
-        var existingJobPosition = jobPositionQueryResponse.Content.Value;
-        existingJobPosition.Title = command.Title;
-        existingJobPosition.Description = command.Description;
-        existingJobPosition.LastModified = DateTimeOffset.UtcNow;
-        
-        var response = await _jobPositionService.UpdateAsync(existingJobPosition, cancellationToken);
+        JobPosition jobPositionUpdate = command.ToEntity();
+        var response = await _jobPositionService.UpdateAsync(jobPositionUpdate, cancellationToken);
         if (response.IsFailure)
         {
             return ResourceIdeaResponse<JobPositionModel>.Failure(response.Error);
         }
-               
+
         if (response.Content.HasValue is false)
         {
             return ResourceIdeaResponse<JobPositionModel>.Failure(ErrorCode.EmptyEntityOnUpdateJobPosition);
         }
-        
+
         return response.Content.Value.ToResourceIdeaResponse<JobPosition, JobPositionModel>();
     }
 }

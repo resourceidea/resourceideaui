@@ -15,6 +15,10 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EastSeat.ResourceIdea.DataStore.Services;
 
+/// <summary>
+/// Service to perform CRUD operations on JobPosition entities.
+/// </summary>
+/// <param name="dbContext"></param>
 public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobPositionService
 {
     private readonly ResourceIdeaDBContext _dbContext = dbContext;
@@ -90,16 +94,37 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
             PageSize = size
         };
 
-        return ResourceIdeaResponse<PagedListResponse<JobPosition>>.Success(
-            Optional<PagedListResponse<JobPosition>>.Some(pagedList));
+        return ResourceIdeaResponse<PagedListResponse<JobPosition>>
+                .Success(Optional<PagedListResponse<JobPosition>>.Some(pagedList));
     }
 
     /// <inheritdoc/>
-    public Task<ResourceIdeaResponse<JobPosition>> UpdateAsync(
+    public async Task<ResourceIdeaResponse<JobPosition>> UpdateAsync(
         JobPosition entity,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var jobPosition = await _dbContext.JobPositions
+            .FirstOrDefaultAsync(j => j.Id == entity.Id
+                && j.TenantId == entity.TenantId
+                && j.DepartmentId == entity.DepartmentId, cancellationToken);
+
+        if (jobPosition == null)
+        {
+            return ResourceIdeaResponse<JobPosition>.NotFound();
+        }
+
+        jobPosition.Title = entity.Title;
+        jobPosition.Description = entity.Description;
+                
+        _dbContext.JobPositions.Update(jobPosition);
+        int changes = await _dbContext.SaveChangesAsync(cancellationToken);
+        if (changes <= 0)
+        {
+            // TODO: Log failure to update department.
+            return ResourceIdeaResponse<JobPosition>.Failure(ErrorCode.DbUpdateFailureOnUpdateDepartment);
+        }
+
+        return ResourceIdeaResponse<JobPosition>.Success(Optional<JobPosition>.Some(jobPosition));
     }
 
     private static bool JobPositionCreatedSuccessfully(

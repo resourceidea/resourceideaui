@@ -4,11 +4,9 @@
     Description: JobPositionsList component
    ------------------------------------------------------------------------------ *@
 
-@using EastSeat.ResourceIdea.Domain.JobPositions.Models
-
 <div class="card mt-1">
     <div class="card-header">
-        Job Positions
+        Job Positions List
     </div>
     <table class="table table-sm table-striped table-hover">
         <thead>
@@ -19,27 +17,64 @@
             </tr>
         </thead>
         <tbody>
-            @if (List != null && List.Count > 0)
+            @if (PagedTenantsList != null && PagedTenantsList.Items.Count > 0)
             {
-                foreach (var jobPosition in List)
+                foreach (var jobPosition in PagedTenantsList.Items)
                 {
                     <tr>
                         <td>@jobPosition.Title</td>
                         <td>@jobPosition.DepartmentName</td>
                         <td class="col-2">
-                            <NavLink class="btn btn-outline-primary btn-sm"
-                                     href=@($"/jobpositions/{jobPosition.Id}")>
+                            <NavLink class="btn btn-outline-primary btn-sm" href=@($"/jobpositions/{jobPosition.Id}")>
                                 View
                             </NavLink>
                         </td>
                     </tr>
                 }
             }
-            </tbody>
-        </table>
-    </div>
+        </tbody>
+    </table>
 
-    @code {
-        [Parameter]
-        public IReadOnlyList<TenantJobPositionModel>? List { get; set; }
+    @if (PagedTenantsList != null && PagedTenantsList.TotalCount > 0)
+    {
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <div>
+                <span>Page @(PagedTenantsList.CurrentPage + 1) of @PagedTenantsList.Pages</span>
+            </div>
+            <div>
+                <button class="btn btn-outline-secondary btn-sm me-2" @onclick="GoToPreviousPage"
+                    disabled="@(PagedTenantsList.CurrentPage <= 0)">
+                    Previous
+                </button>
+                <button class="btn btn-outline-secondary btn-sm" @onclick="GoToNextPage"
+                    disabled="@(!PagedTenantsList.HasNextPage)">
+                    Next
+                </button>
+            </div>
+        </div>
     }
+</div>
+
+@code {
+    [Parameter]
+    public PagedListResponse<TenantJobPositionModel>? PagedTenantsList { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnPageChange { get; set; }
+
+    private async Task GoToPreviousPage()
+    {
+        if (PagedTenantsList != null && PagedTenantsList.CurrentPage > 0)
+        {
+            await OnPageChange.InvokeAsync(PagedTenantsList.CurrentPage - 1);
+        }
+    }
+
+    private async Task GoToNextPage()
+    {
+        if (PagedTenantsList != null && PagedTenantsList.HasNextPage)
+        {
+            await OnPageChange.InvokeAsync(PagedTenantsList.CurrentPage + 1);
+        }
+    }
+}

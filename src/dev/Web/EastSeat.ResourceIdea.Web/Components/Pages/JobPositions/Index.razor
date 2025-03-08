@@ -23,13 +23,13 @@
 }
 else
 {
-    <TenantJobPositionsList List="@JobPositions" />
+    <TenantJobPositionsList PagedTenantsList="@JobPositions" />
 }
 
 @code {
-    private IReadOnlyList<TenantJobPositionModel> JobPositions { get; set; } = [];
+    private PagedListResponse<TenantJobPositionModel> JobPositions { get; set; } = new();
     private bool IsLoadingModelData;
-    
+
     protected override async Task OnInitializedAsync()
     {
         IsLoadingModelData = true;
@@ -38,19 +38,17 @@ else
         {
             TenantId = ResourceIdeaRequestContext.Tenant,
             PageNumber = 1,
-            PageSize = 100 // Adjust based on your needs
+            PageSize = 10
         };
-        
+
         var response = await Mediator.Send(query);
-        
         if (response.IsSuccess && response.Content.HasValue)
         {
-            JobPositions = response.Content.Value.Items;
+            JobPositions = response.Content.Value;
         }
         else
         {
-            // Handle error (could log or display a message)
-            JobPositions = [];
+            // TODO: Display message for failure to get job positions
         }
 
         IsLoadingModelData = false;

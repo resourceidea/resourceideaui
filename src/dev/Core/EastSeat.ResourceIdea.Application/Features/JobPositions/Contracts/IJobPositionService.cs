@@ -5,7 +5,11 @@
 // ----------------------------------------------------------------------------
 
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
+using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
+using EastSeat.ResourceIdea.Domain.JobPositions.Models;
+using EastSeat.ResourceIdea.Domain.Types;
 
 namespace EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
 
