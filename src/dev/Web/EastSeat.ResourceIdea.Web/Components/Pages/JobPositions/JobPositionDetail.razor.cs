@@ -60,7 +60,7 @@ public partial class JobPositionDetail : ComponentBase
         }
         catch (Exception ex)
         {
-            message = $"Error loading job position: {ex.Message}";
+            message = $"Unexpected error: {ex.Message}";
             isErrorMessage = true;
         }
         finally
@@ -86,9 +86,9 @@ public partial class JobPositionDetail : ComponentBase
             var validationResponse = command.Validate();
             if (!validationResponse.IsValid)
             {
-                message = string.Join(
-                    Environment.NewLine,
-                    validationResponse.ValidationFailureMessages.FirstOrDefault());
+                message = validationResponse.ValidationFailureMessages.Any()
+                    ? string.Join(Environment.NewLine, validationResponse.ValidationFailureMessages.FirstOrDefault())
+                    : "Validation failure.";
                 isErrorMessage = true;
                 return;
             }
