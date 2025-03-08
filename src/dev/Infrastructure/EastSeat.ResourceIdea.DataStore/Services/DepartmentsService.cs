@@ -20,23 +20,15 @@ public sealed class DepartmentsService(ResourceIdeaDBContext dbContext) : IDepar
     /// <inheritdoc/>
     public async Task<ResourceIdeaResponse<Department>> AddAsync(Department department, CancellationToken cancellationToken)
     {
-        try
+        EntityEntry<Department> result = await _dbContext.Departments.AddAsync(department, cancellationToken);
+        int changes = await _dbContext.SaveChangesAsync(cancellationToken);
+        if (!DepartmentCreatedSuccessfully(result, changes))
         {
-            EntityEntry<Department> result = await _dbContext.Departments.AddAsync(department, cancellationToken);
-            int changes = await _dbContext.SaveChangesAsync(cancellationToken);
-            if (!DepartmentCreatedSuccessfully(result, changes))
-            {
-                // TODO: Log failure to create department.
-                return ResourceIdeaResponse<Department>.Failure(ErrorCode.DbInsertFailureOnCreateDepartment);
-            }
-
-            return ResourceIdeaResponse<Department>.Success(Optional<Department>.Some(result.Entity));
-        }
-        catch (Exception)
-        {
-            // TODO: Log exception on failure to create department.
+            // TODO: Log failure to create department.
             return ResourceIdeaResponse<Department>.Failure(ErrorCode.DbInsertFailureOnCreateDepartment);
         }
+
+        return ResourceIdeaResponse<Department>.Success(Optional<Department>.Some(result.Entity));
     }
 
     /// <inheritdoc/>
@@ -114,7 +106,7 @@ public sealed class DepartmentsService(ResourceIdeaDBContext dbContext) : IDepar
             {
                 return ResourceIdeaResponse<Department>.NotFound();
             }
-            
+
             department.Name = entity.Name;
             _dbContext.Departments.Update(department);
             int changes = await _dbContext.SaveChangesAsync(cancellationToken);

@@ -1,6 +1,11 @@
+// ----------------------------------------------------------------------------------
+// File: CreateClientCommand.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Application\Features\Clients\Commands\CreateClientCommand.cs
+// Description: Command to create a client.
+// ----------------------------------------------------------------------------------
+
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 
 using MediatR;

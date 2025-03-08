@@ -5,6 +5,9 @@ using EastSeat.ResourceIdea.Domain.Types;
 
 namespace EastSeat.ResourceIdea.Domain.Departments.Entities;
 
+/// <summary>
+/// Department entity.
+/// </summary>
 public class Department : BaseEntity
 {
     /// <summary>
@@ -19,12 +22,16 @@ public class Department : BaseEntity
 
     public override TModel ToModel<TModel>()
     {
-        return (TModel)(object)new DepartmentModel
+        if (typeof(TModel) == typeof(DepartmentModel))
         {
-            DepartmentId = Id,
-            Name = Name,
-            TenantId = TenantId
-        };
+            return (TModel)(object)new DepartmentModel
+            {
+                DepartmentId = Id,
+                Name = Name
+            };
+        }
+
+        throw new InvalidOperationException($"Mapping for {typeof(TModel).Name} is not configured.");
     }
 
     public override ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()

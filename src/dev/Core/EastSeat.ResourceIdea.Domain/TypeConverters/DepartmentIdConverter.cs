@@ -10,6 +10,7 @@ namespace EastSeat.ResourceIdea.Domain.TypeConverters;
 /// </summary>
 public class DepartmentIdConverter : TypeConverter
 {
+    /// <inheritdoc />
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
     {
         if (sourceType == typeof(string))
@@ -20,6 +21,7 @@ public class DepartmentIdConverter : TypeConverter
         return base.CanConvertFrom(context, sourceType);
     }
 
+    /// <inheritdoc />
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
         if (value is string stringValue && Guid.TryParse(stringValue, out Guid guidValue))
@@ -30,6 +32,7 @@ public class DepartmentIdConverter : TypeConverter
         return base.ConvertFrom(context, culture, value);
     }
 
+    /// <inheritdoc />
     public override bool CanConvertTo(ITypeDescriptorContext? context, [NotNullWhen(true)] Type? destinationType)
     {
         if (destinationType == typeof(string))
@@ -40,6 +43,7 @@ public class DepartmentIdConverter : TypeConverter
         return base.CanConvertTo(context, destinationType);
     }
 
+    /// <inheritdoc />
     public override object? ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
     {
         if (destinationType == typeof(string) && value is DepartmentId departmentId)

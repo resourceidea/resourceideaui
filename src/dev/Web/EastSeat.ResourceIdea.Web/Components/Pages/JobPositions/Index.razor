@@ -1,10 +1,32 @@
+@* ---------------------------------------------------------------------------------
+    File: Index.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Pages/JobPositions/Index.razor
+    Description: This file contains the Razor component for displaying a list of job positions.
+   ---------------------------------------------------------------------------------*@
+
 @page "/job-positions"
 @page "/job-positions/index"
 
 @layout AdminLayout
+@inject IMediator Mediator
+@inject IResourceIdeaRequestContext ResourceIdeaRequestContext
 
-<h3>Job Positions</h3>
+<div class="page-container">
+    <PageHeader Text="Job Positions" />
 
-@code {
-    
-}
+    <div class="content-container">
+        @if (IsLoadingModelData)
+        {
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <TenantJobPositionsList PagedJobPositionsList="@JobPositions"
+                                    OnPageChange="HandlePageChangeAsync" />
+        }
+    </div>
+</div>

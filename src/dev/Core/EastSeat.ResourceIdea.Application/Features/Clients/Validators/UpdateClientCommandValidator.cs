@@ -1,6 +1,11 @@
+// ----------------------------------------------------------------------------------
+// File: UpdateClientCommandValidator.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Application\Features\Clients\Validators\UpdateClientCommandValidator.cs
+// Description: Validator for UpdateClientCommand.
+// ----------------------------------------------------------------------------------
+
 using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using FluentValidation;
 
 namespace EastSeat.ResourceIdea.Application.Features.Clients.Validators;

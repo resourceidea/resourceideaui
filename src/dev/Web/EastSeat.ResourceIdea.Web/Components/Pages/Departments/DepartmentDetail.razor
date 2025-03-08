@@ -1,16 +1,20 @@
-﻿@page "/departments/{Id:guid}"
+﻿@* -----------------------------------------------------------------------------------
+    File: DepartmentDetail.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Pages/Departments/DepartmentDetail.razor
+    Description: Department Detail Page
+   ------------------------------------------------------------------------------------ *@
+
+@page "/departments/{Id:guid}"
 
 @layout AdminLayout
 
 <ResourceIdeaPageTitle Title="Department details" />
 
-<div class="card text-bg-light mt-1">
+<div class="card text-bg-light mt-1 mb-2">
     <div class="card-body">
         <h5 class="card-title">Department details</h5>
     </div>
 </div>
-
-<NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2" href="/departments">Back</NavLink>
 
 @if (IsLoadingModelData)
 {
@@ -18,29 +22,34 @@
 }
 else
 {
-    if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <div class="alert @(isErrorMessage ? "alert-danger" : "alert-success") alert-dismissible fade show mt-3" role="alert">
-            @errorMessage
-            <button type="button" class="btn-close" @onclick="@(() => errorMessage = null)" aria-label="Close"></button>
-        </div>
-    }
-    <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit">
+    <DismissibleAlert ErrorMessage="@errorMessage" IsErrorMessage="@isErrorMessage" />
+
+    <EditForm Model="@Model" OnValidSubmit="HandleValidSubmitAsync">
         <DataAnnotationsValidator />
         <ValidationSummary />
+
+        <NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2"
+                 href="/departments">Departments List</NavLink>
+        <button type="submit" class="btn btn-danger btn-sm">Save changes</button>
 
         <input type="hidden" @bind="Model.DepartmentId" />
 
         <div class="form-group">
-        <div class="row mb-1">
-            <div class="col-md-6">
-                <label for="departmentName" class="form-label">Department Name</label>
-                <InputText id="departmentName" class="form-control" @bind-Value="Model.Name" />
-                <ValidationMessage For="@(() => Model.Name)" />
+            <div class="row mb-1">
+                <div class="col-md-6">
+                    <label for="departmentName" class="form-label">Name</label>
+                    <InputText id="departmentName" class="form-control" @bind-Value="Model.Name" />
+                    <ValidationMessage For="@(() => Model.Name)" />
+                </div>
             </div>
         </div>
-    </div>
-
-        <button type="submit" class="btn btn-danger btn-sm">Save changes</button>
     </EditForm>
+    
+    <NavLink href="@($"/jobpositions/new?department={Model.DepartmentId}")"
+             class="btn btn-primary btn-sm mt-4">
+        Add Job Position</NavLink>
+
+    <JobPositionsList
+        PagedJobPositionsList="@JobPositions"
+        OnPageChange="HandlePageChangeAsync"/>
 }

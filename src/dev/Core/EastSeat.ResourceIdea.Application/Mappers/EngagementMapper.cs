@@ -1,13 +1,16 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
+﻿// ----------------------------------------------------------------------------------
+// File: EngagementMapper.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Application\Mappers\EngagementMapper.cs
+// Description: Provides extension methods for mapping Engagement entities to models.
+// ----------------------------------------------------------------------------------
+
+using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Commands;
 using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.Models;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
-using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
-
-using System.Net.NetworkInformation;
 
 namespace EastSeat.ResourceIdea.Application.Mappers;
 

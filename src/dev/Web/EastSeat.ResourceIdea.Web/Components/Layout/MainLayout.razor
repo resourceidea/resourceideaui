@@ -1,4 +1,10 @@
-﻿@inherits LayoutComponentBase
+﻿@* ----------------------------------------------------------------------------------
+    File: MainLayout.razor
+    Path: src/Web/EastSeat.ResourceIdea.Web/Components/Layout/MainLayout.razor
+    Description: Main layout for the app.
+   ---------------------------------------------------------------------------------- *@
+
+@inherits LayoutComponentBase
 
 <nav id="top-navbar" class="navbar navbar-expand-lg fixed-top">
     <div class="container-fluid">
@@ -43,14 +49,10 @@
     </div>
 </div>
 
-<nav class="navbar fixed-bottom bg-tertiary py0" style="background-color: rgb(245, 244, 244); max-height: 50px;">
+<nav class="navbar bg-tertiary py0" style="background-color: rgb(245, 244, 244); max-height: 50px;">
     <div class="container-fluid">
         <span class="navbar-text ms-auto">
-            <span class="fs-6">&copy; @DateTime.Now.Year ResourceIdea</span>
+            <span class="fs-6">&copy; @DateTime.Now.Year EastSeat</span>
         </span>
 </div>
 </nav>
-
-@code {
-
-}

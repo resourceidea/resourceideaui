@@ -1,4 +1,10 @@
-﻿using System.ComponentModel;
+﻿// ----------------------------------------------------------------------------------
+// File: DepartmentId.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Domain\Departments\ValueObjects\DepartmentId.cs
+// Description: Department ID type.
+// ----------------------------------------------------------------------------------
+
+using System.ComponentModel;
 using EastSeat.ResourceIdea.Domain.Exceptions;
 using EastSeat.ResourceIdea.Domain.TypeConverters;
 
@@ -50,6 +56,20 @@ public readonly record struct DepartmentId
         }
 
         return Create(departmentId);
+    }
+
+    /// <summary>
+    /// Empty department ID.
+    /// </summary>
+    public static DepartmentId Empty => new(Guid.Empty);
+
+    /// <summary>
+    /// Validate that the Department ID is not empty.
+    /// </summary>
+    /// <returns>Message on validation failure, otherwise empty string.</returns>
+    public string ValidateRequired()
+    {
+        return Value == Guid.Empty ? "DepartmentId is required." : string.Empty;
     }
 
     /// <inheritdoc />

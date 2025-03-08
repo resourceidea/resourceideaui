@@ -1,0 +1,57 @@
+@* ------------------------------------------------------------------------------
+    File: JobPositionDetail.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Pages/JobPositions/JobPositionDetail.razor
+    Description: Job Position Detail Page
+   ------------------------------------------------------------------------------ *@
+
+@page "/jobpositions/{Id:guid}"
+
+@layout AdminLayout
+
+<ResourceIdeaPageTitle Title="Job Position Details" />
+
+<div class="card text-bg-light mt-1 mb-2">
+    <div class="card-body">
+        <h5 class="card-title">Job Position Details</h5>
+    </div>
+</div>
+
+@if (IsLoadingModelData)
+{
+    <p>Loading data, please wait...</p>
+}
+else
+{
+    <DismissibleAlert ErrorMessage="@message" IsErrorMessage="@isErrorMessage" />
+
+    <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />        
+
+        <NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2"
+                 href=@($"/departments/{Model.DepartmentId}")>View Department</NavLink>
+        <button type="submit" class="btn btn-danger btn-sm">Save changes</button>
+
+        <input type="hidden" @bind="Model.Id" />
+        <input type="hidden" @bind="Model.DepartmentId" />
+
+        <div class="form-group">
+            <div class="row mb-1">
+                <div class="col-md-6">
+                    <label for="jobPositionTitle" class="form-label">Title</label>
+                    <InputText id="jobPositionTitle" class="form-control" @bind-Value="Model.Title" />
+                    <ValidationMessage For="@(() => Model.Title)" />
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-md-6">
+                    <label for="jobPositionDescription" class="form-label">Description</label>
+                    <InputTextArea id="jobPositionDescription" class="form-control" @bind-Value="Model.Description" />
+                    <ValidationMessage For="@(() => Model.Description)" />
+                </div>
+            </div>
+        </div>
+    </EditForm>
+    
+    @* Additional components or lists could be added here in future *@
+}

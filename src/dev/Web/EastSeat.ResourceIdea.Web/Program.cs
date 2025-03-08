@@ -1,17 +1,17 @@
 using EastSeat.ResourceIdea.Web.Components;
 using EastSeat.ResourceIdea.Web;
 using EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
+using EastSeat.ResourceIdea.Web.RequestContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IResourceIdeaRequestContext, ResourceIdeaRequestContext>();
+
 builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
-
-// Add DbContext
+                
 builder.Services.AddResourceIdeaDbContext();
-
-// Add ResourceIdea Services
 builder.Services.AddResourceIdeaServices();
 
 // Add MediatR

@@ -2,7 +2,6 @@
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 
@@ -20,9 +19,9 @@ public class BaseHandler
     /// <param name="errorCode">The error code to return if the entity is empty.</param>
     /// <param name="entityToModelConverter">The function to convert the entity to a model.</param>
     /// <returns>A new response containing the model or an error code.</returns>
-    public static ResourceIdeaResponse<TModel> GetHandlerResponse<TEntity, TModel>(ResourceIdeaResponse<TEntity> response, ErrorCode errorCode)
-        where TEntity : BaseEntity
-        where TModel : class
+    public static ResourceIdeaResponse<TModel> GetHandlerResponse<TEntity, TModel>(
+        ResourceIdeaResponse<TEntity> response,
+        ErrorCode errorCode) where TEntity : BaseEntity where TModel : class
     {
         if (response.IsFailure)
         {
@@ -36,9 +35,8 @@ public class BaseHandler
         return response.Content.Value.ToResourceIdeaResponse<TEntity, TModel>();
     }
 
-    public static ResourceIdeaResponse<IReadOnlyList<TModel>> GetHandlerResponse<TEntity, TModel>(ResourceIdeaResponse<IReadOnlyList<TEntity>> response)
-        where TEntity : BaseEntity
-        where TModel : class
+    public static ResourceIdeaResponse<IReadOnlyList<TModel>> GetHandlerResponse<TEntity, TModel>(
+        ResourceIdeaResponse<IReadOnlyList<TEntity>> response) where TEntity : BaseEntity where TModel : class
     {
         if (response.IsFailure)
         {
@@ -55,9 +53,8 @@ public class BaseHandler
         return ResourceIdeaResponse<IReadOnlyList<TModel>>.Success(models);
     }
 
-    public static ResourceIdeaResponse<PagedListResponse<TModel>> GetHandlerResponse<TEntity, TModel>(ResourceIdeaResponse<PagedListResponse<TEntity>> response)
-        where TEntity : BaseEntity
-        where TModel : class
+    public static ResourceIdeaResponse<PagedListResponse<TModel>> GetHandlerResponse<TEntity, TModel>(
+        ResourceIdeaResponse<PagedListResponse<TEntity>> response) where TEntity : BaseEntity where TModel : class
     {
         if (response.IsFailure)
         {
@@ -71,18 +68,12 @@ public class BaseHandler
         var items = response.Content.Value.Items;
         PagedListResponse<TModel> pagedListResponse = new()
         {
-            Items = items.Select(item => item.ToModel<TModel>()).ToList(),
+            Items = [.. items.Select(item => item.ToModel<TModel>())],
             TotalCount = response.Content.Value.TotalCount,
             CurrentPage = response.Content.Value.CurrentPage,
             PageSize = response.Content.Value.PageSize
         };
 
         return ResourceIdeaResponse<PagedListResponse<TModel>>.Success(pagedListResponse);
-    }
-
-    public static TenantId GetTenantIdFromLoginSession()
-    {
-        // TODO: Implement logic to get the tenant id from the login session.
-        return TenantId.Create("841C6122-59E8-4294-93B8-D21C0BEB6724");
     }
 }

@@ -7,7 +7,6 @@ using EastSeat.ResourceIdea.Application.Features.Departments.Queries;
 using EastSeat.ResourceIdea.Application.Features.Departments.Specifications;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
-using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 
 using MediatR;
@@ -34,9 +33,16 @@ public sealed class GetAllDepartmentsQueryHandler(IDepartmentsService department
     /// <returns>A task that represents the asynchronous operation. The task result contains the response with the paged list of department models.</returns>
     public async Task<ResourceIdeaResponse<PagedListResponse<DepartmentModel>>> Handle(GetAllDepartmentsQuery query, CancellationToken cancellationToken)
     {
-        BaseSpecification<Department> specification = GetDepartmentsQuerySpecification(query.Filter);
-        ResourceIdeaResponse<PagedListResponse<Department>> serviceResponse = await _departmentsService.GetPagedListAsync(query.PageNumber, query.PageSize, specification, cancellationToken);
-        ResourceIdeaResponse<PagedListResponse<DepartmentModel>> handlerResponse = GetHandlerResponse<Department, DepartmentModel>(serviceResponse);
+        BaseSpecification<Department> specification = GetDepartmentsQuerySpecification(query);
+        ResourceIdeaResponse<PagedListResponse<Department>> serviceResponse =
+            await _departmentsService.GetPagedListAsync(
+                query.PageNumber,
+                query.PageSize,
+                specification,
+                cancellationToken);
+
+        ResourceIdeaResponse<PagedListResponse<DepartmentModel>> handlerResponse =
+            GetHandlerResponse<Department, DepartmentModel>(serviceResponse);
 
         return handlerResponse;
     }
@@ -46,12 +52,11 @@ public sealed class GetAllDepartmentsQueryHandler(IDepartmentsService department
     /// </summary>
     /// <param name="filters">The filter string to filter the departments.</param>
     /// <returns>The specification for querying departments.</returns>
-    private static BaseSpecification<Department> GetDepartmentsQuerySpecification(string filters)
+    private static BaseSpecification<Department> GetDepartmentsQuerySpecification(GetAllDepartmentsQuery query)
     {
-        TenantId tenantId = GetTenantIdFromLoginSession();
-        BaseSpecification<Department> specification = new TenantIdSpecification<Department>(tenantId);
+        BaseSpecification<Department> specification = new TenantIdSpecification<Department>(query.TenantId);
 
-        var queryFilters = filters.GetFiltersAsDictionary(delimiter: [';'], keyValueSeparator: ['=']);
+        var queryFilters = query.Filter.GetFiltersAsDictionary(delimiter: [';'], keyValueSeparator: ['=']);
         if (queryFilters == null || queryFilters.Count == 0)
         {
             return specification;

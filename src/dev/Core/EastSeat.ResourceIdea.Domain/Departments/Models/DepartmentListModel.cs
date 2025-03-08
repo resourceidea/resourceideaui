@@ -1,4 +1,8 @@
-﻿using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
+﻿// ----------------------------------------------------------------------------------
+// File: DepartmentListModel.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Domain\Departments\Models\DepartmentListModel.cs
+// Description: Model representing department listing data.
+// ----------------------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
 

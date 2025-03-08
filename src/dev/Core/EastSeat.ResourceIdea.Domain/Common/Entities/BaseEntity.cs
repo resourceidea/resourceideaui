@@ -53,7 +53,7 @@ public abstract class BaseEntity
     /// </summary>
     /// <typeparam name="TModel">The type of the model class.</typeparam>
     /// <returns>The model class instance.</returns>
-    public abstract TModel ToModel<TModel>();
+    public abstract TModel ToModel<TModel>() where TModel : class;
 
     public abstract ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()
         where TEntity : BaseEntity

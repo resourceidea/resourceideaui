@@ -1,16 +1,16 @@
-﻿using EastSeat.ResourceIdea.Domain.Departments.Entities;
+﻿using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
+using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Extensions;
 using EastSeat.ResourceIdea.Domain.Types;
-
-using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Departments.Commands;
 
 /// <summary>
 /// Command to create a department.
 /// </summary>
-public sealed class CreateDepartmentCommand : IRequest<ResourceIdeaResponse<DepartmentModel>>
+public sealed class CreateDepartmentCommand : BaseRequest<DepartmentModel>
 {
     /// <summary>Name of the department to be created.</summary>
     public string Name { get; set; } = string.Empty;
@@ -26,5 +26,22 @@ public sealed class CreateDepartmentCommand : IRequest<ResourceIdeaResponse<Depa
             Name = Name,
             Id = DepartmentId.Create(Guid.NewGuid())
         };
+    }
+
+    /// <summary>
+    /// Validates the command.
+    /// </summary>
+    /// <returns><see cref="ValidationResponse"/></returns>
+    public override ValidationResponse Validate()
+    {
+        var validationFailureMessages = new[]
+        {
+            Name.ValidateRequired(nameof(Name)),
+        }
+        .Where(message => !string.IsNullOrWhiteSpace(message));
+
+        return validationFailureMessages.Any()
+            ? new ValidationResponse(false, validationFailureMessages)
+            : new ValidationResponse(true, []);
     }
 }
