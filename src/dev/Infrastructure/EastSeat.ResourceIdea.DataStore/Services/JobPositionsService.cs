@@ -80,10 +80,10 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
 
         int totalCount = await query.CountAsync(cancellationToken);
         List<JobPosition> items = await query
-                                      .Skip((page - 1) * size)
-                                      .Take(size)
                                       .Include(d => d.Department)
                                       .OrderBy(d => d.Title)
+                                      .Skip((page - 1) * size)
+                                      .Take(size)
                                       .ToListAsync(cancellationToken);
 
         PagedListResponse<JobPosition> pagedList = new()

@@ -24,7 +24,7 @@ public partial class JobPositionDetail : ComponentBase
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
     
-    private string? errorMessage;
+    private string? message;
     private bool isErrorMessage;
     private bool IsLoadingModelData = true;
 
@@ -52,7 +52,7 @@ public partial class JobPositionDetail : ComponentBase
 
             if (!response.IsSuccess || !response.Content.HasValue)
             {
-                errorMessage = "Failed to load job position details";
+                message = "Failed to load job position details";
                 isErrorMessage = true;
             }
 
@@ -60,7 +60,7 @@ public partial class JobPositionDetail : ComponentBase
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error loading job position: {ex.Message}";
+            message = $"Error loading job position: {ex.Message}";
             isErrorMessage = true;
         }
         finally
@@ -86,7 +86,7 @@ public partial class JobPositionDetail : ComponentBase
             var validationResponse = command.Validate();
             if (!validationResponse.IsValid)
             {
-                errorMessage = string.Join(
+                message = string.Join(
                     Environment.NewLine,
                     validationResponse.ValidationFailureMessages.FirstOrDefault());
                 isErrorMessage = true;
@@ -98,18 +98,18 @@ public partial class JobPositionDetail : ComponentBase
             {
                 // Update successful, reload data
                 await LoadJobPositionData();
-                errorMessage = "Job position updated successfully";
+                message = "Job position updated successfully";
                 isErrorMessage = false;
             }
             else
             {
-                errorMessage = "Failed to update job position";
+                message = "Failed to update job position";
                 isErrorMessage = true;
             }
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error updating job position: {ex.Message}";
+            message = $"Error updating job position: {ex.Message}";
             isErrorMessage = true;
         }
     }
