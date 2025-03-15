@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------------------
+// File: JobPositionId.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Domain\JobPositions\ValueObjects\JobPositionId.cs
+// Description: JobPosition ID value object.
+// ----------------------------------------------------------------------------------
+
 using System.ComponentModel;
 using EastSeat.ResourceIdea.Domain.TypeConverters;
 
@@ -71,7 +77,7 @@ public readonly record struct JobPositionId
     /// </summary>
     /// <returns>True if JobPositionId is empty, otherwise False.</returns>
     public bool IsEmpty() => this == JobPositionId.Empty;
-    
+
     /// <summary>
     /// Validates that the job position ID is not empty.
     /// </summary>
@@ -80,7 +86,7 @@ public readonly record struct JobPositionId
     /// </returns>
     public string ValidateRequired()
     {
-        return IsEmpty() 
+        return IsEmpty()
             ? "Job position ID is required."
             : string.Empty;
     }

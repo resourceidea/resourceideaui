@@ -23,13 +23,13 @@ jobs:
         dotnet-version: '9.0.x'
 
     - name: Restore dependencies
-      run:  dotnet restore ./EastSeat.ResourceIdea.sln
+      run:  dotnet restore ./EastSeat.ResourceIdea.slnx
 
     - name: Clean
-      run: dotnet clean ./EastSeat.ResourceIdea.sln
+      run: dotnet clean ./EastSeat.ResourceIdea.slnx
 
     - name: Build  
-      run: dotnet build ./EastSeat.ResourceIdea.sln --no-restore --framework net9.0 -maxcpucount:1
+      run: dotnet build ./EastSeat.ResourceIdea.slnx -v detailed --no-restore --framework net9.0 -maxcpucount:1
 
     - name: Run tests
-      run: dotnet test ./EastSeat.ResourceIdea.sln --no-build --verbosity normal
+      run: dotnet test ./EastSeat.ResourceIdea.slnx --no-build --verbosity normal

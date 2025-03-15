@@ -115,7 +115,7 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
 
         jobPosition.Title = entity.Title;
         jobPosition.Description = entity.Description;
-                
+
         _dbContext.JobPositions.Update(jobPosition);
         int changes = await _dbContext.SaveChangesAsync(cancellationToken);
         if (changes <= 0)
@@ -125,6 +125,33 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
         }
 
         return ResourceIdeaResponse<JobPosition>.Success(Optional<JobPosition>.Some(jobPosition));
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResourceIdeaResponse<PagedListResponse<JobPosition>>> GetDepartmentJobPositionsAsync(
+        int page,
+        int size,
+        BaseSpecification<JobPosition> specification,
+        CancellationToken cancellationToken)
+    {
+        var query = _dbContext.JobPositions.Where(specification.Criteria).AsQueryable();
+        var totalCount = await query.CountAsync(cancellationToken);
+        var departmentJobPositions = await query
+                                            .Include(jobPosition => jobPosition.Department)
+                                            .Skip((page - 1) * size)
+                                            .Take(size)
+                                            .ToListAsync(cancellationToken);
+
+        PagedListResponse<JobPosition> pagedList = new()
+        {
+            Items = departmentJobPositions,
+            TotalCount = totalCount,
+            CurrentPage = page,
+            PageSize = size
+        };
+
+        return ResourceIdeaResponse<PagedListResponse<JobPosition>>
+                .Success(Optional<PagedListResponse<JobPosition>>.Some(pagedList));
     }
 
     private static bool JobPositionCreatedSuccessfully(

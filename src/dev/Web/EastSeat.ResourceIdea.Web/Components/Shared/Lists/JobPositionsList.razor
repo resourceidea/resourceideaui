@@ -14,6 +14,7 @@
         <thead>
             <tr>
                 <th>Position</th>
+                <th>Count</th>
                 <th class="col-2">Actions</th>
             </tr>
         </thead>
@@ -24,9 +25,18 @@
                 {
                     <tr>
                         <td>@jobPosition.Title</td>
+                        <td></td>
                         <td class="col-2">
                             <NavLink class="btn btn-outline-primary btn-sm"
-                                     href=@($"/jobpositions/{jobPosition.Id}")>View</NavLink>
+                                     href=@($"/jobpositions/{jobPosition.Id}") 
+                                     title="Recruit new staff member for this position">
+                                <i class="fa-solid fa-user-plus"></i>
+                            </NavLink>
+                            <NavLink class="btn btn-outline-primary btn-sm"
+                                     href=@($"/jobpositions/{jobPosition.Id}")
+                                     title="View job position details">
+                                <i class="fa-solid fa-eye"></i>
+                            </NavLink>
                         </td>
                     </tr>
                 }
