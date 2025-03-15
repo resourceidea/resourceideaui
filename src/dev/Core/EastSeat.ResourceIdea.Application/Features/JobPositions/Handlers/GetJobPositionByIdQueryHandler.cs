@@ -5,12 +5,9 @@
 // ------------------------------------------------------------------------------
 
 using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
-using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Queries;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Specifications;
-using EastSeat.ResourceIdea.Domain.Enums;
-using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.Types;
 using MediatR;

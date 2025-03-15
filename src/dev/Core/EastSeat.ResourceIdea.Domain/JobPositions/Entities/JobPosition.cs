@@ -7,6 +7,7 @@
 using EastSeat.ResourceIdea.Domain.Common.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Employees.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
@@ -42,6 +43,11 @@ public class JobPosition : BaseEntity
     /// Job position department.
     /// </summary>
     public Department? Department { get; set; }
+
+    /// <summary>
+    /// Employees hired to the job position.
+    /// </summary>
+    public IEnumerable<Employee>? Employees { get; set; }
 
     /// <summary>
     /// Maps the entity to a model.

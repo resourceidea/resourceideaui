@@ -32,6 +32,8 @@ public class Employee : BaseEntity
 
     public Employee? Manager { get; set; }
 
+    public IEnumerable<Employee>? Subordinates { get; set; }
+
     /// <inheritdoc/>
     public override TModel ToModel<TModel>()
     {

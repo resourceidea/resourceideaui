@@ -15,7 +15,7 @@ namespace EastSeat.ResourceIdea.Application.Features.JobPositions.Queries;
 /// <summary>
 /// Query to get job positions by department ID.
 /// </summary>
-public sealed class GetJobPositionsByDepartmentIdQuery : BaseRequest<PagedListResponse<JobPositionModel>>
+public sealed class GetJobPositionsByDepartmentIdQuery : BaseRequest<PagedListResponse<JobPositionSummary>>
 {
     /// <summary>Department identifier to filter job positions.</summary>
     public DepartmentId DepartmentId { get; set; }

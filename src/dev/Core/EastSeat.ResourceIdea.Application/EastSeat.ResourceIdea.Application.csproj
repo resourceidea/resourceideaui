@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Employees\Handlers\" />
     <Folder Include="Features\Engagements\Specifications\" />
   </ItemGroup>
 

@@ -816,7 +816,7 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
 
                             b1.HasKey("ClientId");
 
-                            b1.ToTable("Clients");
+                            b1.ToTable("Clients", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ClientId");

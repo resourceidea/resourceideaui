@@ -14,26 +14,26 @@
         <thead>
             <tr>
                 <th>Position</th>
-                <th>Count</th>
-                <th class="col-2">Actions</th>
+                <th class="text-center">Employees Count</th>
+                <th class="col-2 text-end">Actions</th>
             </tr>
         </thead>
         <tbody>
-            @if (PagedJobPositionsList != null && PagedJobPositionsList.Items.Count > 0)
+            @if (Data != null && Data.Items.Count > 0)
             {
-                foreach (var jobPosition in PagedJobPositionsList.Items)
+                foreach (var jobPosition in Data.Items)
                 {
                     <tr>
                         <td>@jobPosition.Title</td>
-                        <td></td>
-                        <td class="col-2">
+                        <td class="text-center">@jobPosition.EmployeeCount</td>
+                        <td class="col-2 text-end">
                             <NavLink class="btn btn-outline-primary btn-sm"
-                                     href=@($"/jobpositions/{jobPosition.Id}") 
+                                     href=@($"/jobpositions/{jobPosition.JobPositionId}") 
                                      title="Recruit new staff member for this position">
                                 <i class="fa-solid fa-user-plus"></i>
                             </NavLink>
                             <NavLink class="btn btn-outline-primary btn-sm"
-                                     href=@($"/jobpositions/{jobPosition.Id}")
+                                     href=@($"/jobpositions/{jobPosition.JobPositionId}")
                                      title="View job position details">
                                 <i class="fa-solid fa-eye"></i>
                             </NavLink>
@@ -44,19 +44,19 @@
         </tbody>
     </table>
 
-    @if (PagedJobPositionsList != null && PagedJobPositionsList.TotalCount > 0)
+    @if (Data != null && Data.TotalCount > 0)
     {
         <div class="card-footer d-flex justify-content-between align-items-center">
             <div>
-                <span>Page @(PagedJobPositionsList.CurrentPage) of @PagedJobPositionsList.Pages</span>
+                <span>Page @(Data.CurrentPage) of @Data.Pages</span>
             </div>
             <div>
                 <button class="btn btn-outline-secondary btn-sm me-2" @onclick="GoToPreviousPage"
-                        disabled="@(PagedJobPositionsList.CurrentPage <= 1)">
+                        disabled="@(Data.CurrentPage <= 1)">
                     Previous
                 </button>
                 <button class="btn btn-outline-secondary btn-sm" @onclick="GoToNextPage"
-                        disabled="@(!PagedJobPositionsList.HasNextPage)">
+                        disabled="@(!Data.HasNextPage)">
                     Next
                 </button>
             </div>
@@ -66,24 +66,24 @@
 
 @code {
     [Parameter]
-    public PagedListResponse<JobPositionModel>? PagedJobPositionsList { get; set; }
+    public PagedListResponse<JobPositionSummary>? Data { get; set; }
 
     [Parameter]
     public EventCallback<int> OnPageChange { get; set; }
 
     private async Task GoToPreviousPage()
     {
-        if (PagedJobPositionsList != null && PagedJobPositionsList.CurrentPage > 1)
+        if (Data != null && Data.CurrentPage > 1)
         {
-            await OnPageChange.InvokeAsync(PagedJobPositionsList.CurrentPage - 1);
+            await OnPageChange.InvokeAsync(Data.CurrentPage - 1);
         }
     }
 
     private async Task GoToNextPage()
     {
-        if (PagedJobPositionsList != null && PagedJobPositionsList.HasNextPage)
+        if (Data != null && Data.HasNextPage)
         {
-            await OnPageChange.InvokeAsync(PagedJobPositionsList.CurrentPage + 1);
+            await OnPageChange.InvokeAsync(Data.CurrentPage + 1);
         }
     }
 }

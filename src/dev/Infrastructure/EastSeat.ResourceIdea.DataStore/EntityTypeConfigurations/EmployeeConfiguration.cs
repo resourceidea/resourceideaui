@@ -15,6 +15,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
 
+/// <summary>
+/// Entity Framework Core configuration for the Employee entity.
+/// This class configures the Employee entity mapping to the database including
+/// primary keys, foreign keys, and property conversions for value objects.
+/// </summary>
 public sealed class EmployeeConfiguration : BaseEntityConfiguration<Employee>
 {
     public override void Configure(EntityTypeBuilder<Employee> builder)
@@ -56,11 +61,11 @@ public sealed class EmployeeConfiguration : BaseEntityConfiguration<Employee>
             .HasMaxLength(450);
 
         builder.HasOne(employee => employee.JobPosition)
-            .WithMany()
+            .WithMany(jobPosition => jobPosition.Employees)
             .HasForeignKey(employee => employee.JobPositionId);
 
         builder.HasOne(employee => employee.Manager)
-            .WithMany()
+            .WithMany(manager => manager.Subordinates)
             .HasForeignKey(employee => employee.ManagerId)
             .OnDelete(DeleteBehavior.NoAction);
     }

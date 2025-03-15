@@ -24,7 +24,7 @@ public partial class DepartmentDetail : ComponentBase
 {
     [Parameter] public Guid Id { get; set; }
 
-    PagedListResponse<JobPositionModel> JobPositions { get; set; } = new();
+    PagedListResponse<JobPositionSummary> JobPositionSummaries { get; set; } = new();
 
     public UpdateDepartmentCommand Model { get; set; } = new();
 
@@ -90,10 +90,10 @@ public partial class DepartmentDetail : ComponentBase
             DisplayMessage(message: errorMessage, isError: true);
         }
 
-        ResourceIdeaResponse<PagedListResponse<JobPositionModel>> response = await Mediator.Send(query);
+        ResourceIdeaResponse<PagedListResponse<JobPositionSummary>> response = await Mediator.Send(query);
         if (response.IsSuccess && response.Content.HasValue)
         {
-            JobPositions = response.Content.Value;
+            JobPositionSummaries = response.Content.Value;
         }
         else
         {

@@ -7,9 +7,14 @@
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
+using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
+using EastSeat.ResourceIdea.Domain.JobPositions.Models;
+using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -128,34 +133,73 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
     }
 
     /// <inheritdoc/>
-    public async Task<ResourceIdeaResponse<PagedListResponse<JobPosition>>> GetDepartmentJobPositionsAsync(
+    public async Task<ResourceIdeaResponse<PagedListResponse<JobPositionSummary>>> GetDepartmentJobPositionsAsync(
         int page,
         int size,
-        BaseSpecification<JobPosition> specification,
+        TenantId tenantId,
+        DepartmentId departmentId,
         CancellationToken cancellationToken)
     {
-        var query = _dbContext.JobPositions.Where(specification.Criteria).AsQueryable();
-        var totalCount = await query.CountAsync(cancellationToken);
-        var departmentJobPositions = await query
-                                            .Include(jobPosition => jobPosition.Department)
-                                            .Skip((page - 1) * size)
-                                            .Take(size)
-                                            .ToListAsync(cancellationToken);
+        string sqlQuery = BuildJobPositionSummaryRawSqlQuery();
+        SqlParameter[] sqlQueryParameters =
+        [
+            new SqlParameter("@Offset", (page - 1) * size),
+            new SqlParameter("@Size", size),
+            new SqlParameter("@TenantId", tenantId.Value.ToString()),
+            new SqlParameter("@DepartmentId", departmentId.Value.ToString())
+        ];
 
-        PagedListResponse<JobPosition> pagedList = new()
+        // Use DTO since raw SQL query cannot be mapped to the JobPositionSummary model directly.
+        List<JobPositionSummaryDTO> jobPositionSummaryDTOs = await _dbContext.Database
+            .SqlQueryRaw<JobPositionSummaryDTO>(sqlQuery, sqlQueryParameters)
+            .ToListAsync(cancellationToken);
+
+        // Map the DTOs to the JobPositionSummary model
+        List<JobPositionSummary> jobPositionSummaries = [.. jobPositionSummaryDTOs
+            .Select(dto => new JobPositionSummary
+            {
+                JobPositionId = JobPositionId.Create(dto.JobPositionId ?? Guid.Empty.ToString()),
+                Title = dto.Title,
+                EmployeeCount = dto.EmployeeCount,
+                TotalCount = dto.TotalCount
+            })];
+
+        int totalCount = jobPositionSummaries.Count != 0 ? jobPositionSummaries[0].TotalCount : 0;
+
+        PagedListResponse<JobPositionSummary> pagedList = new()
         {
-            Items = departmentJobPositions,
+            Items = jobPositionSummaries,
             TotalCount = totalCount,
             CurrentPage = page,
             PageSize = size
         };
 
-        return ResourceIdeaResponse<PagedListResponse<JobPosition>>
-                .Success(Optional<PagedListResponse<JobPosition>>.Some(pagedList));
+        return ResourceIdeaResponse<PagedListResponse<JobPositionSummary>>
+                .Success(Optional<PagedListResponse<JobPositionSummary>>.Some(pagedList));
     }
 
     private static bool JobPositionCreatedSuccessfully(
         EntityEntry<JobPosition> result,
         int changes)
         => result.Entity != null && changes > 0;
+
+    private static string BuildJobPositionSummaryRawSqlQuery() =>
+        @"SELECT
+            jp.Id AS JobPositionId,
+            jp.Title,
+            (SELECT COUNT(*) FROM Employees e WHERE e.JobPositionId = jp.Id) AS EmployeeCount,
+            COUNT(*) OVER() AS TotalCount
+        FROM JobPositions jp
+        WHERE jp.TenantId = @TenantId
+        AND jp.DepartmentId = @DepartmentId
+        ORDER BY jp.Title
+        OFFSET @Offset ROWS FETCH NEXT @Size ROWS ONLY";
+
+    private class JobPositionSummaryDTO
+    {
+        public string? JobPositionId { get; set; }
+        public string? Title { get; set; } = string.Empty;
+        public int EmployeeCount { get; set; }
+        public int TotalCount { get; set; }
+    }
 }

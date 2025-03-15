@@ -76,7 +76,7 @@ public readonly record struct EmployeeId
     /// Check if EmployeeId is empty.
     /// </summary>
     /// <returns>True if EmployeeId is empty, otherwise False.</returns>
-    public bool IsEmpty() => this == EmployeeId.Empty;
+    public bool IsEmpty() => this == Empty;
 
     /// <summary>
     /// Validates that the employee ID is not empty.

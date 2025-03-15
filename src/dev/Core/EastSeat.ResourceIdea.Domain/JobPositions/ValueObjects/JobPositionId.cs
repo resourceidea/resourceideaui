@@ -53,9 +53,8 @@ public readonly record struct JobPositionId
     {
         if (!Guid.TryParse(jobPositionId, out var value))
         {
-            throw new ArgumentException(
-                "String value used to create JobPositionId is not a valid Guid.",
-                nameof(jobPositionId));
+            // TODO: Log invalid string value of job position id can not be parsed to GUID value.
+            return Empty;
         }
 
         return Create(value);
@@ -76,7 +75,7 @@ public readonly record struct JobPositionId
     /// Check if JobPositionId is empty.
     /// </summary>
     /// <returns>True if JobPositionId is empty, otherwise False.</returns>
-    public bool IsEmpty() => this == JobPositionId.Empty;
+    public bool IsEmpty() => this == Empty;
 
     /// <summary>
     /// Validates that the job position ID is not empty.

@@ -9,12 +9,10 @@ using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Queries;
-using EastSeat.ResourceIdea.Application.Features.Departments.Contracts;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.Types;
 using MediatR;
-using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Application.Mappers;
 
 namespace EastSeat.ResourceIdea.Application.Features.JobPositions.Handlers;
