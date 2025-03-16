@@ -12,6 +12,7 @@ using EastSeat.ResourceIdea.Domain.Departments.Models;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.Types;
+using EastSeat.ResourceIdea.Web.Components.Shared;
 using EastSeat.ResourceIdea.Web.RequestContext;
 
 using MediatR;
@@ -31,6 +32,7 @@ public partial class DepartmentDetail : ComponentBase
     private bool IsLoadingModelData;
     private string? errorMessage;
     private bool isErrorMessage;
+    private ParentComponent ParentComponent { get; set; } = new();
 
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
@@ -38,6 +40,9 @@ public partial class DepartmentDetail : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         IsLoadingModelData = true;
+
+        ParentComponent.View = "department-details";
+        ParentComponent.Id = Id.ToString();
 
         await LoadDepartmentDetailsAsync();
         await LoadDepartmentJobPositionsAsync();

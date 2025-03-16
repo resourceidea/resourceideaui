@@ -10,14 +10,13 @@ using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Extensions;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
-using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Features.Employees.Commands;
 
 /// <summary>
 /// Command to hire an employee.
 /// </summary>
-public class HireEmployeeCommand : BaseRequest<Employee>
+public class AddEmployeeCommand : BaseRequest<Employee>
 {
     public EmployeeId EmployeeId { get; set; }
 
@@ -25,9 +24,11 @@ public class HireEmployeeCommand : BaseRequest<Employee>
 
     public JobPositionId JobPositionId { get; set; }
 
-    public ApplicationUserId ApplicationUserId { get; set; }
+    public string FirstName { get; set; } = string.Empty;
 
-    public EmployeeId ManagerId { get; set; }
+    public string LastName { get; set; } = string.Empty;
+
+    public string Email { get; set; } = string.Empty;
 
     /// <summary>
     /// Validates the command.
@@ -40,8 +41,10 @@ public class HireEmployeeCommand : BaseRequest<Employee>
         {
             EmployeeNumber.ValidateRequired(nameof(EmployeeNumber)),
             JobPositionId.ValidateRequired(),
-            ApplicationUserId.ValidateRequired(),
             EmployeeId.ValidateRequired(),
+            FirstName.ValidateRequired(nameof(FirstName)),
+            LastName.ValidateRequired(nameof(LastName)),
+            Email.ValidateRequired(nameof(Email)),
         }
         .Where(message => !string.IsNullOrWhiteSpace(message));
 

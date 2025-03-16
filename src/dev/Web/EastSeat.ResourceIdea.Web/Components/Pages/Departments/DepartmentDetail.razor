@@ -29,7 +29,8 @@ else
         <ValidationSummary />
 
         <NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2"
-                 href="/departments">Departments List</NavLink>
+                 href="/departments">Departments List
+        </NavLink>
         <button type="submit" class="btn btn-danger btn-sm">Save changes</button>
 
         <input type="hidden" @bind="Model.DepartmentId" />
@@ -51,5 +52,6 @@ else
 
     <JobPositionsSummary
         Data ="@JobPositionSummaries"
+        ParentComponent="@ParentComponent"
         OnPageChange="HandlePageChangeAsync"/>
 }
