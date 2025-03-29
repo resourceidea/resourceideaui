@@ -62,6 +62,15 @@ public readonly record struct EmployeeId
     }
 
     /// <summary>
+    /// Creates a new EmployeeId with a randomly generated GUID.
+    /// </summary>
+    /// <returns>A new EmployeeId with a unique identifier.</returns>
+    public static EmployeeId NewId()
+    {
+        return new EmployeeId(Guid.NewGuid());
+    }
+
+    /// <summary>
     /// Convert EmployeeId to string.
     /// </summary>
     /// <returns></returns>

@@ -6,6 +6,7 @@
 
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Domain.Employees.Entities;
+using EastSeat.ResourceIdea.Domain.Employees.Models;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Extensions;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
@@ -16,12 +17,8 @@ namespace EastSeat.ResourceIdea.Application.Features.Employees.Commands;
 /// <summary>
 /// Command to hire an employee.
 /// </summary>
-public class AddEmployeeCommand : BaseRequest<Employee>
+public class AddEmployeeCommand : BaseRequest<EmployeeModel>
 {
-    public EmployeeId EmployeeId { get; set; }
-
-    public string EmployeeNumber { get; set; } = string.Empty;
-
     public JobPositionId JobPositionId { get; set; }
 
     public string FirstName { get; set; } = string.Empty;
@@ -29,6 +26,22 @@ public class AddEmployeeCommand : BaseRequest<Employee>
     public string LastName { get; set; } = string.Empty;
 
     public string Email { get; set; } = string.Empty;
+
+    public string EmployeeNumber => GenerateEmployeeNumber();
+
+    /// <summary>
+    /// Maps the command to an Employee entity.
+    /// </summary>
+    /// <returns>A new Employee entity populated with data from this command.</returns>
+    public Employee ToEntity() =>
+        new()
+        {
+            EmployeeId = EmployeeId.NewId(),
+            JobPositionId = JobPositionId,
+            TenantId = TenantId,
+            EmployeeNumber = EmployeeNumber,
+            ManagerId = EmployeeId.Empty,
+        };
 
     /// <summary>
     /// Validates the command.
@@ -39,9 +52,7 @@ public class AddEmployeeCommand : BaseRequest<Employee>
     {
         var validationFailureMessages = new[]
         {
-            EmployeeNumber.ValidateRequired(nameof(EmployeeNumber)),
             JobPositionId.ValidateRequired(),
-            EmployeeId.ValidateRequired(),
             FirstName.ValidateRequired(nameof(FirstName)),
             LastName.ValidateRequired(nameof(LastName)),
             Email.ValidateRequired(nameof(Email)),
@@ -52,4 +63,10 @@ public class AddEmployeeCommand : BaseRequest<Employee>
             ? new ValidationResponse(false, validationFailureMessages)
             : new ValidationResponse(true, []);
     }
+
+    /// <summary>
+    /// Generates a unique employee number.
+    /// </summary>
+    /// <returns>A unique employee number string.</returns>
+    private static string GenerateEmployeeNumber() => $"EMP-{Guid.NewGuid().ToString()[..8].ToUpper()}";
 }

@@ -14,10 +14,10 @@ public class ParentComponent
     /// <summary>
     /// View where the child component is used.
     /// </summary>
-    public string? View { get; set; }
+    public string View { get; set; } = string.Empty;
 
     /// <summary>
     /// Id on the url of the view where the child component is used.
     /// </summary>
-    public string? Id { get; set; }
+    public string? Id { get; set; } = string.Empty;
 }

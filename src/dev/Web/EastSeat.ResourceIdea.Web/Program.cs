@@ -2,6 +2,9 @@ using EastSeat.ResourceIdea.Web.Components;
 using EastSeat.ResourceIdea.Web;
 using EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.DataStore.Identity.Entities;
+using EastSeat.ResourceIdea.DataStore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,22 @@ builder.Services.AddRazorComponents()
                 
 builder.Services.AddResourceIdeaDbContext();
 builder.Services.AddResourceIdeaServices();
+
+// Add this after builder.Services.AddResourceIdeaServices();
+builder.Services.AddIdentityCore<ApplicationUser>()
+    .AddRoles<ApplicationRole>()
+    .AddEntityFrameworkStores<ResourceIdeaDBContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+})
+.AddIdentityCookies();
+
+// Add authorization services
+builder.Services.AddAuthorizationCore();
 
 // Add MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateDepartmentCommandHandler).Assembly));

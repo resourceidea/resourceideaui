@@ -5,6 +5,7 @@
 /// -------------------------------------------------------------------------------
 
 using EastSeat.ResourceIdea.Domain.Common.Entities;
+using EastSeat.ResourceIdea.Domain.Employees.Models;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
@@ -30,19 +31,32 @@ public class Employee : BaseEntity
 
     public JobPosition? JobPosition { get; set; }
 
-    public Employee? Manager { get; set; }
-
-    public IEnumerable<Employee>? Subordinates { get; set; }
-
     /// <inheritdoc/>
-    public override TModel ToModel<TModel>()
+    public override TModel ToModel<TModel>() where TModel : class
     {
-        throw new NotImplementedException();
+        return typeof(TModel) switch
+        {
+            var t when t == typeof(EmployeeModel) => (TModel)(object)MapToEmployeeModel(),
+            _ => throw new InvalidOperationException($"Mapping for {typeof(TModel).Name} is not configured."),
+        };
     }
 
     /// <inheritdoc/>
     public override ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()
     {
-        throw new NotImplementedException();
+        return typeof(TModel) switch
+        {
+            var t when t == typeof(EmployeeModel) => ResourceIdeaResponse<TModel>.Success(ToModel<TModel>()),
+            _ => throw new InvalidOperationException($"Cannot map {typeof(TEntity).Name} to {typeof(TModel).Name}")
+        };
     }
+
+    private EmployeeModel MapToEmployeeModel() => new()
+    {
+        EmployeeId = EmployeeId,
+        JobPositionId = JobPositionId,
+        ApplicationUserId = ApplicationUserId,
+        EmployeeNumber = EmployeeNumber ?? string.Empty,
+        ManagerId = ManagerId,
+    };
 }

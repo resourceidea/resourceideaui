@@ -247,4 +247,8 @@ public enum ErrorCode
     /// Empty entity returned from repository on update job position.
     /// </summary>
     EmptyEntityOnUpdateJobPosition,
+    DbInsertFailureOnAddNewEmployee,
+    DbInsertFailureOnAddApplicationUser,
+    AddApplicationUserFailure,
+    DeleteApplicationUserFailure,
 }

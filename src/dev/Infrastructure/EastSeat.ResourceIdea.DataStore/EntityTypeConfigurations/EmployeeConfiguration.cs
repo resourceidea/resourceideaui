@@ -63,10 +63,5 @@ public sealed class EmployeeConfiguration : BaseEntityConfiguration<Employee>
         builder.HasOne(employee => employee.JobPosition)
             .WithMany(jobPosition => jobPosition.Employees)
             .HasForeignKey(employee => employee.JobPositionId);
-
-        builder.HasOne(employee => employee.Manager)
-            .WithMany(manager => manager.Subordinates)
-            .HasForeignKey(employee => employee.ManagerId)
-            .OnDelete(DeleteBehavior.NoAction);
     }
 }

@@ -21,13 +21,10 @@ namespace EastSeat.ResourceIdea.Application.Features.JobPositions.Handlers;
 /// </summary>
 /// <param name="jobPositionService"></param>
 /// <param name="tenantsService"></param>
-public sealed class CreateJobPositionCommandHandler(
-    IJobPositionService jobPositionService,
-    ITenantsService tenantsService)
+public sealed class CreateJobPositionCommandHandler(IJobPositionService jobPositionService)
     : BaseHandler, IRequestHandler<CreateJobPositionCommand, ResourceIdeaResponse<JobPositionModel>>
 {
     private readonly IJobPositionService _jobPositionService = jobPositionService;
-    private readonly ITenantsService _tenantsService = tenantsService;
 
     public async Task<ResourceIdeaResponse<JobPositionModel>> Handle(
         CreateJobPositionCommand command,
