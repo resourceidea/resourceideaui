@@ -14,7 +14,7 @@ using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Web.Components.Shared;
 using EastSeat.ResourceIdea.Web.RequestContext;
-
+using EastSeat.ResourceIdea.Web.Services;
 using MediatR;
 
 using Microsoft.AspNetCore.Components;
@@ -33,9 +33,11 @@ public partial class DepartmentDetail : ComponentBase
     private string? errorMessage;
     private bool isErrorMessage;
     private ParentComponent ParentComponent { get; set; } = new();
+    private NotificationMessage? notification;
 
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
+    [Inject] private NotificationService NotificationService { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -43,6 +45,8 @@ public partial class DepartmentDetail : ComponentBase
 
         ParentComponent.View = "department-details";
         ParentComponent.Id = Id.ToString();
+
+        notification = NotificationService.GetMessage();
 
         await LoadDepartmentDetailsAsync();
         await LoadDepartmentJobPositionsAsync();

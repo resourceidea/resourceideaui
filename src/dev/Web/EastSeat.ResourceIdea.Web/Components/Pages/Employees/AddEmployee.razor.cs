@@ -3,6 +3,7 @@ using EastSeat.ResourceIdea.Domain.Employees.Models;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.Web.Services;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 
@@ -15,6 +16,7 @@ public partial class AddEmployee : ComponentBase
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
+    [Inject] private NotificationService NotificationService { get; set; } = null!;
 
     [Parameter, SupplyParameterFromQuery] public Guid JobPosition { get; set; }
     [Parameter, SupplyParameterFromQuery] public string? ReturnView { get; set; }
@@ -45,10 +47,12 @@ public partial class AddEmployee : ComponentBase
 
         if (ReturnView == "department-details")
         {
+            NotificationService.SetMessage("Employee added successfully.");
             NavigationManager.NavigateTo($"/departments/{ReturnId}");
         }
         else
         {
+            NotificationService.SetMessage("Employee added successfully.");
             NavigationManager.NavigateTo("/employees");
         }
     }

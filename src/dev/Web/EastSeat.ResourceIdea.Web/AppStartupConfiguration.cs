@@ -9,7 +9,7 @@ using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.DataStore;
 using EastSeat.ResourceIdea.DataStore.Services;
-
+using EastSeat.ResourceIdea.Web.Services;
 using Microsoft.EntityFrameworkCore;
 
 using System.Diagnostics;
@@ -41,6 +41,8 @@ namespace EastSeat.ResourceIdea.Web
             services.AddScoped<IJobPositionService, JobPositionsService>();
             services.AddScoped<IEmployeeService, EmployeesService>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
+
+            services.AddScoped<NotificationService>();
         }
 
         private static string GetDbContextConnectionString()

@@ -16,6 +16,15 @@
     </div>
 </div>
 
+@if (notification != null)
+{
+    <div class="alert @(notification.Type == NotificationType.Success ? "alert-success" : 
+                        notification.Type == NotificationType.Error ? "alert-danger" :
+                        notification.Type == NotificationType.Warning ? "alert-warning" : "alert-info")">
+        @notification.Message
+    </div>
+}
+
 @if (IsLoadingModelData)
 {
     <p>Loading data, please wait...</p>
