@@ -11,6 +11,7 @@ using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Extensions;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
+using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Features.Employees.Commands;
 
@@ -33,15 +34,18 @@ public class AddEmployeeCommand : BaseRequest<EmployeeModel>
     /// Maps the command to an Employee entity.
     /// </summary>
     /// <returns>A new Employee entity populated with data from this command.</returns>
-    public Employee ToEntity() =>
-        new()
-        {
-            EmployeeId = EmployeeId.NewId(),
-            JobPositionId = JobPositionId,
-            TenantId = TenantId,
-            EmployeeNumber = EmployeeNumber,
-            ManagerId = EmployeeId.Empty,
-        };
+    public Employee ToEntity() => new()
+    {
+        EmployeeId = EmployeeId.NewId(),
+        JobPositionId = JobPositionId,
+        TenantId = TenantId,
+        EmployeeNumber = EmployeeNumber,
+        ManagerId = EmployeeId.Empty,
+        ApplicationUserId = ApplicationUserId.Create(Guid.NewGuid()),
+        FirstName = FirstName,
+        LastName = LastName,
+        Email = Email,
+    };
 
     /// <summary>
     /// Validates the command.

@@ -37,9 +37,10 @@ public partial class AddEmployee : ComponentBase
         ResourceIdeaResponse<EmployeeModel> response = await Mediator.Send(Command);
         if (!response.IsSuccess || !response.Content.HasValue)
         {
-            // TODO: Log failure to create job position.
-            errorMessage = "Failed to create job position";
+            // TODO: Log failure to add new employee.
+            errorMessage = "ERROR: Failed to add new employee.";
             isErrorMessage = true;
+            return;
         }
 
         if (ReturnView == "department-details")

@@ -7,7 +7,6 @@
 using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Commands;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
-using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;

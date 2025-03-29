@@ -4,12 +4,14 @@
 /// Description: Employee entity.
 /// -------------------------------------------------------------------------------
 
+using System.ComponentModel.DataAnnotations.Schema;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
 using EastSeat.ResourceIdea.Domain.Employees.Models;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
+using EastSeat.ResourceIdea.Domain.Users.Entities;
 using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Domain.Employees.Entities;
@@ -30,6 +32,15 @@ public class Employee : BaseEntity
     public EmployeeId ManagerId { get; set; }
 
     public JobPosition? JobPosition { get; set; }
+
+    [NotMapped]
+    public string FirstName { get; set; } = string.Empty;
+
+    [NotMapped]
+    public string LastName { get; set; } = string.Empty;
+
+    [NotMapped]
+    public string Email { get; set; } = string.Empty;
 
     /// <inheritdoc/>
     public override TModel ToModel<TModel>() where TModel : class
