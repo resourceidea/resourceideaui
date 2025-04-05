@@ -11,8 +11,6 @@ namespace EastSeat.ResourceIdea.Web.Components.Pages.Employees;
 
 public partial class AddEmployee : ComponentBase
 {
-    private string? errorMessage;
-    private bool isErrorMessage;
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
@@ -31,8 +29,8 @@ public partial class AddEmployee : ComponentBase
         ValidationResponse commandValidation = Command.Validate();
         if (!commandValidation.IsValid)
         {
-            isErrorMessage = true;
-            errorMessage = string.Join(Environment.NewLine, commandValidation.ValidationFailureMessages);
+            // TODO: Log command validation failure.
+            NotificationService.ShowErrorNotification("ERROR: Invalid data provided.");
             return;
         }
 
@@ -40,20 +38,30 @@ public partial class AddEmployee : ComponentBase
         if (!response.IsSuccess || !response.Content.HasValue)
         {
             // TODO: Log failure to add new employee.
-            errorMessage = "ERROR: Failed to add new employee.";
-            isErrorMessage = true;
+            NotificationService.ShowErrorNotification("ERROR: Failed to add new employee.");
             return;
         }
 
-        if (ReturnView == "department-details")
+        string returnUrl = GetReturnUrl();
+        NotificationService.ShowSuccessNotification("Employee added successfully.");
+        NavigationManager.NavigateTo(returnUrl);
+    }
+
+    private string GetReturnUrl()
+    {
+        const string defaultUrl = "/employees";
+
+        if (string.IsNullOrEmpty(ReturnView) || string.IsNullOrEmpty(ReturnId))
         {
-            NotificationService.SetMessage("Employee added successfully.");
-            NavigationManager.NavigateTo($"/departments/{ReturnId}");
+            return defaultUrl;
         }
-        else
+
+        var urlMappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
-            NotificationService.SetMessage("Employee added successfully.");
-            NavigationManager.NavigateTo("/employees");
-        }
+            { "department-details", $"/departments/{ReturnId}" },
+            { "jobposition-details", $"/jobpositions/{ReturnId}" },
+        };
+
+        return urlMappings.TryGetValue(ReturnView, out var url) ? url : defaultUrl;
     }
 }

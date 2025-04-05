@@ -1,0 +1,20 @@
+﻿@if (Notification != null)
+{
+    <div class="alert @GetAlertClass() alert-dismissible fade show" role="alert">
+        @Notification.Message
+        <button type="button" class="btn-close" @onclick="OnDismiss" aria-label="Close"></button>
+    </div>
+}
+
+@code {
+    [Parameter] public Notification? Notification { get; set; }
+    [Parameter] public EventCallback OnDismiss { get; set; }
+
+    private string GetAlertClass() => Notification?.Type switch
+    {
+        NotificationType.Success => "alert-success",
+        NotificationType.Error => "alert-danger",
+        NotificationType.Warning => "alert-warning",
+        _ => "alert-info"
+    };
+}

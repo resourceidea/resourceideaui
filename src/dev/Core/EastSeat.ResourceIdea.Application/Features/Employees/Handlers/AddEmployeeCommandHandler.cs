@@ -11,7 +11,6 @@ using EastSeat.ResourceIdea.Domain.Employees.Entities;
 using EastSeat.ResourceIdea.Domain.Employees.Models;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
-using EastSeat.ResourceIdea.Domain.Users.Entities;
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Employees.Handlers;

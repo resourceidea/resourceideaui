@@ -7,7 +7,6 @@
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Employees.Contracts;
-using EastSeat.ResourceIdea.DataStore.EntityTypeConfigurations;
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.Domain.Employees.Entities;
 using EastSeat.ResourceIdea.Domain.Enums;

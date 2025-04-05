@@ -16,15 +16,6 @@
     </div>
 </div>
 
-@if (notification != null)
-{
-    <div class="alert @(notification.Type == NotificationType.Success ? "alert-success" : 
-                        notification.Type == NotificationType.Error ? "alert-danger" :
-                        notification.Type == NotificationType.Warning ? "alert-warning" : "alert-info")">
-        @notification.Message
-    </div>
-}
-
 @if (IsLoadingModelData)
 {
     <p>Loading data, please wait...</p>
@@ -38,8 +29,11 @@ else
         <ValidationSummary />
 
         <NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2"
-                 href="/departments">Departments List
+                 href="/departments"
+                 ActiveClass="">
+            <i class="fa fa-chevron-left"></i> Departments List
         </NavLink>
+
         <button type="submit" class="btn btn-danger btn-sm">Save changes</button>
 
         <input type="hidden" @bind="Model.DepartmentId" />

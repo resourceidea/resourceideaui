@@ -1,8 +1,6 @@
-using System;
-
 namespace EastSeat.ResourceIdea.Web.Services;
 
-public class NotificationMessage
+public class Notification
 {
     public string Message { get; set; } = string.Empty;
     public NotificationType Type { get; set; } = NotificationType.Info;
@@ -19,22 +17,36 @@ public enum NotificationType
 
 public class NotificationService
 {
-    private NotificationMessage? _notificationMessage;
+    public event Action<Notification>? OnNotification;
+    public event Action? OnClearNotification;
 
-    public NotificationMessage? GetMessage()
+    public void ShowNotification(Notification notification)
     {
-        NotificationMessage? message = _notificationMessage;
-        _notificationMessage = null; // Clear the message after retrieval
-        return message;
+        OnNotification?.Invoke(notification);
     }
 
-    public void SetMessage(string message, NotificationType type = NotificationType.Success)
+    public void ShowSuccessNotification(string message)
     {
-        _notificationMessage = new NotificationMessage
-        {
-            Message = message,
-            Type = type,
-            Timestamp = DateTimeOffset.UtcNow
-        };
+        ShowNotification(new Notification { Type = NotificationType.Success, Message = message });
+    }
+
+    public void ShowErrorNotification(string message)
+    {
+        ShowNotification(new Notification { Type = NotificationType.Error, Message = message });
+    }
+
+    public void ShowWarningNotification(string message)
+    {
+        ShowNotification(new Notification { Type = NotificationType.Warning, Message = message });
+    }
+
+    public void ShowInfoNotification(string message)
+    {
+        ShowNotification(new Notification { Type = NotificationType.Info, Message = message });
+    }
+
+    public void ClearNotification()
+    {
+        OnClearNotification?.Invoke();
     }
 }

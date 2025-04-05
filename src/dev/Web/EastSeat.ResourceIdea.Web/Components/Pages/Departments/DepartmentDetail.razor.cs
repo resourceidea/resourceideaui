@@ -33,7 +33,7 @@ public partial class DepartmentDetail : ComponentBase
     private string? errorMessage;
     private bool isErrorMessage;
     private ParentComponent ParentComponent { get; set; } = new();
-    private NotificationMessage? notification;
+    private Notification? notification;
 
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
@@ -45,8 +45,6 @@ public partial class DepartmentDetail : ComponentBase
 
         ParentComponent.View = "department-details";
         ParentComponent.Id = Id.ToString();
-
-        notification = NotificationService.GetMessage();
 
         await LoadDepartmentDetailsAsync();
         await LoadDepartmentJobPositionsAsync();
