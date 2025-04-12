@@ -15,4 +15,6 @@ public class TenantIdSpecification<TEntity>(TenantId tenantId) : BaseSpecificati
     private readonly TenantId _tenantId = tenantId;
 
     public override Expression<Func<TEntity, bool>> Criteria => entity => entity.TenantId == _tenantId;
+
+    public TenantId TenantId => _tenantId;
 }

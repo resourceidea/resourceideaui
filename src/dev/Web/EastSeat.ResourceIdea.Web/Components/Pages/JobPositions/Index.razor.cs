@@ -17,11 +17,11 @@ public partial class Index : ComponentBase
     public PagedListResponse<TenantJobPositionModel> JobPositions { get; set; } = new();
     public bool IsLoadingModelData;
 
-    protected override async Task OnInitializedAsync() => await LoadJobPositions();
+    protected override async Task OnInitializedAsync() => await LoadJobPositionsAsync();
 
-    protected async Task HandlePageChangeAsync(int page) => await LoadJobPositions(page);
+    protected async Task HandlePageChangeAsync(int page) => await LoadJobPositionsAsync(page);
 
-    private async Task LoadJobPositions(int page = 1)
+    private async Task LoadJobPositionsAsync(int page = 1)
     {
         IsLoadingModelData = true;
 

@@ -33,12 +33,14 @@ public readonly record struct EmployeeId
     /// <exception cref="ArgumentException">Thrown when Guid is empty.</exception>
     public static EmployeeId Create(Guid employeeId)
     {
-        if (employeeId == Guid.Empty)
-        {
-            throw new ArgumentException(
-                "Can not use empty Guid value to create EmployeeId.",
-                nameof(employeeId));
-        }
+        // Validation is commented out because the ManagerId can be empty in some cases.
+        // TODO: Create a new type of ManagerId should be created with out the empty check.
+        //if (employeeId == Guid.Empty)
+        //{
+        //    throw new ArgumentException(
+        //        "Can not use empty Guid value to create EmployeeId.",
+        //        nameof(employeeId));
+        //}
 
         return new EmployeeId(employeeId);
     }

@@ -247,8 +247,30 @@ public enum ErrorCode
     /// Empty entity returned from repository on update job position.
     /// </summary>
     EmptyEntityOnUpdateJobPosition,
+
+    /// <summary>
+    /// Indicates a failure to insert a new employee record into the database.
+    /// </summary>
     DbInsertFailureOnAddNewEmployee,
+
+    /// <summary>
+    /// Indicates a failure to insert a new application user into the database.
+    /// </summary>
     DbInsertFailureOnAddApplicationUser,
+
+    /// <summary>
+    /// Handles the failure of adding an application user.
+    /// </summary>
     AddApplicationUserFailure,
+
+    /// <summary>
+    /// Represents a failure that occurred while attempting to delete an application user.
+    /// </summary>
     DeleteApplicationUserFailure,
+
+    /// <summary>
+    /// Indicates that the operation is not supported.
+    /// </summary>
+    UnSupportedOperation,
+    FailureOnTenantEmployeesQuery,
 }

@@ -25,8 +25,7 @@ namespace EastSeat.ResourceIdea.Application.Features.JobPositions.Handlers;
 /// </remarks>
 /// <param name="jobPositionService">The job position service.</param>
 /// <param name="departmentService">The department service.</param>
-public sealed class GetAllJobPositionsQueryHandler(
-    IJobPositionService jobPositionService)
+public sealed class GetAllJobPositionsQueryHandler(IJobPositionService jobPositionService)
     : BaseHandler,
       IRequestHandler<GetAllJobPositionsQuery, ResourceIdeaResponse<PagedListResponse<TenantJobPositionModel>>>
 {

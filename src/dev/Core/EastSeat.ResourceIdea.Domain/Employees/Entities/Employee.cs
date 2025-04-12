@@ -47,6 +47,7 @@ public class Employee : BaseEntity
         return typeof(TModel) switch
         {
             var t when t == typeof(EmployeeModel) => (TModel)(object)MapToEmployeeModel(),
+            var t when t == typeof(TenantEmployeeModel) => (TModel)(object)MapToTenantEmployeeModel(),
             _ => throw new InvalidOperationException($"Mapping for {typeof(TModel).Name} is not configured."),
         };
     }
@@ -68,5 +69,15 @@ public class Employee : BaseEntity
         ApplicationUserId = ApplicationUserId,
         EmployeeNumber = EmployeeNumber ?? string.Empty,
         ManagerId = ManagerId,
+    };
+
+    private TenantEmployeeModel MapToTenantEmployeeModel() => new()
+    {
+        EmployeeId = EmployeeId,
+        FirstName = FirstName,
+        LastName = LastName,
+        Email = Email,
+        JobPositionTitle = JobPosition?.Title ?? string.Empty,
+        DepartmentName = JobPosition?.Department?.Name ?? string.Empty,
     };
 }

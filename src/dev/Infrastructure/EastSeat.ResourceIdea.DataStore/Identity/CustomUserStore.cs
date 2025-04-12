@@ -12,34 +12,34 @@ public class CustomUserStore(ResourceIdeaDBContext dbContext)
     public async Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        await _dbContext.Users.AddAsync(user, cancellationToken);
+        await _dbContext.Users!.AddAsync(user, cancellationToken);
         return IdentityResult.Success;
     }
 
     public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        _dbContext.Users.Update(user);
+        _dbContext.Users!.Update(user);
         return Task.FromResult(IdentityResult.Success);
     }
 
     public Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        _dbContext.Users.Remove(user);
+        _dbContext.Users!.Remove(user);
         return Task.FromResult(IdentityResult.Success);
     }
 
-    public Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
+    public async Task<ApplicationUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        return _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+        return await _dbContext.Users!.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
     }
 
-    public Task<ApplicationUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+    public async Task<ApplicationUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        return _dbContext.Users.FirstOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName, cancellationToken);
+        return await _dbContext.Users!.FirstOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName, cancellationToken);
     }
 
     public Task<string> GetUserIdAsync(ApplicationUser user, CancellationToken cancellationToken)
@@ -48,33 +48,33 @@ public class CustomUserStore(ResourceIdeaDBContext dbContext)
         return Task.FromResult(user.Id);
     }
 
-    public Task<string> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
+    public Task<string?> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         return Task.FromResult(user.UserName);
     }
 
-    public Task SetUserNameAsync(ApplicationUser user, string userName, CancellationToken cancellationToken)
+    public Task SetUserNameAsync(ApplicationUser user, string? userName, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         user.UserName = userName;
         return Task.CompletedTask;
     }
 
-    public Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
+    public Task<string?> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         return Task.FromResult(user.NormalizedUserName);
     }
 
-    public Task SetNormalizedUserNameAsync(ApplicationUser user, string normalizedName, CancellationToken cancellationToken)
+    public Task SetNormalizedUserNameAsync(ApplicationUser user, string? normalizedName, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         user.NormalizedUserName = normalizedName;
         return Task.CompletedTask;
     }
 
-    public Task SetPasswordHashAsync(ApplicationUser user, string passwordHash, CancellationToken cancellationToken)
+    public Task SetPasswordHashAsync(ApplicationUser user, string? passwordHash, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         user.PasswordHash = passwordHash;

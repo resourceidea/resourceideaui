@@ -33,7 +33,6 @@ public partial class DepartmentDetail : ComponentBase
     private string? errorMessage;
     private bool isErrorMessage;
     private ParentComponent ParentComponent { get; set; } = new();
-    private Notification? notification;
 
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
