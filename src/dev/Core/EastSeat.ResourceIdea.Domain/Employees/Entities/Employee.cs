@@ -6,6 +6,7 @@
 
 using System.ComponentModel.DataAnnotations.Schema;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
+using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Employees.Models;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
@@ -70,6 +71,10 @@ public class Employee : BaseEntity
         ApplicationUserId = ApplicationUserId,
         EmployeeNumber = EmployeeNumber ?? string.Empty,
         ManagerId = ManagerId,
+        FirstName = FirstName,
+        LastName = LastName,
+        Email = Email,
+        DepartmentId = JobPosition?.Department?.Id ?? DepartmentId.Empty,
     };
 
     private TenantEmployeeModel MapToTenantEmployeeModel() => new()

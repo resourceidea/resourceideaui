@@ -24,6 +24,7 @@ public class TenantEmployeeModel
     public string? JobPositionTitle { get; init; }
     public DepartmentId DepartmentId { get; init; }
     public string? DepartmentName { get; init; }
+    public string? ApplicationUserId { get; init; }
     
     /// <summary>
     /// Represents an empty instance of TenantEmployeeModel with default values.

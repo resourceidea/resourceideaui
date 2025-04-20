@@ -9,6 +9,7 @@ using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Employees.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Employees.Queries;
+using EastSeat.ResourceIdea.Application.Features.Employees.Specifications;
 using EastSeat.ResourceIdea.Application.Mappers;
 using EastSeat.ResourceIdea.Domain.Employees.Entities;
 using EastSeat.ResourceIdea.Domain.Employees.Models;
@@ -29,13 +30,13 @@ public class TenantEmployeesQueryHandler(IEmployeeService employeeService)
     private readonly IEmployeeService _employeeService = employeeService;
 
     public async Task<ResourceIdeaResponse<PagedListResponse<TenantEmployeeModel>>> Handle(
-        TenantEmployeesQuery request,
+        TenantEmployeesQuery query,
         CancellationToken cancellationToken)
     {
-        var querySpecification = new TenantIdSpecification<Employee>(request.TenantId);
+        var querySpecification = new TenantEmployeesSpecification(query.TenantId);
         var queryResponse  = await _employeeService.GetPagedListAsync(
-            request.PageNumber,
-            request.PageSize,
+            query.PageNumber,
+            query.PageSize,
             querySpecification,
             cancellationToken);
 

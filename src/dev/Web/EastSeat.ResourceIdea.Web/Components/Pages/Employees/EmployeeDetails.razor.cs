@@ -18,7 +18,6 @@ public partial class EmployeeDetails : ComponentBase
     public Guid Id { get; set; }
 
     [Inject] private IMediator Mediator { get; set; } = null!;
-    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
 
     private string? message;
@@ -38,7 +37,6 @@ public partial class EmployeeDetails : ComponentBase
     private async Task LoadEmployeeData()
     {
         IsLoadingModelData = true;
-        StateHasChanged();
 
         try
         {
@@ -52,12 +50,12 @@ public partial class EmployeeDetails : ComponentBase
             if (response.IsSuccess && response.Content.Value is not null)
             {
                 var employee = response.Content.Value;
-                Command.EmployeeId = response.Content.Value.EmployeeId;
-                Command.FirstName = response.Content.Value.FirstName;
-                Command.LastName = response.Content.Value.LastName;
-                Command.Email = response.Content.Value.Email;
-                Command.DepartmentId = response.Content.Value.DepartmentId;
-                Command.JobPositionId = response.Content.Value.JobPositionId;
+                Command.EmployeeId = employee.EmployeeId;
+                Command.FirstName = employee.FirstName;
+                Command.LastName = employee.LastName;
+                Command.Email = employee.Email;
+                Command.DepartmentId = employee.DepartmentId;
+                Command.JobPositionId = employee.JobPositionId;
 
                 if (Command.DepartmentId != DepartmentId.Empty)
                 {
@@ -106,7 +104,7 @@ public partial class EmployeeDetails : ComponentBase
 
     private async Task LoadJobPositions()
     {
-        if (Command.DepartmentId != DepartmentId.Empty)
+        if (Command.DepartmentId == DepartmentId.Empty)
         {
             JobPositions.Clear();
             return;

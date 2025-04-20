@@ -17,6 +17,7 @@ using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 
 using Microsoft.AspNetCore.Identity;
@@ -81,15 +82,14 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
         BaseSpecification<Employee> specification,
         CancellationToken cancellationToken)
     {
-        Guid? tenantId = GetTenantIdFromSpecification(specification);
-        if (specification is not EmployeeIdBySpecification employeeIdSpecification)
+        if (specification is not GetEmployeeIdBySpecification employeeIdSpecification)
         {
             return ResourceIdeaResponse<Employee>.Failure(ErrorCode.FailureOnTenantEmployeesQuery);
         }
         try
         {
             TenantEmployeeModel tenantEmployee = await GetTenantEmployeeByIdAsync(
-                employeeIdSpecification.EmployeeId, tenantId, cancellationToken);
+                employeeIdSpecification.EmployeeId, employeeIdSpecification.TenantId, cancellationToken);
 
             if (tenantEmployee.IsEmpty)
             {
@@ -134,7 +134,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
     {
         try
         {
-            if (specification.HasValue is false || specification.Value is not TenantIdSpecification<Employee>)
+            if (specification.HasValue is false || specification.Value is not TenantEmployeesSpecification)
             {
                 return ResourceIdeaResponse<PagedListResponse<Employee>>.Failure(ErrorCode.FailureOnTenantEmployeesQuery);
             }
@@ -165,9 +165,9 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
 
     private static Guid? GetTenantIdFromSpecification(Optional<BaseSpecification<Employee>> specification)
     {
-        TenantIdSpecification<Employee>? tenantSpec = specification.Value as TenantIdSpecification<Employee>;
-        Guid? tenantId = tenantSpec?.TenantId.Value;
-        return tenantId;
+        TenantEmployeesSpecification? employeeSpecification = specification.Value as TenantEmployeesSpecification;
+        TenantId tenantId = employeeSpecification?.TenantId ?? TenantId.Empty;
+        return tenantId.Value;
     }
 
     private async Task<int> GetTotalItemCountAsync(Guid? tenantId, CancellationToken cancellationToken)
@@ -185,13 +185,13 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
 
     private async Task<TenantEmployeeModel> GetTenantEmployeeByIdAsync(
         EmployeeId employeeId,
-        Guid? tenantId,
+        TenantId tenantId,
         CancellationToken cancellationToken)
     {
         using var connection = new SqlConnection(_dbContext.Database.GetConnectionString());
         await connection.OpenAsync(cancellationToken);
 
-        string sql = @"SELECT TOP 1 e.EmployeeId, e.JobPositionId, e.EmployeeNumber,
+        string sql = @"SELECT TOP 1 e.EmployeeId, e.JobPositionId, e.EmployeeNumber, e.ApplicationUserId,
                           u.FirstName, u.LastName, u.Email,
                           jp.Title as 'JobPositionTitle', 
                           d.Id as 'DepartmentId', d.Name as 'DepartmentName'
@@ -203,7 +203,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
 
         using var command = new SqlCommand(sql, connection);
         command.Parameters.Add(new SqlParameter("@EmployeeId", employeeId.Value));
-        command.Parameters.Add(new SqlParameter("@TenantId", tenantId));
+        command.Parameters.Add(new SqlParameter("@TenantId", tenantId.Value));
 
         using var reader = await command.ExecuteReaderAsync(cancellationToken);
         if (await reader.ReadAsync(cancellationToken))
@@ -218,7 +218,8 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
                 JobPositionId = JobPositionId.Create(reader.GetString(reader.GetOrdinal("JobPositionId"))),
                 JobPositionTitle = reader.GetString(reader.GetOrdinal("JobPositionTitle")),
                 DepartmentId = DepartmentId.Create(reader.GetString(reader.GetOrdinal("DepartmentId"))),
-                DepartmentName = reader.GetString(reader.GetOrdinal("DepartmentName"))
+                DepartmentName = reader.GetString(reader.GetOrdinal("DepartmentName")),
+                ApplicationUserId = reader.GetString(reader.GetOrdinal("ApplicationUserId"))
             };
         }
 

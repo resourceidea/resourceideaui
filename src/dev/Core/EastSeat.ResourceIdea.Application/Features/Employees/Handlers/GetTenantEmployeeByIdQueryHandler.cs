@@ -32,17 +32,18 @@ public sealed class GetTenantEmployeeByIdQueryHandler(IEmployeeService employeeS
             return ResourceIdeaResponse<EmployeeModel>.Failure(ErrorCode.EmployeeQueryValidationFailure);
         }
 
-        BaseSpecification<Employee> specification = GetQueryFilterSpecification(query);
-        var tenantEmployee = await _employeeService.GetByIdAsync(specification, cancellationToken);
-        if (tenantEmployee == null)
+        BaseSpecification<Employee> specification = new GetEmployeeIdBySpecification(query.EmployeeId, query.TenantId);
+        ResourceIdeaResponse<Employee> employeeQuery = await _employeeService.GetByIdAsync(specification, cancellationToken);
+        if (employeeQuery.IsFailure)
+        {
+            return ResourceIdeaResponse<EmployeeModel>.Failure(employeeQuery.Error);
+        }
+        
+        if (!employeeQuery.Content.HasValue)
         {
             return ResourceIdeaResponse<EmployeeModel>.Failure(ErrorCode.EmployeeNotFound);
         }
 
-        return tenantEmployee.Content.Value.ToResourceIdeaResponse<Employee, EmployeeModel>();
+        return employeeQuery.Content.Value.ToResourceIdeaResponse<Employee, EmployeeModel>();
     }
-
-    private static BaseSpecification<Employee> GetQueryFilterSpecification(GetEmployeeByIdQuery query) =>
-        new TenantIdSpecification<Employee>(query.TenantId)
-                .And(new EmployeeIdBySpecification(query.EmployeeId));
 }
