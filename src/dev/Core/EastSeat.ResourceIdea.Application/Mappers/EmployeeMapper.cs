@@ -1,16 +1,13 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Common.Entities;
-using EastSeat.ResourceIdea.Domain.Employees.Entities;
-using EastSeat.ResourceIdea.Domain.Employees.Models;
-using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
-using EastSeat.ResourceIdea.Domain.JobPositions.Models;
-using EastSeat.ResourceIdea.Domain.Types;
+﻿// =========================================================================================
+// File: UpdateEmployeeCommandHandler.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Application\Features\Employees\Handlers\UpdateEmployeeCommandHandler.cs
+// Description: Mapper for Employee related classes
+// =========================================================================================
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Common.Entities;
+using EastSeat.ResourceIdea.Domain.Employees.Models;
+using EastSeat.ResourceIdea.Domain.Types;
 
 namespace EastSeat.ResourceIdea.Application.Mappers;
 

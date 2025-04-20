@@ -1,3 +1,9 @@
+// =========================================================================================
+// File: ErrorCode.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Domain\Enums\ErrorCode.cs
+// Description: Enum representing various error codes used in the application.
+// =========================================================================================
+
 namespace EastSeat.ResourceIdea.Domain.Enums;
 
 public enum ErrorCode
@@ -272,5 +278,34 @@ public enum ErrorCode
     /// Indicates that the operation is not supported.
     /// </summary>
     UnSupportedOperation,
+
+    /// <summary>
+    /// Failure on the tenant employees query.
+    /// </summary>
     FailureOnTenantEmployeesQuery,
+
+    /// <summary>
+    /// Indicates that the application user was not found.
+    /// </summary>
+    ApplicationUserNotFound,
+
+    /// <summary>
+    /// Indicates that the employee was not found.
+    /// </summary>
+    EmployeeNotFound,
+
+    /// <summary>
+    /// Indicates operation to update an employee failed.
+    /// </summary>
+    DbUpdateFailureOnUpdateEmployee,
+
+    /// <summary>
+    /// Indicates operation has not been implemented yet.
+    /// </summary>
+    NotImplemented,
+
+    /// <summary>
+    /// Indicates that the employee query validation failed.
+    /// </summary>
+    EmployeeQueryValidationFailure,
 }

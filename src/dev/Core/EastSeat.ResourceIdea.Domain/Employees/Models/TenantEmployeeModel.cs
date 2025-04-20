@@ -16,12 +16,42 @@ namespace EastSeat.ResourceIdea.Domain.Employees.Models;
 public class TenantEmployeeModel
 {
     public EmployeeId EmployeeId { get; set; }
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string EmployeeNumber { get; set; } = string.Empty;
-    public JobPositionId JobPositionId { get; set; }
-    public string JobPositionTitle { get; set; } = string.Empty;
-    public DepartmentId DepartmentId { get; set; }
-    public string DepartmentName { get; set; } = string.Empty;
+    public string? FirstName { get; init; }
+    public string? LastName { get; init; }
+    public string? Email { get; init; }
+    public string? EmployeeNumber { get; init; }
+    public JobPositionId JobPositionId { get; init; }
+    public string? JobPositionTitle { get; init; }
+    public DepartmentId DepartmentId { get; init; }
+    public string? DepartmentName { get; init; }
+    
+    /// <summary>
+    /// Represents an empty instance of TenantEmployeeModel with default values.
+    /// </summary>
+    public static TenantEmployeeModel Empty => new()
+    {
+        EmployeeId = EmployeeId.Empty,
+        JobPositionId = JobPositionId.Empty,
+        DepartmentId = DepartmentId.Empty,
+        Email = string.Empty,
+        EmployeeNumber = string.Empty,
+        JobPositionTitle = string.Empty,
+        DepartmentName = string.Empty,
+        FirstName = string.Empty,
+        LastName = string.Empty
+    };
+    
+    /// <summary>
+    /// Checks if the current instance is empty (equivalent to the Empty property).
+    /// </summary>
+    public bool IsEmpty => true
+        && EmployeeId == EmployeeId.Empty
+        && JobPositionId == JobPositionId.Empty
+        && DepartmentId == DepartmentId.Empty
+        && string.IsNullOrEmpty(EmployeeNumber)
+        && string.IsNullOrEmpty(JobPositionTitle)
+        && string.IsNullOrEmpty(DepartmentName)
+        && string.IsNullOrEmpty(FirstName)
+        && string.IsNullOrEmpty(LastName)
+        && string.IsNullOrEmpty(Email);
 }

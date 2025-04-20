@@ -1,0 +1,48 @@
+// ===================================================================================
+// File: GetTenantEmployeeByIdQueryHandler.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Application\Features\Employees\Handlers\GetTenantEmployeeByIdQueryHandler.cs
+// Description: Handles the query to get a tenant employee by ID.
+// ===================================================================================
+
+using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
+using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
+using EastSeat.ResourceIdea.Application.Features.Employees.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Employees.Queries;
+using EastSeat.ResourceIdea.Application.Features.Employees.Specifications;
+using EastSeat.ResourceIdea.Domain.Employees.Entities;
+using EastSeat.ResourceIdea.Domain.Employees.Models;
+using EastSeat.ResourceIdea.Domain.Enums;
+using EastSeat.ResourceIdea.Domain.Types;
+using MediatR;
+
+namespace EastSeat.ResourceIdea.Application.Features.Employees.Handlers;
+
+public sealed class GetTenantEmployeeByIdQueryHandler(IEmployeeService employeeService)
+    : BaseHandler, IRequestHandler<GetEmployeeByIdQuery, ResourceIdeaResponse<EmployeeModel>>
+{
+    private readonly IEmployeeService _employeeService = employeeService;
+
+    public async Task<ResourceIdeaResponse<EmployeeModel>> Handle(
+        GetEmployeeByIdQuery query,
+        CancellationToken cancellationToken)
+    {
+        ValidationResponse queryValidation = query.Validate();
+        if (!queryValidation.IsValid && queryValidation.ValidationFailureMessages.Any())
+        {
+            return ResourceIdeaResponse<EmployeeModel>.Failure(ErrorCode.EmployeeQueryValidationFailure);
+        }
+
+        BaseSpecification<Employee> specification = GetQueryFilterSpecification(query);
+        var tenantEmployee = await _employeeService.GetByIdAsync(specification, cancellationToken);
+        if (tenantEmployee == null)
+        {
+            return ResourceIdeaResponse<EmployeeModel>.Failure(ErrorCode.EmployeeNotFound);
+        }
+
+        return tenantEmployee.Content.Value.ToResourceIdeaResponse<Employee, EmployeeModel>();
+    }
+
+    private static BaseSpecification<Employee> GetQueryFilterSpecification(GetEmployeeByIdQuery query) =>
+        new TenantIdSpecification<Employee>(query.TenantId)
+                .And(new EmployeeIdBySpecification(query.EmployeeId));
+}

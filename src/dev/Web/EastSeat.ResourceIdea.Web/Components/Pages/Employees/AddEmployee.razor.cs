@@ -1,3 +1,9 @@
+// =============================================================================================
+// File: AddEmployee.razor.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Web\Components\Pages\Employees\AddEmployee.razor.cs
+// Description: This file contains the code-behind for the AddEmployee component.
+// =============================================================================================
+
 using EastSeat.ResourceIdea.Application.Features.Employees.Commands;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
@@ -64,7 +70,6 @@ public partial class AddEmployee : ComponentBase
 
             if (response.IsSuccess && response.Content.HasValue)
             {
-                // Get the department ID of the job position
                 var jobPositionDetails = response.Content.Value;
                 SelectedDepartmentId = jobPositionDetails.DepartmentId.Value;
             }
@@ -81,18 +86,14 @@ public partial class AddEmployee : ComponentBase
 
         if (response.IsSuccess && response.Content.HasValue)
         {
-            Departments = response.Content.Value.Items.ToList();
-
-            if (Departments.Any())
+            Departments = [.. response.Content.Value.Items];
+            if (Departments.Count > 0)
             {
-                // If we're not pre-populated from query string, use the first department
                 if (!IsPrePopulated)
                 {
                     var firstDepartmentId = Departments.First().DepartmentId;
                     SelectedDepartmentId = firstDepartmentId.Value;
                 }
-
-                // Load job positions for the selected department (either from job position details or first department)
                 await LoadJobPositionsForDepartmentAsync(DepartmentId.Create(SelectedDepartmentId));
             }
         }
@@ -112,12 +113,9 @@ public partial class AddEmployee : ComponentBase
         };
 
         var response = await Mediator.Send(query);
-
         if (response.IsSuccess && response.Content.HasValue)
         {
             var jobPositionSummaries = response.Content.Value.Items;
-
-            // Convert JobPositionSummary to TenantJobPositionModel
             JobPositions = [.. jobPositionSummaries.Select(jp => new TenantJobPositionModel
             {
                 Id = jp.JobPositionId,
@@ -125,34 +123,26 @@ public partial class AddEmployee : ComponentBase
                 DepartmentId = departmentId
             })];
 
-            // If the JobPosition parameter is set, select it
             if (IsPrePopulated && JobPosition != Guid.Empty)
             {
-                // We're pre-populated from query string, so keep the selected job position
                 SelectedJobPositionId = JobPosition;
-
-                // Verify that the job position exists in the list
                 if (JobPositions.All(jp => jp.Id.Value != SelectedJobPositionId))
                 {
-                    // If the job position isn't found in the list of department job positions,
-                    // something is wrong - notify the user
                     NotificationService.ShowErrorNotification("The specified job position was not found in the selected department");
                 }
             }
-            // Otherwise select the first job position if available
-            else if (JobPositions.Any())
+            else if (JobPositions.Count > 0)
             {
                 SelectedJobPositionId = JobPositions.First().Id.Value;
             }
         }
         else
         {
-            JobPositions = new List<TenantJobPositionModel>();
+            JobPositions = [];
             NotificationService.ShowErrorNotification("Failed to load job positions");
         }
     }
 
-    // Handler for department selection change
     private async Task OnDepartmentChanged(ChangeEventArgs e)
     {
         if (Guid.TryParse(e.Value?.ToString(), out var departmentGuid))
@@ -162,7 +152,6 @@ public partial class AddEmployee : ComponentBase
         }
     }
 
-    // Handler for job position selection change
     private void OnJobPositionChanged(ChangeEventArgs e)
     {
         if (Guid.TryParse(e.Value?.ToString(), out var jobPositionGuid))

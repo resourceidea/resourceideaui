@@ -4,11 +4,10 @@
 // Description: Service class to handle employee operations.
 // ===============================================================================================
 
-using Azure;
-
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Employees.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Employees.Specifications;
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
@@ -18,17 +17,12 @@ using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-
-using System.Drawing;
-using System.Linq;
-using System.Threading;
 
 namespace EastSeat.ResourceIdea.DataStore.Services;
 
@@ -83,19 +77,60 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
     }
 
     /// <inheritdoc />
-    public Task<ResourceIdeaResponse<Employee>> GetByIdAsync(
+    public async Task<ResourceIdeaResponse<Employee>> GetByIdAsync(
         BaseSpecification<Employee> specification,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        Guid? tenantId = GetTenantIdFromSpecification(specification);
+        if (specification is not EmployeeIdBySpecification employeeIdSpecification)
+        {
+            return ResourceIdeaResponse<Employee>.Failure(ErrorCode.FailureOnTenantEmployeesQuery);
+        }
+        try
+        {
+            TenantEmployeeModel tenantEmployee = await GetTenantEmployeeByIdAsync(
+                employeeIdSpecification.EmployeeId, tenantId, cancellationToken);
+
+            if (tenantEmployee.IsEmpty)
+            {
+                return ResourceIdeaResponse<Employee>.Failure(ErrorCode.EmployeeNotFound);
+            }
+
+            Employee employee = new()
+            {
+                EmployeeId = tenantEmployee.EmployeeId,
+                JobPositionId = tenantEmployee.JobPositionId,
+                EmployeeNumber = tenantEmployee.EmployeeNumber,
+                FirstName = tenantEmployee.FirstName ?? string.Empty,
+                LastName = tenantEmployee.LastName ?? string.Empty,
+                Email = tenantEmployee.Email ?? string.Empty,
+                JobPosition = new JobPosition
+                {
+                    Id = tenantEmployee.JobPositionId,
+                    Title = tenantEmployee.JobPositionTitle,
+                    Department = new Department
+                    {
+                        Id = tenantEmployee.DepartmentId,
+                        Name = tenantEmployee.DepartmentName ?? string.Empty
+                    }
+                }
+            };
+
+            return ResourceIdeaResponse<Employee>.Success(Optional<Employee>.Some(employee));
+        }
+        catch (Exception)
+        {
+            // TODO: Log exception
+            return ResourceIdeaResponse<Employee>.Failure(ErrorCode.FailureOnTenantEmployeesQuery);
+        }
     }
 
     /// <inheritdoc />
     public async Task<ResourceIdeaResponse<PagedListResponse<Employee>>> GetPagedListAsync(
-    int page,
-    int size,
-    Optional<BaseSpecification<Employee>> specification,
-    CancellationToken cancellationToken)
+        int page,
+        int size,
+        Optional<BaseSpecification<Employee>> specification,
+        CancellationToken cancellationToken)
     {
         try
         {
@@ -146,6 +181,48 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
 
         object result = await command.ExecuteScalarAsync(cancellationToken);
         return result != null ? Convert.ToInt32(result) : 0;
+    }
+
+    private async Task<TenantEmployeeModel> GetTenantEmployeeByIdAsync(
+        EmployeeId employeeId,
+        Guid? tenantId,
+        CancellationToken cancellationToken)
+    {
+        using var connection = new SqlConnection(_dbContext.Database.GetConnectionString());
+        await connection.OpenAsync(cancellationToken);
+
+        string sql = @"SELECT TOP 1 e.EmployeeId, e.JobPositionId, e.EmployeeNumber,
+                          u.FirstName, u.LastName, u.Email,
+                          jp.Title as 'JobPositionTitle', 
+                          d.Id as 'DepartmentId', d.Name as 'DepartmentName'
+                   FROM [dbo].[Employees] e
+                   JOIN [Identity].[ApplicationUsers] u ON e.ApplicationUserId = u.ApplicationUserId
+                   LEFT JOIN [dbo].[JobPositions] jp ON e.JobPositionId = jp.Id
+                   LEFT JOIN [dbo].[Departments] d ON jp.DepartmentId = d.Id
+                   WHERE e.TenantId = @TenantId AND e.EmployeeId = @EmployeeId";
+
+        using var command = new SqlCommand(sql, connection);
+        command.Parameters.Add(new SqlParameter("@EmployeeId", employeeId.Value));
+        command.Parameters.Add(new SqlParameter("@TenantId", tenantId));
+
+        using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        if (await reader.ReadAsync(cancellationToken))
+        {
+            return new TenantEmployeeModel
+            {
+                EmployeeId = EmployeeId.Create(reader.GetString(reader.GetOrdinal("EmployeeId"))),
+                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                Email = reader.GetString(reader.GetOrdinal("Email")),
+                EmployeeNumber = reader.GetString(reader.GetOrdinal("EmployeeNumber")),
+                JobPositionId = JobPositionId.Create(reader.GetString(reader.GetOrdinal("JobPositionId"))),
+                JobPositionTitle = reader.GetString(reader.GetOrdinal("JobPositionTitle")),
+                DepartmentId = DepartmentId.Create(reader.GetString(reader.GetOrdinal("DepartmentId"))),
+                DepartmentName = reader.GetString(reader.GetOrdinal("DepartmentName"))
+            };
+        }
+
+        return TenantEmployeeModel.Empty;
     }
 
     private async Task<List<TenantEmployeeModel>> QueryForTenantEmployeesAsync(
@@ -215,9 +292,9 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
                     EmployeeId = e.EmployeeId,
                     JobPositionId = e.JobPositionId,
                     EmployeeNumber = e.EmployeeNumber,
-                    FirstName = e.FirstName,
-                    LastName = e.LastName,
-                    Email = e.Email,
+                    FirstName = e.FirstName ?? string.Empty,
+                    LastName = e.LastName ?? string.Empty,
+                    Email = e.Email ?? string.Empty,
                     JobPosition = new JobPosition
                     {
                         Id = e.JobPositionId,
@@ -225,15 +302,62 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
                         Department = new Department
                         {
                             Id = e.DepartmentId,
-                            Name = e.DepartmentName
+                            Name = e.DepartmentName ?? string.Empty
                         }
                     }
                 })];
     }
 
     /// <inheritdoc />
-    public Task<ResourceIdeaResponse<Employee>> UpdateAsync(Employee entity, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<Employee>> UpdateAsync(Employee entity, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+
+            ApplicationUser? applicationUser = await _userManager.FindByIdAsync(entity.ApplicationUserId.ToString());
+            if (applicationUser == null)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return ResourceIdeaResponse<Employee>.Failure(ErrorCode.ApplicationUserNotFound);
+            }
+            applicationUser.FirstName = entity.FirstName;
+            applicationUser.LastName = entity.LastName;
+            await _userManager.UpdateAsync(applicationUser);
+
+            Employee? existingEmployee = await _dbContext.Employees
+                .FirstOrDefaultAsync(e => e.EmployeeId == entity.EmployeeId, cancellationToken);
+            if (existingEmployee == null)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return ResourceIdeaResponse<Employee>.Failure(ErrorCode.EmployeeNotFound);
+            }
+            existingEmployee.JobPositionId = entity.JobPositionId;
+            existingEmployee.FirstName = entity.FirstName;
+            existingEmployee.LastName = entity.LastName;
+            _dbContext.Employees.Update(existingEmployee);
+
+            int changes = await _dbContext.SaveChangesAsync(cancellationToken);
+            if (changes < 1)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return ResourceIdeaResponse<Employee>.Failure(ErrorCode.DbUpdateFailureOnUpdateEmployee);
+            }
+
+            await transaction.CommitAsync(cancellationToken);
+            return ResourceIdeaResponse<Employee>.Success(Optional<Employee>.Some(existingEmployee));
+        }
+        catch (DbUpdateException)
+        {
+            // Handles database update conflicts, constraint violations
+            // TODO: Log specific database update exception
+            return ResourceIdeaResponse<Employee>.Failure(ErrorCode.DbUpdateFailureOnUpdateEmployee);
+        }
+        catch (SqlException)
+        {
+            // Handles SQL Server-specific errors like timeouts, connection issues
+            // TODO: Log SQL exception details
+            return ResourceIdeaResponse<Employee>.Failure(ErrorCode.DbUpdateFailureOnUpdateEmployee);
+        }
     }
 }

@@ -4,6 +4,7 @@
 // Description: Defines the model for an employee.
 // ----------------------------------------------------------------------------------
 
+using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Employees.Entities;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Extensions;
@@ -29,6 +30,11 @@ public class EmployeeModel
     public JobPositionId JobPositionId { get; set; }
 
     /// <summary>
+    /// Gets or sets the department identifier.
+    /// </summary>
+    public DepartmentId DepartmentId { get; set; }
+
+    /// <summary>
     /// Gets or sets the application user identifier.
     /// </summary>
     public ApplicationUserId ApplicationUserId { get; set; }
@@ -44,6 +50,21 @@ public class EmployeeModel
     public EmployeeId ManagerId { get; set; }
 
     /// <summary>
+    /// Gets or sets the first name of the employee.
+    /// </summary>
+    public string FirstName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the last name of the employee.
+    /// </summary>
+    public string LastName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the email of the employee.
+    /// </summary>
+    public string Email { get; set; } = string.Empty;
+
+    /// <summary>
     /// Validates the model.
     /// </summary>
     /// <returns><see cref="ValidationResponse"/></returns>
@@ -55,7 +76,10 @@ public class EmployeeModel
             JobPositionId.ValidateRequired(),
             ApplicationUserId.ValidateRequired(),
             ManagerId.ValidateRequired(),
-            EmployeeNumber.ValidateRequired(nameof(EmployeeNumber))
+            EmployeeNumber.ValidateRequired(nameof(EmployeeNumber)),
+            FirstName.ValidateRequired(nameof(FirstName)),
+            LastName.ValidateRequired(nameof(LastName)),
+            Email.ValidateRequired(nameof(Email)),
         }
         .Where(message => !string.IsNullOrWhiteSpace(message));
 

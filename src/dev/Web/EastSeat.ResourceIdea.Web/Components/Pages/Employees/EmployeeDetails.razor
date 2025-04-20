@@ -1,0 +1,86 @@
+﻿@page "/employees/{id:guid}"
+@using EastSeat.ResourceIdea.Application.Features.Employees.Commands
+@using EastSeat.ResourceIdea.Application.Features.Departments.Queries
+@using EastSeat.ResourceIdea.Application.Features.JobPositions.Queries
+@using EastSeat.ResourceIdea.Domain.Departments.Models
+@using EastSeat.ResourceIdea.Domain.JobPositions.Models
+@using EastSeat.ResourceIdea.Domain.Employees.Models
+
+<PageTitle>Edit Employee Details</PageTitle>
+
+<h3>Edit Employee Details</h3>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert @(isErrorMessage ? "alert-danger" : "alert-success") alert-dismissible fade show" role="alert">
+        @message
+        <button type="button" class="btn-close" @onclick="ClearMessage" aria-label="Close"></button>
+    </div>
+}
+
+@if (IsLoadingModelData)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else
+{
+    <EditForm Model="@Command" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label for="firstName" class="form-label">First Name</label>
+            <InputText id="firstName" @bind-Value="Command.FirstName" class="form-control" />
+            <ValidationMessage For="@(() => Command.FirstName)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <InputText id="lastName" @bind-Value="Command.LastName" class="form-control" />
+            <ValidationMessage For="@(() => Command.LastName)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <InputText id="email" Value="@Command.Email" class="form-control" disabled readonly />
+            <small class="text-muted">Email cannot be changed</small>
+        </div>
+
+        <div class="mb-3">
+            <label for="departmentId" class="form-label">Department</label>
+            <InputSelect id="departmentId" @bind-Value="Command.DepartmentId" class="form-select" @onchange="LoadJobPositions">
+                <option value="">-- Select Department --</option>
+                @foreach (var department in Departments)
+                {
+                    <option value="@department.DepartmentId.Value">@department.Name</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => Command.DepartmentId)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="jobPositionId" class="form-label">Job Position</label>
+            <InputSelect id="jobPositionId" @bind-Value="Command.JobPositionId" class="form-select">
+                <option value="">-- Select Job Position --</option>
+                @foreach (var jobPosition in JobPositions)
+                {
+                    <option value="@jobPosition.Id.Value">@jobPosition.Title</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => Command.JobPositionId)" />
+        </div>
+
+        <div class="mb-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="/employees" class="btn btn-secondary">Cancel</a>
+        </div>
+    </EditForm>
+}
+
+@code {
+
+}

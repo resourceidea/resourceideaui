@@ -1,8 +1,8 @@
-/// -------------------------------------------------------------------------------
-/// File: Employee.cs
-/// Path: src\dev\Core\EastSeat.ResourceIdea.Domain\Employees\Entities\Employee.cs
-/// Description: Employee entity.
-/// -------------------------------------------------------------------------------
+// ====================================================================================
+// File: Employee.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Domain\Employees\Entities\Employee.cs
+// Description: Employee entity.
+// ====================================================================================
 
 using System.ComponentModel.DataAnnotations.Schema;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
@@ -58,6 +58,7 @@ public class Employee : BaseEntity
         return typeof(TModel) switch
         {
             var t when t == typeof(EmployeeModel) => ResourceIdeaResponse<TModel>.Success(ToModel<TModel>()),
+            var t when t == typeof(TenantEmployeeModel) => ResourceIdeaResponse<TModel>.Success(ToModel<TModel>()),
             _ => throw new InvalidOperationException($"Cannot map {typeof(TEntity).Name} to {typeof(TModel).Name}")
         };
     }
