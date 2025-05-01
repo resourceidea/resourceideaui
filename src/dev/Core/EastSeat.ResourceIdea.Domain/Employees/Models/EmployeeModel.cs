@@ -9,6 +9,7 @@ using EastSeat.ResourceIdea.Domain.Employees.Entities;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Extensions;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 
@@ -63,6 +64,7 @@ public class EmployeeModel
     /// Gets or sets the email of the employee.
     /// </summary>
     public string Email { get; set; } = string.Empty;
+    public TenantId TenantId { get; set; }
 
     /// <summary>
     /// Validates the model.
@@ -80,6 +82,7 @@ public class EmployeeModel
             FirstName.ValidateRequired(nameof(FirstName)),
             LastName.ValidateRequired(nameof(LastName)),
             Email.ValidateRequired(nameof(Email)),
+            TenantId.ValidateRequired()
         }
         .Where(message => !string.IsNullOrWhiteSpace(message));
 

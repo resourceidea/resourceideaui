@@ -17,7 +17,7 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Employees.Handlers;
 
-public sealed class GetTenantEmployeeByIdQueryHandler(IEmployeeService employeeService)
+public sealed class GetEmployeeByIdQueryHandler(IEmployeeService employeeService)
     : BaseHandler, IRequestHandler<GetEmployeeByIdQuery, ResourceIdeaResponse<EmployeeModel>>
 {
     private readonly IEmployeeService _employeeService = employeeService;

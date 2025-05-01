@@ -68,4 +68,7 @@ public readonly record struct ApplicationUserId
             ? "ApplicationUserId is required."
             : string.Empty;
     }
+
+    /// <inheritdoc />
+    public override string ToString() => Value.ToString();
 }

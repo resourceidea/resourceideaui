@@ -56,7 +56,8 @@ public partial class EmployeeDetails : ComponentBase
                 Command.Email = employee.Email;
                 Command.DepartmentId = employee.DepartmentId;
                 Command.JobPositionId = employee.JobPositionId;
-
+                Command.ApplicationUserId = employee.ApplicationUserId;
+                Command.EmployeeNumber = employee.EmployeeNumber;
                 if (Command.DepartmentId != DepartmentId.Empty)
                 {
                     await LoadJobPositions();
@@ -148,6 +149,7 @@ public partial class EmployeeDetails : ComponentBase
     {
         try
         {
+            Command.TenantId = ResourceIdeaRequestContext.Tenant;
             var response = await Mediator.Send(Command);
             if (response.IsSuccess)
             {

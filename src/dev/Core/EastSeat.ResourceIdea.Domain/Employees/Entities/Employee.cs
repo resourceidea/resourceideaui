@@ -75,6 +75,7 @@ public class Employee : BaseEntity
         LastName = LastName,
         Email = Email,
         DepartmentId = JobPosition?.Department?.Id ?? DepartmentId.Empty,
+        TenantId = TenantId,
     };
 
     private TenantEmployeeModel MapToTenantEmployeeModel() => new()

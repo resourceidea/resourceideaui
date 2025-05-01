@@ -12,6 +12,7 @@ using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Extensions;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
+using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Features.Employees.Commands;
 
@@ -51,6 +52,16 @@ public class UpdateEmployeeCommand : BaseRequest<EmployeeModel>
     public DepartmentId DepartmentId { get; set; }
 
     /// <summary>
+    /// Application user ID associated with the employee.
+    /// </summary>
+    public ApplicationUserId ApplicationUserId { get; set; }
+
+    /// <summary>
+    /// Employment number of the employee.
+    /// </summary>
+    public string EmployeeNumber { get; set; } = string.Empty;
+
+    /// <summary>
     /// Maps the command to an Employee entity.
     /// </summary>
     /// <returns>An Employee entity populated with data from this command.</returns>
@@ -61,7 +72,9 @@ public class UpdateEmployeeCommand : BaseRequest<EmployeeModel>
         LastName = LastName,
         Email = Email,
         TenantId = TenantId,
-        JobPositionId = JobPositionId
+        JobPositionId = JobPositionId,
+        ApplicationUserId = ApplicationUserId,
+        EmployeeNumber = EmployeeNumber,
     };
 
     /// <summary>

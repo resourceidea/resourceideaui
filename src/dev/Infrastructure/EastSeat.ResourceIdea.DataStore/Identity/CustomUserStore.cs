@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
+using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 
 namespace EastSeat.ResourceIdea.DataStore.Identity;
 
@@ -33,7 +34,8 @@ public class CustomUserStore(ResourceIdeaDBContext dbContext)
     public async Task<ApplicationUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        return await _dbContext.Users!.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+        ApplicationUserId applicationUserId = ApplicationUserId.Create(userId);
+        return await _dbContext.Users!.FirstOrDefaultAsync(u => u.ApplicationUserId == applicationUserId, cancellationToken);
     }
 
     public async Task<ApplicationUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)

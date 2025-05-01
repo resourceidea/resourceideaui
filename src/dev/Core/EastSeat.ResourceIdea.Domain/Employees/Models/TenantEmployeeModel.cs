@@ -7,6 +7,8 @@
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Domain.Employees.Models;
 
@@ -24,7 +26,8 @@ public class TenantEmployeeModel
     public string? JobPositionTitle { get; init; }
     public DepartmentId DepartmentId { get; init; }
     public string? DepartmentName { get; init; }
-    public string? ApplicationUserId { get; init; }
+    public ApplicationUserId ApplicationUserId { get; init; }
+    public TenantId TenantId { get; init; }
     
     /// <summary>
     /// Represents an empty instance of TenantEmployeeModel with default values.
@@ -39,7 +42,8 @@ public class TenantEmployeeModel
         JobPositionTitle = string.Empty,
         DepartmentName = string.Empty,
         FirstName = string.Empty,
-        LastName = string.Empty
+        LastName = string.Empty,
+        TenantId = TenantId.Empty
     };
     
     /// <summary>
@@ -49,6 +53,7 @@ public class TenantEmployeeModel
         && EmployeeId == EmployeeId.Empty
         && JobPositionId == JobPositionId.Empty
         && DepartmentId == DepartmentId.Empty
+        && TenantId == TenantId.Empty
         && string.IsNullOrEmpty(EmployeeNumber)
         && string.IsNullOrEmpty(JobPositionTitle)
         && string.IsNullOrEmpty(DepartmentName)

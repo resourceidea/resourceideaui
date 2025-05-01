@@ -19,7 +19,7 @@ using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
-
+using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -104,6 +104,8 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
                 FirstName = tenantEmployee.FirstName ?? string.Empty,
                 LastName = tenantEmployee.LastName ?? string.Empty,
                 Email = tenantEmployee.Email ?? string.Empty,
+                ApplicationUserId = tenantEmployee.ApplicationUserId,
+                TenantId = tenantEmployee.TenantId,
                 JobPosition = new JobPosition
                 {
                     Id = tenantEmployee.JobPositionId,
@@ -191,7 +193,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
         using var connection = new SqlConnection(_dbContext.Database.GetConnectionString());
         await connection.OpenAsync(cancellationToken);
 
-        string sql = @"SELECT TOP 1 e.EmployeeId, e.JobPositionId, e.EmployeeNumber, e.ApplicationUserId,
+        string sql = @"SELECT TOP 1 e.EmployeeId, e.JobPositionId, e.EmployeeNumber, e.ApplicationUserId, e.TenantId,
                           u.FirstName, u.LastName, u.Email,
                           jp.Title as 'JobPositionTitle', 
                           d.Id as 'DepartmentId', d.Name as 'DepartmentName'
@@ -219,7 +221,8 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
                 JobPositionTitle = reader.GetString(reader.GetOrdinal("JobPositionTitle")),
                 DepartmentId = DepartmentId.Create(reader.GetString(reader.GetOrdinal("DepartmentId"))),
                 DepartmentName = reader.GetString(reader.GetOrdinal("DepartmentName")),
-                ApplicationUserId = reader.GetString(reader.GetOrdinal("ApplicationUserId"))
+                ApplicationUserId = ApplicationUserId.Create(reader.GetString(reader.GetOrdinal("ApplicationUserId"))),
+                TenantId = TenantId.Create(reader.GetString(reader.GetOrdinal("TenantId")))
             };
         }
 
