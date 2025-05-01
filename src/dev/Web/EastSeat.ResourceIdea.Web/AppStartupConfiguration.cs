@@ -1,5 +1,6 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Departments.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Employees.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
 using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
@@ -8,7 +9,7 @@ using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.DataStore;
 using EastSeat.ResourceIdea.DataStore.Services;
-
+using EastSeat.ResourceIdea.Web.Services;
 using Microsoft.EntityFrameworkCore;
 
 using System.Diagnostics;
@@ -38,6 +39,10 @@ namespace EastSeat.ResourceIdea.Web
             services.AddScoped<ISubscriptionServicesService, SubscriptionServicesService>();
             services.AddScoped<ISubscriptionsService, SubscriptionsService>();
             services.AddScoped<IJobPositionService, JobPositionsService>();
+            services.AddScoped<IEmployeeService, EmployeesService>();
+            services.AddScoped<IApplicationUserService, ApplicationUserService>();
+
+            services.AddScoped<NotificationService>();
         }
 
         private static string GetDbContextConnectionString()

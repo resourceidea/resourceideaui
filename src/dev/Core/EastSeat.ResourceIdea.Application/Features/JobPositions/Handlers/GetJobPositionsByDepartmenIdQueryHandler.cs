@@ -1,10 +1,13 @@
+// ===================================================================================
+// File: GetJobPositionsByDepartmentIdQueryHandler.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Application\Features\JobPositions\Handlers\GetJobPositionsByDepartmentIdQueryHandler.cs
+// Description: Query handler to get job positions by department ID.
+// ===================================================================================
+
 using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
-using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Queries;
-using EastSeat.ResourceIdea.Application.Features.JobPositions.Specifications;
-using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.Types;
 using MediatR;
@@ -13,7 +16,7 @@ namespace EastSeat.ResourceIdea.Application.Features.JobPositions.Handlers;
 
 public sealed class GetJobPositionsByDepartmentIdQueryHandler(IJobPositionService jobPositionService)
     : BaseHandler,
-      IRequestHandler<GetJobPositionsByDepartmentIdQuery, ResourceIdeaResponse<PagedListResponse<JobPositionModel>>>
+      IRequestHandler<GetJobPositionsByDepartmentIdQuery, ResourceIdeaResponse<PagedListResponse<JobPositionSummary>>>
 {
     private readonly IJobPositionService _jobPositionService = jobPositionService;
 
@@ -23,19 +26,13 @@ public sealed class GetJobPositionsByDepartmentIdQueryHandler(IJobPositionServic
     /// <param name="query"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>Paged list of job positions.</returns>
-    public async Task<ResourceIdeaResponse<PagedListResponse<JobPositionModel>>> Handle(
+    public async Task<ResourceIdeaResponse<PagedListResponse<JobPositionSummary>>> Handle(
         GetJobPositionsByDepartmentIdQuery query,
-        CancellationToken cancellationToken)
-    {
-        BaseSpecification<JobPosition> specification = new TenantIdSpecification<JobPosition>(query.TenantId)
-            .And(new JobPositionDepartmentIdSpecification(query.DepartmentId));
-
-        var response = await _jobPositionService.GetPagedListAsync(
-                query.PageNumber,
-                query.PageSize,
-                specification,
-                cancellationToken);
-
-        return GetHandlerResponse<JobPosition, JobPositionModel>(response);
-    }
+        CancellationToken cancellationToken) =>
+        await _jobPositionService.GetDepartmentJobPositionsAsync(
+            query.PageNumber,
+            query.PageSize,
+            query.TenantId,
+            query.DepartmentId,
+            cancellationToken);
 }

@@ -5,11 +5,9 @@
 // ------------------------------------------------------------------------------
 
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
-using EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
-using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.JobPositions.Queries;
 

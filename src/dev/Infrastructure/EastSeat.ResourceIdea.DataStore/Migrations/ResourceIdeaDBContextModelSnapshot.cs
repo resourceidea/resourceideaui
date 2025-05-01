@@ -17,7 +17,7 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.1")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -230,6 +230,68 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments", (string)null);
+                });
+
+            modelBuilder.Entity("EastSeat.ResourceIdea.Domain.Employees.Entities.Employee", b =>
+                {
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset?>("Deleted")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("EmployeeNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("JobPositionId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ManagerId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EmployeeId");
+
+                    b.HasIndex("JobPositionId");
+
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("EastSeat.ResourceIdea.Domain.EngagementTasks.Entities.EngagementTask", b =>
@@ -473,6 +535,8 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("JobPositions", (string)null);
                 });
@@ -750,7 +814,7 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
 
                             b1.HasKey("ClientId");
 
-                            b1.ToTable("Clients");
+                            b1.ToTable("Clients", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ClientId");
@@ -758,6 +822,17 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
 
                     b.Navigation("Address")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("EastSeat.ResourceIdea.Domain.Employees.Entities.Employee", b =>
+                {
+                    b.HasOne("EastSeat.ResourceIdea.Domain.JobPositions.Entities.JobPosition", "JobPosition")
+                        .WithMany("Employees")
+                        .HasForeignKey("JobPositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JobPosition");
                 });
 
             modelBuilder.Entity("EastSeat.ResourceIdea.Domain.EngagementTasks.Entities.EngagementTask", b =>
@@ -780,6 +855,17 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                         .IsRequired();
 
                     b.Navigation("EngagementTask");
+                });
+
+            modelBuilder.Entity("EastSeat.ResourceIdea.Domain.JobPositions.Entities.JobPosition", b =>
+                {
+                    b.HasOne("EastSeat.ResourceIdea.Domain.Departments.Entities.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("EastSeat.ResourceIdea.Domain.Subscriptions.Entities.Subscription", b =>
@@ -852,6 +938,11 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
             modelBuilder.Entity("EastSeat.ResourceIdea.Domain.Engagements.Entities.Engagement", b =>
                 {
                     b.Navigation("EngagementTasks");
+                });
+
+            modelBuilder.Entity("EastSeat.ResourceIdea.Domain.JobPositions.Entities.JobPosition", b =>
+                {
+                    b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618
         }

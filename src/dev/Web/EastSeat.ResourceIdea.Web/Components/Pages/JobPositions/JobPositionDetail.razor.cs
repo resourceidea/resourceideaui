@@ -8,7 +8,6 @@ using EastSeat.ResourceIdea.Application.Features.JobPositions.Commands;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Queries;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Web.RequestContext;
 using MediatR;
 using Microsoft.AspNetCore.Components;

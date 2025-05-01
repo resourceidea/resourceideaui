@@ -2,6 +2,7 @@
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
+using EastSeat.ResourceIdea.Domain.Employees.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
@@ -26,6 +27,7 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
     public DbSet<EngagementTaskAssignment> EngagementTaskAssignments { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<JobPosition> JobPositions { get; set; }
+    public DbSet<Employee> Employees { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -49,5 +51,6 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
         builder.ApplyConfiguration(new EngagementTaskAssignmentConfiguration());
         builder.ApplyConfiguration(new DepartmentConfiguration());
         builder.ApplyConfiguration(new JobPositionConfiguration());
+        builder.ApplyConfiguration(new EmployeeConfiguration());
     }
 }

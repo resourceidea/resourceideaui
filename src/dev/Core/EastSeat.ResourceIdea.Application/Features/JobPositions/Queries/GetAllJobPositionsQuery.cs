@@ -24,7 +24,7 @@ public class GetAllJobPositionsQuery : BaseRequest<PagedListResponse<TenantJobPo
     /// <summary>
     /// Gets or sets the page size.
     /// </summary>
-    public int PageSize { get; set; } = 50;
+    public int PageSize { get; set; } = 10;
 
     /// <summary>
     /// Validates the query.

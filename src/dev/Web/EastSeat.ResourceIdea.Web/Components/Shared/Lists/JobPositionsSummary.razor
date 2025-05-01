@@ -1,0 +1,91 @@
+@* ------------------------------------------------------------------------------
+    File: JobPositionsList.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Shared/Lists
+    Description: JobPositionsList component
+   ------------------------------------------------------------------------------ *@
+
+<div class="card mt-1">
+    <div class="card-header">
+        Department Job Positions
+    </div>
+    <table class="table table-sm table-striped table-hover table-borderless">
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th class="text-center">Employees Count</th>
+                <th class="col-2 text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Data != null && Data.Items.Count > 0)
+            {
+                foreach (var jobPosition in Data.Items)
+                {
+                    <tr>
+                        <td>@jobPosition.Title</td>
+                        <td class="text-center">@jobPosition.EmployeeCount</td>
+                        <td class="col-2 text-end">
+                            <NavLink class="btn btn-outline-primary btn-sm"
+                                     href=@($"/employees/add?jobposition={jobPosition.JobPositionId}"+
+                                            $"&returnid={ParentComponent.Id}"+
+                                            $"&returnview={ParentComponent.View}")
+                                     title="Add new employee to job position">
+                                <i class="fa-solid fa-user-plus"></i>
+                            </NavLink>
+                            <NavLink class="btn btn-outline-primary btn-sm"
+                                     href=@($"/jobpositions/{jobPosition.JobPositionId}")
+                                     title="View job position details">
+                                <i class="fa-solid fa-eye"></i>
+                            </NavLink>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    @if (Data != null && Data.TotalCount > 0)
+    {
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <div>
+                <span>Page @(Data.CurrentPage) of @Data.Pages</span>
+            </div>
+            <div>
+                <button class="btn btn-outline-secondary btn-sm me-2" @onclick="GoToPreviousPage"
+                        disabled="@(Data.CurrentPage <= 1)">
+                    Previous
+                </button>
+                <button class="btn btn-outline-secondary btn-sm" @onclick="GoToNextPage"
+                        disabled="@(!Data.HasNextPage)">
+                    Next
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public PagedListResponse<JobPositionSummary>? Data { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnPageChange { get; set; }
+
+    [Parameter] public ParentComponent ParentComponent { get; set; } = new();
+
+    private async Task GoToPreviousPage()
+    {
+        if (Data != null && Data.CurrentPage > 1)
+        {
+            await OnPageChange.InvokeAsync(Data.CurrentPage - 1);
+        }
+    }
+
+    private async Task GoToNextPage()
+    {
+        if (Data != null && Data.HasNextPage)
+        {
+            await OnPageChange.InvokeAsync(Data.CurrentPage + 1);
+        }
+    }
+}

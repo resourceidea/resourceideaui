@@ -13,6 +13,20 @@
 <div class="card text-bg-light mt-1 mb-2">
     <div class="card-body">
         <h5 class="card-title">Job Position Details</h5>
+        <p class="card-subtitle mb-2 text-body-secondary">
+            Department: 
+            <NavLink class="pb-0" style="text-decoration: none" href=@($"/departments/{Model.DepartmentId}")>
+                Department Name
+            </NavLink><br />
+            Employee Count: 
+            <NavLink class="pb-0" style="text-decoration: none" href=@($"/departments/{Model.DepartmentId}")>
+                0
+            </NavLink><br />
+            Vacancies: 
+            <NavLink class="pb-0" style="text-decoration: none" href=@($"/departments/{Model.DepartmentId}")>
+                0
+            </NavLink><br />
+        </p>
     </div>
 </div>
 
@@ -26,10 +40,19 @@ else
 
     <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit">
         <DataAnnotationsValidator />
-        <ValidationSummary />        
+        <ValidationSummary />
 
         <NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2"
-                 href=@($"/departments/{Model.DepartmentId}")>View Department</NavLink>
+                 href=@($"/jobpositions")
+                 ActiveClass="">
+            <i class="fa fa-chevron-left"></i> Job Positions List</NavLink>
+
+        <NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2"
+                 href=@($"/employees/add?returnview=jobposition-details&returnid={Model.Id}&jobposition={Model.Id}")
+                 ActiveClass="">
+            <i class="fa-solid fa-user-plus"></i> Add Employee
+        </NavLink>
+
         <button type="submit" class="btn btn-danger btn-sm">Save changes</button>
 
         <input type="hidden" @bind="Model.Id" />
@@ -52,6 +75,4 @@ else
             </div>
         </div>
     </EditForm>
-    
-    @* Additional components or lists could be added here in future *@
 }

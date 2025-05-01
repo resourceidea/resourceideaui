@@ -12,8 +12,9 @@ using EastSeat.ResourceIdea.Domain.Departments.Models;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.Types;
+using EastSeat.ResourceIdea.Web.Components.Shared;
 using EastSeat.ResourceIdea.Web.RequestContext;
-
+using EastSeat.ResourceIdea.Web.Services;
 using MediatR;
 
 using Microsoft.AspNetCore.Components;
@@ -24,20 +25,25 @@ public partial class DepartmentDetail : ComponentBase
 {
     [Parameter] public Guid Id { get; set; }
 
-    PagedListResponse<JobPositionModel> JobPositions { get; set; } = new();
+    PagedListResponse<JobPositionSummary> JobPositionSummaries { get; set; } = new();
 
     public UpdateDepartmentCommand Model { get; set; } = new();
 
     private bool IsLoadingModelData;
     private string? errorMessage;
     private bool isErrorMessage;
+    private ParentComponent ParentComponent { get; set; } = new();
 
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
+    [Inject] private NotificationService NotificationService { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
         IsLoadingModelData = true;
+
+        ParentComponent.View = "department-details";
+        ParentComponent.Id = Id.ToString();
 
         await LoadDepartmentDetailsAsync();
         await LoadDepartmentJobPositionsAsync();
@@ -90,10 +96,10 @@ public partial class DepartmentDetail : ComponentBase
             DisplayMessage(message: errorMessage, isError: true);
         }
 
-        ResourceIdeaResponse<PagedListResponse<JobPositionModel>> response = await Mediator.Send(query);
+        ResourceIdeaResponse<PagedListResponse<JobPositionSummary>> response = await Mediator.Send(query);
         if (response.IsSuccess && response.Content.HasValue)
         {
-            JobPositions = response.Content.Value;
+            JobPositionSummaries = response.Content.Value;
         }
         else
         {

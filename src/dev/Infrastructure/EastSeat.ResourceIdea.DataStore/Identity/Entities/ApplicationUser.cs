@@ -18,8 +18,8 @@ public class ApplicationUser : IdentityUser, IApplicationUser
     public TenantId TenantId { get; set; }
     
     /// <inheritdoc />
-    public required string FirstName { get; set; }
+    public string FirstName { get; set; } = string.Empty;
 
     /// <inheritdoc />
-    public required string LastName { get; set; }
+    public string LastName { get; set; } = string.Empty;
 }

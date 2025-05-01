@@ -60,6 +60,12 @@ public class ResourceIdeaResponse<T> where T : class
     public static ResourceIdeaResponse<T> BadRequest() => Failure(ErrorCode.BadRequest);
 
     /// <summary>
+    /// Creates a response indicating that the operation is unsupported.
+    /// </summary>
+    /// <returns>Returns a ResourceIdeaResponse object representing a failure due to unsupported operation.</returns>
+    public static ResourceIdeaResponse<T> UnSupportedOperation() => Failure(ErrorCode.UnSupportedOperation);
+
+    /// <summary>
     /// Creates a new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a success response
     /// and the content is <see cref="Optional{T}"/> None.
     /// </summary>

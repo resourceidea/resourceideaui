@@ -7,7 +7,6 @@
 using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Commands;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
-using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
@@ -21,13 +20,10 @@ namespace EastSeat.ResourceIdea.Application.Features.JobPositions.Handlers;
 /// </summary>
 /// <param name="jobPositionService"></param>
 /// <param name="tenantsService"></param>
-public sealed class CreateJobPositionCommandHandler(
-    IJobPositionService jobPositionService,
-    ITenantsService tenantsService)
+public sealed class CreateJobPositionCommandHandler(IJobPositionService jobPositionService)
     : BaseHandler, IRequestHandler<CreateJobPositionCommand, ResourceIdeaResponse<JobPositionModel>>
 {
     private readonly IJobPositionService _jobPositionService = jobPositionService;
-    private readonly ITenantsService _tenantsService = tenantsService;
 
     public async Task<ResourceIdeaResponse<JobPositionModel>> Handle(
         CreateJobPositionCommand command,

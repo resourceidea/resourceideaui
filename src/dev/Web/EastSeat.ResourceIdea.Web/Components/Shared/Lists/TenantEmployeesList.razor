@@ -1,0 +1,92 @@
+@* ------------------------------------------------------------------------------
+    File: TenantEmployeesList.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Shared/Lists
+    Description: Employee List component
+   ------------------------------------------------------------------------------ *@
+
+<div class="card mt-1">
+    <div class="card-header">
+        Employees List
+    </div>
+    <table class="table table-sm table-striped table-hover table-borderless">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Job Title</th>
+                <th>Department</th>
+                <th class="col-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (PagedEmployeesList != null && PagedEmployeesList.Items.Count > 0)
+            {
+                foreach (var employee in PagedEmployeesList.Items)
+                {
+                    <tr>
+                        <td>@($"{employee.FirstName} {employee.LastName}")</td>
+                        <td>@employee.Email</td>
+                        <td>@employee.JobPositionTitle</td>
+                        <td>@employee.DepartmentName</td>
+                        <td class="col-2">
+                            <NavLink class="btn btn-outline-primary btn-sm" href=@($"/employees/{employee.EmployeeId}")>
+                                View
+                            </NavLink>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center">No employees found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (PagedEmployeesList != null && PagedEmployeesList.TotalCount > 0)
+    {
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <div>
+                <span>Page @(PagedEmployeesList.CurrentPage) of @PagedEmployeesList.Pages</span>
+            </div>
+            <div>
+                <button class="btn btn-outline-secondary btn-sm me-2" @onclick="GoToPreviousPage"
+                    disabled="@(PagedEmployeesList.CurrentPage <= 1)">
+                    Previous
+                </button>
+                <button class="btn btn-outline-secondary btn-sm" @onclick="GoToNextPage"
+                    disabled="@(!PagedEmployeesList.HasNextPage)">
+                    Next
+                </button>
+            </div>
+        </div>
+    }
+
+</div>
+<br />
+
+@code {
+    [Parameter]
+    public PagedListResponse<TenantEmployeeModel>? PagedEmployeesList { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnPageChange { get; set; }
+
+    private async Task GoToPreviousPage()
+    {
+        if (PagedEmployeesList != null && PagedEmployeesList.CurrentPage > 1)
+        {
+            await OnPageChange.InvokeAsync(PagedEmployeesList.CurrentPage - 1);
+        }
+    }
+
+    private async Task GoToNextPage()
+    {
+        if (PagedEmployeesList != null && PagedEmployeesList.HasNextPage)
+        {
+            await OnPageChange.InvokeAsync(PagedEmployeesList.CurrentPage + 1);
+        }
+    }
+}

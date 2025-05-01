@@ -49,10 +49,26 @@ public readonly record struct ApplicationUserId
     }
 
     /// <summary>Application User DepartmentId is not empty.</summary>
-    public bool IsNotEmpty() => this != Empty;
+    public bool IsEmpty() => this == Empty;
 
     /// <summary>
     /// Empty application user id.
     /// </summary>
     public static ApplicationUserId Empty => new(Guid.Empty);
+
+    /// <summary>
+    /// Validates that ApplicationUserId is not empty.
+    /// </summary>
+    /// <returns>
+    /// Empty string if the ID is valid, otherwise a validation error message.
+    /// </returns>
+    public string ValidateRequired()
+    {
+        return IsEmpty()
+            ? "ApplicationUserId is required."
+            : string.Empty;
+    }
+
+    /// <inheritdoc />
+    public override string ToString() => Value.ToString();
 }

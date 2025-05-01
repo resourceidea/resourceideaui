@@ -1,10 +1,73 @@
-﻿@page "/employees"
+﻿@* ====================================================================================
+   File: Index.razor
+   Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Pages/Employees/Index.razor
+   Description: Employees List Page
+   ====================================================================================*@
+
+@page "/employees"
 @page "/employees/index"
 
 @layout AdminLayout
+@inject IMediator Mediator
+@inject IResourceIdeaRequestContext ResourceIdeaRequestContext
 
-<h3>Employees</h3>
+@using EastSeat.ResourceIdea.Application.Features.Employees.Queries
+@using EastSeat.ResourceIdea.Domain.Employees.Models
+@using EastSeat.ResourceIdea.Web.Components.Shared.Cards
+@using EastSeat.ResourceIdea.Web.Components.Shared.Lists
+
+<div class="page-container">
+    <PageHeader Text="Employees" />
+
+    <NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2" href="/employees/add" ActiveClass="">
+        <i class="fa-solid fa-user-plus"></i> Add Employee
+    </NavLink>
+
+    <div class="content-container">
+        @if (IsLoadingModelData)
+        {
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <TenantEmployeesList PagedEmployeesList="@Employees" OnPageChange="HandlePageChangeAsync" />
+        }
+    </div>
+</div>
 
 @code {
+    private bool IsLoadingModelData { get; set; } = true;
+    private PagedListResponse<TenantEmployeeModel>? Employees { get; set; }
 
+    protected override async Task OnInitializedAsync() => await LoadEmployeesAsync();
+
+    protected async Task HandlePageChangeAsync(int page) => await LoadEmployeesAsync(page);
+
+    private async Task LoadEmployeesAsync(int page = 1)
+    {
+        IsLoadingModelData = true;
+
+        var query = new TenantEmployeesQuery
+        {
+            TenantId = ResourceIdeaRequestContext.Tenant,
+            PageNumber = page,
+            PageSize = 10
+        };
+
+        var response = await Mediator.Send(query);
+        if (response.IsSuccess && response.Content.HasValue)
+        {
+            Employees = response.Content.Value;
+        }
+        else
+        {
+            // TODO: Display message for failure to get job positions
+        }
+        IsLoadingModelData = false;
+        StateHasChanged();
+    }
 }

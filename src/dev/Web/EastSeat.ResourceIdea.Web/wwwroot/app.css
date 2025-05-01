@@ -65,3 +65,11 @@ h1:focus {
 .equal-height-home .card-body {
     flex-grow: 1;
 }
+
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    max-width: 350px;
+}
