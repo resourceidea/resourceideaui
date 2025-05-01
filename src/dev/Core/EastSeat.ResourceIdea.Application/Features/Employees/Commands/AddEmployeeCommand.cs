@@ -1,7 +1,7 @@
 // ===============================================================================================
-//  File: HireEmployeeCommand.cs
-//  Path: src\dev\Core\EastSeat.ResourceIdea.Application\Features\Employees\Commands\HireEmployeeCommand.cs
-//  Description: Command to hire an employee. This command is used to create a new employee record in the system.
+//  File: AddEmployeeCommand.cs
+//  Path: src\dev\Core\EastSeat.ResourceIdea.Application\Features\Employees\Commands\AddEmployeeCommand.cs
+//  Description: Command to add a new employee. This command is used to create a new employee record in the system.
 // ================================================================================================
 
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
