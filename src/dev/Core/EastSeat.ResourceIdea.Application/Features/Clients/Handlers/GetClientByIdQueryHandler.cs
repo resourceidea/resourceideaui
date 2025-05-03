@@ -1,7 +1,6 @@
 using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Clients.Queries;
 using EastSeat.ResourceIdea.Application.Features.Clients.Specifications;
-using EastSeat.ResourceIdea.Application.Mappers;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Types;

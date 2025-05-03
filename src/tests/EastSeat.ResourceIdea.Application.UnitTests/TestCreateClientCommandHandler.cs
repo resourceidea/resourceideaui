@@ -1,7 +1,6 @@
 using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
 using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
-using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
@@ -56,7 +55,7 @@ public class TestCreateClientCommandHandler
 
         // Assert
         result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Be(ErrorCode.EmptyEntityOnCreateClient);
+        result.Error.Should().Be(ErrorCode.CommandValidationFailure);
     }
 
     [Fact(Skip = "To be implemented")]
