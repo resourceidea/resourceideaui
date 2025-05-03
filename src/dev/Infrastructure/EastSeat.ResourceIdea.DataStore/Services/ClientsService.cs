@@ -89,7 +89,7 @@ public sealed class ClientsService(ResourceIdeaDBContext dbContext) : IClientsSe
             FROM [dbo].[Clients] c
             WHERE c.TenantId = @TenantId
             ORDER BY c.Name
-            OFFSET @Offset ROWS FETCH NEXT @Size ROWS ONLY";
+            OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
 
         var sqlParameters = new List<object>
             {
