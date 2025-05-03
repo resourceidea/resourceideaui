@@ -1,4 +1,5 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
+﻿using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Types;
 
@@ -9,11 +10,22 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Queries;
 /// <summary>
 /// Query to get a list of clients.
 /// </summary>
-public sealed class GetClientsListQuery : IRequest<ResourceIdeaResponse<PagedListResponse<ClientModel>>>
+public sealed class TenantClientsQuery : BaseRequest<ResourceIdeaResponse<PagedListResponse<ClientModel>>>
 {
-    public int CurrentPageNumber { get; set; } = 1;
+    public int PageNumber { get; set; } = 1;
 
     public int PageSize { get; set; } = 10;
 
-    public string Filter { get; set; } = string.Empty;
+    public override ValidationResponse Validate()
+    {
+        var validationFailureMessages = new[]
+        {
+            TenantId.ValidateRequired(),
+        }
+        .Where(message => !string.IsNullOrWhiteSpace(message));
+
+        return validationFailureMessages.Any()
+            ? new ValidationResponse(false, validationFailureMessages)
+            : new ValidationResponse(true, []);
+    }
 }

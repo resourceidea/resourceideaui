@@ -34,14 +34,14 @@
         }
         else
         {
-            <TenantEmployeesList PagedEmployeesList="@Employees" OnPageChange="HandlePageChangeAsync" />
+            <TenantEmployeesList PagedEmployeesList="@TenantEmployees" OnPageChange="HandlePageChangeAsync" />
         }
     </div>
 </div>
 
 @code {
     private bool IsLoadingModelData { get; set; } = true;
-    private PagedListResponse<TenantEmployeeModel>? Employees { get; set; }
+    private PagedListResponse<TenantEmployeeModel>? TenantEmployees { get; set; }
 
     protected override async Task OnInitializedAsync() => await LoadEmployeesAsync();
 
@@ -61,7 +61,7 @@
         var response = await Mediator.Send(query);
         if (response.IsSuccess && response.Content.HasValue)
         {
-            Employees = response.Content.Value;
+            TenantEmployees = response.Content.Value;
         }
         else
         {

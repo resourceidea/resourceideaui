@@ -14,7 +14,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Employees.Queries;
 /// <summary>
 /// Query for tenant's employees.
 /// </summary>
-public class TenantEmployeesQuery : BaseRequest<PagedListResponse<TenantEmployeeModel>>
+public sealed class TenantEmployeesQuery : BaseRequest<PagedListResponse<TenantEmployeeModel>>
 {
     public int PageNumber { get; set; } = 1;
 

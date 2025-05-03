@@ -1,0 +1,97 @@
+@* ------------------------------------------------------------------------------
+    File: TenantEmployeesList.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Shared/Lists
+    Description: Employee List component
+   ------------------------------------------------------------------------------ *@
+
+<div class="card mt-1">
+    <div class="card-header">
+        <div class="input-group input-group-sm">
+            <input type="text" class="form-control" placeholder="Search clients..." aria-label="Search clients">
+            <button class="btn btn-outline-secondary" type="button">
+                <i class="fa-solid fa-search"></i>
+            </button>
+        </div>
+    </div>
+    <table class="table table-sm table-striped table-hover table-borderless">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>Street</th>
+                <th>Building</th>
+                <th class="col-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (PagedClientsList != null && PagedClientsList.Items.Count > 0)
+            {
+                foreach (var client in PagedClientsList.Items)
+                {
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="col-2">
+                            <NavLink class="btn btn-outline-primary btn-sm" href=@($"/clients/{client.ClientId}")>
+                                View
+                            </NavLink>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center">No clients found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (PagedClientsList != null && PagedClientsList.TotalCount > 0)
+    {
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <div>
+                <span>Page @(PagedClientsList.CurrentPage) of @PagedClientsList.Pages</span>
+            </div>
+            <div>
+                <button class="btn btn-outline-secondary btn-sm me-2" @onclick="GoToPreviousPage"
+                    disabled="@(PagedClientsList.CurrentPage <= 1)">
+                    Previous
+                </button>
+                <button class="btn btn-outline-secondary btn-sm" @onclick="GoToNextPage"
+                    disabled="@(!PagedClientsList.HasNextPage)">
+                    Next
+                </button>
+            </div>
+        </div>
+    }
+
+</div>
+<br />
+
+@code {
+    [Parameter]
+    public PagedListResponse<TenantClientModel>? PagedClientsList { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnClientsPageChange { get; set; }
+
+    private async Task GoToPreviousPage()
+    {
+        if (PagedClientsList != null && PagedClientsList.CurrentPage > 1)
+        {
+            await OnClientsPageChange.InvokeAsync(PagedClientsList.CurrentPage - 1);
+        }
+    }
+
+    private async Task GoToNextPage()
+    {
+        if (PagedClientsList != null && PagedClientsList.HasNextPage)
+        {
+            await OnClientsPageChange.InvokeAsync(PagedClientsList.CurrentPage + 1);
+        }
+    }
+}
