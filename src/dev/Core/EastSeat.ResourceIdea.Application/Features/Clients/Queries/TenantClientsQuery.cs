@@ -1,4 +1,4 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Types;
