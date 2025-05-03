@@ -11,6 +11,10 @@ using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Application.Features.Employees.Specifications;
 
+/// <summary>
+/// Specification for retrieving tenant employees.
+/// </summary>
+/// <param name="tenantId"></param>
 public class TenantEmployeesSpecification(TenantId tenantId) : BaseSpecification<Employee>
 {
     public TenantId TenantId => tenantId;

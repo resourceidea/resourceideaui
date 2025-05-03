@@ -20,7 +20,6 @@
                 <th>City</th>
                 <th>Street</th>
                 <th>Building</th>
-                <th class="col-2">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -29,22 +28,21 @@
                 foreach (var client in PagedClientsList.Items)
                 {
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="col-2">
-                            <NavLink class="btn btn-outline-primary btn-sm" href=@($"/clients/{client.ClientId}")>
-                                View
+                        <td>
+                            <NavLink class="text-decoration-none" href=@($"/clients/{client.ClientId}")>
+                                @($"{client.Name}")
                             </NavLink>
                         </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 }
             }
             else
             {
                 <tr>
-                    <td colspan="5" class="text-center">No clients found.</td>
+                    <td colspan="4" class="text-center">No clients found.</td>
                 </tr>
             }
         </tbody>

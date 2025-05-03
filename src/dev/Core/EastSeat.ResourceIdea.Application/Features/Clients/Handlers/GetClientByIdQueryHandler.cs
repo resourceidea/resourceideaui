@@ -2,6 +2,7 @@ using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Clients.Queries;
 using EastSeat.ResourceIdea.Application.Features.Clients.Specifications;
 using EastSeat.ResourceIdea.Application.Mappers;
+using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Types;
 
@@ -35,6 +36,6 @@ public sealed class GetClientByIdQueryHandler(IClientsService clientsService)
             return ResourceIdeaResponse<ClientModel>.NotFound();
         }
 
-        return result.Content.Value.ToResourceIdeaResponse();
+        return result.Content.Value.ToResourceIdeaResponse<Client, ClientModel>();
     }
 }

@@ -1,8 +1,12 @@
+// =============================================================================================
+// File: CreateClientCommandHandler.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Application\Features\Clients\Handlers\CreateClientCommandHandler.cs
+// Description: Command handler for creating a client.
+// =============================================================================================
+
 using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
 using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
-using EastSeat.ResourceIdea.Application.Features.Clients.Validators;
-using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
-using EastSeat.ResourceIdea.Application.Mappers;
+using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Enums;
@@ -17,53 +21,31 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
 /// </summary>
 /// <param name="clientService"></param>
 /// <param name="tenantsService"></param>
-public sealed class CreateClientCommandHandler(IClientsService clientService, ITenantsService tenantsService)
-    : IRequestHandler<CreateClientCommand, ResourceIdeaResponse<ClientModel>>
+public sealed class CreateClientCommandHandler(IClientsService clientService)
+    : BaseHandler,
+      IRequestHandler<CreateClientCommand, ResourceIdeaResponse<ClientModel>>
 {
     private readonly IClientsService _clientService = clientService;
-    private readonly ITenantsService _tenantsService = tenantsService;
 
     public async Task<ResourceIdeaResponse<ClientModel>> Handle(
-        CreateClientCommand request,
+        CreateClientCommand command,
         CancellationToken cancellationToken)
     {
-        var commandValidation = await ValidateCommand(request, cancellationToken);
-        if (commandValidation.IsFailure)
+        ValidationResponse commandValidation = command.Validate();
+        if (commandValidation.IsValid is false && commandValidation.ValidationFailureMessages.Any())
         {
-            return commandValidation;
+            // TODO: Log validation failure.
+            return ResourceIdeaResponse<ClientModel>.Failure(ErrorCode.CommandValidationFailure);
         }
 
-        Client client = request.ToEntity();
-        client.TenantId = _tenantsService.GetTenantIdFromLoginSession(cancellationToken);
-        var result = await _clientService.AddAsync(client, cancellationToken);
-
-        if (result.IsFailure)
+        Client client = command.ToEntity();
+        var addClientResponse = await _clientService.AddAsync(client, cancellationToken);
+        if (addClientResponse.IsFailure)
         {
-            return ResourceIdeaResponse<ClientModel>.Failure(result.Error);
+            // TODO: Log failure to add a client.
+            return ResourceIdeaResponse<ClientModel>.Failure(addClientResponse.Error);
         }
 
-        if (result.Content.HasValue is false)
-        {
-            return ResourceIdeaResponse<ClientModel>.Failure(ErrorCode.EmptyEntityOnCreateClient);
-        }
-
-        return result.Content.Value.ToResourceIdeaResponse();
-    }
-
-    private static async Task<ResourceIdeaResponse<ClientModel>> ValidateCommand(
-        CreateClientCommand request,
-        CancellationToken cancellationToken)
-    {
-        var commandValidationResponse = ResourceIdeaResponse<ClientModel>.Success(Optional<ClientModel>.None);
-        
-        CreateClientCommandValidator validator = new();
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (validationResult.IsValid is false || validationResult.Errors.Count > 0)
-        {
-            commandValidationResponse = ResourceIdeaResponse<ClientModel>.Failure(
-                ErrorCode.EmptyEntityOnCreateClient);
-        }
-
-        return commandValidationResponse;
+        return addClientResponse.Content.Value.ToResourceIdeaResponse<Client, ClientModel>();
     }
 }

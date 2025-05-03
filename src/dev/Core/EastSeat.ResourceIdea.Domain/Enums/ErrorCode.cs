@@ -308,4 +308,5 @@ public enum ErrorCode
     /// Indicates that the employee query validation failed.
     /// </summary>
     EmployeeQueryValidationFailure,
+    FailureOnTenantClientsSpecification,
 }

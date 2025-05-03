@@ -16,7 +16,7 @@ using EastSeat.ResourceIdea.Domain.Types;
 
 using MediatR;
 
-namespace EastSeat.ResourceIdea.Application.Features.JobPositions.Handlers;
+namespace EastSeat.ResourceIdea.Application.Features.Employees.Handlers;
 
 /// <summary>
 /// Handles the query for tenant's employees.

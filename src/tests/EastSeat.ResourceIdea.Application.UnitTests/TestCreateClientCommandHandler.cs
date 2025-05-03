@@ -17,15 +17,13 @@ namespace EastSeat.ResourceIdea.Application.UnitTests;
 public class TestCreateClientCommandHandler
 {
     private readonly Mock<IClientsService> _mockClientsService;
-    private readonly Mock<ITenantsService> _mockTenantsService;
     private readonly CreateClientCommandHandler _handler;
     private readonly ClientId _clientId;
 
     public TestCreateClientCommandHandler()
     {
         _mockClientsService = new Mock<IClientsService>();
-        _mockTenantsService = new Mock<ITenantsService>();
-        _handler = new CreateClientCommandHandler(_mockClientsService.Object, _mockTenantsService.Object);
+        _handler = new CreateClientCommandHandler(_mockClientsService.Object);
         _clientId = ClientId.Create(Guid.NewGuid());
     }
 
@@ -51,7 +49,7 @@ public class TestCreateClientCommandHandler
     public async Task ShouldReturnFailure_WhenValidationFails()
     {
         // Arrange
-        var command = GetCreateClientCommand(isInvalidCommand: true);        
+        var command = GetCreateClientCommand(isInvalidCommand: true);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

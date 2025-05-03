@@ -1,3 +1,10 @@
+// =========================================================================================
+// File: Client.cs
+// Path: src\dev\Core\EastSeat.ResourceIdea.Domain\Clients\Entities\Client.cs
+// Description: Client entity representing a client in the system.
+// =========================================================================================
+
+using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
 using EastSeat.ResourceIdea.Domain.Types;
@@ -27,13 +34,35 @@ public class Client : BaseEntity
     /// <returns>True if instance is empty; Otherwise, False.</returns>
     public bool IsEmpty() => this == EmptyClient.Instance;
 
-    public override TModel ToModel<TModel>()
+    public override TModel ToModel<TModel>() where TModel : class
     {
-        throw new NotImplementedException();
+        return typeof(TModel) switch
+        {
+            var t when t == typeof(ClientModel) => (TModel)(object)MapToClientModel(),
+            var t when t == typeof(TenantClientModel) => (TModel)(object)MapToTenantClientModel(),
+            _ => throw new InvalidOperationException($"Mapping for {typeof(TModel).Name} is not configured."),
+        };
     }
+
+    private TenantClientModel MapToTenantClientModel()
+    {
+        return new TenantClientModel(Id, Address, Name);
+    }
+
+    private ClientModel MapToClientModel() => new()
+    {
+        ClientId = Id,
+        Name = Name,
+        Address = Address,
+    };
 
     public override ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()
     {
-        throw new NotImplementedException();
+        return typeof(TModel) switch
+        {
+            var t when t == typeof(ClientModel) => ResourceIdeaResponse<TModel>.Success(ToModel<TModel>()),
+            var t when t == typeof(TenantClientModel) => ResourceIdeaResponse<TModel>.Success(ToModel<TModel>()),
+            _ => throw new InvalidOperationException($"Cannot map {typeof(TEntity).Name} to {typeof(TModel).Name}")
+        };
     }
 }
