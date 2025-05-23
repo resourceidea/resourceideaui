@@ -7,8 +7,6 @@ using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 
-using FluentAssertions;
-
 using Moq;
 
 namespace EastSeat.ResourceIdea.Application.UnitTests;
@@ -40,8 +38,10 @@ public class TestCreateClientCommandHandler
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        result.IsSuccess.Should().BeTrue();
-        result.Content.Value.Should().BeEquivalentTo(clientModel);
+        Assert.True(result.IsSuccess);
+        Assert.Equal(clientModel.ClientId, result.Content.Value.ClientId);
+        Assert.Equal(clientModel.Name, result.Content.Value.Name);
+        Assert.Equal(clientModel.Address, result.Content.Value.Address);
     }
 
     [Fact]
@@ -54,8 +54,8 @@ public class TestCreateClientCommandHandler
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Be(ErrorCode.CommandValidationFailure);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(ErrorCode.CommandValidationFailure, result.Error);
     }
 
     [Fact(Skip = "To be implemented")]
@@ -71,8 +71,8 @@ public class TestCreateClientCommandHandler
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Be(ErrorCode.GetRepositoryFailure);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(ErrorCode.GetRepositoryFailure, result.Error);
     }
 
     private CreateClientCommand GetCreateClientCommand(bool isInvalidCommand = false)
