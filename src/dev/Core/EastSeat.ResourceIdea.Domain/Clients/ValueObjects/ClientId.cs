@@ -1,14 +1,17 @@
-﻿using EastSeat.ResourceIdea.Domain.Exceptions;
+﻿using System.ComponentModel;
+using EastSeat.ResourceIdea.Domain.Exceptions;
+using EastSeat.ResourceIdea.Domain.TypeConverters;
 
 namespace EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 
 /// <summary>
 /// Client DepartmentId.
 /// </summary>
+[TypeConverter(typeof(ClientIdConverter))]
 public readonly record struct ClientId
 {
     /// <summary>
-    /// Client DepartmentId value.
+    /// Client Id value.
     /// </summary>
     public Guid Value { get; }
 
@@ -18,9 +21,9 @@ public readonly record struct ClientId
     }
 
     /// <summary>
-    /// Create a new Client DepartmentId.
+    /// Create a new Client Id.
     /// </summary>
-    /// <param name="value">Client DepartmentId as a Guid.</param>
+    /// <param name="value">Client Id as a Guid.</param>
     /// <returns>Instance of <see cref="ClientId"/>.</returns>
     /// <exception cref="InvalidEntityIdException">Thrown when creating a new <see cref="ClientId"/> from an empty Guid.</exception>
     public static ClientId Create(Guid value)
@@ -54,4 +57,13 @@ public readonly record struct ClientId
     /// Empty client id.
     /// </summary>
     public static ClientId Empty => new(Guid.Empty);
+
+    /// <summary>
+    /// Validates whether the ClientId is not empty.
+    /// </summary>
+    /// <returns>Validation failure message.</returns>
+    public string ValidateRequired()
+    {
+        return Value == Guid.Empty ? "TenantId is required." : string.Empty;
+    }
 }

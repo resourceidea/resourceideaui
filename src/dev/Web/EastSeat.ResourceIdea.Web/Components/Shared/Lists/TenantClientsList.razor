@@ -4,6 +4,8 @@
     Description: Employee List component
    ------------------------------------------------------------------------------ *@
 
+@using Microsoft.AspNetCore.Components.Routing
+
 <div class="card mt-1">
     <div class="card-header">
         <div class="input-group input-group-sm">
@@ -29,13 +31,13 @@
                 {
                     <tr>
                         <td>
-                            <NavLink class="text-decoration-none" href=@($"/clients/{client.ClientId}")>
-                                @($"{client.Name}")
+                            <NavLink class="text-decoration-none" href=@($"/clients/{client.ClientId.Value}")>
+                                @client.Name
                             </NavLink>
                         </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>@client.Address.City</td>
+                        <td>@client.Address.Street</td>
+                        <td>@client.Address.Building</td>
                     </tr>
                 }
             }

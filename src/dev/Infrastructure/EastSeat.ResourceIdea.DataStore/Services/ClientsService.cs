@@ -1,4 +1,10 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
+﻿// ===========================================================================================
+// File: ClientsService.cs
+// Path: src\dev\Infrastructure\EastSeat.ResourceIdea.DataStore\Services\ClientsService.cs
+// Description: Service for managing clients.
+// ===========================================================================================
+
+using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Clients.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
@@ -19,11 +25,31 @@ namespace EastSeat.ResourceIdea.DataStore.Services;
 public sealed class ClientsService(ResourceIdeaDBContext dbContext) : IClientsService
 {
     private readonly ResourceIdeaDBContext _dbContext = dbContext;
-    
+
     /// <inheritdoc />
-    public Task<ResourceIdeaResponse<Client>> AddAsync(Client entity, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<Client>> AddAsync(Client entity, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            await _dbContext.Clients.AddAsync(entity, cancellationToken);
+            int result = await _dbContext.SaveChangesAsync(cancellationToken);
+            if (result > 0)
+            {
+                return ResourceIdeaResponse<Client>.Success(entity);
+            }
+
+            return ResourceIdeaResponse<Client>.Failure(ErrorCode.DbInsertFailureOnAddClient);
+        }
+        catch (DbUpdateException dbEx)
+        {
+            if (dbEx.InnerException?.Message.Contains("duplicate") == true ||
+                dbEx.InnerException?.Message.Contains("unique constraint") == true)
+            {
+                return ResourceIdeaResponse<Client>.Failure(ErrorCode.ClientAlreadyExists);
+            }
+
+            return ResourceIdeaResponse<Client>.Failure(ErrorCode.DatabaseError);
+        }
     }
 
     /// <inheritdoc />
@@ -33,9 +59,15 @@ public sealed class ClientsService(ResourceIdeaDBContext dbContext) : IClientsSe
     }
 
     /// <inheritdoc />
-    public Task<ResourceIdeaResponse<Client>> GetByIdAsync(BaseSpecification<Client> specification, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<Client>> GetByIdAsync(BaseSpecification<Client> specification, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        Client? client = await _dbContext.Clients.AsNoTracking().FirstOrDefaultAsync(specification.Criteria, cancellationToken);
+        if (client == null)
+        {
+            return ResourceIdeaResponse<Client>.NotFound();
+        }
+
+        return ResourceIdeaResponse<Client>.Success(client);
     }
 
     /// <inheritdoc />
