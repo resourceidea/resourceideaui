@@ -39,9 +39,7 @@ public class TestCreateClientCommandHandler
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(clientModel.ClientId, result.Content.Value.ClientId);
-        Assert.Equal(clientModel.Name, result.Content.Value.Name);
-        Assert.Equal(clientModel.Address, result.Content.Value.Address);
+        Assert.Equal(clientModel, result.Content.Value);
     }
 
     [Fact]
