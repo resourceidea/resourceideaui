@@ -84,6 +84,6 @@ public readonly record struct ClientId
     /// <returns>Validation failure message.</returns>
     public string ValidateRequired()
     {
-        return Value == Guid.Empty ? "TenantId is required." : string.Empty;
+        return Value == Guid.Empty ? "ClientId is required." : string.Empty;
     }
 }
