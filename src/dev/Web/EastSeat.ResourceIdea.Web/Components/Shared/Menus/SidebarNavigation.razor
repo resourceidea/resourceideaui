@@ -4,7 +4,7 @@
     Description: Sidebar navigation component matching Figma design
    ---------------------------------------------------------------------------------- *@
 
-<div class="sidebar-navigation">
+<aside class="sidebar-navigation">
     <!-- Brand Header -->
     <div class="sidebar-header">
         <div class="brand-section">
@@ -27,7 +27,7 @@
     </div>
 
     <!-- Navigation Sections -->
-    <div class="sidebar-content">
+    <nav class="sidebar-content">
         <!-- Views Section -->
         <div class="nav-section">
             <button class="section-header @(viewsExpanded ? "expanded" : "")" @onclick="ToggleViews">
@@ -35,18 +35,18 @@
                 <i class="fa-solid fa-chevron-right section-arrow"></i>
             </button>
             <div class="section-content @(viewsExpanded ? "show" : "")">
-                <NavLink class="nav-item" href="#" Match="NavLinkMatch.All">
+                <a class="nav-item" href="#" role="menuitem">
                     <i class="fa-solid fa-calendar-days nav-icon"></i>
                     <span class="nav-text">Resources Timeline</span>
-                </NavLink>
-                <NavLink class="nav-item" href="#" Match="NavLinkMatch.All">
+                </a>
+                <a class="nav-item" href="#" role="menuitem">
                     <i class="fa-solid fa-chart-line nav-icon"></i>
                     <span class="nav-text">Service Lines Timeline</span>
-                </NavLink>
-                <NavLink class="nav-item" href="#" Match="NavLinkMatch.All">
+                </a>
+                <a class="nav-item" href="#" role="menuitem">
                     <i class="fa-solid fa-users nav-icon"></i>
                     <span class="nav-text">Job Managers Timeline</span>
-                </NavLink>
+                </a>
             </div>
         </div>
 
@@ -57,30 +57,30 @@
                 <i class="fa-solid fa-chevron-right section-arrow"></i>
             </button>
             <div class="section-content @(controlPanelExpanded ? "show" : "")">
-                <NavLink class="nav-item" href="/employees" Match="NavLinkMatch.All">
+                <a class="nav-item" href="/employees" role="menuitem">
                     <i class="fa-solid fa-folder nav-icon"></i>
                     <span class="nav-text">Resources</span>
-                </NavLink>
-                <NavLink class="nav-item" href="/clients" Match="NavLinkMatch.All">
+                </a>
+                <a class="nav-item" href="/clients" role="menuitem">
                     <i class="fa-solid fa-users nav-icon"></i>
                     <span class="nav-text">Clients</span>
-                </NavLink>
-                <NavLink class="nav-item" href="#" Match="NavLinkMatch.All">
+                </a>
+                <a class="nav-item" href="#" role="menuitem">
                     <i class="fa-solid fa-chart-bar nav-icon"></i>
                     <span class="nav-text">Lines of Service</span>
-                </NavLink>
-                <NavLink class="nav-item" href="/jobpositions" Match="NavLinkMatch.All">
+                </a>
+                <a class="nav-item" href="/jobpositions" role="menuitem">
                     <i class="fa-solid fa-user nav-icon"></i>
                     <span class="nav-text">Job Positions</span>
-                </NavLink>
-                <NavLink class="nav-item" href="/departments" Match="NavLinkMatch.All">
+                </a>
+                <a class="nav-item" href="/departments" role="menuitem">
                     <i class="fa-solid fa-building nav-icon"></i>
                     <span class="nav-text">Departments</span>
-                </NavLink>
+                </a>
             </div>
         </div>
-    </div>
-</div>
+    </nav>
+</aside>
 
 @code {
     private bool viewsExpanded = true;

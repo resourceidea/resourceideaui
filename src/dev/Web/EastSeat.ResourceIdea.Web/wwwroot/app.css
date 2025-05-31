@@ -261,7 +261,16 @@ h1:focus {
     text-decoration: none !important;
 }
 
-.nav-item.active {
+.nav-item:focus {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    text-decoration: none !important;
+    outline: 2px solid #FFFF99 !important;
+    outline-offset: -2px !important;
+}
+
+.nav-item.active,
+.nav-item:active {
     background-color: rgba(255, 255, 255, 0.15) !important;
     border-left-color: #FFFF99 !important;
     color: white !important;
