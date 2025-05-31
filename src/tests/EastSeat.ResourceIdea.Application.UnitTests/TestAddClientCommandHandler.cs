@@ -11,12 +11,12 @@ using Moq;
 
 namespace EastSeat.ResourceIdea.Application.UnitTests;
 
-public class TestAddClientCommandHandler
+public class TestCreateClientCommandHandler
 {
     private readonly Mock<IClientsService> _mockClientsService;
     private readonly ClientId _clientId;
 
-    public TestAddClientCommandHandler()
+    public TestCreateClientCommandHandler()
     {
         _mockClientsService = new Mock<IClientsService>();
         _clientId = ClientId.Create(Guid.NewGuid());

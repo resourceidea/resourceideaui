@@ -34,35 +34,23 @@ public class Client : BaseEntity
     /// <returns>True if instance is empty; Otherwise, False.</returns>
     public bool IsEmpty() => this == EmptyClient.Instance;
 
-    public override TModel ToModel<TModel>() where TModel : class
-    {
-        return typeof(TModel) switch
+    public override TModel ToModel<TModel>() where TModel : class =>
+        typeof(TModel) switch
         {
             var t when t == typeof(ClientModel) => (TModel)(object)MapToClientModel(),
             var t when t == typeof(TenantClientModel) => (TModel)(object)MapToTenantClientModel(),
             _ => throw new InvalidOperationException($"Mapping for {typeof(TModel).Name} is not configured."),
         };
-    }
 
-    private TenantClientModel MapToTenantClientModel()
-    {
-        return new TenantClientModel(Id, Address, Name);
-    }
+    private TenantClientModel MapToTenantClientModel() => new(Id, Address, Name);
 
-    private ClientModel MapToClientModel() => new()
-    {
-        ClientId = Id,
-        Name = Name,
-        Address = Address,
-    };
+    private ClientModel MapToClientModel() => new(Id, TenantId, Name, Address);
 
-    public override ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()
-    {
-        return typeof(TModel) switch
+    public override ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>() =>
+        typeof(TModel) switch
         {
             var t when t == typeof(ClientModel) => ResourceIdeaResponse<TModel>.Success(ToModel<TModel>()),
             var t when t == typeof(TenantClientModel) => ResourceIdeaResponse<TModel>.Success(ToModel<TModel>()),
             _ => throw new InvalidOperationException($"Cannot map {typeof(TEntity).Name} to {typeof(TModel).Name}")
         };
-    }
 }

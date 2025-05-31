@@ -309,4 +309,8 @@ public enum ErrorCode
     /// </summary>
     EmployeeQueryValidationFailure,
     FailureOnTenantClientsSpecification,
+    DbInsertFailureOnAddClient,
+    ClientAlreadyExists,
+    DatabaseError,
+    ClientQueryValidationFailure,
 }
