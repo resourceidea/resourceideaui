@@ -22,7 +22,9 @@ public sealed class AddClientCommand : BaseRequest<ClientModel>
 
     public string Street { get; set; } = string.Empty;
 
-    public string Building { get; set; } = string.Empty; public override ValidationResponse Validate()
+    public string Building { get; set; } = string.Empty;
+    
+    public override ValidationResponse Validate()
     {
         var validationFailureMessages = new[]
         {

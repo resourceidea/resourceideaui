@@ -17,12 +17,14 @@ public class ClientIdConverter : TypeConverter
 
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
-        if (value is string stringValue)
+        if (value is not string stringValue)
         {
-            return ClientId.Create(stringValue);
+            return base.ConvertFrom(context, culture, value);
         }
 
-        return base.ConvertFrom(context, culture, value);
+        return ClientId.TryCreate(stringValue, out var clientId)
+            ? clientId
+            : throw new NotSupportedException($"The value '{stringValue}' is not a valid {nameof(ClientId)}.");
     }
 
     public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)

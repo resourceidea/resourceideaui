@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Exceptions;
 using EastSeat.ResourceIdea.Domain.TypeConverters;
 
@@ -51,6 +52,25 @@ public readonly record struct ClientId
         }
 
         return Create(clientId);
+    }
+
+    /// <summary>
+    /// Tries to create a new ClientId from a string.
+    /// </summary>
+    /// <param name="value">Client ID as a string.</param>
+    /// <param name="clientId">Output parameter for the created ClientId.</param>
+    /// <returns>True if the ClientId was created successfully, otherwise false.</returns>
+    public static bool TryCreate(string value, out ClientId clientId)
+    {
+        clientId = Empty;
+        if (string.IsNullOrWhiteSpace(value) || !Guid.TryParse(value, out var guidValue))
+        {
+            return false;
+        }
+
+        // TODO: Add validation for creating a ClientId from a Guid.
+        clientId = Create(guidValue);
+        return true;
     }
 
     /// <summary>
