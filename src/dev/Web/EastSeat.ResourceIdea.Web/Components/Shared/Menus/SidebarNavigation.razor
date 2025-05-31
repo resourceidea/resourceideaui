@@ -1,33 +1,28 @@
 @* ----------------------------------------------------------------------------------
     File: SidebarNavigation.razor
     Path: src/Web/EastSeat.ResourceIdea.Web/Components/Shared/Menus/SidebarNavigation.razor
-    Description: Simple sidebar navigation component
+    Description: Basic test sidebar
    ---------------------------------------------------------------------------------- *@
 
-<div class="simple-sidebar">
-    <div class="sidebar-brand">
-        <span>RSM Uganda</span>
-    </div>
-    
-    <div class="sidebar-search">
-        <input type="text" placeholder="Search" />
-    </div>
-    
-    <div class="sidebar-menu">
-        <div class="menu-section">
-            <div class="section-title">Views</div>
-            <a href="#" class="menu-item">📅 Resources Timeline</a>
-            <a href="#" class="menu-item">📊 Service Lines Timeline</a>
-            <a href="#" class="menu-item">👥 Job Managers Timeline</a>
+<div style="position: fixed; top: 0; left: 0; width: 280px; height: 100vh; background-color: #00879c; color: white; padding: 20px; z-index: 1000;">
+    <h3>RSM Uganda</h3>
+    <input type="text" placeholder="Search" style="width: 100%; padding: 8px; margin: 10px 0;" />
+    <div>
+        <h4>Views</h4>
+        <div style="margin-left: 10px;">
+            <a href="#" style="display: block; color: white; padding: 5px 0;">📅 Resources Timeline</a>
+            <a href="#" style="display: block; color: white; padding: 5px 0;">📊 Service Lines Timeline</a>
+            <a href="#" style="display: block; color: white; padding: 5px 0;">👥 Job Managers Timeline</a>
         </div>
-        
-        <div class="menu-section">
-            <div class="section-title">Control Panel</div>
-            <a href="/employees" class="menu-item">📁 Resources</a>
-            <a href="/clients" class="menu-item">👥 Clients</a>
-            <a href="#" class="menu-item">📊 Lines of Service</a>
-            <a href="/jobpositions" class="menu-item">👤 Job Positions</a>
-            <a href="/departments" class="menu-item">🏢 Departments</a>
+    </div>
+    <div>
+        <h4>Control Panel</h4>
+        <div style="margin-left: 10px;">
+            <a href="/employees" style="display: block; color: white; padding: 5px 0;">📁 Resources</a>
+            <a href="/clients" style="display: block; color: white; padding: 5px 0;">👥 Clients</a>
+            <a href="#" style="display: block; color: white; padding: 5px 0;">📊 Lines of Service</a>
+            <a href="/jobpositions" style="display: block; color: white; padding: 5px 0;">👤 Job Positions</a>
+            <a href="/departments" style="display: block; color: white; padding: 5px 0;">🏢 Departments</a>
         </div>
     </div>
 </div>
