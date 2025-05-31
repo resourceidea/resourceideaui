@@ -3,18 +3,11 @@
 
 @inject NotificationService NotificationService
 
-<div>
-    <div class="row">
-        <div class="col-2 mt-1">
-            <AdminNavMenu />
-        </div>
-        <div class="col-10">
-            <div class="notification-container">
-                <NotificationAlert Notification="@currentNotification" OnDismiss="ClearNotification" />
-            </div>
-            @Body
-        </div>
+<div class="admin-content">
+    <div class="notification-container">
+        <NotificationAlert Notification="@currentNotification" OnDismiss="ClearNotification" />
     </div>
+    @Body
 </div>
 
 @code{

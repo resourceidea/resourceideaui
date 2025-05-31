@@ -22,3 +22,5 @@
 .bg-lightyellow {
     background-color: lightyellow;
 }
+
+/* Main layout styles moved to app.css to avoid scoping issues */
