@@ -38,6 +38,6 @@ public class UpdateEmployeeCommandHandler(IEmployeeService employeeService)
             return ResourceIdeaResponse<EmployeeModel>.Failure(updateEmployeeResponse.Error);
         }
 
-        return updateEmployeeResponse.Content.Value.ToResourceIdeaResponse<Employee, EmployeeModel>();
+        return updateEmployeeResponse.Content.ToResourceIdeaResponse<Employee, EmployeeModel>();
     }
 }

@@ -26,12 +26,12 @@ namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers
                 return ResourceIdeaResponse<EngagementModel>.Failure(result.Error);
             }
 
-            if (result.Content.HasValue is false)
+            if (result.Content != null is false)
             {
                 return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.EmptyEntityOnCancelEngagement);
             }
 
-            return result.Content.Value.ToResourceIdeaResponse();
+            return result.Content.ToResourceIdeaResponse();
         }
     }
 }

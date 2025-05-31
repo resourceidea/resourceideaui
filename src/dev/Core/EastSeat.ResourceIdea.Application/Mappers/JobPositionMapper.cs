@@ -29,7 +29,7 @@ public static class JobPositionMapper
         }
 
         var model = jobPosition.ToModel<JobPositionModel>();
-        return ResourceIdeaResponse<JobPositionModel>.Success(Optional<JobPositionModel>.Some(model));
+        return ResourceIdeaResponse<JobPositionModel>.Success(model);
     }
 
     public static ResourceIdeaResponse<PagedListResponse<TModel>> ToResourceIdeaResponse<TModel>(
@@ -52,15 +52,15 @@ public static class JobPositionMapper
             return ResourceIdeaResponse<PagedListResponse<JobPositionModel>>.NotFound();
         }
 
-        var mappedItems = pagedListResponse.Content.Value.Items
+        var mappedItems = pagedListResponse.Content.Items
             .Select(jobPosition => jobPosition.ToModel<JobPositionModel>())
             .ToList();
         var mappedPagedListResponse = new PagedListResponse<JobPositionModel>
         {
             Items = mappedItems,
-            TotalCount = pagedListResponse.Content.Value.TotalCount,
-            CurrentPage = pagedListResponse.Content.Value.CurrentPage,
-            PageSize = pagedListResponse.Content.Value.PageSize
+            TotalCount = pagedListResponse.Content.TotalCount,
+            CurrentPage = pagedListResponse.Content.CurrentPage,
+            PageSize = pagedListResponse.Content.PageSize
         };
 
         return ResourceIdeaResponse<PagedListResponse<JobPositionModel>>.Success(mappedPagedListResponse);
@@ -74,15 +74,15 @@ public static class JobPositionMapper
             return ResourceIdeaResponse<PagedListResponse<TenantJobPositionModel>>.NotFound();
         }
 
-        var mappedItems = pagedListResponse.Content.Value.Items
+        var mappedItems = pagedListResponse.Content.Items
             .Select(jobPosition => jobPosition.ToModel<TenantJobPositionModel>())
             .ToList();
         var mappedPagedListResponse = new PagedListResponse<TenantJobPositionModel>
         {
             Items = mappedItems,
-            TotalCount = pagedListResponse.Content.Value.TotalCount,
-            CurrentPage = pagedListResponse.Content.Value.CurrentPage,
-            PageSize = pagedListResponse.Content.Value.PageSize
+            TotalCount = pagedListResponse.Content.TotalCount,
+            CurrentPage = pagedListResponse.Content.CurrentPage,
+            PageSize = pagedListResponse.Content.PageSize
         };
 
         return ResourceIdeaResponse<PagedListResponse<TenantJobPositionModel>>.Success(mappedPagedListResponse);

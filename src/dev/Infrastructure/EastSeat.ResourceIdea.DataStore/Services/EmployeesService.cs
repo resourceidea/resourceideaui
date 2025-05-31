@@ -68,7 +68,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
         }
 
         await transaction.CommitAsync(cancellationToken);
-        return ResourceIdeaResponse<Employee>.Success(Optional<Employee>.Some(employeeEntry.Entity));
+        return ResourceIdeaResponse<Employee>.Success(employeeEntry.Entity);
     }
 
     /// <inheritdoc />
@@ -118,7 +118,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
                 }
             };
 
-            return ResourceIdeaResponse<Employee>.Success(Optional<Employee>.Some(employee));
+            return ResourceIdeaResponse<Employee>.Success(employee);
         }
         catch (Exception)
         {
@@ -147,7 +147,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
             IReadOnlyList<Employee> employees = MapToEmployeesList(queryResults);
             PagedListResponse<Employee> pagedList = GetPagedList(page, size, tenantEmployeesCount, employees);
 
-            return ResourceIdeaResponse<PagedListResponse<Employee>>.Success(Optional<PagedListResponse<Employee>>.Some(pagedList));
+            return ResourceIdeaResponse<PagedListResponse<Employee>>.Success(pagedList);
         }
         catch (Exception)
         {
@@ -349,7 +349,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
             }
 
             await transaction.CommitAsync(cancellationToken);
-            return ResourceIdeaResponse<Employee>.Success(Optional<Employee>.Some(existingEmployee));
+            return ResourceIdeaResponse<Employee>.Success(existingEmployee);
         }
         catch (DbUpdateException)
         {

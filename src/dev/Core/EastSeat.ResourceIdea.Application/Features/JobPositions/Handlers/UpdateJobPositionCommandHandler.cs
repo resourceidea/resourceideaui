@@ -43,11 +43,11 @@ public sealed class UpdateJobPositionCommandHandler(IJobPositionService jobPosit
             return ResourceIdeaResponse<JobPositionModel>.Failure(response.Error);
         }
 
-        if (response.Content.HasValue is false)
+        if (response.Content != null is false)
         {
             return ResourceIdeaResponse<JobPositionModel>.Failure(ErrorCode.EmptyEntityOnUpdateJobPosition);
         }
 
-        return response.Content.Value.ToResourceIdeaResponse<JobPosition, JobPositionModel>();
+        return response.Content.ToResourceIdeaResponse<JobPosition, JobPositionModel>();
     }
 }

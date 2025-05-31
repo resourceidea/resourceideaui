@@ -38,11 +38,11 @@ public sealed class StartEngagementCommandHandler (IEngagementsService engagemen
             return ResourceIdeaResponse<EngagementModel>.Failure(response.Error);
         }
 
-        if (response.Content.HasValue is false)
+        if (response.Content != null is false)
         {
             return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.EmptyEntityOnStartEngagement);
         }
 
-        return response.Content.Value.ToResourceIdeaResponse();
+        return response.Content.ToResourceIdeaResponse();
     }
 }

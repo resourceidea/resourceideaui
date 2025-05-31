@@ -68,9 +68,9 @@ public partial class AddEmployee : ComponentBase
 
             var response = await Mediator.Send(query);
 
-            if (response.IsSuccess && response.Content.HasValue)
+            if (response.IsSuccess && response.Content != null)
             {
-                var jobPositionDetails = response.Content.Value;
+                var jobPositionDetails = response.Content;
                 SelectedDepartmentId = jobPositionDetails.DepartmentId.Value;
             }
         }
@@ -84,9 +84,9 @@ public partial class AddEmployee : ComponentBase
         var query = new GetAllDepartmentsQuery { TenantId = ResourceIdeaRequestContext.Tenant };
         var response = await Mediator.Send(query);
 
-        if (response.IsSuccess && response.Content.HasValue)
+        if (response.IsSuccess && response.Content != null)
         {
-            Departments = [.. response.Content.Value.Items];
+            Departments = [.. response.Content.Items];
             if (Departments.Count > 0)
             {
                 if (!IsPrePopulated)
@@ -113,9 +113,9 @@ public partial class AddEmployee : ComponentBase
         };
 
         var response = await Mediator.Send(query);
-        if (response.IsSuccess && response.Content.HasValue)
+        if (response.IsSuccess && response.Content != null)
         {
-            var jobPositionSummaries = response.Content.Value.Items;
+            var jobPositionSummaries = response.Content.Items;
             JobPositions = [.. jobPositionSummaries.Select(jp => new TenantJobPositionModel
             {
                 Id = jp.JobPositionId,
@@ -173,7 +173,7 @@ public partial class AddEmployee : ComponentBase
         }
 
         ResourceIdeaResponse<EmployeeModel> response = await Mediator.Send(Command);
-        if (!response.IsSuccess || !response.Content.HasValue)
+        if (!response.IsSuccess || !response.Content != null)
         {
             // TODO: Log failure to add new employee.
             NotificationService.ShowErrorNotification("ERROR: Failed to add new employee.");

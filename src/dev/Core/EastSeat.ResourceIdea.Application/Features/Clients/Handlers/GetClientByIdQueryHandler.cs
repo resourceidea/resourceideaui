@@ -39,7 +39,7 @@ public sealed class GetClientByIdQueryHandler(IClientsService clientsService)
             null => ResourceIdeaResponse<ClientModel>.Failure(ErrorCode.NotFound),
             { IsFailure: true } => ResourceIdeaResponse<ClientModel>.Failure(result.Error),
             { Content.HasValue: false } => ResourceIdeaResponse<ClientModel>.NotFound(),
-            _ => result.Content.Value.ToResourceIdeaResponse<Client, ClientModel>()
+            _ => result.Content.ToResourceIdeaResponse<Client, ClientModel>()
         };
     }
 }

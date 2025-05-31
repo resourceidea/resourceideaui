@@ -28,7 +28,7 @@ public sealed class DepartmentsService(ResourceIdeaDBContext dbContext) : IDepar
             return ResourceIdeaResponse<Department>.Failure(ErrorCode.DbInsertFailureOnCreateDepartment);
         }
 
-        return ResourceIdeaResponse<Department>.Success(Optional<Department>.Some(result.Entity));
+        return ResourceIdeaResponse<Department>.Success(result.Entity);
     }
 
     /// <inheritdoc/>
@@ -48,7 +48,7 @@ public sealed class DepartmentsService(ResourceIdeaDBContext dbContext) : IDepar
                 return ResourceIdeaResponse<Department>.NotFound();
             }
 
-            return ResourceIdeaResponse<Department>.Success(Optional<Department>.Some(department));
+            return ResourceIdeaResponse<Department>.Success(department);
         }
         catch (Exception)
         {
@@ -84,7 +84,7 @@ public sealed class DepartmentsService(ResourceIdeaDBContext dbContext) : IDepar
                 PageSize = size
             };
 
-            return ResourceIdeaResponse<PagedListResponse<Department>>.Success(Optional<PagedListResponse<Department>>.Some(pagedList));
+            return ResourceIdeaResponse<PagedListResponse<Department>>.Success(pagedList);
         }
         catch (Exception)
         {
@@ -116,7 +116,7 @@ public sealed class DepartmentsService(ResourceIdeaDBContext dbContext) : IDepar
                 return ResourceIdeaResponse<Department>.Failure(ErrorCode.DbUpdateFailureOnUpdateDepartment);
             }
 
-            return ResourceIdeaResponse<Department>.Success(Optional<Department>.Some(department));
+            return ResourceIdeaResponse<Department>.Success(department);
         }
         catch (Exception)
         {

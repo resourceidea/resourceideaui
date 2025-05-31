@@ -56,9 +56,9 @@ public partial class ClientDetails : ComponentBase
 
         var response = await Mediator.Send(query);
 
-        if (response is not null && response.IsSuccess && response.Content.HasValue)
+        if (response is not null && response.IsSuccess && response.Content != null)
         {
-            Client = response.Content.Value;
+            Client = response.Content;
         }
         else
         {

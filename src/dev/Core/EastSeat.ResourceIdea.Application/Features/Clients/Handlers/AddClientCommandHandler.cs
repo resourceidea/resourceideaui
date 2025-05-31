@@ -40,6 +40,6 @@ public class AddClientCommandHandler(IClientsService clientsService) :
             return ResourceIdeaResponse<ClientModel>.Failure(addClientResponse.Error);
         }
 
-        return addClientResponse.Content.Value.ToResourceIdeaResponse<Client, ClientModel>();
+        return addClientResponse.Content.ToResourceIdeaResponse<Client, ClientModel>();
     }
 }

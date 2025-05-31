@@ -42,11 +42,11 @@ public class UpdateDepartmentCommandHandler (
             return ResourceIdeaResponse<DepartmentModel>.Failure(result.Error);
         }
 
-        if (!result.Content.HasValue)
+        if (!result.Content != null)
         {
             return ResourceIdeaResponse<DepartmentModel>.Failure(ErrorCode.EmptyEntityOnUpdateDepartment);
         }
 
-        return result.Content.Value.ToResourceIdeaResponse();
+        return result.Content.ToResourceIdeaResponse();
     }
 }

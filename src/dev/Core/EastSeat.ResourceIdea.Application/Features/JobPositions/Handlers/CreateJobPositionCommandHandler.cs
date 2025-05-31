@@ -34,13 +34,13 @@ public sealed class CreateJobPositionCommandHandler(IJobPositionService jobPosit
             newJobPosition,
             cancellationToken);
 
-        if (response is { IsSuccess: false } || response.Content.HasValue == false)
+        if (response is { IsSuccess: false } || response.Content != null == false)
         {
             return ResourceIdeaResponse<JobPositionModel>.Failure(ErrorCode.DbInsertFailureOnCreateJobPosition);
         }
 
-        var responseModel = response.Content.Value.ToModel<JobPositionModel>();
+        var responseModel = response.Content.ToModel<JobPositionModel>();
 
-        return ResourceIdeaResponse<JobPositionModel>.Success(Optional<JobPositionModel>.Some(responseModel));
+        return ResourceIdeaResponse<JobPositionModel>.Success(responseModel);
     }
 }

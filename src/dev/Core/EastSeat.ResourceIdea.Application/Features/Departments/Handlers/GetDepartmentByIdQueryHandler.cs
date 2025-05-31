@@ -29,11 +29,11 @@ public sealed class GetDepartmentByIdQueryHandler(IDepartmentsService department
             return ResourceIdeaResponse<DepartmentModel>.Failure(response.Error);
         }
 
-        if (response.Content.HasValue is false)
+        if (response.Content != null is false)
         {
             return ResourceIdeaResponse<DepartmentModel>.NotFound();
         }
 
-        return response.Content.Value.ToResourceIdeaResponse();
+        return response.Content.ToResourceIdeaResponse();
     }
 }

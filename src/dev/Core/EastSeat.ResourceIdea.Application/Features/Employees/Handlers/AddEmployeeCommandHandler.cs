@@ -39,6 +39,6 @@ public class AddEmployeeCommandHandler(IEmployeeService employeeService)
             return ResourceIdeaResponse<EmployeeModel>.Failure(addEmployeeResponse.Error);
         }
 
-        return addEmployeeResponse.Content.Value.ToResourceIdeaResponse<Employee, EmployeeModel>();
+        return addEmployeeResponse.Content.ToResourceIdeaResponse<Employee, EmployeeModel>();
     }
 }

@@ -49,13 +49,13 @@ public partial class JobPositionDetail : ComponentBase
 
             var response = await Mediator.Send(query);
 
-            if (!response.IsSuccess || !response.Content.HasValue)
+            if (!response.IsSuccess || !response.Content != null)
             {
                 message = "Failed to load job position details";
                 isErrorMessage = true;
             }
 
-            Model = response.Content.Value;
+            Model = response.Content;
         }
         catch (Exception ex)
         {
@@ -93,7 +93,7 @@ public partial class JobPositionDetail : ComponentBase
             }
 
             var response = await Mediator.Send(command);
-            if (response.IsSuccess && response.Content.HasValue)
+            if (response.IsSuccess && response.Content != null)
             {
                 // Update successful, reload data
                 await LoadJobPositionData();

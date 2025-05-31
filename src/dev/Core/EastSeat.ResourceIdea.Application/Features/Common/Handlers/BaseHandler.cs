@@ -27,12 +27,12 @@ public class BaseHandler
         {
             return ResourceIdeaResponse<TModel>.Failure(response.Error);
         }
-        if (response.Content.HasValue is false)
+        if (response.Content != null is false)
         {
             return ResourceIdeaResponse<TModel>.Failure(errorCode);
         }
 
-        return response.Content.Value.ToResourceIdeaResponse<TEntity, TModel>();
+        return response.Content.ToResourceIdeaResponse<TEntity, TModel>();
     }
 
     public static ResourceIdeaResponse<IReadOnlyList<TModel>> GetHandlerResponse<TEntity, TModel>(
@@ -42,12 +42,12 @@ public class BaseHandler
         {
             return ResourceIdeaResponse<IReadOnlyList<TModel>>.Failure(response.Error);
         }
-        if (response.Content.HasValue is false || response.Content.Value.Count == 0)
+        if (response.Content != null is false || response.Content.Count == 0)
         {
             return ResourceIdeaResponse<IReadOnlyList<TModel>>.Failure(ErrorCode.NotFound);
         }
 
-        var items = response.Content.Value;
+        var items = response.Content;
         var models = items.Select(item => item.ToModel<TModel>()).ToList();
 
         return ResourceIdeaResponse<IReadOnlyList<TModel>>.Success(models);
@@ -60,18 +60,18 @@ public class BaseHandler
         {
             return ResourceIdeaResponse<PagedListResponse<TModel>>.Failure(response.Error);
         }
-        if (response.Content.HasValue is false || response.Content.Value.TotalCount == 0)
+        if (response.Content != null is false || response.Content.TotalCount == 0)
         {
             return ResourceIdeaResponse<PagedListResponse<TModel>>.Failure(ErrorCode.NotFound);
         }
 
-        var items = response.Content.Value.Items;
+        var items = response.Content.Items;
         PagedListResponse<TModel> pagedListResponse = new()
         {
             Items = [.. items.Select(item => item.ToModel<TModel>())],
-            TotalCount = response.Content.Value.TotalCount,
-            CurrentPage = response.Content.Value.CurrentPage,
-            PageSize = response.Content.Value.PageSize
+            TotalCount = response.Content.TotalCount,
+            CurrentPage = response.Content.CurrentPage,
+            PageSize = response.Content.PageSize
         };
 
         return ResourceIdeaResponse<PagedListResponse<TModel>>.Success(pagedListResponse);
