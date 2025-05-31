@@ -1,98 +1,33 @@
 @* ----------------------------------------------------------------------------------
     File: SidebarNavigation.razor
     Path: src/Web/EastSeat.ResourceIdea.Web/Components/Shared/Menus/SidebarNavigation.razor
-    Description: Sidebar navigation component matching Figma design
+    Description: Simple sidebar navigation component
    ---------------------------------------------------------------------------------- *@
 
-<aside class="sidebar-navigation">
-    <!-- Brand Header -->
-    <div class="sidebar-header">
-        <div class="brand-section">
-            <div class="brand-logo">
-                <i class="fa-solid fa-circle" style="color: #fff; font-size: 0.8rem;"></i>
-            </div>
-            <span class="brand-text">RSM Uganda</span>
-        </div>
-        <button class="sidebar-toggle" type="button">
-            <i class="fa-solid fa-bars"></i>
-        </button>
+<div class="simple-sidebar">
+    <div class="sidebar-brand">
+        <span>RSM Uganda</span>
     </div>
-
-    <!-- Search Bar -->
+    
     <div class="sidebar-search">
-        <div class="search-wrapper">
-            <i class="fa-solid fa-search search-icon"></i>
-            <input type="text" class="search-input" placeholder="Search" />
+        <input type="text" placeholder="Search" />
+    </div>
+    
+    <div class="sidebar-menu">
+        <div class="menu-section">
+            <div class="section-title">Views</div>
+            <a href="#" class="menu-item">📅 Resources Timeline</a>
+            <a href="#" class="menu-item">📊 Service Lines Timeline</a>
+            <a href="#" class="menu-item">👥 Job Managers Timeline</a>
+        </div>
+        
+        <div class="menu-section">
+            <div class="section-title">Control Panel</div>
+            <a href="/employees" class="menu-item">📁 Resources</a>
+            <a href="/clients" class="menu-item">👥 Clients</a>
+            <a href="#" class="menu-item">📊 Lines of Service</a>
+            <a href="/jobpositions" class="menu-item">👤 Job Positions</a>
+            <a href="/departments" class="menu-item">🏢 Departments</a>
         </div>
     </div>
-
-    <!-- Navigation Sections -->
-    <nav class="sidebar-content">
-        <!-- Views Section -->
-        <div class="nav-section">
-            <button class="section-header @(viewsExpanded ? "expanded" : "")" @onclick="ToggleViews">
-                <span class="section-title">Views</span>
-                <i class="fa-solid fa-chevron-right section-arrow"></i>
-            </button>
-            <div class="section-content @(viewsExpanded ? "show" : "")">
-                <a class="nav-item" href="#" role="menuitem">
-                    <i class="fa-solid fa-calendar-days nav-icon"></i>
-                    <span class="nav-text">Resources Timeline</span>
-                </a>
-                <a class="nav-item" href="#" role="menuitem">
-                    <i class="fa-solid fa-chart-line nav-icon"></i>
-                    <span class="nav-text">Service Lines Timeline</span>
-                </a>
-                <a class="nav-item" href="#" role="menuitem">
-                    <i class="fa-solid fa-users nav-icon"></i>
-                    <span class="nav-text">Job Managers Timeline</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- Control Panel Section -->
-        <div class="nav-section">
-            <button class="section-header @(controlPanelExpanded ? "expanded" : "")" @onclick="ToggleControlPanel">
-                <span class="section-title">Control Panel</span>
-                <i class="fa-solid fa-chevron-right section-arrow"></i>
-            </button>
-            <div class="section-content @(controlPanelExpanded ? "show" : "")">
-                <a class="nav-item" href="/employees" role="menuitem">
-                    <i class="fa-solid fa-folder nav-icon"></i>
-                    <span class="nav-text">Resources</span>
-                </a>
-                <a class="nav-item" href="/clients" role="menuitem">
-                    <i class="fa-solid fa-users nav-icon"></i>
-                    <span class="nav-text">Clients</span>
-                </a>
-                <a class="nav-item" href="#" role="menuitem">
-                    <i class="fa-solid fa-chart-bar nav-icon"></i>
-                    <span class="nav-text">Lines of Service</span>
-                </a>
-                <a class="nav-item" href="/jobpositions" role="menuitem">
-                    <i class="fa-solid fa-user nav-icon"></i>
-                    <span class="nav-text">Job Positions</span>
-                </a>
-                <a class="nav-item" href="/departments" role="menuitem">
-                    <i class="fa-solid fa-building nav-icon"></i>
-                    <span class="nav-text">Departments</span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</aside>
-
-@code {
-    private bool viewsExpanded = true;
-    private bool controlPanelExpanded = true;
-
-    private void ToggleViews()
-    {
-        viewsExpanded = !viewsExpanded;
-    }
-
-    private void ToggleControlPanel()
-    {
-        controlPanelExpanded = !controlPanelExpanded;
-    }
-}
+</div>
