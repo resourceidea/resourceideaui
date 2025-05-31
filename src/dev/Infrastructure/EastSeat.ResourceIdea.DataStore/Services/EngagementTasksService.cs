@@ -62,7 +62,7 @@ public sealed class EngagementTasksService : IEngagementTasksService
     }
 
     /// <inheritdoc />
-    public Task<ResourceIdeaResponse<PagedListResponse<EngagementTask>>> GetPagedListAsync(int page, int size, Optional<BaseSpecification<EngagementTask>> specification, CancellationToken cancellationToken)
+    public Task<ResourceIdeaResponse<PagedListResponse<EngagementTask>>> GetPagedListAsync(int page, int size, BaseSpecification<EngagementTask>? specification, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

@@ -33,9 +33,9 @@ public partial class Index : ComponentBase
         };
 
         var response = await Mediator.Send(query);
-        if (response.IsSuccess && response.Content.HasValue)
+        if (response.IsSuccess && response.Content != null)
         {
-            JobPositions = response.Content.Value;
+            JobPositions = response.Content;
         }
         else
         {

@@ -36,11 +36,11 @@ public sealed class UpdateEngagementCommandHandler (IEngagementsService engageme
             return ResourceIdeaResponse<EngagementModel>.Failure(response.Error);
         }
 
-        if (response.Content.HasValue is false)
+        if (response.Content != null is false)
         {
             return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.EmptyEntityOnUpdateEngagement);
         }
 
-        return response.Content.Value.ToResourceIdeaResponse();
+        return response.Content.ToResourceIdeaResponse();
     }
 }

@@ -39,11 +39,11 @@ public sealed class GetEmployeeByIdQueryHandler(IEmployeeService employeeService
             return ResourceIdeaResponse<EmployeeModel>.Failure(employeeQuery.Error);
         }
         
-        if (!employeeQuery.Content.HasValue)
+        if (!employeeQuery.Content != null)
         {
             return ResourceIdeaResponse<EmployeeModel>.Failure(ErrorCode.EmployeeNotFound);
         }
 
-        return employeeQuery.Content.Value.ToResourceIdeaResponse<Employee, EmployeeModel>();
+        return employeeQuery.Content.ToResourceIdeaResponse<Employee, EmployeeModel>();
     }
 }

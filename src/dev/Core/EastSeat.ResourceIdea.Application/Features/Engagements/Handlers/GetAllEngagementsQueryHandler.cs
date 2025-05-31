@@ -21,18 +21,18 @@ public class GetAllEngagementsQueryHandler(IEngagementsService engagementsServic
         var result = await _engagementsService.GetPagedListAsync(
             request.PageNumber,
             request.PageSize,
-            Optional<BaseSpecification<Engagement>>.None,
+            null,
             cancellationToken);
         if (result.IsFailure)
         {
             return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.Failure(result.Error);
         }
 
-        if (result.Content.HasValue is false)
+        if (result.Content is null)
         {
             return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.NotFound();
         }
 
-        return result.Content.Value.ToResourceIdeaResponse();
+        return result.Content.ToResourceIdeaResponse();
     }
 }

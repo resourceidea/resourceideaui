@@ -35,21 +35,21 @@ public static class ResponseMappingConfiguration
             return ResourceIdeaResponse<PagedListResponse<TModel>>.UnSupportedOperation();
         }
 
-        if (pagedListResponse is null || pagedListResponse.IsFailure || !pagedListResponse.Content.HasValue)
+        if (pagedListResponse is null || pagedListResponse.IsFailure || !pagedListResponse.Content != null)
         {
-            return pagedListResponse is null || !pagedListResponse.Content.HasValue
+            return pagedListResponse is null || !pagedListResponse.Content != null
                 ? ResourceIdeaResponse<PagedListResponse<TModel>>.NotFound()
                 : ResourceIdeaResponse<PagedListResponse<TModel>>.Failure(pagedListResponse.Error);
         }
 
-        IReadOnlyList<TModel> mappedItems = [.. pagedListResponse.Content.Value.Items.Select(entity => entity.ToModel<TModel>())];
+        IReadOnlyList<TModel> mappedItems = [.. pagedListResponse.Content.Items.Select(entity => entity.ToModel<TModel>())];
 
         var mappedPagedListResponse = new PagedListResponse<TModel>
         {
             Items = mappedItems,
-            TotalCount = pagedListResponse.Content.Value.TotalCount,
-            CurrentPage = pagedListResponse.Content.Value.CurrentPage,
-            PageSize = pagedListResponse.Content.Value.PageSize
+            TotalCount = pagedListResponse.Content.TotalCount,
+            CurrentPage = pagedListResponse.Content.CurrentPage,
+            PageSize = pagedListResponse.Content.PageSize
         };
 
         return ResourceIdeaResponse<PagedListResponse<TModel>>.Success(mappedPagedListResponse);

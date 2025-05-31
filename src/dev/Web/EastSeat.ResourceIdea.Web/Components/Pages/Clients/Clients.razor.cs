@@ -38,9 +38,9 @@ public partial class Clients : ComponentBase
         };
 
         var response = await Mediator.Send(query);
-        if (response.IsSuccess && response.Content.HasValue)
+        if (response.IsSuccess && response.Content != null)
         {
-            TenantClients = response.Content.Value;
+            TenantClients = response.Content;
         }
         else
         {

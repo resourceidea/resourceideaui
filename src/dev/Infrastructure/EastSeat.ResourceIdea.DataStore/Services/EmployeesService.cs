@@ -68,7 +68,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
         }
 
         await transaction.CommitAsync(cancellationToken);
-        return ResourceIdeaResponse<Employee>.Success(Optional<Employee>.Some(employeeEntry.Entity));
+        return ResourceIdeaResponse<Employee>.Success(employeeEntry.Entity);
     }
 
     /// <inheritdoc />
@@ -118,7 +118,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
                 }
             };
 
-            return ResourceIdeaResponse<Employee>.Success(Optional<Employee>.Some(employee));
+            return ResourceIdeaResponse<Employee>.Success(employee);
         }
         catch (Exception)
         {
@@ -131,12 +131,12 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
     public async Task<ResourceIdeaResponse<PagedListResponse<Employee>>> GetPagedListAsync(
         int page,
         int size,
-        Optional<BaseSpecification<Employee>> specification,
+        BaseSpecification<Employee>? specification,
         CancellationToken cancellationToken)
     {
         try
         {
-            if (specification.HasValue is false || specification.Value is not TenantEmployeesSpecification)
+            if (specification != null is false || specification.Value is not TenantEmployeesSpecification)
             {
                 return ResourceIdeaResponse<PagedListResponse<Employee>>.Failure(ErrorCode.FailureOnTenantEmployeesQuery);
             }
@@ -147,7 +147,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
             IReadOnlyList<Employee> employees = MapToEmployeesList(queryResults);
             PagedListResponse<Employee> pagedList = GetPagedList(page, size, tenantEmployeesCount, employees);
 
-            return ResourceIdeaResponse<PagedListResponse<Employee>>.Success(Optional<PagedListResponse<Employee>>.Some(pagedList));
+            return ResourceIdeaResponse<PagedListResponse<Employee>>.Success(pagedList);
         }
         catch (Exception)
         {
@@ -165,7 +165,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
             PageSize = size
         };
 
-    private static Guid? GetTenantIdFromSpecification(Optional<BaseSpecification<Employee>> specification)
+    private static Guid? GetTenantIdFromSpecification(BaseSpecification<Employee>? specification)
     {
         TenantEmployeesSpecification? employeeSpecification = specification.Value as TenantEmployeesSpecification;
         TenantId tenantId = employeeSpecification?.TenantId ?? TenantId.Empty;
@@ -349,7 +349,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
             }
 
             await transaction.CommitAsync(cancellationToken);
-            return ResourceIdeaResponse<Employee>.Success(Optional<Employee>.Some(existingEmployee));
+            return ResourceIdeaResponse<Employee>.Success(existingEmployee);
         }
         catch (DbUpdateException)
         {

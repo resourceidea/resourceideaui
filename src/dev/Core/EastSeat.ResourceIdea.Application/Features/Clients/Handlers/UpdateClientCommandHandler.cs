@@ -35,6 +35,6 @@ public sealed class UpdateClientCommandHandler (IClientsService clientsService)
             return ResourceIdeaResponse<ClientModel>.Failure(updateClientResponse.Error);
         }
 
-        return updateClientResponse.Content.Value.ToResourceIdeaResponse<Client, ClientModel>();
+        return updateClientResponse.Content.ToResourceIdeaResponse<Client, ClientModel>();
     }
 }

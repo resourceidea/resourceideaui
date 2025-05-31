@@ -28,11 +28,11 @@ public class GetEngagementsByStatusQueryHandler(IEngagementsService engagementsS
             return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.Failure(result.Error);
         }
 
-        if (result.Content.HasValue is false)
+        if (result.Content != null is false)
         {
             return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.NotFound();
         }
 
-        return result.Content.Value.ToResourceIdeaResponse();
+        return result.Content.ToResourceIdeaResponse();
     }
 }

@@ -36,12 +36,12 @@ public sealed class GetTenantsListQueryHandler(ITenantsService tenantsService)
             return ResourceIdeaResponse<PagedListResponse<TenantModel>>.Failure(response.Error);
         }
 
-        if (response.Content.HasValue is false)
+        if (response.Content != null is false)
         {
             return ResourceIdeaResponse<PagedListResponse<TenantModel>>.NotFound();
         }
 
-        return response.Content.Value.ToResourceIdeaResponse();
+        return response.Content.ToResourceIdeaResponse();
     }
 
     private static BaseSpecification<Tenant> GetTenantsQuerySpecification(string queryFilters)

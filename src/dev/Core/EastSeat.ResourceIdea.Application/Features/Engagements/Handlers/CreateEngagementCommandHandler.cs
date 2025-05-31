@@ -27,11 +27,11 @@ public sealed class CreateEngagementCommandHandler (IEngagementsService engageme
             return ResourceIdeaResponse<EngagementModel>.Failure(result.Error);
         }
 
-        if (result.Content.HasValue is false)
+        if (result.Content != null is false)
         {
             return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.EmptyEntityOnCreateEngagement);
         }
 
-        return result.Content.Value.ToResourceIdeaResponse();
+        return result.Content.ToResourceIdeaResponse();
     }
 }

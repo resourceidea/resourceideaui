@@ -40,7 +40,7 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
             return ResourceIdeaResponse<JobPosition>.Failure(ErrorCode.DbInsertFailureOnCreateJobPosition);
         }
 
-        return ResourceIdeaResponse<JobPosition>.Success(Optional<JobPosition>.Some(result.Entity));
+        return ResourceIdeaResponse<JobPosition>.Success(result.Entity);
     }
 
     /// <inheritdoc/>
@@ -66,21 +66,21 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
             return ResourceIdeaResponse<JobPosition>.NotFound();
         }
 
-        return ResourceIdeaResponse<JobPosition>.Success(Optional<JobPosition>.Some(jobPosition));
+        return ResourceIdeaResponse<JobPosition>.Success(jobPosition);
     }
 
     /// <inheritdoc/>
     public async Task<ResourceIdeaResponse<PagedListResponse<JobPosition>>> GetPagedListAsync(
         int page,
         int size,
-        Optional<BaseSpecification<JobPosition>> specification,
+        BaseSpecification<JobPosition>? specification,
         CancellationToken cancellationToken)
     {
         IQueryable<JobPosition> query = _dbContext.JobPositions.AsQueryable();
 
-        if (specification.HasValue)
+        if (specification != null)
         {
-            query = query.Where(specification.Value.Criteria);
+            query = query.Where(specification.Criteria);
         }
 
         int totalCount = await query.CountAsync(cancellationToken);
@@ -99,8 +99,7 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
             PageSize = size
         };
 
-        return ResourceIdeaResponse<PagedListResponse<JobPosition>>
-                .Success(Optional<PagedListResponse<JobPosition>>.Some(pagedList));
+        return ResourceIdeaResponse<PagedListResponse<JobPosition>>.Success(pagedList);
     }
 
     /// <inheritdoc/>
@@ -129,7 +128,7 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
             return ResourceIdeaResponse<JobPosition>.Failure(ErrorCode.DbUpdateFailureOnUpdateDepartment);
         }
 
-        return ResourceIdeaResponse<JobPosition>.Success(Optional<JobPosition>.Some(jobPosition));
+        return ResourceIdeaResponse<JobPosition>.Success(jobPosition);
     }
 
     /// <inheritdoc/>
@@ -174,8 +173,7 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
             PageSize = size
         };
 
-        return ResourceIdeaResponse<PagedListResponse<JobPositionSummary>>
-                .Success(Optional<PagedListResponse<JobPositionSummary>>.Some(pagedList));
+        return ResourceIdeaResponse<PagedListResponse<JobPositionSummary>>.Success(pagedList);
     }
 
     private static bool JobPositionCreatedSuccessfully(

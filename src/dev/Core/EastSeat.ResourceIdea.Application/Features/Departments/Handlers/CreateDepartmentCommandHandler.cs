@@ -44,12 +44,12 @@ public sealed class CreateDepartmentCommandHandler (
             return ResourceIdeaResponse<DepartmentModel>.Failure(result.Error);
         }
 
-        if (!result.Content.HasValue)
+        if (!result.Content != null)
         {
             return ResourceIdeaResponse<DepartmentModel>.Failure(ErrorCode.EmptyEntityOnCreateDepartment);
         }
 
-        return result.Content.Value.ToResourceIdeaResponse();
+        return result.Content.ToResourceIdeaResponse();
     }
 }
 

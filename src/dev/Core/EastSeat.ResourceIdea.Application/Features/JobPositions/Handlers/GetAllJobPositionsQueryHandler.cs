@@ -48,7 +48,7 @@ public sealed class GetAllJobPositionsQueryHandler(IJobPositionService jobPositi
             tenantIdSpec,
             cancellationToken);
 
-        if (!jobPositionsResponse.IsSuccess || !jobPositionsResponse.Content.HasValue)
+        if (!jobPositionsResponse.IsSuccess || !jobPositionsResponse.Content != null)
         {
             return ResourceIdeaResponse<PagedListResponse<TenantJobPositionModel>>.Failure(jobPositionsResponse.Error);
         }

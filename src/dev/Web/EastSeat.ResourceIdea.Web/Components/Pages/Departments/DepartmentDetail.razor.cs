@@ -64,7 +64,7 @@ public partial class DepartmentDetail : ComponentBase
             return;
         }
         ResourceIdeaResponse<DepartmentModel> response = await Mediator.Send(Model);
-        if (response.IsSuccess && response.Content.HasValue)
+        if (response.IsSuccess && response.Content != null)
         {
             DisplayMessage(message: "Changes saved successfully", isError: false);
         }
@@ -97,9 +97,9 @@ public partial class DepartmentDetail : ComponentBase
         }
 
         ResourceIdeaResponse<PagedListResponse<JobPositionSummary>> response = await Mediator.Send(query);
-        if (response.IsSuccess && response.Content.HasValue)
+        if (response.IsSuccess && response.Content != null)
         {
-            JobPositionSummaries = response.Content.Value;
+            JobPositionSummaries = response.Content;
         }
         else
         {
@@ -126,12 +126,12 @@ public partial class DepartmentDetail : ComponentBase
         }
 
         ResourceIdeaResponse<DepartmentModel> response = await Mediator.Send(query);
-        if (response.IsSuccess && response.Content.HasValue)
+        if (response.IsSuccess && response.Content != null)
         {
             Model = new UpdateDepartmentCommand
             {
-                Name = response.Content.Value.Name,
-                DepartmentId = response.Content.Value.DepartmentId,
+                Name = response.Content.Name,
+                DepartmentId = response.Content.DepartmentId,
                 TenantId = ResourceIdeaRequestContext.Tenant
             };
         }

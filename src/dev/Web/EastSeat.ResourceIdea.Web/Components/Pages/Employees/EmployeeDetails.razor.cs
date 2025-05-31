@@ -47,9 +47,9 @@ public partial class EmployeeDetails : ComponentBase
             };
 
             var response = await Mediator.Send(query);
-            if (response.IsSuccess && response.Content.Value is not null)
+            if (response.IsSuccess && response.Content is not null)
             {
-                var employee = response.Content.Value;
+                var employee = response.Content;
                 Command.EmployeeId = employee.EmployeeId;
                 Command.FirstName = employee.FirstName;
                 Command.LastName = employee.LastName;
@@ -91,9 +91,9 @@ public partial class EmployeeDetails : ComponentBase
             };
 
             var response = await Mediator.Send(query);
-            if (response.IsSuccess && response.Content.Value is not null)
+            if (response.IsSuccess && response.Content is not null)
             {
-                Departments = [.. response.Content.Value.Items];
+                Departments = [.. response.Content.Items];
             }
         }
         catch (Exception ex)
@@ -121,9 +121,9 @@ public partial class EmployeeDetails : ComponentBase
             };
 
             var response = await Mediator.Send(query);
-            if (response.IsSuccess && response.Content.Value is not null)
+            if (response.IsSuccess && response.Content is not null)
             {
-                JobPositions = [.. response.Content.Value.Items.Select(j => new JobPositionModel
+                JobPositions = [.. response.Content.Items.Select(j => new JobPositionModel
                 {
                     Id = j.JobPositionId,
                     Title = j.Title ?? string.Empty,

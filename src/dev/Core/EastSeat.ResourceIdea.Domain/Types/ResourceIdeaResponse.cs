@@ -15,7 +15,7 @@ namespace EastSeat.ResourceIdea.Domain.Types;
 public class ResourceIdeaResponse<T> where T : class
 {
     /// <summary>Content from a success response on an operation.</summary>
-    public Optional<T> Content { get; set; }
+    public T? Content { get; set; }
 
     /// <summary>True is the response is a success; Otherwise False.</summary>
     public bool IsSuccess { get; set; }
@@ -26,7 +26,7 @@ public class ResourceIdeaResponse<T> where T : class
     /// <summary>ErrorCode if the operation failed.</summary>
     public ErrorCode Error { get; set; }
 
-    private ResourceIdeaResponse(Optional<T> value, bool isSuccess, ErrorCode error)
+    private ResourceIdeaResponse(T? value, bool isSuccess, ErrorCode error)
     {
         Content = value;
         IsSuccess = isSuccess;
@@ -38,14 +38,14 @@ public class ResourceIdeaResponse<T> where T : class
     /// </summary>
     /// <param name="value">Content from a successful response on an operation.</param>
     /// <returns>A new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a successful response.</returns>
-    public static ResourceIdeaResponse<T> Success(Optional<T> value) => new(value, true, ErrorCode.None);
+    public static ResourceIdeaResponse<T> Success(T? value) => new(value, true, ErrorCode.None);
 
     /// <summary>
     /// Creates a new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a failed response.
     /// </summary>
     /// <param name="errorCode">The error code.</param>
     /// <returns>A new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a failed response.</returns>
-    public static ResourceIdeaResponse<T> Failure(ErrorCode errorCode) => new(Optional<T>.None, false, errorCode);
+    public static ResourceIdeaResponse<T> Failure(ErrorCode errorCode) => new(null, false, errorCode);
 
     /// <summary>
     /// Creates a new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a failed response.
@@ -67,10 +67,10 @@ public class ResourceIdeaResponse<T> where T : class
 
     /// <summary>
     /// Creates a new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a success response
-    /// and the content is <see cref="Optional{T}"/> None.
+    /// and the content is null.
     /// </summary>
     /// <returns></returns>
-    public static ResourceIdeaResponse<T> Success() => Success(Optional<T>.None);
+    public static ResourceIdeaResponse<T> Success() => Success(null);
 
     /// <summary>
     /// Creates a new instance of the <see cref="ResourceIdeaResponse{T}"/> class representing a failed response.
@@ -79,7 +79,7 @@ public class ResourceIdeaResponse<T> where T : class
     /// <param name="onSuccess"></param>
     /// <param name="onFailure"></param>
     /// <returns></returns>
-    public TResult Match<TResult>(Func<Optional<T>, TResult> onSuccess, Func<ErrorCode, TResult> onFailure)
+    public TResult Match<TResult>(Func<T?, TResult> onSuccess, Func<ErrorCode, TResult> onFailure)
     {
         return IsSuccess ? onSuccess(Content) : onFailure(Error);
     }

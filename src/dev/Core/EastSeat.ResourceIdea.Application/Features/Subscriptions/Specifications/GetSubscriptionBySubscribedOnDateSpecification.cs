@@ -19,10 +19,8 @@ public sealed class GetSubscriptionBySubscribedOnDateSpecification(Dictionary<st
     {
         get
         {
-            Optional<DateTimeOffset> filterValidationResult = GetValidatedDateTimeOffset();
-            DateTimeOffset filter = filterValidationResult.Match(
-                some: value => value,
-                none: () => DateTimeOffset.MinValue);
+            DateTimeOffset? filterValidationResult = GetValidatedDateTimeOffset();
+            DateTimeOffset filter = filterValidationResult ?? DateTimeOffset.MinValue;
 
             return filter == DateTimeOffset.MinValue
                 ? subscription => false
@@ -30,21 +28,21 @@ public sealed class GetSubscriptionBySubscribedOnDateSpecification(Dictionary<st
         }
     }
 
-    private Optional<DateTimeOffset> GetValidatedDateTimeOffset()
+    private DateTimeOffset? GetValidatedDateTimeOffset()
     {
         if (_filters is null
             || _filters.Count <= 0
             || !_filters.TryGetValue("subon", out var filterDateValue)
             || string.IsNullOrEmpty(filterDateValue))
         {
-            return Optional<DateTimeOffset>.None;
+            return null;
         }
 
         if (!DateTimeOffset.TryParse(filterDateValue, out DateTimeOffset filterDate))
         {
-            return Optional<DateTimeOffset>.None;
+            return null;
         }
 
-        return Optional<DateTimeOffset>.Some(filterDate);
+        return filterDate;
     }
 }

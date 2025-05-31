@@ -14,10 +14,8 @@ public sealed class GetSubscriptionByStatusSpecification (Dictionary<string, str
     {
         get
         {
-            Optional<string> filterValidationResult = GetValidatedStatusFilter();
-            string filter = filterValidationResult.Match(
-                some: value => value,
-                none: () => string.Empty);
+            string? filterValidationResult = GetValidatedStatusFilter();
+            string filter = filterValidationResult ?? string.Empty;
 
             return string.IsNullOrEmpty(filter)
                 ? subscription => false
@@ -25,16 +23,16 @@ public sealed class GetSubscriptionByStatusSpecification (Dictionary<string, str
         }
     }
 
-    private Optional<string> GetValidatedStatusFilter()
+    private string? GetValidatedStatusFilter()
     {
         if (_filters is null
             || _filters.Count <= 0
             || !_filters.TryGetValue("status", out var statusValue)
             || string.IsNullOrEmpty(statusValue))
         {
-            return Optional<string>.None;
+            return null;
         }
 
-        return Optional<string>.Some(statusValue);
+        return statusValue;
     }
 }

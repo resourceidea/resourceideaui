@@ -18,10 +18,8 @@ public abstract class BaseStringSpecification<TEntity>(Dictionary<string, string
     {
         get
         {
-            Optional<string> optionalFilter = GetValidatedStringFilter();
-            string filter = optionalFilter.Match(
-                some: value => value,
-                none: () => string.Empty);
+            string? optionalFilter = GetValidatedStringFilter();
+            string filter = optionalFilter ?? string.Empty;
 
             return string.IsNullOrEmpty(filter)
                 ? entity => false
@@ -31,17 +29,17 @@ public abstract class BaseStringSpecification<TEntity>(Dictionary<string, string
 
     protected abstract Expression<Func<TEntity, bool>> GetExpression();
 
-    private Optional<string> GetValidatedStringFilter()
+    private string? GetValidatedStringFilter()
     {
         if (_filters is null
             || _filters.Count <= 0
             || !_filters.TryGetValue(GetFilterKey(), out var nameValue)
             || string.IsNullOrEmpty(nameValue))
         {
-            return Optional<string>.None;
+            return null;
         }
 
-        return Optional<string>.Some(nameValue);
+        return nameValue;
     }
 
     protected abstract string GetFilterKey();

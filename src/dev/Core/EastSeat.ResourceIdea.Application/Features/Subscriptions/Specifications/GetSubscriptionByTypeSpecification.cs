@@ -18,10 +18,8 @@ public sealed class GetSubscriptionByTypeSpecification(Dictionary<string, string
     {
         get
         {
-            Optional<string> filterValidationResult = GetValidatedTypeFilter();
-            string filter = filterValidationResult.Match(
-                some: value => value,
-                none: () => string.Empty);
+            string? filterValidationResult = GetValidatedTypeFilter();
+            string filter = filterValidationResult ?? string.Empty;
 
             return string.IsNullOrEmpty(filter)
                 ? subscription => false
@@ -29,16 +27,16 @@ public sealed class GetSubscriptionByTypeSpecification(Dictionary<string, string
         }
     }
 
-    private Optional<string> GetValidatedTypeFilter()
+    private string? GetValidatedTypeFilter()
     {
         if (_filters is null
             || _filters.Count <= 0
             || !_filters.TryGetValue("type", out var typeValue)
             || string.IsNullOrEmpty(typeValue))
         {
-            return Optional<string>.None;
+            return null;
         } 
 
-        return Optional<string>.Some(typeValue);
+        return typeValue;
     }
 }

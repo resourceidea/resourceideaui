@@ -44,7 +44,7 @@ public class ApplicationUserService(UserManager<ApplicationUser> userManager) : 
             return ResourceIdeaResponse<IApplicationUser>.Failure(ErrorCode.AddApplicationUserFailure);
         }
 
-        return ResourceIdeaResponse<IApplicationUser>.Success(Optional<IApplicationUser>.Some(newApplicationUser));
+        return ResourceIdeaResponse<IApplicationUser>.Success(newApplicationUser);
     }
 
     /// <inheritdoc/>
@@ -60,6 +60,6 @@ public class ApplicationUserService(UserManager<ApplicationUser> userManager) : 
             return ResourceIdeaResponse<IApplicationUser>.Failure(ErrorCode.DeleteApplicationUserFailure);
         }
 
-        return ResourceIdeaResponse<IApplicationUser>.Success(Optional<IApplicationUser>.None);
+        return ResourceIdeaResponse<IApplicationUser>.Success(null);
     }
 }

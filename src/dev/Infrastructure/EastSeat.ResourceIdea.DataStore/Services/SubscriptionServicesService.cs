@@ -52,7 +52,7 @@ public sealed class SubscriptionServicesService : ISubscriptionServicesService
     /// <param name="specification">The optional specification to filter the entities.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{PagedListResponse{SubscriptionService}}"/>.</returns>
-    public Task<ResourceIdeaResponse<PagedListResponse<SubscriptionService>>> GetPagedListAsync(int page, int size, Optional<BaseSpecification<SubscriptionService>> specification, CancellationToken cancellationToken)
+    public Task<ResourceIdeaResponse<PagedListResponse<SubscriptionService>>> GetPagedListAsync(int page, int size, BaseSpecification<SubscriptionService>? specification, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

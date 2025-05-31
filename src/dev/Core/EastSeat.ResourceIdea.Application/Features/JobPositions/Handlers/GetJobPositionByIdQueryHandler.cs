@@ -38,13 +38,13 @@ public sealed class GetJobPositionByIdQueryHandler(IJobPositionService jobPositi
             return ResourceIdeaResponse<JobPositionModel>.Failure(response.Error);
         }
         
-        if (response.Content.HasValue is false)
+        if (response.Content != null is false)
         {
             return ResourceIdeaResponse<JobPositionModel>.NotFound();
         }
         
         // Map the entity to model and return
-        var jobPositionModel = response.Content.Value.ToModel<JobPositionModel>();
-        return ResourceIdeaResponse<JobPositionModel>.Success(Optional<JobPositionModel>.Some(jobPositionModel));
+        var jobPositionModel = response.Content.ToModel<JobPositionModel>();
+        return ResourceIdeaResponse<JobPositionModel>.Success(jobPositionModel);
     }
 }
