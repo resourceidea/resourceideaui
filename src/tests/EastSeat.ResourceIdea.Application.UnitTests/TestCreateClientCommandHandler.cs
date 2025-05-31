@@ -28,7 +28,7 @@ public class TestCreateClientCommandHandler
         throw new NotImplementedException();
     }
 
-    [Fact]
+    [Fact(Skip = "To be implemented")]
     public Task ShouldReturnFailure_WhenValidationFails()
     {
         throw new NotImplementedException();
