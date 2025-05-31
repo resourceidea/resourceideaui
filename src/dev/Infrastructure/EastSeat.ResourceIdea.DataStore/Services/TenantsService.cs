@@ -53,7 +53,7 @@ public sealed class TenantsService : ITenantsService
     /// <param name="specification">The optional specification to filter the Tenant entities.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{PagedListResponse{T}}"/>.</returns>
-    public Task<ResourceIdeaResponse<PagedListResponse<Tenant>>> GetPagedListAsync(int page, int size, Optional<BaseSpecification<Tenant>> specification, CancellationToken cancellationToken)
+    public Task<ResourceIdeaResponse<PagedListResponse<Tenant>>> GetPagedListAsync(int page, int size, BaseSpecification<Tenant>? specification, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

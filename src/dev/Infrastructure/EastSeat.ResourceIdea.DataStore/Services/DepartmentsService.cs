@@ -58,15 +58,15 @@ public sealed class DepartmentsService(ResourceIdeaDBContext dbContext) : IDepar
     }
 
     /// <inheritdoc/>
-    public async Task<ResourceIdeaResponse<PagedListResponse<Department>>> GetPagedListAsync(int page, int size, Optional<BaseSpecification<Department>> specification, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<PagedListResponse<Department>>> GetPagedListAsync(int page, int size, BaseSpecification<Department>? specification, CancellationToken cancellationToken)
     {
         try
         {
             IQueryable<Department> query = _dbContext.Departments.AsQueryable();
 
-            if (specification.HasValue)
+            if (specification != null)
             {
-                query = query.Where(specification.Value.Criteria);
+                query = query.Where(specification.Criteria);
             }
 
             int totalCount = await query.CountAsync(cancellationToken);

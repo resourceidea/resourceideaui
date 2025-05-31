@@ -131,12 +131,12 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
     public async Task<ResourceIdeaResponse<PagedListResponse<Employee>>> GetPagedListAsync(
         int page,
         int size,
-        Optional<BaseSpecification<Employee>> specification,
+        BaseSpecification<Employee>? specification,
         CancellationToken cancellationToken)
     {
         try
         {
-            if (specification.HasValue is false || specification.Value is not TenantEmployeesSpecification)
+            if (specification != null is false || specification.Value is not TenantEmployeesSpecification)
             {
                 return ResourceIdeaResponse<PagedListResponse<Employee>>.Failure(ErrorCode.FailureOnTenantEmployeesQuery);
             }
@@ -165,7 +165,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
             PageSize = size
         };
 
-    private static Guid? GetTenantIdFromSpecification(Optional<BaseSpecification<Employee>> specification)
+    private static Guid? GetTenantIdFromSpecification(BaseSpecification<Employee>? specification)
     {
         TenantEmployeesSpecification? employeeSpecification = specification.Value as TenantEmployeesSpecification;
         TenantId tenantId = employeeSpecification?.TenantId ?? TenantId.Empty;

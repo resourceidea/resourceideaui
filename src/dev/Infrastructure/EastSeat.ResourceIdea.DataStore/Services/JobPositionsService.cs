@@ -73,14 +73,14 @@ public sealed class JobPositionsService(ResourceIdeaDBContext dbContext) : IJobP
     public async Task<ResourceIdeaResponse<PagedListResponse<JobPosition>>> GetPagedListAsync(
         int page,
         int size,
-        Optional<BaseSpecification<JobPosition>> specification,
+        BaseSpecification<JobPosition>? specification,
         CancellationToken cancellationToken)
     {
         IQueryable<JobPosition> query = _dbContext.JobPositions.AsQueryable();
 
-        if (specification.HasValue)
+        if (specification != null)
         {
-            query = query.Where(specification.Value.Criteria);
+            query = query.Where(specification.Criteria);
         }
 
         int totalCount = await query.CountAsync(cancellationToken);

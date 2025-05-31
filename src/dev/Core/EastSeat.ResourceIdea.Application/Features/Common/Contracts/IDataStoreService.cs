@@ -22,7 +22,7 @@ public interface IDataStoreService<T> where T : BaseEntity
     Task<ResourceIdeaResponse<PagedListResponse<T>>> GetPagedListAsync(
         int page,
         int size,
-        Optional<BaseSpecification<T>> specification,
+        BaseSpecification<T>? specification,
         CancellationToken cancellationToken);
 
     /// <summary>

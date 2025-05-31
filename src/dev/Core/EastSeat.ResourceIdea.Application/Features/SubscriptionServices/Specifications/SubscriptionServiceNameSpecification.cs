@@ -19,10 +19,8 @@ public sealed class SubscriptionServiceNameSpecification (Dictionary<string, str
     {
         get
         {
-            Optional<string> filterValidationResult = GetValidatedNameFilter();
-            string filter = filterValidationResult.Match(
-                some: value => value,
-                none: () => string.Empty);
+            string? filterValidationResult = GetValidatedNameFilter();
+            string filter = filterValidationResult ?? string.Empty;
 
             return string.IsNullOrEmpty(filter)
                 ? subscriptionService => false
@@ -30,16 +28,16 @@ public sealed class SubscriptionServiceNameSpecification (Dictionary<string, str
         }
     }
 
-    private Optional<string> GetValidatedNameFilter()
+    private string? GetValidatedNameFilter()
     {
         if (_filters is null
             || _filters.Count <= 0
             || !_filters.TryGetValue("name", out var nameValue)
             || string.IsNullOrEmpty(nameValue))
         {
-            return Optional<string>.None;
+            return null;
         }
 
-        return Optional<string>.Some(nameValue);
+        return nameValue;
     }
 }

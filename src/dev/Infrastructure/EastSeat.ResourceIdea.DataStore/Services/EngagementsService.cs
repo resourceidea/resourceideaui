@@ -76,7 +76,7 @@ public sealed class EngagementsService : IEngagementsService
     /// <param name="specification">The optional specification to filter the engagements.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{PagedListResponse{Engagement}}"/>.</returns>
-    public Task<ResourceIdeaResponse<PagedListResponse<Engagement>>> GetPagedListAsync(int page, int size, Optional<BaseSpecification<Engagement>> specification, CancellationToken cancellationToken)
+    public Task<ResourceIdeaResponse<PagedListResponse<Engagement>>> GetPagedListAsync(int page, int size, BaseSpecification<Engagement>? specification, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

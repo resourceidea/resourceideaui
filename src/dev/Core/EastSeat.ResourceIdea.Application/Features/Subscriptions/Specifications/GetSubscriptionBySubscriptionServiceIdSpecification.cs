@@ -19,10 +19,8 @@ public sealed class GetSubscriptionBySubscriptionServiceIdSpecification(
     {
         get
         {
-            Optional<Guid> filterValidationResult = GetValidatedSubscriptionServiceId();
-            Guid filter = filterValidationResult.Match(
-                some: value => value,
-                none: () => Guid.Empty);
+            Guid? filterValidationResult = GetValidatedSubscriptionServiceId();
+            Guid filter = filterValidationResult ?? Guid.Empty;
 
             return Guid.Empty == filter
                 ? subscription => false
@@ -30,21 +28,21 @@ public sealed class GetSubscriptionBySubscriptionServiceIdSpecification(
         }
     }
 
-    private Optional<Guid> GetValidatedSubscriptionServiceId()
+    private Guid? GetValidatedSubscriptionServiceId()
     {
         if (_filters is null
             || _filters.Count <= 0
             || !_filters.TryGetValue("subscriptionServiceId", out var subscriptionServiceIdValue)
             || string.IsNullOrEmpty(subscriptionServiceIdValue))
         {
-            return Optional<Guid>.None;
+            return null;
         }
 
-        if (Guid.TryParse(subscriptionServiceIdValue, out Guid subscriptionServiceIdGuid))
+        if (!Guid.TryParse(subscriptionServiceIdValue, out Guid subscriptionServiceIdGuid))
         {
-            return Optional<Guid>.None;
+            return null;
         }
 
-        return Optional<Guid>.Some(subscriptionServiceIdGuid);
+        return subscriptionServiceIdGuid;
     }
 }
