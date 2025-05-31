@@ -41,6 +41,7 @@ h1:focus {
     App Styles
    ============================= */
 
+/* Legacy navbar styles (can be removed if not used elsewhere) */
 #top-navbar {
     background-color: #00879c;
 }
@@ -72,4 +73,9 @@ h1:focus {
     right: 20px;
     z-index: 1050;
     max-width: 350px;
+}
+
+/* Admin content styles */
+.admin-content {
+    position: relative;
 }

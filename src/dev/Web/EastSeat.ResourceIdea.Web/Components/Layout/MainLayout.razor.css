@@ -22,3 +22,102 @@
 .bg-lightyellow {
     background-color: lightyellow;
 }
+
+/* App Layout Styles */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+}
+
+.top-header {
+    background-color: white;
+    border-bottom: 1px solid #dee2e6;
+    padding: 0.75rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-spacer {
+    flex: 1;
+}
+
+.user-profile-dropdown {
+    position: relative;
+}
+
+.user-profile-btn {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    color: #6c757d;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    transition: color 0.2s ease;
+}
+
+.user-profile-btn:hover {
+    color: #495057;
+    background-color: #f8f9fa;
+}
+
+.user-profile-btn i:first-child {
+    font-size: 1.5rem;
+}
+
+.user-profile-btn i:last-child {
+    font-size: 0.8rem;
+}
+
+.page-content {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.app-footer {
+    background-color: white;
+    border-top: 1px solid #dee2e6;
+    padding: 1rem 1.5rem;
+    margin-top: auto;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.copyright {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .page-content {
+        padding: 1rem;
+    }
+}
