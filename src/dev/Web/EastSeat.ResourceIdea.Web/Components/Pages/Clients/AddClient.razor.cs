@@ -5,6 +5,7 @@
 // ======================================================================================
 
 using EastSeat.ResourceIdea.Application.Features.Clients.Commands;
+using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.Web.Services;
 using MediatR;
@@ -21,8 +22,25 @@ public partial class AddClient : ComponentBase
 
     public AddClientCommand Command { get; set; } = new();
 
-    private Task HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
-        throw new NotImplementedException("HandleValidSubmit method is not implemented yet.");
+        Command.TenantId = ResourceIdeaRequestContext.Tenant;
+        ValidationResponse commandValidation = Command.Validate();
+        if (!commandValidation.IsValid && commandValidation.ValidationFailureMessages.Any())
+        {
+            // TODO: Log validation failure.
+            NotificationService.ShowErrorNotification("Validation failed.");
+            return;
+        }
+        var response = await Mediator.Send(Command);
+        if (response.IsSuccess)
+        {
+            NotificationService.ShowSuccessNotification("Client added successfully.");
+            NavigationManager.NavigateTo("/clients");
+        }
+        else
+        {
+            NotificationService.ShowErrorNotification("Failed to add client.");
+        }
     }
 }
