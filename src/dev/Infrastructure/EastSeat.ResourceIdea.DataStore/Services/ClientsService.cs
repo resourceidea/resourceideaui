@@ -40,16 +40,25 @@ public sealed class ClientsService(ResourceIdeaDBContext dbContext) : IClientsSe
 
             return ResourceIdeaResponse<Client>.Failure(ErrorCode.DbInsertFailureOnAddClient);
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException dbException)
         {
-            if (dbEx.InnerException?.Message.Contains("duplicate") == true ||
-                dbEx.InnerException?.Message.Contains("unique constraint") == true)
+            if (IsUniqueConstraintViolation(dbException))
             {
                 return ResourceIdeaResponse<Client>.Failure(ErrorCode.ClientAlreadyExists);
             }
 
             return ResourceIdeaResponse<Client>.Failure(ErrorCode.DatabaseError);
         }
+    }
+
+    private static bool IsUniqueConstraintViolation(DbUpdateException dbException)
+    {
+        return dbException.InnerException switch
+        {
+            SqlException sqlException when sqlException.Number == 2627 || sqlException.Number == 2601 => true, // Unique constraint violation
+            _ => dbException.InnerException?.Message.Contains("unique constraint", StringComparison.OrdinalIgnoreCase) == true ||
+                 dbException.InnerException?.Message.Contains("duplicate", StringComparison.OrdinalIgnoreCase) == true
+        };
     }
 
     /// <inheritdoc />
