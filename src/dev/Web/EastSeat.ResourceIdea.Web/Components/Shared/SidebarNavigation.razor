@@ -90,22 +90,32 @@
 </div>
 
 @code {
-    private bool isPlannerExpanded = true;
-    private bool isClientsExpanded = true;
-    private bool isAdministrationExpanded = true;
+    private enum ExpandedSection
+    {
+        None,
+        Planner,
+        Clients,
+        Administration
+    }
+
+    private ExpandedSection currentExpandedSection = ExpandedSection.Planner;
+
+    private bool isPlannerExpanded => currentExpandedSection == ExpandedSection.Planner;
+    private bool isClientsExpanded => currentExpandedSection == ExpandedSection.Clients;
+    private bool isAdministrationExpanded => currentExpandedSection == ExpandedSection.Administration;
 
     private void TogglePlannerSection()
     {
-        isPlannerExpanded = !isPlannerExpanded;
+        currentExpandedSection = isPlannerExpanded ? ExpandedSection.None : ExpandedSection.Planner;
     }
 
     private void ToggleClientsSection()
     {
-        isClientsExpanded = !isClientsExpanded;
+        currentExpandedSection = isClientsExpanded ? ExpandedSection.None : ExpandedSection.Clients;
     }
 
     private void ToggleAdministrationSection()
     {
-        isAdministrationExpanded = !isAdministrationExpanded;
+        currentExpandedSection = isAdministrationExpanded ? ExpandedSection.None : ExpandedSection.Administration;
     }
 }
