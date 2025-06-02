@@ -181,8 +181,34 @@ public sealed class ClientsService(ResourceIdeaDBContext dbContext) : IClientsSe
     }
 
     /// <inheritdoc />
-    public Task<ResourceIdeaResponse<Client>> UpdateAsync(Client entity, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<Client>> UpdateAsync(Client entity, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var existingClient = await _dbContext.Clients.FirstOrDefaultAsync(c => c.Id == entity.Id && c.TenantId == entity.TenantId, cancellationToken);
+            if (existingClient == null)
+            {
+                return ResourceIdeaResponse<Client>.NotFound();
+            }
+
+            existingClient.Name = entity.Name;
+            existingClient.Address = entity.Address;
+
+            _dbContext.Clients.Update(existingClient);
+            int result = await _dbContext.SaveChangesAsync(cancellationToken);
+            if (result > 0)
+            {
+                return ResourceIdeaResponse<Client>.Success(existingClient);
+            }
+            return ResourceIdeaResponse<Client>.Failure(ErrorCode.EmptyEntityOnUpdateClient);
+        }
+        catch (DbUpdateException dbException)
+        {
+            if (IsUniqueConstraintViolation(dbException))
+            {
+                return ResourceIdeaResponse<Client>.Failure(ErrorCode.ClientAlreadyExists);
+            }
+            return ResourceIdeaResponse<Client>.Failure(ErrorCode.DatabaseError);
+        }
     }
 }
