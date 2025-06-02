@@ -194,6 +194,7 @@ public sealed class ClientsService(ResourceIdeaDBContext dbContext) : IClientsSe
             existingClient.Name = entity.Name;
             existingClient.Address = entity.Address;
 
+            _dbContext.Clients.Update(existingClient);
             int result = await _dbContext.SaveChangesAsync(cancellationToken);
             if (result > 0)
             {

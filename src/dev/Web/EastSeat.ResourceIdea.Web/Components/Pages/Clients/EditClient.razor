@@ -130,7 +130,11 @@ else if (Command != null)
 
     private async Task HandleValidSubmit()
     {
-        if (Command is null) return;
+        if (Command is null)
+        {
+            return;
+        }
+        
         Command.Address = Address.Create(Building, Street, City);
         var result = await Mediator.Send(Command);
         if (result.IsSuccess)
