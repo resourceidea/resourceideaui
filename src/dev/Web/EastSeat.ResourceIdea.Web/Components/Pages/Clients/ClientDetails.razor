@@ -36,9 +36,9 @@
             <NavLink class="btn btn-outline-dark btn-sm" href="/clients" ActiveClass="">
                 <i class="fa fa-chevron-left"></i> Back to Clients
             </NavLink>
-            <button class="btn btn-primary btn-sm ms-2" @onclick="HandleEditClick">
+            <NavLink class="btn btn-primary btn-sm ms-2" href=@($"/clients/edit/{Client.ClientId.Value}") ActiveClass="">
                 <i class="fa-solid fa-pen-to-square"></i> Edit
-            </button>
+            </NavLink>
         </div>
 
         <div class="card mb-3">
