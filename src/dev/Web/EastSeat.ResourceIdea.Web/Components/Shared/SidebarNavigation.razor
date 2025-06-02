@@ -1,0 +1,125 @@
+@* ----------------------------------------------------------------------------------
+    File: SidebarNavigation.razor
+    Path: src/Web/EastSeat.ResourceIdea.Web/Components/Shared/SidebarNavigation.razor
+    Description: Vertical sidebar navigation component with collapsible sections
+   ---------------------------------------------------------------------------------- *@
+
+<div class="sidebar" id="sidebar">
+    <!-- Brand Header -->
+    <div class="sidebar-header">
+        <div class="brand">
+            <div class="brand-logo">
+                <img src="/images/resourceidea-logo.svg" alt="ResourceIdea Logo" style="height: 32px; width: auto;" />
+            </div>
+            <span class="brand-text">ResourceIdea</span>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="sidebar-search">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search" />
+        </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <div class="sidebar-menu">
+        <!-- Planner Section -->
+        <div class="menu-section">
+            <div class="menu-section-header" @onclick="TogglePlannerSection">
+                <span class="menu-section-title">Planner</span>
+                <i class="fas fa-chevron-right section-toggle @(isPlannerExpanded ? "expanded" : "")"></i>
+            </div>
+            <div class="menu-section-content @(isPlannerExpanded ? "expanded" : "")">
+                <NavLink class="menu-item" href="/service-lines-timeline">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Service Lines Timeline</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/job-managers-timeline">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Job Managers Timeline</span>
+                </NavLink>
+            </div>
+        </div>
+
+        <!-- Clients Section -->
+        <div class="menu-section">
+            <div class="menu-section-header" @onclick="ToggleClientsSection">
+                <span class="menu-section-title">Clients</span>
+                <i class="fas fa-chevron-right section-toggle @(isClientsExpanded ? "expanded" : "")"></i>
+            </div>
+            <div class="menu-section-content @(isClientsExpanded ? "expanded" : "")">
+                <NavLink class="menu-item" href="/clients">
+                    <i class="fas fa-building"></i>
+                    <span>Client List</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/engagements">
+                    <i class="fas fa-handshake"></i>
+                    <span>Engagements</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/assignments">
+                    <i class="fas fa-tasks"></i>
+                    <span>Assignments</span>
+                </NavLink>
+            </div>
+        </div>
+
+        <!-- Administration Section -->
+        <div class="menu-section">
+            <div class="menu-section-header" @onclick="ToggleAdministrationSection">
+                <span class="menu-section-title">Administration</span>
+                <i class="fas fa-chevron-right section-toggle @(isAdministrationExpanded ? "expanded" : "")"></i>
+            </div>
+            <div class="menu-section-content @(isAdministrationExpanded ? "expanded" : "")">
+                <NavLink class="menu-item" href="/employees">
+                    <i class="fas fa-users"></i>
+                    <span>Employees</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/departments">
+                    <i class="fas fa-sitemap"></i>
+                    <span>Departments</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/jobpositions">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Job Positions</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/admin/subscription">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Subscription</span>
+                </NavLink>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private enum ExpandedSection
+    {
+        None,
+        Planner,
+        Clients,
+        Administration
+    }
+
+    private ExpandedSection currentExpandedSection = ExpandedSection.Planner;
+
+    private bool isPlannerExpanded => currentExpandedSection == ExpandedSection.Planner;
+    private bool isClientsExpanded => currentExpandedSection == ExpandedSection.Clients;
+    private bool isAdministrationExpanded => currentExpandedSection == ExpandedSection.Administration;
+
+    private void TogglePlannerSection()
+    {
+        currentExpandedSection = isPlannerExpanded ? ExpandedSection.None : ExpandedSection.Planner;
+    }
+
+    private void ToggleClientsSection()
+    {
+        currentExpandedSection = isClientsExpanded ? ExpandedSection.None : ExpandedSection.Clients;
+    }
+
+    private void ToggleAdministrationSection()
+    {
+        currentExpandedSection = isAdministrationExpanded ? ExpandedSection.None : ExpandedSection.Administration;
+    }
+}
