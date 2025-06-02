@@ -117,10 +117,21 @@ else if (Command != null)
                 Building = client.Address.Building;
             }
         }
+        catch (InvalidOperationException ex)
+        {
+            HasError = true;
+            ErrorMessage = "An invalid operation occurred: " + ex.Message;
+        }
+        catch (ArgumentException ex)
+        {
+            HasError = true;
+            ErrorMessage = "An argument error occurred: " + ex.Message;
+        }
         catch (Exception ex)
         {
             HasError = true;
-            ErrorMessage = ex.Message;
+            ErrorMessage = "An unexpected error occurred: " + ex.Message;
+            throw; // Rethrow unexpected exceptions
         }
         finally
         {
