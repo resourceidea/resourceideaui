@@ -48,23 +48,24 @@ h1:focus {
    ============================= */
 
 .app-container {
-    display: flex;
-    min-height: 100vh;
+    display: flex !important;
+    min-height: 100vh !important;
 }
 
 /* Sidebar Styles */
 .sidebar {
-    width: 280px;
-    background-color: #00879c;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    z-index: 1000;
-    overflow-y: auto;
+    width: 280px !important;
+    background-color: #00879c !important;
+    color: white !important;
+    display: flex !important;
+    flex-direction: column !important;
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    height: 100vh !important;
+    z-index: 1000 !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
 }
 
 .sidebar-header {
@@ -207,12 +208,13 @@ h1:focus {
 
 /* Main Content Styles */
 .main-content {
-    flex: 1;
-    margin-left: 280px;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #f8f9fa;
+    flex: 1 !important;
+    margin-left: 280px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 100vh !important;
+    background-color: #f8f9fa !important;
+    box-sizing: border-box !important;
 }
 
 .top-header {
