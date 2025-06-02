@@ -10,6 +10,27 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous">
     <link rel="stylesheet" href="app.css" />
+    <!-- Additional CSS to ensure sidebar positioning works -->
+    <style>
+        .sidebar {
+            position: fixed !important;
+            left: 0 !important;
+            top: 0 !important;
+            height: 100vh !important;
+            width: 280px !important;
+            background-color: #00879c !important;
+            z-index: 1000 !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        .app-container {
+            display: flex !important;
+        }
+        .main-content {
+            margin-left: 280px !important;
+            flex: 1 !important;
+        }
+    </style>
     <ImportMap />
     <HeadOutlet @rendermode="InteractiveServer" />
 </head>
