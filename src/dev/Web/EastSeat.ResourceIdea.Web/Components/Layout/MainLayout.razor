@@ -1,61 +1,52 @@
 ﻿@* ----------------------------------------------------------------------------------
     File: MainLayout.razor
     Path: src/Web/EastSeat.ResourceIdea.Web/Components/Layout/MainLayout.razor
-    Description: Main layout for the app.
+    Description: Main layout for the app with vertical sidebar navigation.
    ---------------------------------------------------------------------------------- *@
 
 @inherits LayoutComponentBase
-
 @inject NotificationService NotificationService
 
-<div class="d-flex flex-column min-vh-100">
-    <nav id="top-navbar" class="navbar navbar-expand-lg fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">ResourceIdea</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fa-solid fa-calendar-days"></i> Planner
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/clients">
-                            <i class="fa-solid fa-users"></i> Clients
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="/admin">
-                            <i class="fa-solid fa-user-gear"></i> Admin
-                        </NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Logout <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                        </a>
-                    </li>
-                </ul>
+<div class="app-container">
+    <!-- Sidebar Navigation -->
+    <SidebarNavigation />
+    
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Top Header with User Profile -->
+        <header class="top-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <!-- Space for future header content -->
+                </div>
+                <div class="header-right">
+                    <div class="user-profile-dropdown">
+                        <button class="user-profile-btn" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i>
+                            <span class="user-name">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/profile"><i class="fas fa-user"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
-    </nav>
+        </header>
 
-    <div class="container-fluid flex-grow-1 mt-5 pt-3">
-        <div class="row">
-            <div class="col-12">
-                @Body
+        <!-- Page Content -->
+        <main class="page-content">
+            @Body
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <span>&copy; @DateTime.Now.Year EastSeat</span>
             </div>
-        </div>
+        </footer>
     </div>
-
-    <nav class="navbar bg-tertiary py-0 mt-auto" style="background-color: rgb(245, 244, 244); max-height: 50px;">
-        <div class="container-fluid">
-            <span class="navbar-text">
-                <span class="fs-6">&copy; @DateTime.Now.Year EastSeat</span>
-            </span>
-        </div>
-    </nav>
 </div>

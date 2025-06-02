@@ -41,19 +41,256 @@ h1:focus {
     App Styles
    ============================= */
 
-#top-navbar {
-    background-color: #00879c;
+/* Remove old top navbar styles since we're using sidebar now */
+
+/* =============================
+    Sidebar Layout Styles
+   ============================= */
+
+.app-container {
+    display: flex;
+    min-height: 100vh;
 }
 
-    #top-navbar .nav-link {
-        color: #fff;
-        font-size: 0.8rem;
-    }
+/* Sidebar Styles */
+.sidebar {
+    width: 280px;
+    background-color: #00879c;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+    overflow-y: auto;
+}
 
-    #top-navbar .navbar-brand {
-        color: #FFFF99;
-        font-weight: 700;
+.sidebar-header {
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.brand-logo {
+    width: 32px;
+    height: 32px;
+    background-color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00879c;
+    font-size: 1.2rem;
+}
+
+.brand-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #FFFF99;
+}
+
+.sidebar-search {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.search-container {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    font-size: 0.875rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 0.875rem;
+}
+
+.search-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 153, 0.5);
+}
+
+.sidebar-menu {
+    flex: 1;
+    padding: 1rem 0;
+}
+
+.menu-section {
+    margin-bottom: 0.5rem;
+}
+
+.menu-section-header {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.menu-section-header:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-section-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.section-toggle {
+    transition: transform 0.2s;
+    font-size: 0.75rem;
+}
+
+.section-toggle.expanded {
+    transform: rotate(90deg);
+}
+
+.menu-section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.menu-section-content.expanded {
+    max-height: 500px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-decoration: none;
+}
+
+.menu-item.active {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-left-color: #FFFF99;
+    color: white;
+}
+
+.menu-item i {
+    width: 16px;
+    text-align: center;
+    font-size: 0.875rem;
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.top-header {
+    background-color: white;
+    border-bottom: 1px solid #e9ecef;
+    padding: 0.75rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-profile-dropdown {
+    position: relative;
+}
+
+.user-profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    color: #495057;
+}
+
+.user-profile-btn:hover {
+    background-color: #f8f9fa;
+}
+
+.user-profile-btn i.fa-user-circle {
+    font-size: 1.5rem;
+    color: #00879c;
+}
+
+.user-name {
+    font-weight: 500;
+}
+
+.page-content {
+    flex: 1;
+    padding: 1.5rem;
+}
+
+.app-footer {
+    background-color: white;
+    border-top: 1px solid #e9ecef;
+    padding: 1rem 1.5rem;
+    margin-top: auto;
+}
+
+.footer-content {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
     }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+}
 
 /* Add this CSS to ensure all cards have equal height */
 .equal-height-home {
