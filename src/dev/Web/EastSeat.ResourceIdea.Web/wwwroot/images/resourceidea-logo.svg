@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" width="200" height="50">
+  <!-- Teal background circle -->
+  <circle cx="25" cy="25" r="20" fill="#00879c"/>
+  <!-- White ResourceIdea logo placeholder (R letter) -->
+  <text x="25" y="35" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="bold">R</text>
+  <!-- ResourceIdea text -->
+  <text x="55" y="20" fill="#00879c" font-family="Arial, sans-serif" font-size="14" font-weight="bold">ResourceIdea</text>
+  <text x="55" y="35" fill="#666" font-family="Arial, sans-serif" font-size="10">Management System</text>
+</svg>
