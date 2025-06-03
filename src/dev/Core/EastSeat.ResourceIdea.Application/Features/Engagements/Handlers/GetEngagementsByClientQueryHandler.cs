@@ -28,7 +28,7 @@ public class GetEngagementsByClientQueryHandler(IEngagementsService engagementsS
             return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.Failure(result.Error);
         }
 
-        if (result.Content != null is false)
+        if (result.Content is null)
         {
             return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.NotFound();
         }

@@ -36,7 +36,7 @@ public sealed class UpdateEngagementCommandHandler (IEngagementsService engageme
             return ResourceIdeaResponse<EngagementModel>.Failure(response.Error);
         }
 
-        if (response.Content != null is false)
+        if (response.Content is null)
         {
             return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.EmptyEntityOnUpdateEngagement);
         }

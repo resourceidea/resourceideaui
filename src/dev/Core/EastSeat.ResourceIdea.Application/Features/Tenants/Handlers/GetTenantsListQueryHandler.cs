@@ -36,7 +36,7 @@ public sealed class GetTenantsListQueryHandler(ITenantsService tenantsService)
             return ResourceIdeaResponse<PagedListResponse<TenantModel>>.Failure(response.Error);
         }
 
-        if (response.Content != null is false)
+        if (response.Content is null)
         {
             return ResourceIdeaResponse<PagedListResponse<TenantModel>>.NotFound();
         }

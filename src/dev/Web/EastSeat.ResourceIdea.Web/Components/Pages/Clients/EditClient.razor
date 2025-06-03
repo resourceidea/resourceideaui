@@ -97,14 +97,14 @@ else if (Command != null)
             };
 
             var response = await Mediator.Send(query);
-            if (response.IsFailure || !response.Content.HasValue)
+            if (response.IsFailure || response.Content is null)
             {
                 HasError = true;
                 ErrorMessage = "Failed to load client details.";
             }
             else
             {
-                var client = response.Content.Value;
+                var client = response.Content;
                 Command = new UpdateClientCommand
                 {
                     ClientId = client.ClientId,

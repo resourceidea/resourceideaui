@@ -29,7 +29,7 @@ public sealed class GetDepartmentByIdQueryHandler(IDepartmentsService department
             return ResourceIdeaResponse<DepartmentModel>.Failure(response.Error);
         }
 
-        if (response.Content != null is false)
+        if (response.Content is null)
         {
             return ResourceIdeaResponse<DepartmentModel>.NotFound();
         }

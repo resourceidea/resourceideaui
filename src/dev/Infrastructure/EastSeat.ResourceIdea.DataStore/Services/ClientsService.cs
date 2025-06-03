@@ -82,7 +82,7 @@ public sealed class ClientsService(ResourceIdeaDBContext dbContext) : IClientsSe
     /// <inheritdoc />
     public async Task<ResourceIdeaResponse<PagedListResponse<Client>>> GetPagedListAsync(int page, int size, BaseSpecification<Client>? specification, CancellationToken cancellationToken)
     {
-        if (specification != null is false || specification.Value is not TenantClientsSpecification)
+        if (specification is null || specification is not TenantClientsSpecification)
         {
             return ResourceIdeaResponse<PagedListResponse<Client>>.Failure(ErrorCode.FailureOnTenantClientsSpecification);
         }
@@ -175,7 +175,7 @@ public sealed class ClientsService(ResourceIdeaDBContext dbContext) : IClientsSe
 
     private static Guid? GetTenantIdFromSpecification(BaseSpecification<Client>? specification)
     {
-        TenantClientsSpecification? tenantClientsSpecification = specification.Value as TenantClientsSpecification;
+        TenantClientsSpecification? tenantClientsSpecification = specification as TenantClientsSpecification;
         TenantId tenantId = tenantClientsSpecification?.TenantId ?? TenantId.Empty;
         return tenantId.Value;
     }

@@ -42,7 +42,7 @@ public partial class CreateJobPosition : ComponentBase
         }
 
         ResourceIdeaResponse<JobPositionModel> response = await Mediator.Send(Command);
-        if (!response.IsSuccess || !response.Content != null)
+        if (!response.IsSuccess || response.Content is null)
         {
             // TODO: Log failure to create job position.
             errorMessage = "Failed to create job position";

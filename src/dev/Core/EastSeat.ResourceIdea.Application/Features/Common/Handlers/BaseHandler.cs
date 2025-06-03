@@ -27,7 +27,7 @@ public class BaseHandler
         {
             return ResourceIdeaResponse<TModel>.Failure(response.Error);
         }
-        if (response.Content != null is false)
+        if (response.Content is null)
         {
             return ResourceIdeaResponse<TModel>.Failure(errorCode);
         }
@@ -42,7 +42,7 @@ public class BaseHandler
         {
             return ResourceIdeaResponse<IReadOnlyList<TModel>>.Failure(response.Error);
         }
-        if (response.Content != null is false || response.Content.Count == 0)
+        if (response.Content is null || response.Content.Count == 0)
         {
             return ResourceIdeaResponse<IReadOnlyList<TModel>>.Failure(ErrorCode.NotFound);
         }
@@ -60,7 +60,7 @@ public class BaseHandler
         {
             return ResourceIdeaResponse<PagedListResponse<TModel>>.Failure(response.Error);
         }
-        if (response.Content != null is false || response.Content.TotalCount == 0)
+        if (response.Content is null || response.Content.TotalCount == 0)
         {
             return ResourceIdeaResponse<PagedListResponse<TModel>>.Failure(ErrorCode.NotFound);
         }

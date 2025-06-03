@@ -35,9 +35,9 @@ public static class ResponseMappingConfiguration
             return ResourceIdeaResponse<PagedListResponse<TModel>>.UnSupportedOperation();
         }
 
-        if (pagedListResponse is null || pagedListResponse.IsFailure || !pagedListResponse.Content != null)
+        if (pagedListResponse is null || pagedListResponse.IsFailure || pagedListResponse.Content is null)
         {
-            return pagedListResponse is null || !pagedListResponse.Content != null
+            return pagedListResponse is null || pagedListResponse.Content is null
                 ? ResourceIdeaResponse<PagedListResponse<TModel>>.NotFound()
                 : ResourceIdeaResponse<PagedListResponse<TModel>>.Failure(pagedListResponse.Error);
         }

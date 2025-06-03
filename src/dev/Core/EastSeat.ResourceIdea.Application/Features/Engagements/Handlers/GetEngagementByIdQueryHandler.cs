@@ -30,7 +30,7 @@ public sealed class GetEngagementByIdQueryHandler (IEngagementsService engagemen
             return ResourceIdeaResponse<EngagementModel>.Failure(result.Error);
         }
 
-        if (result.Content != null is false)
+        if (result.Content is null)
         {
             return ResourceIdeaResponse<EngagementModel>.NotFound();
         }

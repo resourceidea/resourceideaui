@@ -28,7 +28,7 @@ public class GetEngagementsByStatusQueryHandler(IEngagementsService engagementsS
             return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.Failure(result.Error);
         }
 
-        if (result.Content != null is false)
+        if (result.Content is null)
         {
             return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.NotFound();
         }

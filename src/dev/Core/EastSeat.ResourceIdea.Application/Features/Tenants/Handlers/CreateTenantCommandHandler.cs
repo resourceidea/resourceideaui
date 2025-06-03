@@ -35,7 +35,7 @@ public sealed class CreateTenantCommandHandler (ITenantsService tenantsService)
             return ResourceIdeaResponse<TenantModel>.Failure(response.Error);
         }
 
-        if (response.Content != null is false)
+        if (response.Content is null)
         {
             return ResourceIdeaResponse<TenantModel>.Failure(ErrorCode.EmptyEntityOnCreateTenant);
         }

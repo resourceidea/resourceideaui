@@ -23,7 +23,7 @@ public sealed class GetTenantByIdQueryHandler(ITenantsService tenantsService)
             return ResourceIdeaResponse<TenantModel>.Failure(response.Error);
         }
 
-        if (response.Content != null is false)
+        if (response.Content is null)
         {
             return ResourceIdeaResponse<TenantModel>.NotFound();
         }

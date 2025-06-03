@@ -136,7 +136,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
     {
         try
         {
-            if (specification != null is false || specification.Value is not TenantEmployeesSpecification)
+            if (specification is null || specification is not TenantEmployeesSpecification)
             {
                 return ResourceIdeaResponse<PagedListResponse<Employee>>.Failure(ErrorCode.FailureOnTenantEmployeesQuery);
             }
@@ -167,7 +167,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
 
     private static Guid? GetTenantIdFromSpecification(BaseSpecification<Employee>? specification)
     {
-        TenantEmployeesSpecification? employeeSpecification = specification.Value as TenantEmployeesSpecification;
+        TenantEmployeesSpecification? employeeSpecification = specification as TenantEmployeesSpecification;
         TenantId tenantId = employeeSpecification?.TenantId ?? TenantId.Empty;
         return tenantId.Value;
     }

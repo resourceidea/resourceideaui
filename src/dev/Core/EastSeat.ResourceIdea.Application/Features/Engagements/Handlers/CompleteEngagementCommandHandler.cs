@@ -37,7 +37,7 @@ public sealed class CompleteEngagementCommandHandler (IEngagementsService engage
             return ResourceIdeaResponse<EngagementModel>.Failure(result.Error);
         }
 
-        if (result.Content != null is false)
+        if (result.Content is null)
         {
             return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.EmptyEntityOnCompleteEngagement);
         }

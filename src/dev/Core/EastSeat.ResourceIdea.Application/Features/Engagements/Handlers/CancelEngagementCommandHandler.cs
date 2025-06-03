@@ -26,7 +26,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers
                 return ResourceIdeaResponse<EngagementModel>.Failure(result.Error);
             }
 
-            if (result.Content != null is false)
+            if (result.Content is null)
             {
                 return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.EmptyEntityOnCancelEngagement);
             }

@@ -38,7 +38,7 @@ public sealed class GetJobPositionByIdQueryHandler(IJobPositionService jobPositi
             return ResourceIdeaResponse<JobPositionModel>.Failure(response.Error);
         }
         
-        if (response.Content != null is false)
+        if (response.Content is null)
         {
             return ResourceIdeaResponse<JobPositionModel>.NotFound();
         }

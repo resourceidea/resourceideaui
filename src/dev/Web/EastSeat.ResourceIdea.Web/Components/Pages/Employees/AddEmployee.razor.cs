@@ -173,7 +173,7 @@ public partial class AddEmployee : ComponentBase
         }
 
         ResourceIdeaResponse<EmployeeModel> response = await Mediator.Send(Command);
-        if (!response.IsSuccess || !response.Content != null)
+        if (!response.IsSuccess || response.Content is null)
         {
             // TODO: Log failure to add new employee.
             NotificationService.ShowErrorNotification("ERROR: Failed to add new employee.");

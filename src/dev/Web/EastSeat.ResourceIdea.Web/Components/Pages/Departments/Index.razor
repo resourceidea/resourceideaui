@@ -66,9 +66,9 @@ else
         var query = new GetAllDepartmentsQuery { TenantId = ResourceIdeaRequestContext.Tenant };
         var response = await Mediator.Send(query);
 
-        if (response.IsSuccess && response.Content.HasValue)
+        if (response.IsSuccess && response.Content is not null)
         {
-            Model = response.Content.Value.Items;
+            Model = response.Content.Items;
         }
 
         // Complete loading of the model data.
