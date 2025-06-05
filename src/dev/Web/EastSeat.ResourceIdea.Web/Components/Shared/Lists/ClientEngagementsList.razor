@@ -109,7 +109,20 @@
             else
             {
                 <tr>
-                    <td colspan="4" class="text-center">No engagements found.</td>
+                    <td colspan="4" class="text-center py-4">
+                        <div class="text-muted">
+                            <i class="fa-solid fa-handshake fa-2x mb-3"></i>
+                            <p class="mb-1">No engagements found</p>
+                            @if (!string.IsNullOrEmpty(SearchTerm))
+                            {
+                                <small>Try adjusting your search criteria</small>
+                            }
+                            else
+                            {
+                                <small>This client doesn't have any engagements yet</small>
+                            }
+                        </div>
+                    </td>
                 </tr>
             }
         </tbody>

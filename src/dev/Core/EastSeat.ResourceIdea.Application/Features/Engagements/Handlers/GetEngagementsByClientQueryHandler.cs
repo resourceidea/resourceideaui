@@ -75,10 +75,7 @@ public class GetEngagementsByClientQueryHandler(IEngagementsService engagementsS
             Items = items,
             CurrentPage = pageNumber,
             PageSize = pageSize,
-            TotalCount = totalCount,
-            Pages = (int)Math.Ceiling((double)totalCount / pageSize),
-            HasNextPage = pageNumber < (int)Math.Ceiling((double)totalCount / pageSize),
-            HasPreviousPage = pageNumber > 1
+            TotalCount = totalCount
         };
     }
 }
