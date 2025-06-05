@@ -17,12 +17,16 @@ public class GetEngagementsByClientQueryHandler(IEngagementsService engagementsS
 
     public async Task<ResourceIdeaResponse<PagedListResponse<EngagementModel>>> Handle(GetEngagementsByClientQuery request, CancellationToken cancellationToken)
     {
-        var getEngagementByIdSpecification = new GetEngagementsByClientSpecification(request.ClientId);
+        var getEngagementsByClientSpecification = new GetEngagementsByClientSpecification(request.ClientId, request.SearchTerm);
+        
+        // For now, we'll get all matching engagements and handle sorting/paging in memory
+        // In a production system, this should be handled at the database level
         var result = await _engagementsService.GetPagedListAsync(
-            request.PageNumber,
-            request.PageSize,
-            getEngagementByIdSpecification,
+            1, 
+            int.MaxValue, // Get all records for now to handle sorting
+            getEngagementsByClientSpecification,
             cancellationToken);
+            
         if (result.IsFailure)
         {
             return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.Failure(result.Error);
@@ -33,6 +37,48 @@ public class GetEngagementsByClientQueryHandler(IEngagementsService engagementsS
             return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.NotFound();
         }
 
-        return result.Content.Value.ToResourceIdeaResponse();
+        var engagements = result.Content.Value.ToResourceIdeaResponse().Content.Value;
+        
+        // Apply sorting
+        var sortedEngagements = ApplySorting(engagements.Items, request.SortField, request.SortDirection);
+        
+        // Apply paging
+        var pagedResult = ApplyPaging(sortedEngagements, request.PageNumber, request.PageSize);
+        
+        return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.Success(pagedResult);
+    }
+
+    private IEnumerable<EngagementModel> ApplySorting(IEnumerable<EngagementModel> engagements, string? sortField, string? sortDirection)
+    {
+        if (string.IsNullOrEmpty(sortField))
+            return engagements.OrderBy(e => e.Description); // Default sort
+
+        var isDescending = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+
+        return sortField.ToLowerInvariant() switch
+        {
+            "description" => isDescending ? engagements.OrderByDescending(e => e.Description) : engagements.OrderBy(e => e.Description),
+            "status" => isDescending ? engagements.OrderByDescending(e => e.Status) : engagements.OrderBy(e => e.Status),
+            "commencementdate" => isDescending ? engagements.OrderByDescending(e => e.CommencementDate) : engagements.OrderBy(e => e.CommencementDate),
+            "completiondate" => isDescending ? engagements.OrderByDescending(e => e.CompletionDate) : engagements.OrderBy(e => e.CompletionDate),
+            _ => engagements.OrderBy(e => e.Description)
+        };
+    }
+
+    private PagedListResponse<EngagementModel> ApplyPaging(IEnumerable<EngagementModel> engagements, int pageNumber, int pageSize)
+    {
+        var totalCount = engagements.Count();
+        var items = engagements.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        
+        return new PagedListResponse<EngagementModel>
+        {
+            Items = items,
+            CurrentPage = pageNumber,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            Pages = (int)Math.Ceiling((double)totalCount / pageSize),
+            HasNextPage = pageNumber < (int)Math.Ceiling((double)totalCount / pageSize),
+            HasPreviousPage = pageNumber > 1
+        };
     }
 }

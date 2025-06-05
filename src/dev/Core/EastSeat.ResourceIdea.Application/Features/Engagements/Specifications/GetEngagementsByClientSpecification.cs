@@ -9,12 +9,17 @@ namespace EastSeat.ResourceIdea.Application.Features.Engagements.Specifications;
 /// Specification to retrieve an engagement by the owning client.
 /// </summary>
 /// <param name="clientId">Client identifier.</param>
-public class GetEngagementsByClientSpecification(ClientId clientId) : BaseSpecification<Engagement>
+/// <param name="searchTerm">Optional search term to filter engagements.</param>
+public class GetEngagementsByClientSpecification(ClientId clientId, string? searchTerm = null) : BaseSpecification<Engagement>
 {
     private readonly ClientId _clientId = clientId;
+    private readonly string? _searchTerm = searchTerm;
 
     /// <summary>
     /// Criteria to retrieve an engagements by its owning client.
     /// </summary>
-    public override Expression<Func<Engagement, bool>> Criteria => engagement => engagement.ClientId == _clientId;
+    public override Expression<Func<Engagement, bool>> Criteria => engagement => 
+        engagement.ClientId == _clientId &&
+        (string.IsNullOrEmpty(_searchTerm) || 
+         engagement.Description.Contains(_searchTerm));
 }
