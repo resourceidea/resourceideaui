@@ -177,10 +177,21 @@ else if (Command != null)
             CommencementDate = engagement.CommencementDate?.DateTime;
             CompletionDate = engagement.CompletionDate?.DateTime;
         }
-        catch (Exception)
+        catch (InvalidOperationException ex)
+        {
+            HasError = true;
+            ErrorMessage = "An invalid operation occurred while loading the engagement details: " + ex.Message;
+        }
+        catch (ArgumentException ex)
+        {
+            HasError = true;
+            ErrorMessage = "An argument error occurred while loading the engagement details: " + ex.Message;
+        }
+        catch (Exception ex)
         {
             HasError = true;
             ErrorMessage = "An unexpected error occurred while loading the engagement details.";
+            Console.Error.WriteLine($"Unexpected error: {ex}");
         }
         finally
         {
