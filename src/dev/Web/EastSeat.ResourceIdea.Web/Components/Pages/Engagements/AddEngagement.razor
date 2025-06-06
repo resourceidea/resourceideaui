@@ -1,4 +1,5 @@
 ﻿@page "/engagements/add"
+@using EastSeat.ResourceIdea.Domain.Enums
 
 <ResourceIdeaPageTitle Title="Add Engagement" />
 
@@ -57,10 +58,37 @@ else
                         </div>
                     </div>
                     <div class="row mt-2">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="title">Title <span class="text-danger">*</span></label>
+                                <InputText id="title" class="form-control" @bind-Value="Command.Title" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="description">Description <span class="text-danger">*</span></label>
                                 <InputTextArea id="description" class="form-control" @bind-Value="Command.Description" rows="4" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="dueDate">Due Date</label>
+                                <InputDate id="dueDate" class="form-control" @bind-Value="Command.DueDate" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="status">Status <span class="text-danger">*</span></label>
+                                <InputSelect id="status" class="form-control" @bind-Value="Command.Status">
+                                    <option value="@EngagementStatus.NotStarted">Not Started</option>
+                                    <option value="@EngagementStatus.InProgress">In Progress</option>
+                                    <option value="@EngagementStatus.Completed">Completed</option>
+                                    <option value="@EngagementStatus.Canceled">Canceled</option>
+                                </InputSelect>
                             </div>
                         </div>
                     </div>

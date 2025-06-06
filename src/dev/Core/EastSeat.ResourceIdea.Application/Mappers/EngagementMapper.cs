@@ -66,8 +66,11 @@ public static class EngagementMapper
         {
             Id = EngagementId.Create(Guid.NewGuid()),
             ClientId = command.ClientId,
-            EngagementStatus = EngagementStatus.NotStarted,
-            Description = command.Description ?? string.Empty
+            EngagementStatus = command.Status,
+            Description = string.IsNullOrWhiteSpace(command.Title) 
+                ? command.Description ?? string.Empty
+                : $"{command.Title}\n\n{command.Description ?? string.Empty}".Trim(),
+            CompletionDate = command.DueDate
         };
     }
 

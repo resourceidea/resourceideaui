@@ -9,6 +9,7 @@ using EastSeat.ResourceIdea.Application.Features.Clients.Queries;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.Web.Services;
@@ -36,7 +37,10 @@ public partial class AddEngagement : ComponentBase
     private string SelectedClientId { get; set; } = string.Empty;
     private bool IsClientPreSelected => ClientId.HasValue && ClientId.Value != Guid.Empty;
     private bool HasAnyClients => Clients != null && Clients.Items.Count > 0;
-    private bool CanSubmit => HasAnyClients && !string.IsNullOrEmpty(SelectedClientId) && !string.IsNullOrWhiteSpace(Command.Description);
+    private bool CanSubmit => HasAnyClients 
+        && !string.IsNullOrEmpty(SelectedClientId) 
+        && !string.IsNullOrWhiteSpace(Command.Title)
+        && !string.IsNullOrWhiteSpace(Command.Description);
 
     protected override async Task OnInitializedAsync()
     {
