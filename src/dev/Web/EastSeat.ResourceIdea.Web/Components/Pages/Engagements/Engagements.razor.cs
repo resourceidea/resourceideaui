@@ -7,6 +7,7 @@
 using EastSeat.ResourceIdea.Application.Features.Engagements.Queries;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Engagements.Models;
+using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.Web.Services;
 using MediatR;
@@ -57,7 +58,7 @@ public partial class Engagements : ComponentBase
             if (response?.IsFailure == true)
             {
                 HasError = true;
-                ErrorMessage = response.Error?.Message ?? "Failed to load engagements.";
+                ErrorMessage = GetErrorMessage(response.Error);
             }
         }
         catch (Exception ex)
@@ -93,5 +94,16 @@ public partial class Engagements : ComponentBase
         EngagementSortField = sortInfo.field;
         EngagementSortDirection = sortInfo.direction;
         // Don't reload data since sorting isn't supported yet
+    }
+
+    private static string GetErrorMessage(ErrorCode errorCode)
+    {
+        return errorCode switch
+        {
+            ErrorCode.NotFound => "Engagements not found.",
+            ErrorCode.DataStoreQueryFailure => "Failed to query engagements from the data store.",
+            ErrorCode.BadRequest => "Invalid request to load engagements.",
+            _ => "Failed to load engagements."
+        };
     }
 }

@@ -7,6 +7,7 @@
 using EastSeat.ResourceIdea.Application.Features.Engagements.Queries;
 using EastSeat.ResourceIdea.Domain.Engagements.Models;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.Web.Services;
 using MediatR;
@@ -69,7 +70,7 @@ public partial class EngagementDetails : ComponentBase
             HasError = false;
             StateHasChanged();
 
-            var engagementId = new EngagementId(Id);
+            var engagementId = EngagementId.Create(Id);
             var query = new GetEngagementByIdQuery { EngagementId = engagementId };
             var response = await Mediator.Send(query);
 
@@ -80,7 +81,7 @@ public partial class EngagementDetails : ComponentBase
             else
             {
                 HasError = true;
-                ErrorMessage = response.Error?.Message ?? "Failed to load engagement details.";
+                ErrorMessage = GetErrorMessage(response.Error);
             }
         }
         catch (Exception ex)
@@ -124,6 +125,17 @@ public partial class EngagementDetails : ComponentBase
             "client" => "Back to client details",
             "engagements" => "Back to engagements list",
             _ => "Back to engagements list" // Default fallback
+        };
+    }
+
+    private static string GetErrorMessage(ErrorCode errorCode)
+    {
+        return errorCode switch
+        {
+            ErrorCode.NotFound => "Engagement not found.",
+            ErrorCode.DataStoreQueryFailure => "Failed to query engagement details from the data store.",
+            ErrorCode.BadRequest => "Invalid request to load engagement details.",
+            _ => "Failed to load engagement details."
         };
     }
 }
