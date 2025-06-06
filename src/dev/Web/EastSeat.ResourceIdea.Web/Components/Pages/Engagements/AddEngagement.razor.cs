@@ -85,11 +85,17 @@ public partial class AddEngagement : ComponentBase
             ErrorMessage = "The operation to load clients was canceled. Please try again.";
             Console.Error.WriteLine($"TaskCanceledException: {ex.Message}");
         }
-        catch (Exception ex)
+        catch (HttpRequestException ex)
         {
             HasError = true;
-            ErrorMessage = "An unexpected error occurred while loading clients. Please try again later.";
-            Console.Error.WriteLine($"Exception: {ex.Message}");
+            ErrorMessage = "A network error occurred while loading clients. Please check your connection and try again.";
+            Console.Error.WriteLine($"HttpRequestException: {ex.Message}");
+        }
+        catch (TimeoutException ex)
+        {
+            HasError = true;
+            ErrorMessage = "The request to load clients timed out. Please try again later.";
+            Console.Error.WriteLine($"TimeoutException: {ex.Message}");
         }
     }
 
