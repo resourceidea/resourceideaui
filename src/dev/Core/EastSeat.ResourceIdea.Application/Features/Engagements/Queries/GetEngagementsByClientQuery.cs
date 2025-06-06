@@ -28,4 +28,19 @@ public sealed class GetEngagementsByClientQuery (
     /// The client identifier to retrieve engagements for.
     /// </summary>
     public ClientId ClientId { get; init; }
+
+    /// <summary>
+    /// Optional search term to filter engagements.
+    /// </summary>
+    public string? SearchTerm { get; init; }
+
+    /// <summary>
+    /// Optional sort field.
+    /// </summary>
+    public string? SortField { get; init; }
+
+    /// <summary>
+    /// Optional sort direction (asc or desc).
+    /// </summary>
+    public string? SortDirection { get; init; }
 }
