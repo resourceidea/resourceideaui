@@ -118,7 +118,7 @@ public sealed class EngagementsService(ResourceIdeaDBContext dbContext) : IEngag
         {
             // Log the operation canceled exception here if logging is available
             Console.Error.WriteLine($"Operation canceled: {ocEx.Message}");
-            return ResourceIdeaResponse<PagedListResponse<Engagement>>.Failure(ErrorCode.OperationCanceled);
+            return ResourceIdeaResponse<PagedListResponse<Engagement>>.Failure(ErrorCode.DataStoreQueryFailure);
         }
         catch (Exception ex)
         {
