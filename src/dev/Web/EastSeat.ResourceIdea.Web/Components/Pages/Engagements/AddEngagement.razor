@@ -1,0 +1,75 @@
+﻿@page "/engagements/add"
+
+<ResourceIdeaPageTitle Title="Add Engagement" />
+
+<PageHeader Text="Add New Engagement" />
+
+<NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2" href="/engagements" ActiveClass="">
+    <i class="fa fa-chevron-left"></i> Back
+</NavLink>
+
+@if (IsLoading)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else if (HasError)
+{
+    <div class="alert alert-danger">
+        @ErrorMessage
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Engagement Details</h5>
+        </div>
+        <EditForm class="card-body" Model="@Command" OnValidSubmit="HandleValidSubmit">
+            <div class="row">
+                <div class="col-12">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="client">Client <span class="text-danger">*</span></label>
+                                <select id="client" class="form-control" @bind="SelectedClientId" disabled="@IsClientPreSelected">
+                                    <option value="">-- Select a Client --</option>
+                                    @if (Clients != null)
+                                    {
+                                        @foreach (var client in Clients.Items)
+                                        {
+                                            <option value="@client.ClientId.Value">@client.Name</option>
+                                        }
+                                    }
+                                </select>
+                                @if (!HasAnyClients)
+                                {
+                                    <div class="form-text text-danger">
+                                        No clients available. Please <NavLink href="/clients/add">add a client</NavLink> first.
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="description">Description <span class="text-danger">*</span></label>
+                                <InputTextArea id="description" class="form-control" @bind-Value="Command.Description" rows="4" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-danger btn-sm" disabled="@(!CanSubmit)">Save</button>
+                    </div>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+}
