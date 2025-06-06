@@ -1,0 +1,226 @@
+@* ------------------------------------------------------------------------------
+    File: ClientEngagementsList.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Shared/Lists
+    Description: Client Engagements List component
+   ------------------------------------------------------------------------------ *@
+
+@using Microsoft.AspNetCore.Components.Routing
+@using EastSeat.ResourceIdea.Domain.Engagements.Models
+@using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects
+
+<div class="card mt-1">
+    <div class="card-header">
+        <div class="input-group input-group-sm">
+            <input type="text" class="form-control" placeholder="Search engagements..." aria-label="Search engagements"
+                @bind="SearchTerm" @onkeypress="OnSearchKeyPress">
+            <button class="btn btn-outline-secondary" type="button" @onclick="OnSearch">
+                <i class="fa-solid fa-search"></i>
+            </button>
+        </div>
+    </div>
+    <table class="table table-sm table-striped table-hover table-borderless">
+        <thead>
+            <tr>
+                <th @onclick='() => OnSort("Description")' style="cursor: pointer;">
+                    Description
+                    @if (SortField == "Description")
+                    {
+                        <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-sort text-muted"></i>
+                    }
+                </th>
+                <th @onclick='() => OnSort("Status")' style="cursor: pointer;">
+                    Status
+                    @if (SortField == "Status")
+                    {
+                        <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-sort text-muted"></i>
+                    }
+                </th>
+                <th @onclick='() => OnSort("CommencementDate")' style="cursor: pointer;">
+                    Start Date
+                    @if (SortField == "CommencementDate")
+                    {
+                        <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-sort text-muted"></i>
+                    }
+                </th>
+                <th @onclick='() => OnSort("CompletionDate")' style="cursor: pointer;">
+                    End Date
+                    @if (SortField == "CompletionDate")
+                    {
+                        <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-sort text-muted"></i>
+                    }
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (PagedEngagementsList != null && PagedEngagementsList.Items.Count > 0)
+            {
+                foreach (var engagement in PagedEngagementsList.Items)
+                {
+                    <tr>
+                        <td>
+                            <NavLink class="text-decoration-none" href=@($"/engagements/{engagement.Id.Value}")>
+                                @engagement.Description
+                            </NavLink>
+                        </td>
+                        <td>
+                            <span class="badge @GetStatusBadgeClass(engagement.Status)">
+                                @engagement.Status.ToString()
+                            </span>
+                        </td>
+                        <td>
+                            @if (engagement.CommencementDate.HasValue)
+                            {
+                                @engagement.CommencementDate.Value.ToString("MMM dd, yyyy")
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not started</span>
+                            }
+                        </td>
+                        <td>
+                            @if (engagement.CompletionDate.HasValue)
+                            {
+                                @engagement.CompletionDate.Value.ToString("MMM dd, yyyy")
+                            }
+                            else
+                            {
+                                <span class="text-muted">Ongoing</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center py-4">
+                        <div class="text-muted">
+                            <i class="fa-solid fa-handshake fa-2x mb-3"></i>
+                            <p class="mb-1">No engagements found</p>
+                            @if (!string.IsNullOrEmpty(SearchTerm))
+                            {
+                                <small>Try adjusting your search criteria</small>
+                            }
+                            else
+                            {
+                                <small>This client doesn't have any engagements yet</small>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (PagedEngagementsList != null && PagedEngagementsList.TotalCount > 0)
+    {
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <div>
+                <span>Page @(PagedEngagementsList.CurrentPage) of @PagedEngagementsList.Pages</span>
+                <span class="text-muted ms-2">(@PagedEngagementsList.TotalCount total engagements)</span>
+            </div>
+            <div>
+                <button class="btn btn-outline-secondary btn-sm me-2" @onclick="GoToPreviousPage"
+                    disabled="@(PagedEngagementsList.CurrentPage <= 1)">
+                    Previous
+                </button>
+                <button class="btn btn-outline-secondary btn-sm" @onclick="GoToNextPage"
+                    disabled="@(!PagedEngagementsList.HasNextPage)">
+                    Next
+                </button>
+            </div>
+        </div>
+    }
+
+</div>
+<br />
+
+@code {
+    [Parameter]
+    public PagedListResponse<EngagementModel>? PagedEngagementsList { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnEngagementsPageChange { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnSearchTermChange { get; set; }
+
+    [Parameter]
+    public EventCallback<(string field, string direction)> OnSortChange { get; set; }
+
+    private string SearchTerm { get; set; } = string.Empty;
+    private string SortField { get; set; } = string.Empty;
+    private string SortDirection { get; set; } = "asc";
+
+    private async Task GoToPreviousPage()
+    {
+        if (PagedEngagementsList != null && PagedEngagementsList.CurrentPage > 1)
+        {
+            await OnEngagementsPageChange.InvokeAsync(PagedEngagementsList.CurrentPage - 1);
+        }
+    }
+
+    private async Task GoToNextPage()
+    {
+        if (PagedEngagementsList != null && PagedEngagementsList.HasNextPage)
+        {
+            await OnEngagementsPageChange.InvokeAsync(PagedEngagementsList.CurrentPage + 1);
+        }
+    }
+
+    private async Task OnSearch()
+    {
+        await OnSearchTermChange.InvokeAsync(SearchTerm);
+    }
+
+    private async Task OnSearchKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await OnSearch();
+        }
+    }
+
+    private async Task OnSort(string field)
+    {
+        if (SortField == field)
+        {
+            SortDirection = SortDirection == "asc" ? "desc" : "asc";
+        }
+        else
+        {
+            SortField = field;
+            SortDirection = "asc";
+        }
+
+        await OnSortChange.InvokeAsync((SortField, SortDirection));
+    }
+
+    private string GetStatusBadgeClass(EastSeat.ResourceIdea.Domain.Enums.EngagementStatus status)
+    {
+        return status switch
+        {
+            EastSeat.ResourceIdea.Domain.Enums.EngagementStatus.NotStarted => "bg-secondary",
+            EastSeat.ResourceIdea.Domain.Enums.EngagementStatus.InProgress => "bg-primary",
+            EastSeat.ResourceIdea.Domain.Enums.EngagementStatus.Completed => "bg-success",
+            EastSeat.ResourceIdea.Domain.Enums.EngagementStatus.Canceled => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+}
