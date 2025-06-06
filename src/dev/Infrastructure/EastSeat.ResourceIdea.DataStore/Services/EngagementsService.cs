@@ -83,9 +83,23 @@ public sealed class EngagementsService(ResourceIdeaDBContext dbContext) : IEngag
         {
             return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
         }
-        catch (Exception)
+        catch (InvalidOperationException ex)
         {
+            // Log the invalid operation exception here if logging is available
+            Console.Error.WriteLine($"Invalid operation: {ex.Message}");
             return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
+        }
+        catch (TimeoutException ex)
+        {
+            // Log the timeout exception here if logging is available
+            Console.Error.WriteLine($"Operation timed out: {ex.Message}");
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
+        }
+        catch (Exception ex)
+        {
+            // Log the unexpected exception here if logging is available
+            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+            throw; // Rethrow the exception to preserve its context
         }
     }
 
