@@ -83,6 +83,13 @@ public partial class AddEngagement : ComponentBase
 
     private async Task HandleValidSubmit()
     {
+        // Check if any clients exist
+        if (!HasAnyClients)
+        {
+            NotificationService.ShowErrorNotification("No clients available. Please add a client first before creating an engagement.");
+            return;
+        }
+
         // Set the client ID from the selected value
         if (Guid.TryParse(SelectedClientId, out var clientGuid))
         {
