@@ -108,9 +108,22 @@ public sealed class EngagementsService(ResourceIdeaDBContext dbContext) : IEngag
 
             return ResourceIdeaResponse<PagedListResponse<Engagement>>.Success(Optional<PagedListResponse<Engagement>>.Some(pagedList));
         }
-        catch (Exception)
+        catch (DbUpdateException dbEx)
         {
-            // TODO: Log the exception here if logging is available
+            // Log the database update exception here if logging is available
+            Console.Error.WriteLine($"Database update error: {dbEx.Message}");
+            return ResourceIdeaResponse<PagedListResponse<Engagement>>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
+        catch (OperationCanceledException ocEx)
+        {
+            // Log the operation canceled exception here if logging is available
+            Console.Error.WriteLine($"Operation canceled: {ocEx.Message}");
+            return ResourceIdeaResponse<PagedListResponse<Engagement>>.Failure(ErrorCode.OperationCanceled);
+        }
+        catch (Exception ex)
+        {
+            // Log the generic exception here if logging is available
+            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
             return ResourceIdeaResponse<PagedListResponse<Engagement>>.Failure(ErrorCode.DataStoreCommandFailure);
         }
     }
