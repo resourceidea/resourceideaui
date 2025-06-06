@@ -25,83 +25,51 @@
     }
     else if (Client != null)
     {
-        <PageHeader Text="@Client.Name" />
+        <PageHeader Text=@($"Client: {Client.Name}") />
 
         <div class="mt-2 mb-2">
             <NavLink class="btn btn-outline-dark btn-sm" href="/clients" ActiveClass="">
                 <i class="fa fa-chevron-left"></i> Back to Clients
             </NavLink>
-            <NavLink class="btn btn-primary btn-sm ms-2" href=@($"/clients/edit/{Client.ClientId.Value}") ActiveClass="">
+            <NavLink class="btn btn-primary btn-sm" href=@($"/clients/edit/{Client.ClientId.Value}") ActiveClass="">
                 <i class="fa-solid fa-pen-to-square"></i> Edit
+            </NavLink>
+            <span class="mx-3 text-muted" aria-hidden="true">|</span>
+            <NavLink class="btn btn-outline-secondary btn-sm" href="#">
+                <i class="fa-solid fa-file-invoice"></i> Invoices
+            </NavLink>
+            <NavLink class="btn btn-outline-secondary btn-sm" href="#">
+                <i class="fa-solid fa-address-card"></i> Contacts
             </NavLink>
         </div>
 
-        <div class="card mb-3">
-            <div class="card-header">
-                <h6 class="mb-0">Related Information</h6>
-            </div>
-            <div class="card-body">
-                <div class="d-grid gap-2 d-md-flex">
-                    <NavLink class="btn btn-outline-secondary btn-sm" href="#">
-                        <i class="fa-solid fa-briefcase"></i> Projects
-                    </NavLink>
-                    <NavLink class="btn btn-outline-secondary btn-sm" href="/engagements" ActiveClass="">
-                        <i class="fa-solid fa-handshake"></i> All Engagements
-                    </NavLink>
-                    <NavLink class="btn btn-outline-secondary btn-sm" href="#">
-                        <i class="fa-solid fa-file-invoice"></i> Invoices
-                    </NavLink>
-                    <NavLink class="btn btn-outline-secondary btn-sm" href="#">
-                        <i class="fa-solid fa-address-card"></i> Contacts
-                    </NavLink>
-                </div>
-            </div>
+        <hr/>
+
+        <h5 class="mb-2">Engagements</h5>
+
+        <div class="mb-1">
+            <NavLink class="btn btn-success btn-sm" href=@($"/engagements/add?clientid={Client.ClientId.Value}") ActiveClass="">
+                <i class="fa-solid fa-plus"></i> Add Engagement
+            </NavLink>
         </div>
 
-        <div class="row">
-            <div class="col-4">
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h6 class="mb-0">Address</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-9">
-                                <div><span class="fw-bold">Building:</span> @Client.Address.Building</div>
-                                <div><span class="fw-bold">Street:</span> @Client.Address.Street</div>
-                                <div><span class="fw-bold">City:</span> @Client.Address.City</div>
-                            </div>
-                        </div>
-                    </div>
+        @if (IsLoadingEngagements)
+        {
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="visually-hidden">Loading engagements...</span>
                 </div>
+                <span class="ms-2">Loading engagements...</span>
             </div>
-            <div class="col-8">
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h6 class="mb-0">Engagements</h6>
-                    </div>
-                    <div class="card-body">
-                        @if (IsLoadingEngagements)
-                        {
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border spinner-border-sm" role="status">
-                                    <span class="visually-hidden">Loading engagements...</span>
-                                </div>
-                                <span class="ms-2">Loading engagements...</span>
-                            </div>
-                        }
-                        else
-                        {
-                            <ClientEngagementsList 
-                                PagedEngagementsList="PagedEngagementsList"
-                                OnEngagementsPageChange="OnEngagementsPageChange"
-                                OnSearchTermChange="OnEngagementSearchTermChange"
-                                OnSortChange="OnEngagementSortChange" />
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
+        }
+        else
+        {
+            <ClientEngagementsList 
+                PagedEngagementsList="PagedEngagementsList"
+                OnEngagementsPageChange="OnEngagementsPageChange"
+                OnSearchTermChange="OnEngagementSearchTermChange"
+                OnSortChange="OnEngagementSortChange" />
+        }
     }
     else
     {

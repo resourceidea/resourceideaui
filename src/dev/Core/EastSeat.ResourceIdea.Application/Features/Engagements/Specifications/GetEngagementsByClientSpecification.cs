@@ -18,8 +18,19 @@ public class GetEngagementsByClientSpecification(ClientId clientId, string? sear
     /// <summary>
     /// Criteria to retrieve an engagements by its owning client.
     /// </summary>
-    public override Expression<Func<Engagement, bool>> Criteria => engagement => 
-        engagement.ClientId == _clientId &&
-        (string.IsNullOrEmpty(_searchTerm) || 
-         engagement.Description.Contains(_searchTerm));
+    public override Expression<Func<Engagement, bool>> Criteria
+    {
+        get
+        {
+            return engagement => engagement.ClientId == _clientId && DescriptionContainsSearchTerm(engagement);
+        }
+    }
+
+    private bool DescriptionContainsSearchTerm(Engagement engagement)
+    {
+        if (string.IsNullOrWhiteSpace(_searchTerm))
+            return true;
+
+        return engagement.Description?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) ?? false;
+    }
 }
