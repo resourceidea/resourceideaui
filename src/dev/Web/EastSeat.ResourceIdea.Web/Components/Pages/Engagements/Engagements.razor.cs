@@ -38,16 +38,10 @@ public partial class Engagements : ComponentBase
         GetAllEngagementsQuery query = new(CurrentPage, PageSize);
 
         var response = await Mediator.Send(query);
-        if (response.IsSuccess && response.Content.HasValue)
-        {
-            TenantEngagements = response.Content.Value;
-        }
-        else
-        {
-            // Handle error response
-            // For now, just set to null
-            TenantEngagements = null;
-        }
+        // Handle error response: For now, just set to null if the condition fails.
+        TenantEngagements = response.IsSuccess && response.Content.HasValue 
+            ? response.Content.Value 
+            : null;
 
         IsLoadingPage = false;
         StateHasChanged();
