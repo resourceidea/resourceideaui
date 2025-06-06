@@ -283,7 +283,7 @@ h1:focus {
    ============================= */
 
 .page-header-card {
-    background-color: #D7E8E8 !important;
+    background-color: var(--header-bg-color) !important;
 }
 
 .page-header-body {
