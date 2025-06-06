@@ -80,16 +80,18 @@ public partial class Engagements : ComponentBase
 
     private async Task OnEngagementSearchTermChange(string searchTerm)
     {
+        // Note: Search is not currently supported by GetAllEngagementsQuery
+        // This is a placeholder for future enhancement
         EngagementSearchTerm = searchTerm;
-        CurrentEngagementsPage = 1; // Reset to first page when searching
-        await LoadEngagementsAsync();
+        // Don't reload data since search isn't supported yet
     }
 
     private async Task OnEngagementSortChange((string field, string direction) sortInfo)
     {
+        // Note: Sorting is not currently supported by GetAllEngagementsQuery  
+        // This is a placeholder for future enhancement
         EngagementSortField = sortInfo.field;
         EngagementSortDirection = sortInfo.direction;
-        CurrentEngagementsPage = 1; // Reset to first page when sorting
-        await LoadEngagementsAsync();
+        // Don't reload data since sorting isn't supported yet
     }
 }

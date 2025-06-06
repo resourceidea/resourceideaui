@@ -186,6 +186,8 @@
 
     private async Task OnSearch()
     {
+        // Note: Search is not currently supported by GetAllEngagementsQuery
+        // This is a placeholder for future enhancement
         await OnSearchTermChange.InvokeAsync(SearchTerm);
     }
 
@@ -199,6 +201,8 @@
 
     private async Task OnSort(string field)
     {
+        // Note: Sorting is not currently supported by GetAllEngagementsQuery
+        // This is a placeholder for future enhancement
         if (SortField == field)
         {
             SortDirection = SortDirection == "asc" ? "desc" : "asc";
