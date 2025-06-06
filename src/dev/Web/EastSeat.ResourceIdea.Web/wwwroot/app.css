@@ -283,17 +283,17 @@ h1:focus {
    ============================= */
 
 .page-header-card {
-    background-color: #D7E8E8 !important;
+    background-color: #D7E8E8;
 }
 
 .page-header-body {
-    padding: 0 !important;
+    padding: 0;
 }
 
 .page-header-title {
-    font-family: 'Roboto' !important;
-    letter-spacing: -0.02em !important;
-    margin: 0.5rem 0 0.5rem 0.3rem !important;
+    font-family: 'Roboto' sans-serif;
+    letter-spacing: -0.02em;
+    margin: 0.5rem 0 0.5rem 0.3rem;
 }
 
 /* Responsive Design */
