@@ -1,7 +1,7 @@
 @* ------------------------------------------------------------------------------
-    File: ClientEngagementsList.razor
+    File: EngagementsList.razor
     Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Shared/Lists
-    Description: Client Engagements List component
+    Description: All Engagements List component
    ------------------------------------------------------------------------------ *@
 
 @using Microsoft.AspNetCore.Components.Routing
@@ -74,7 +74,7 @@
                 {
                     <tr>
                         <td>
-                            <NavLink class="text-decoration-none" href=@($"/engagements/{engagement.Id.Value}?from=client&clientId={engagement.ClientId.Value}")>
+                            <NavLink class="text-decoration-none" href=@($"/engagements/{engagement.Id.Value}?from=engagements")>
                                 @engagement.Description
                             </NavLink>
                         </td>
@@ -119,7 +119,7 @@
                             }
                             else
                             {
-                                <small>This client doesn't have any engagements yet</small>
+                                <small>No engagements have been created yet</small>
                             }
                         </div>
                     </td>

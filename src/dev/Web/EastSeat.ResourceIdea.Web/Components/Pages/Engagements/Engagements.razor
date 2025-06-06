@@ -1,0 +1,58 @@
+@* ------------------------------------------------------------------------------
+    File: Engagements.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Pages/Engagements/Engagements.razor
+    Description: Engagements List Page
+   ------------------------------------------------------------------------------ *@
+
+@page "/engagements"
+@using EastSeat.ResourceIdea.Web.Components.Shared.Lists
+@using EastSeat.ResourceIdea.Web.Components.Shared.Cards
+@using EastSeat.ResourceIdea.Web.Components.Shared.Alerts
+
+<ResourceIdeaPageTitle Title="Engagements" />
+
+<div class="page-container">
+
+    @if (IsLoading)
+    {
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else if (HasError)
+    {
+        <DismissibleAlert ErrorMessage="@ErrorMessage" IsErrorMessage="true" />
+    }
+    else
+    {
+        <PageHeader Text="All Engagements" />
+
+        <div class="mt-2 mb-2">
+            <NavLink class="btn btn-success btn-sm" href="/engagements/add" ActiveClass="">
+                <i class="fa-solid fa-plus"></i> Add Engagement
+            </NavLink>
+        </div>
+
+        <hr/>
+
+        @if (IsLoadingEngagements)
+        {
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="visually-hidden">Loading engagements...</span>
+                </div>
+                <span class="ms-2">Loading engagements...</span>
+            </div>
+        }
+        else
+        {
+            <EngagementsList 
+                PagedEngagementsList="PagedEngagementsList"
+                OnEngagementsPageChange="OnEngagementsPageChange"
+                OnSearchTermChange="OnEngagementSearchTermChange"
+                OnSortChange="OnEngagementSortChange" />
+        }
+    }
+</div>
