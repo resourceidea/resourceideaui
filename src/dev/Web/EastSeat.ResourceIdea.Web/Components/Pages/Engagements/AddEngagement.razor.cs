@@ -73,11 +73,23 @@ public partial class AddEngagement : ComponentBase
                 ErrorMessage = "Failed to load clients. Please try again later.";
             }
         }
-        catch (Exception)
+        catch (InvalidOperationException ex)
         {
             HasError = true;
-            ErrorMessage = "An error occurred while loading clients. Please try again later.";
-            // TODO: Log the actual exception
+            ErrorMessage = "An invalid operation occurred while loading clients. Please contact support.";
+            Console.Error.WriteLine($"InvalidOperationException: {ex.Message}");
+        }
+        catch (TaskCanceledException ex)
+        {
+            HasError = true;
+            ErrorMessage = "The operation to load clients was canceled. Please try again.";
+            Console.Error.WriteLine($"TaskCanceledException: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            HasError = true;
+            ErrorMessage = "An unexpected error occurred while loading clients. Please try again later.";
+            Console.Error.WriteLine($"Exception: {ex.Message}");
         }
     }
 
