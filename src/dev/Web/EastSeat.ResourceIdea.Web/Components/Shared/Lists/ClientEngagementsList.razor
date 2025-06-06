@@ -11,8 +11,8 @@
 <div class="card mt-1">
     <div class="card-header">
         <div class="input-group input-group-sm">
-            <input type="text" class="form-control" placeholder="Search engagements..." aria-label="Search engagements" 
-                   @bind="SearchTerm" @onkeypress="OnSearchKeyPress">
+            <input type="text" class="form-control" placeholder="Search engagements..." aria-label="Search engagements"
+                @bind="SearchTerm" @onkeypress="OnSearchKeyPress">
             <button class="btn btn-outline-secondary" type="button" @onclick="OnSearch">
                 <i class="fa-solid fa-search"></i>
             </button>
@@ -21,8 +21,8 @@
     <table class="table table-sm table-striped table-hover table-borderless">
         <thead>
             <tr>
-                <th @onclick="() => OnSort('Description')" style="cursor: pointer;">
-                    Description 
+                <th @onclick='() => OnSort("Description")' style="cursor: pointer;">
+                    Description
                     @if (SortField == "Description")
                     {
                         <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
@@ -32,8 +32,8 @@
                         <i class="fa fa-sort text-muted"></i>
                     }
                 </th>
-                <th @onclick="() => OnSort('Status')" style="cursor: pointer;">
-                    Status 
+                <th @onclick='() => OnSort("Status")' style="cursor: pointer;">
+                    Status
                     @if (SortField == "Status")
                     {
                         <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
@@ -43,8 +43,8 @@
                         <i class="fa fa-sort text-muted"></i>
                     }
                 </th>
-                <th @onclick="() => OnSort('CommencementDate')" style="cursor: pointer;">
-                    Start Date 
+                <th @onclick='() => OnSort("CommencementDate")' style="cursor: pointer;">
+                    Start Date
                     @if (SortField == "CommencementDate")
                     {
                         <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
@@ -54,8 +54,8 @@
                         <i class="fa fa-sort text-muted"></i>
                     }
                 </th>
-                <th @onclick="() => OnSort('CompletionDate')" style="cursor: pointer;">
-                    End Date 
+                <th @onclick='() => OnSort("CompletionDate")' style="cursor: pointer;">
+                    End Date
                     @if (SortField == "CompletionDate")
                     {
                         <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
