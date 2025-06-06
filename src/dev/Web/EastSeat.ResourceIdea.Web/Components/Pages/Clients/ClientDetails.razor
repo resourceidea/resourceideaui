@@ -25,7 +25,7 @@
     }
     else if (Client != null)
     {
-        <PageHeader Text="@Client.Name" />
+        <PageHeader Text=@($"Client: {Client.Name}") />
 
         <div class="mt-2 mb-2">
             <NavLink class="btn btn-outline-dark btn-sm" href="/clients" ActiveClass="">
@@ -43,34 +43,33 @@
             </NavLink>
         </div>
 
-        <div class="row">
-            <div class="col-12">
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h6 class="mb-0">Engagements</h6>
-                    </div>
-                    <div class="card-body">
-                        @if (IsLoadingEngagements)
-                        {
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border spinner-border-sm" role="status">
-                                    <span class="visually-hidden">Loading engagements...</span>
-                                </div>
-                                <span class="ms-2">Loading engagements...</span>
-                            </div>
-                        }
-                        else
-                        {
-                            <ClientEngagementsList 
-                                PagedEngagementsList="PagedEngagementsList"
-                                OnEngagementsPageChange="OnEngagementsPageChange"
-                                OnSearchTermChange="OnEngagementSearchTermChange"
-                                OnSortChange="OnEngagementSortChange" />
-                        }
-                    </div>
-                </div>
-            </div>
+        <hr/>
+
+        <h5 class="mb-2">Engagements</h5>
+
+        <div class="mb-1">
+            <NavLink class="btn btn-success btn-sm" href=@($"/engagements/add?clientid={Client.ClientId.Value}") ActiveClass="">
+                <i class="fa-solid fa-plus"></i> Add Engagement
+            </NavLink>
         </div>
+
+        @if (IsLoadingEngagements)
+        {
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="visually-hidden">Loading engagements...</span>
+                </div>
+                <span class="ms-2">Loading engagements...</span>
+            </div>
+        }
+        else
+        {
+            <ClientEngagementsList 
+                PagedEngagementsList="PagedEngagementsList"
+                OnEngagementsPageChange="OnEngagementsPageChange"
+                OnSearchTermChange="OnEngagementSearchTermChange"
+                OnSortChange="OnEngagementSortChange" />
+        }
     }
     else
     {
