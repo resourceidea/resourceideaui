@@ -107,14 +107,9 @@ public partial class ClientDetails : ComponentBase
 
         var response = await Mediator.Send(query);
 
-        if (response is not null && response.IsSuccess && response.Content.HasValue)
-        {
-            PagedEngagementsList = response.Content.Value;
-        }
-        else
-        {
-            PagedEngagementsList = null;
-        }
+        PagedEngagementsList = (response is not null && response.IsSuccess && response.Content.HasValue)
+            ? response.Content.Value
+            : null;
 
         IsLoadingEngagements = false;
         StateHasChanged();
