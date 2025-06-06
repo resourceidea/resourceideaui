@@ -263,7 +263,7 @@ h1:focus {
 
 .page-content {
     flex: 1;
-    padding: 1.5rem;
+    padding: 0.5rem;
 }
 
 .app-footer {
@@ -276,6 +276,24 @@ h1:focus {
 .footer-content {
     color: #6c757d;
     font-size: 0.875rem;
+}
+
+/* =============================
+    Page Header Styles
+   ============================= */
+
+.page-header-card {
+    background-color: #D7E8E8 !important;
+}
+
+.page-header-body {
+    padding: 0 !important;
+}
+
+.page-header-title {
+    font-family: 'Roboto' !important;
+    letter-spacing: -0.02em !important;
+    margin: 0.5rem 0 0.5rem 0.3rem !important;
 }
 
 /* Responsive Design */
