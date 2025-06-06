@@ -52,7 +52,7 @@ app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 
-app.UseStaticFiles();
+app.MapStaticAssets();
 app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
 
