@@ -43,10 +43,6 @@ else if (Command != null)
                     <DataAnnotationsValidator />
                     <ValidationSummary />
                     
-                    @* Hidden inputs for read-only IDs *@
-                    <InputHidden @bind-Value="Command.EngagementId" />
-                    <InputHidden @bind-Value="Command.ClientId" />
-                    
                     <div class="row">
                         <div class="col-md-8">
                             <div class="form-group">
