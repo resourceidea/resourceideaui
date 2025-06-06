@@ -67,9 +67,26 @@ public sealed class EngagementsService(ResourceIdeaDBContext dbContext) : IEngag
     /// <param name="specification">The specification to filter the engagement.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{Engagement}"/>.</returns>
-    public Task<ResourceIdeaResponse<Engagement>> GetByIdAsync(BaseSpecification<Engagement> specification, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<Engagement>> GetByIdAsync(BaseSpecification<Engagement> specification, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            Engagement? engagement = await _dbContext.Engagements.AsNoTracking().FirstOrDefaultAsync(specification.Criteria, cancellationToken);
+            if (engagement == null)
+            {
+                return ResourceIdeaResponse<Engagement>.NotFound();
+            }
+
+            return ResourceIdeaResponse<Engagement>.Success(engagement);
+        }
+        catch (OperationCanceledException)
+        {
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
+        }
+        catch (Exception)
+        {
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
+        }
     }
 
     /// <summary>
@@ -146,8 +163,47 @@ public sealed class EngagementsService(ResourceIdeaDBContext dbContext) : IEngag
     /// <param name="entity">The engagement entity to update.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{Engagement}"/>.</returns>
-    public Task<ResourceIdeaResponse<Engagement>> UpdateAsync(Engagement entity, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<Engagement>> UpdateAsync(Engagement entity, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var existingEngagement = await _dbContext.Engagements.FirstOrDefaultAsync(e => e.Id == entity.Id, cancellationToken);
+            if (existingEngagement == null)
+            {
+                return ResourceIdeaResponse<Engagement>.NotFound();
+            }
+
+            // Update properties (engagement ID and client ID are read-only as per requirements)
+            existingEngagement.Description = entity.Description;
+            existingEngagement.EngagementStatus = entity.EngagementStatus;
+            
+            // Handle nullable dates - only update if not MinValue (which represents null in our UI)
+            existingEngagement.CommencementDate = entity.CommencementDate == DateTimeOffset.MinValue 
+                ? null 
+                : entity.CommencementDate;
+            existingEngagement.CompletionDate = entity.CompletionDate == DateTimeOffset.MinValue 
+                ? null 
+                : entity.CompletionDate;
+
+            _dbContext.Engagements.Update(existingEngagement);
+            int result = await _dbContext.SaveChangesAsync(cancellationToken);
+            if (result > 0)
+            {
+                return ResourceIdeaResponse<Engagement>.Success(existingEngagement);
+            }
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.EmptyEntityOnUpdateEngagement);
+        }
+        catch (DbUpdateException)
+        {
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
+        catch (OperationCanceledException)
+        {
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
+        catch (Exception)
+        {
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
     }
 }
