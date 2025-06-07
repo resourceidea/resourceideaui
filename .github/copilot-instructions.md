@@ -1,1 +1,2 @@
 - @azure Rule - Use Azure Best Practices: When generating code for Azure, running terminal commands for Azure, or performing operations related to Azure, invoke your `azure_development-get_best_practices` tool if available.
+- @testing Rule - Require Tests: When making changes, always include relevant unit tests and either end-to-end (E2E) or integration tests to verify the new or updated functionality. Pull requests without adequate tests should not be considered complete.
