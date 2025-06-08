@@ -21,9 +21,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
   <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\dev\Core\EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj" />
   </ItemGroup>
 
 </Project>

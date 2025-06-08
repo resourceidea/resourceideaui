@@ -1,3 +1,4 @@
+using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
@@ -47,13 +48,37 @@ public class Engagement : BaseEntity
     /// </summary>
     public IReadOnlyCollection<EngagementTask>? EngagementTasks { get; set; }
 
+    /// <summary>Client associated with the engagement.</summary>
+    public Client? Client { get; set; }
+
     public override TModel ToModel<TModel>()
     {
-        throw new NotImplementedException();
+        // Only EngagementModel is supported for now
+        if (typeof(TModel) == typeof(Models.EngagementModel))
+        {
+            var model = new Models.EngagementModel
+            {
+                Id = Id,
+                ClientId = ClientId,
+                TenantId = TenantId,
+                CommencementDate = CommencementDate,
+                CompletionDate = CompletionDate,
+                Status = EngagementStatus,
+                Description = Description ?? string.Empty,
+                ClientName = Client?.Name ?? string.Empty
+            };
+            return (TModel)(object)model;
+        }
+        throw new InvalidOperationException($"Cannot map {nameof(Engagement)} to {typeof(TModel).Name}");
     }
 
     public override ResourceIdeaResponse<TModel> ToResourceIdeaResponse<TEntity, TModel>()
     {
-        throw new NotImplementedException();
+        // Only EngagementModel is supported for now
+        if (typeof(TModel) == typeof(Models.EngagementModel))
+        {
+            return ResourceIdeaResponse<TModel>.Success(ToModel<TModel>());
+        }
+        throw new InvalidOperationException($"Cannot map {typeof(TEntity).Name} to {typeof(TModel).Name}");
     }
 }
