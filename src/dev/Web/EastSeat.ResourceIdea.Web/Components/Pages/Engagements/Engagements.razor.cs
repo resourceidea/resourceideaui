@@ -35,7 +35,10 @@ public partial class Engagements : ComponentBase
         IsLoadingPage = true;
         StateHasChanged();
 
-        GetAllEngagementsQuery query = new(CurrentPage, PageSize);
+        GetAllEngagementsQuery query = new(CurrentPage, PageSize)
+        {
+            TenantId = ResourceIdeaRequestContext.Tenant
+        };
 
         var response = await Mediator.Send(query);
         // Handle error response: For now, just set to null if the condition fails.

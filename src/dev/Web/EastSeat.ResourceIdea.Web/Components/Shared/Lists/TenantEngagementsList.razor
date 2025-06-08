@@ -15,6 +15,7 @@
                 <th>Description</th>
                 <th>Client</th>
                 <th>Status</th>
+                <th>Due Date</th>
                 <th>Start Date</th>
                 <th>End Date</th>
             </tr>
@@ -32,13 +33,16 @@
                         </td>
                         <td>
                             <NavLink class="text-decoration-none" href=@($"/clients/{engagement.ClientId.Value}")>
-                                Client @engagement.ClientId.Value
+                                @engagement.ClientName
                             </NavLink>
                         </td>
                         <td>
                             <span class="badge @GetStatusBadgeClass(engagement.Status)">
                                 @engagement.Status.ToString()
                             </span>
+                        </td>
+                        <td>
+                            <span class="text-muted">Not Set</span>
                         </td>
                         <td>
                             @if (engagement.CommencementDate.HasValue)

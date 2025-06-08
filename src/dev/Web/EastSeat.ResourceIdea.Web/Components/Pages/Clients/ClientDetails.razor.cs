@@ -102,7 +102,8 @@ public partial class ClientDetails : ComponentBase
             ClientId = Client.ClientId,
             SearchTerm = string.IsNullOrWhiteSpace(EngagementSearchTerm) ? null : EngagementSearchTerm,
             SortField = string.IsNullOrWhiteSpace(EngagementSortField) ? null : EngagementSortField,
-            SortDirection = string.IsNullOrWhiteSpace(EngagementSortDirection) ? null : EngagementSortDirection
+            SortDirection = string.IsNullOrWhiteSpace(EngagementSortDirection) ? null : EngagementSortDirection,
+            TenantId = ResourceIdeaRequestContext.Tenant
         };
 
         var response = await Mediator.Send(query);
