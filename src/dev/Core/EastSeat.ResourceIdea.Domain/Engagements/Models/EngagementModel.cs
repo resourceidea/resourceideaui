@@ -26,6 +26,11 @@ public record EngagementModel
     public ClientId ClientId { get; init; }
 
     /// <summary>
+    /// Name of the client associated with the engagement.
+    /// </summary>
+    public string ClientName { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets the tenant ID.
     /// </summary>
     public TenantId TenantId { get; set; }

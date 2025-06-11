@@ -10,4 +10,8 @@
     <Folder Include="Employees\ValueObjects\" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
 </Project>

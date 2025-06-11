@@ -17,8 +17,11 @@ public class GetEngagementsByClientQueryHandler(IEngagementsService engagementsS
 
     public async Task<ResourceIdeaResponse<PagedListResponse<EngagementModel>>> Handle(GetEngagementsByClientQuery request, CancellationToken cancellationToken)
     {
-        var getEngagementsByClientSpecification = new GetEngagementsByClientSpecification(request.ClientId, request.SearchTerm);
-        
+        var getEngagementsByClientSpecification = new GetEngagementsByClientSpecification(
+            request.ClientId,
+            request.TenantId,
+            request.SearchTerm);
+
         // For now, we'll get all matching engagements and handle sorting/paging in memory
         // In a production system, this should be handled at the database level
         var result = await _engagementsService.GetPagedListAsync(

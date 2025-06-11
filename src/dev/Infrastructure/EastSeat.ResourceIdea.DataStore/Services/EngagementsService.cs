@@ -22,9 +22,37 @@ public sealed class EngagementsService(ResourceIdeaDBContext dbContext) : IEngag
     /// <param name="entity">The engagement entity to add.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{Engagement}"/>.</returns>
-    public Task<ResourceIdeaResponse<Engagement>> AddAsync(Engagement entity, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<Engagement>> AddAsync(Engagement entity, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            await _dbContext.Engagements.AddAsync(entity, cancellationToken);
+            int result = await _dbContext.SaveChangesAsync(cancellationToken);
+            if (result > 0)
+            {
+                return ResourceIdeaResponse<Engagement>.Success(entity);
+            }
+
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.EmptyEntityOnCreateEngagement);
+        }
+        catch (DbUpdateException dbEx)
+        {
+            // Log the database update exception here if logging is available
+            Console.Error.WriteLine($"Database update error: {dbEx.Message}");
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
+        catch (OperationCanceledException ocEx)
+        {
+            // Log the operation canceled exception here if logging is available
+            Console.Error.WriteLine($"Operation canceled: {ocEx.Message}");
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
+        }
+        catch (Exception ex)
+        {
+            // Log the generic exception here if logging is available
+            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
     }
 
     /// <summary>
@@ -80,11 +108,15 @@ public sealed class EngagementsService(ResourceIdeaDBContext dbContext) : IEngag
     /// <param name="specification">The optional specification to filter the engagements.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{PagedListResponse{Engagement}}"/>.</returns>
-    public async Task<ResourceIdeaResponse<PagedListResponse<Engagement>>> GetPagedListAsync(int page, int size, Optional<BaseSpecification<Engagement>> specification, CancellationToken cancellationToken)
+    public async Task<ResourceIdeaResponse<PagedListResponse<Engagement>>> GetPagedListAsync(
+        int page,
+        int size,
+        Optional<BaseSpecification<Engagement>> specification,
+        CancellationToken cancellationToken)
     {
         try
         {
-            IQueryable<Engagement> query = _dbContext.Engagements.AsQueryable();
+            IQueryable<Engagement> query = _dbContext.Engagements.Include(e => e.Client).AsQueryable();
 
             if (specification.HasValue)
             {
