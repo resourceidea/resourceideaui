@@ -84,11 +84,24 @@ public partial class EngagementDetails : ComponentBase
                 ErrorMessage = GetErrorMessage(response.Error);
             }
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
         {
             HasError = true;
-            ErrorMessage = $"An error occurred while loading engagement details: {ex.Message}";
+            ErrorMessage = $"Invalid argument: {ex.Message}";
         }
+        catch (InvalidOperationException ex)
+        {
+            HasError = true;
+            ErrorMessage = $"Operation error: {ex.Message}";
+        }
+        catch (Exception ex)
+        {
+            // Log unexpected exceptions and rethrow
+           HasError = true;
+           ErrorMessage = "An unexpected error occurred. Please try again later.";
+           Console.Error.WriteLine($"Unexpected error: {ex}"); // Replace with proper logging
+           throw;
+       }
         finally
         {
             IsLoading = false;
