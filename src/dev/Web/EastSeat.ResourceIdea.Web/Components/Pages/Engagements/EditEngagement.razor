@@ -1,25 +1,245 @@
-@* ------------------------------------------------------------------------------
-    File: EditEngagement.razor
-    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Pages/Engagements/EditEngagement.razor
-    Description: Edit Engagement Page
-   ------------------------------------------------------------------------------ *@
-
 @page "/engagements/edit/{Id:guid}"
+
+@using Microsoft.AspNetCore.Components.Forms
+@using EastSeat.ResourceIdea.Application.Features.Engagements.Commands
+@using EastSeat.ResourceIdea.Application.Features.Engagements.Queries
+@using EastSeat.ResourceIdea.Application.Features.Clients.Queries
+@using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects
+@using EastSeat.ResourceIdea.Domain.Clients.ValueObjects
+@using EastSeat.ResourceIdea.Domain.Enums
+@using EastSeat.ResourceIdea.Web.Services
+@using EastSeat.ResourceIdea.Web.RequestContext
+@using MediatR
 
 <ResourceIdeaPageTitle Title="Edit Engagement" />
 
 <PageHeader Text="Edit Engagement" />
 
-<NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2" href=@($"/engagements/{Id}") ActiveClass="">
-    <i class="fa fa-chevron-left"></i> Back to Engagement Details
+<NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2" href="javascript:history.back()" ActiveClass="">
+    <i class="fa fa-chevron-left"></i> Back
 </NavLink>
 
-<div class="alert alert-info mt-3">
-    <i class="fa-solid fa-info-circle me-2"></i>
-    <strong>Coming Soon!</strong> The engagement editing functionality is not yet implemented. This page is a placeholder for future development.
-</div>
+@if (IsLoading)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else if (HasError)
+{
+    <DismissibleAlert ErrorMessage="@ErrorMessage" IsErrorMessage="true" />
+}
+else if (Command != null)
+{
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Edit Engagement Details</h5>
+        </div>
+        <EditForm class="card-body" Model="@Command" OnValidSubmit="HandleValidSubmit">
+            <div class="row">
+                <div class="col-12">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="clientName">Client</label>
+                                <input id="clientName" class="form-control" value="@ClientName" readonly />
+                                <small class="form-text text-muted">Client cannot be changed</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <InputTextArea id="description" class="form-control" @bind-Value="Command.Description" rows="3" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <InputSelect id="status" class="form-control" @bind-Value="Command.Status">
+                                    <option value="@EngagementStatus.NotStarted">Not Started</option>
+                                    <option value="@EngagementStatus.InProgress">In Progress</option>
+                                    <option value="@EngagementStatus.Completed">Completed</option>
+                                    <option value="@EngagementStatus.Canceled">Canceled</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="commencementDate">Commencement Date</label>
+                                <InputDate id="commencementDate" class="form-control" @bind-Value="CommencementDate" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="completionDate">Completion Date</label>
+                                <InputDate id="completionDate" class="form-control" @bind-Value="CompletionDate" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-primary btn-sm" disabled="@IsSubmitting">
+                            @if (IsSubmitting)
+                            {
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span> Saving...</span>
+                            }
+                            else
+                            {
+                                <span>Save</span>
+                            }
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+}
 
 @code {
     [Parameter]
     public Guid Id { get; set; }
+
+    private UpdateEngagementCommand? Command;
+    private string ClientName = string.Empty;
+    private DateTime? CommencementDate;
+    private DateTime? CompletionDate;
+    private bool IsLoading = true;
+    private bool IsSubmitting = false;
+    private bool HasError = false;
+    private string ErrorMessage = string.Empty;
+
+    [Inject] public IMediator Mediator { get; set; } = default!;
+    [Inject] public NavigationManager Navigation { get; set; } = default!;
+    [Inject] public IResourceIdeaRequestContext RequestContext { get; set; } = default!;
+    [Inject] public NotificationService NotificationService { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Load engagement details
+            GetEngagementByIdQuery engagementQuery = new()
+            {
+                EngagementId = EngagementId.Create(Id)
+            };
+
+            var engagementResponse = await Mediator.Send(engagementQuery);
+            if (engagementResponse.IsFailure || !engagementResponse.Content.HasValue)
+            {
+                HasError = true;
+                ErrorMessage = "Failed to load engagement details.";
+                return;
+            }
+
+            var engagement = engagementResponse.Content.Value;
+
+            // Load client details to get client name
+            GetClientByIdQuery clientQuery = new()
+            {
+                ClientId = engagement.ClientId,
+                TenantId = RequestContext.Tenant
+            };
+
+            var clientResponse = await Mediator.Send(clientQuery);
+            if (clientResponse.IsFailure || !clientResponse.Content.HasValue)
+            {
+                HasError = true;
+                ErrorMessage = "Failed to load client details.";
+                return;
+            }
+
+            var client = clientResponse.Content.Value;
+
+            // Initialize the command and form data
+            Command = new UpdateEngagementCommand
+            {
+                EngagementId = engagement.Id,
+                ClientId = engagement.ClientId,
+                Status = engagement.Status,
+                CommencementDate = engagement.CommencementDate ?? DateTimeOffset.MinValue,
+                CompletionDate = engagement.CompletionDate ?? DateTimeOffset.MinValue,
+                Description = engagement.Description
+            };
+
+            ClientName = client.Name;
+            CommencementDate = engagement.CommencementDate?.DateTime;
+            CompletionDate = engagement.CompletionDate?.DateTime;
+        }
+        catch (InvalidOperationException ex)
+        {
+            HasError = true;
+            ErrorMessage = "An invalid operation occurred while loading the engagement details: " + ex.Message;
+        }
+        catch (ArgumentException ex)
+        {
+            HasError = true;
+            ErrorMessage = "An argument error occurred while loading the engagement details: " + ex.Message;
+        }
+        catch (Exception ex) when (ex is not InvalidOperationException && ex is not ArgumentException)
+        {
+            HasError = true;
+            ErrorMessage = "An unexpected error occurred while loading the engagement details.";
+            Console.Error.WriteLine($"Unexpected error: {ex}");
+            throw; // Rethrow the exception to ensure it is not silently swallowed
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (Command is null)
+        {
+            return;
+        }
+
+        try
+        {
+            IsSubmitting = true;
+            
+            // Convert nullable DateTime to DateTimeOffset
+            // Only update dates if they are provided (not null and not default)
+            Command.CommencementDate = CommencementDate.HasValue 
+                ? new DateTimeOffset(CommencementDate.Value, TimeSpan.Zero)
+                : DateTimeOffset.MinValue;
+            
+            Command.CompletionDate = CompletionDate.HasValue 
+                ? new DateTimeOffset(CompletionDate.Value, TimeSpan.Zero)
+                : DateTimeOffset.MinValue;
+
+            var result = await Mediator.Send(Command);
+            if (result.IsSuccess)
+            {
+                NotificationService.ShowSuccessNotification("Engagement details updated successfully.");
+            }
+            else
+            {
+                // Generic error message as per requirements
+                NotificationService.ShowErrorNotification("Failed to update engagement details. Please try again.");
+            }
+        }
+        catch (Exception)
+        {
+            // Generic error message as per requirements
+            NotificationService.ShowErrorNotification("An unexpected error occurred. Please try again.");
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
 }
