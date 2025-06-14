@@ -87,47 +87,45 @@ public sealed class EngagementsService(ResourceIdeaDBContext dbContext) : IEngag
     public Task<ResourceIdeaResponse<Engagement>> DeleteAsync(Engagement entity, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// Gets an engagement by ID asynchronously.
-    /// </summary>
-    /// <param name="specification">The specification to filter the engagement.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{Engagement}"/>.</returns>
+    }    /// <summary>
+         /// Gets an engagement by ID asynchronously.
+         /// </summary>
+         /// <param name="specification">The specification to filter the engagement.</param>
+         /// <param name="cancellationToken">The cancellation token.</param>
+         /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{Engagement}"/>.</returns>
     public async Task<ResourceIdeaResponse<Engagement>> GetByIdAsync(BaseSpecification<Engagement> specification, CancellationToken cancellationToken)
     {
         try
         {
-            Engagement? engagement = await _dbContext.Engagements.AsNoTracking().FirstOrDefaultAsync(specification.Criteria, cancellationToken);
+            Engagement? engagement = await _dbContext.Engagements
+                .Include(e => e.Client)
+                .Where(specification.Criteria)
+                .FirstOrDefaultAsync(cancellationToken);
+
             if (engagement == null)
             {
-                return ResourceIdeaResponse<Engagement>.NotFound();
+                return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
             }
 
             return ResourceIdeaResponse<Engagement>.Success(engagement);
         }
-        catch (OperationCanceledException)
+        catch (DbUpdateException dbEx)
         {
-            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
+            // Log the database update exception here if logging is available
+            Console.Error.WriteLine($"Database update error: {dbEx.Message}");
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreCommandFailure);
         }
-        catch (InvalidOperationException ex)
+        catch (OperationCanceledException ocEx)
         {
-            // Log the invalid operation exception here if logging is available
-            Console.Error.WriteLine($"Invalid operation: {ex.Message}");
-            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
-        }
-        catch (TimeoutException ex)
-        {
-            // Log the timeout exception here if logging is available
-            Console.Error.WriteLine($"Operation timed out: {ex.Message}");
+            // Log the operation canceled exception here if logging is available
+            Console.Error.WriteLine($"Operation canceled: {ocEx.Message}");
             return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
         }
         catch (Exception ex)
         {
-            // Log the unexpected exception here if logging is available
+            // Log the generic exception here if logging is available
             Console.Error.WriteLine($"Unexpected error: {ex.Message}");
-            throw; // Rethrow the exception to preserve its context
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
         }
     }
 
@@ -246,14 +244,6 @@ public sealed class EngagementsService(ResourceIdeaDBContext dbContext) : IEngag
         catch (OperationCanceledException)
         {
             return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreCommandFailure);
-        }
-        catch (ArgumentNullException)
-        {
-            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.InvalidArgument);
-        }
-        catch (InvalidOperationException)
-        {
-            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.InvalidOperation);
         }
         catch (Exception ex)
         {
