@@ -56,12 +56,7 @@ public class Engagement : BaseEntity
     /// <summary>
     /// Id of the partner responsible for the engagement.
     /// </summary>
-    public EmployeeId? PartnerId { get; set; } 
-
-    /// <summary>
-    /// Engagement tasks associated with the engagement.
-    /// </summary>
-    public IReadOnlyCollection<EngagementTask>? EngagementTasks { get; set; }
+    public EmployeeId? PartnerId { get; set; }
 
     /// <summary>Client associated with the engagement.</summary>
     public Client? Client { get; set; }
