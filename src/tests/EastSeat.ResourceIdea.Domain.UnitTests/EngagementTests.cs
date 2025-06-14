@@ -21,8 +21,8 @@ namespace EastSeat.ResourceIdea.Domain.UnitTests.Engagements
                 Id = EngagementId.Create(Guid.NewGuid()),
                 ClientId = ClientId.Create(Guid.NewGuid()),
                 TenantId = TenantId.Create(Guid.NewGuid()),
-                CommencementDate = DateTimeOffset.UtcNow.AddDays(-10),
-                CompletionDate = DateTimeOffset.UtcNow,
+                StartDate = DateTimeOffset.UtcNow.AddDays(-10),
+                EndDate = DateTimeOffset.UtcNow,
                 EngagementStatus = EngagementStatus.Completed,
                 Description = "Test engagement"
             };
@@ -35,8 +35,8 @@ namespace EastSeat.ResourceIdea.Domain.UnitTests.Engagements
             Assert.Equal(engagement.Id, model.Id);
             Assert.Equal(engagement.ClientId, model.ClientId);
             Assert.Equal(engagement.TenantId, model.TenantId);
-            Assert.Equal(engagement.CommencementDate, model.CommencementDate);
-            Assert.Equal(engagement.CompletionDate, model.CompletionDate);
+            Assert.Equal(engagement.StartDate, model.StartDate);
+            Assert.Equal(engagement.EndDate, model.EndDate);
             Assert.Equal(engagement.EngagementStatus, model.Status);
             Assert.Equal(engagement.Description, model.Description);
         }
@@ -50,8 +50,8 @@ namespace EastSeat.ResourceIdea.Domain.UnitTests.Engagements
                 Id = EngagementId.Create(Guid.NewGuid()),
                 ClientId = ClientId.Create(Guid.NewGuid()),
                 TenantId = TenantId.Create(Guid.NewGuid()),
-                CommencementDate = DateTimeOffset.UtcNow.AddDays(-10),
-                CompletionDate = DateTimeOffset.UtcNow,
+                StartDate = DateTimeOffset.UtcNow.AddDays(-10),
+                EndDate = DateTimeOffset.UtcNow,
                 EngagementStatus = EngagementStatus.InProgress,
                 Description = "Test engagement for response"
             };
@@ -67,8 +67,8 @@ namespace EastSeat.ResourceIdea.Domain.UnitTests.Engagements
             Assert.Equal(engagement.Id, model.Id);
             Assert.Equal(engagement.ClientId, model.ClientId);
             Assert.Equal(engagement.TenantId, model.TenantId);
-            Assert.Equal(engagement.CommencementDate, model.CommencementDate);
-            Assert.Equal(engagement.CompletionDate, model.CompletionDate);
+            Assert.Equal(engagement.StartDate, model.StartDate);
+            Assert.Equal(engagement.EndDate, model.EndDate);
             Assert.Equal(engagement.EngagementStatus, model.Status);
             Assert.Equal(engagement.Description, model.Description);
         }

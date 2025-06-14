@@ -45,9 +45,9 @@
                             <span class="text-muted">Not Set</span>
                         </td>
                         <td>
-                            @if (engagement.CommencementDate.HasValue)
+                            @if (engagement.StartDate.HasValue)
                             {
-                                @engagement.CommencementDate.Value.ToString("MMM dd, yyyy")
+                                @engagement.StartDate.Value.ToString("MMM dd, yyyy")
                             }
                             else
                             {
@@ -55,9 +55,9 @@
                             }
                         </td>
                         <td>
-                            @if (engagement.CompletionDate.HasValue)
+                            @if (engagement.EndDate.HasValue)
                             {
-                                @engagement.CompletionDate.Value.ToString("MMM dd, yyyy")
+                                @engagement.EndDate.Value.ToString("MMM dd, yyyy")
                             }
                             else
                             {

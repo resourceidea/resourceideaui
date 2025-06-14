@@ -222,12 +222,12 @@ public sealed class EngagementsService(ResourceIdeaDBContext dbContext) : IEngag
             existingEngagement.EngagementStatus = entity.EngagementStatus;
             
             // Handle nullable dates - only update if not MinValue (which represents null in our UI)
-            existingEngagement.CommencementDate = entity.CommencementDate == DateTimeOffset.MinValue 
-                ? null 
-                : entity.CommencementDate;
-            existingEngagement.CompletionDate = entity.CompletionDate == DateTimeOffset.MinValue 
-                ? null 
-                : entity.CompletionDate;
+            existingEngagement.StartDate = entity.StartDate == DateTimeOffset.MinValue
+                ? null
+                : entity.StartDate;
+            existingEngagement.EndDate = entity.EndDate == DateTimeOffset.MinValue
+                ? null
+                : entity.EndDate;
 
             _dbContext.Engagements.Update(existingEngagement);
             int result = await _dbContext.SaveChangesAsync(cancellationToken);

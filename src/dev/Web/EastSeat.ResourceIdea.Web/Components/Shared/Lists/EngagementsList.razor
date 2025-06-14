@@ -43,9 +43,9 @@
                         <i class="fa fa-sort text-muted"></i>
                     }
                 </th>
-                <th @onclick='() => OnSort("CommencementDate")' style="cursor: pointer;">
+                <th @onclick='() => OnSort("StartDate")' style="cursor: pointer;">
                     Start Date
-                    @if (SortField == "CommencementDate")
+                    @if (SortField == "StartDate")
                     {
                         <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
                     }
@@ -54,9 +54,9 @@
                         <i class="fa fa-sort text-muted"></i>
                     }
                 </th>
-                <th @onclick='() => OnSort("CompletionDate")' style="cursor: pointer;">
+                <th @onclick='() => OnSort("EndDate")' style="cursor: pointer;">
                     End Date
-                    @if (SortField == "CompletionDate")
+                    @if (SortField == "EndDate")
                     {
                         <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
                     }
@@ -84,9 +84,9 @@
                             </span>
                         </td>
                         <td>
-                            @if (engagement.CommencementDate.HasValue)
+                            @if (engagement.StartDate.HasValue)
                             {
-                                @engagement.CommencementDate.Value.ToString("MMM dd, yyyy")
+                                @engagement.StartDate.Value.ToString("MMM dd, yyyy")
                             }
                             else
                             {
@@ -94,9 +94,9 @@
                             }
                         </td>
                         <td>
-                            @if (engagement.CompletionDate.HasValue)
+                            @if (engagement.EndDate.HasValue)
                             {
-                                @engagement.CompletionDate.Value.ToString("MMM dd, yyyy")
+                                @engagement.EndDate.Value.ToString("MMM dd, yyyy")
                             }
                             else
                             {

@@ -36,14 +36,14 @@ public record EngagementModel
     public TenantId TenantId { get; set; }
 
     /// <summary>
-    /// Gets or sets the commencement date of the engagement.
+    /// Gets or sets the start date of the engagement.
     /// </summary>
-    public DateTimeOffset? CommencementDate { get; init; }
+    public DateTimeOffset? StartDate { get; init; }
 
     /// <summary>
-    /// Gets or sets the completion date of the engagement.
+    /// Gets or sets the end date of the engagement.
     /// </summary>
-    public DateTimeOffset? CompletionDate { get; init; }
+    public DateTimeOffset? EndDate { get; init; }
 
     /// <summary>
     /// Gets or sets the status of the engagement.

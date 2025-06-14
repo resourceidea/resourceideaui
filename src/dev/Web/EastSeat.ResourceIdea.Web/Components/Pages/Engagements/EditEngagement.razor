@@ -76,14 +76,14 @@ else if (Command != null)
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="commencementDate">Commencement Date</label>
-                                <InputDate id="commencementDate" class="form-control" @bind-Value="CommencementDate" />
+                                <label for="startDate">Start Date</label>
+                                <InputDate id="startDate" class="form-control" @bind-Value="StartDate" />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="completionDate">Completion Date</label>
-                                <InputDate id="completionDate" class="form-control" @bind-Value="CompletionDate" />
+                                <label for="endDate">End Date</label>
+                                <InputDate id="endDate" class="form-control" @bind-Value="EndDate" />
                             </div>
                         </div>
                     </div>
@@ -113,8 +113,8 @@ else if (Command != null)
 
     private UpdateEngagementCommand? Command;
     private string ClientName = string.Empty;
-    private DateTime? CommencementDate;
-    private DateTime? CompletionDate;
+    private DateTime? StartDate;
+    private DateTime? EndDate;
     private bool IsLoading = true;
     private bool IsSubmitting = false;
     private bool HasError = false;
@@ -168,14 +168,14 @@ else if (Command != null)
                 EngagementId = engagement.Id,
                 ClientId = engagement.ClientId,
                 Status = engagement.Status,
-                CommencementDate = engagement.CommencementDate ?? DateTimeOffset.MinValue,
-                CompletionDate = engagement.CompletionDate ?? DateTimeOffset.MinValue,
+                StartDate = engagement.StartDate ?? DateTimeOffset.MinValue,
+                EndDate = engagement.EndDate ?? DateTimeOffset.MinValue,
                 Description = engagement.Description
             };
 
             ClientName = client.Name;
-            CommencementDate = engagement.CommencementDate?.DateTime;
-            CompletionDate = engagement.CompletionDate?.DateTime;
+            StartDate = engagement.StartDate?.DateTime;
+            EndDate = engagement.EndDate?.DateTime;
         }
         catch (InvalidOperationException ex)
         {
@@ -210,15 +210,15 @@ else if (Command != null)
         try
         {
             IsSubmitting = true;
-            
+
             // Convert nullable DateTime to DateTimeOffset
             // Only update dates if they are provided (not null and not default)
-            Command.CommencementDate = CommencementDate.HasValue 
-                ? new DateTimeOffset(CommencementDate.Value, TimeSpan.Zero)
+            Command.StartDate = StartDate.HasValue
+                ? new DateTimeOffset(StartDate.Value, TimeSpan.Zero)
                 : DateTimeOffset.MinValue;
-            
-            Command.CompletionDate = CompletionDate.HasValue 
-                ? new DateTimeOffset(CompletionDate.Value, TimeSpan.Zero)
+
+            Command.EndDate = EndDate.HasValue
+                ? new DateTimeOffset(EndDate.Value, TimeSpan.Zero)
                 : DateTimeOffset.MinValue;
 
             var result = await Mediator.Send(Command);

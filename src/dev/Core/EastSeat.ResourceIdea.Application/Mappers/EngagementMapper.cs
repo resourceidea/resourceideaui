@@ -48,8 +48,8 @@ public static class EngagementMapper
             Id = model.Id,
             ClientId = model.ClientId,
             TenantId = model.TenantId,
-            CommencementDate = model.CommencementDate,
-            CompletionDate = model.CompletionDate,
+            StartDate = model.StartDate,
+            EndDate = model.EndDate,
             EngagementStatus = model.Status,
             Description = model.Description
         };
@@ -70,7 +70,7 @@ public static class EngagementMapper
             Description = string.IsNullOrWhiteSpace(command.Title)
                 ? command.Description ?? string.Empty
                 : $"{command.Title}\n\n{command.Description ?? string.Empty}".Trim(),
-            CompletionDate = command.DueDate,
+            EndDate = command.DueDate,
             TenantId = command.TenantId
         };
     }
@@ -87,8 +87,8 @@ public static class EngagementMapper
             Id = command.EngagementId,
             ClientId = command.ClientId,
             EngagementStatus = command.Status,
-            CommencementDate = command.CommencementDate,
-            CompletionDate = command.CompletionDate,
+            StartDate = command.StartDate,
+            EndDate = command.EndDate,
             Description = command.Description ?? string.Empty
         };
     }
@@ -125,8 +125,8 @@ public static class EngagementMapper
             Id = engagement.Id,
             ClientId = engagement.ClientId,
             TenantId = engagement.TenantId,
-            CommencementDate = engagement.CommencementDate,
-            CompletionDate = engagement.CompletionDate,
+            StartDate = engagement.StartDate,
+            EndDate = engagement.EndDate,
             Status = engagement.EngagementStatus,
             Description = engagement.Description ?? string.Empty,
             ClientName = engagement.Client?.Name ?? string.Empty

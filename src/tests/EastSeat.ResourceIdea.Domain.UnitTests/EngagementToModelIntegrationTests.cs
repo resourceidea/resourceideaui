@@ -20,8 +20,8 @@ namespace EastSeat.ResourceIdea.Domain.UnitTests.Engagements
                 Id = EngagementId.Create(Guid.NewGuid()),
                 ClientId = ClientId.Create(Guid.NewGuid()),
                 TenantId = TenantId.Create(Guid.NewGuid()),
-                CommencementDate = DateTimeOffset.UtcNow.AddDays(-30),
-                CompletionDate = DateTimeOffset.UtcNow.AddDays(30),
+                StartDate = DateTimeOffset.UtcNow.AddDays(-30),
+                EndDate = DateTimeOffset.UtcNow.AddDays(30),
                 EngagementStatus = EngagementStatus.InProgress,
                 Description = "Integration test engagement"
             };

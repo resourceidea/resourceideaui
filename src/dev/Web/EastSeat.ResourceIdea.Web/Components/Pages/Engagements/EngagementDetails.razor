@@ -62,9 +62,9 @@
                             
                             <dt class="col-sm-4">Start Date:</dt>
                             <dd class="col-sm-8">
-                                @if (Engagement.CommencementDate.HasValue)
+                                @if (Engagement.StartDate.HasValue)
                                 {
-                                    @Engagement.CommencementDate.Value.ToString("MMM dd, yyyy")
+                                    @Engagement.StartDate.Value.ToString("MMM dd, yyyy")
                                 }
                                 else
                                 {
@@ -74,9 +74,9 @@
                             
                             <dt class="col-sm-4">End Date:</dt>
                             <dd class="col-sm-8">
-                                @if (Engagement.CompletionDate.HasValue)
+                                @if (Engagement.EndDate.HasValue)
                                 {
-                                    @Engagement.CompletionDate.Value.ToString("MMM dd, yyyy")
+                                    @Engagement.EndDate.Value.ToString("MMM dd, yyyy")
                                 }
                                 else
                                 {
