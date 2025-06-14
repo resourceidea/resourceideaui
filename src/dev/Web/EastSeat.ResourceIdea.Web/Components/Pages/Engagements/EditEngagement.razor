@@ -113,8 +113,8 @@ else if (Command != null)
 
     private UpdateEngagementCommand? Command;
     private string ClientName = string.Empty;
-    private DateTime? StartDate;
-    private DateTime? EndDate;
+    private DateTimeOffset? StartDate;
+    private DateTimeOffset? EndDate;
     private bool IsLoading = true;
     private bool IsSubmitting = false;
     private bool HasError = false;
@@ -174,8 +174,8 @@ else if (Command != null)
             };
 
             ClientName = client.Name;
-            StartDate = engagement.StartDate?.DateTime;
-            EndDate = engagement.EndDate?.DateTime;
+            StartDate = engagement.StartDate;
+            EndDate = engagement.EndDate;
         }
         catch (InvalidOperationException ex)
         {
@@ -210,16 +210,8 @@ else if (Command != null)
         try
         {
             IsSubmitting = true;
-
-            // Convert nullable DateTime to DateTimeOffset
-            // Only update dates if they are provided (not null and not default)
-            Command.StartDate = StartDate.HasValue
-                ? new DateTimeOffset(StartDate.Value, TimeSpan.Zero)
-                : DateTimeOffset.MinValue;
-
-            Command.EndDate = EndDate.HasValue
-                ? new DateTimeOffset(EndDate.Value, TimeSpan.Zero)
-                : DateTimeOffset.MinValue;
+            Command.StartDate = StartDate.HasValue ? StartDate.Value : DateTimeOffset.MinValue;
+            Command.EndDate = EndDate.HasValue ? EndDate.Value : DateTimeOffset.MinValue;
 
             var result = await Mediator.Send(Command);
             if (result.IsSuccess)
@@ -228,13 +220,11 @@ else if (Command != null)
             }
             else
             {
-                // Generic error message as per requirements
                 NotificationService.ShowErrorNotification("Failed to update engagement details. Please try again.");
             }
         }
         catch (Exception)
         {
-            // Generic error message as per requirements
             NotificationService.ShowErrorNotification("An unexpected error occurred. Please try again.");
         }
         finally
