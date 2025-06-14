@@ -87,17 +87,46 @@ public sealed class EngagementsService(ResourceIdeaDBContext dbContext) : IEngag
     public Task<ResourceIdeaResponse<Engagement>> DeleteAsync(Engagement entity, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// Gets an engagement by ID asynchronously.
-    /// </summary>
-    /// <param name="specification">The specification to filter the engagement.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{Engagement}"/>.</returns>
-    public Task<ResourceIdeaResponse<Engagement>> GetByIdAsync(BaseSpecification<Engagement> specification, CancellationToken cancellationToken)
+    }    /// <summary>
+         /// Gets an engagement by ID asynchronously.
+         /// </summary>
+         /// <param name="specification">The specification to filter the engagement.</param>
+         /// <param name="cancellationToken">The cancellation token.</param>
+         /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{Engagement}"/>.</returns>
+    public async Task<ResourceIdeaResponse<Engagement>> GetByIdAsync(BaseSpecification<Engagement> specification, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            Engagement? engagement = await _dbContext.Engagements
+                .Include(e => e.Client)
+                .Where(specification.Criteria)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (engagement == null)
+            {
+                return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
+            }
+
+            return ResourceIdeaResponse<Engagement>.Success(engagement);
+        }
+        catch (DbUpdateException dbEx)
+        {
+            // Log the database update exception here if logging is available
+            Console.Error.WriteLine($"Database update error: {dbEx.Message}");
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
+        catch (OperationCanceledException ocEx)
+        {
+            // Log the operation canceled exception here if logging is available
+            Console.Error.WriteLine($"Operation canceled: {ocEx.Message}");
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
+        }
+        catch (Exception ex)
+        {
+            // Log the generic exception here if logging is available
+            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreQueryFailure);
+        }
     }
 
     /// <summary>
