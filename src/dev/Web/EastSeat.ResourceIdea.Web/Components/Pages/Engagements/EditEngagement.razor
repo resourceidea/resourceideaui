@@ -187,11 +187,12 @@ else if (Command != null)
             HasError = true;
             ErrorMessage = "An argument error occurred while loading the engagement details: " + ex.Message;
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not InvalidOperationException && ex is not ArgumentException)
         {
             HasError = true;
             ErrorMessage = "An unexpected error occurred while loading the engagement details.";
             Console.Error.WriteLine($"Unexpected error: {ex}");
+            throw; // Rethrow the exception to ensure it is not silently swallowed
         }
         finally
         {
