@@ -18,16 +18,11 @@ public class Engagement : BaseEntity
     /// </summary>
     public EngagementId Id { get; set; }
 
-             var model = new Models.EngagementModel
-             {
-                 Id = Id,
-                 ClientId = ClientId,
-                 TenantId = TenantId,
-+                Title = Title,
-                 StartDate = StartDate,
-                 EndDate = EndDate,
-                 // …other properties
-             };
+    /// <summary>
+    /// Title of the engagement.
+    /// </summary>
+    public string Title { get; set; } = string.Empty;
+
     /// <summary>
     /// Description of the engagement.
     /// </summary>
