@@ -15,7 +15,7 @@ public sealed class UpdateEngagementCommandValidator : AbstractValidator<UpdateE
     public UpdateEngagementCommandValidator()
     {
         RuleFor(engagement => engagement.StartDate)
-            .LessThanOrEqualTo(DateTime.Now)
+            .LessThanOrEqualTo(DateTimeOffset.Now)
             .WithMessage("Invalid start date.");
 
         RuleFor(engagement => engagement.EndDate)
