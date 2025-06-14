@@ -29,22 +29,31 @@ public class EngagementConfiguration : BaseEntityConfiguration<Engagement>
                     clientId => clientId.Value.ToString(),
                     value => ClientId.Create(value));
 
-        builder.Property(engagement => engagement.ManagerId)
-               .IsRequired(false)
-               .HasConversion(
-                    employeeId => employeeId == null ? EmployeeId.Empty.Value.ToString() : employeeId.Value.ToString(),
-                    value => EmployeeId.Create(value));
+builder.Property(engagement => engagement.ManagerId)
+       .IsRequired(false)
+       .HasConversion(
+            employeeId => employeeId?.Value.ToString(),
+            value        => string.IsNullOrEmpty(value) ? null : EmployeeId.Create(value));
 
-        builder.Property(engagement => engagement.PartnerId)
-               .IsRequired(false)
-               .HasConversion(
-                    employeeId => employeeId == null ? EmployeeId.Empty.Value.ToString() : employeeId.Value.ToString(),
-                    value => EmployeeId.Create(value));
+builder.Property(engagement => engagement.PartnerId)
+       .IsRequired(false)
+       .HasConversion(
+            employeeId => employeeId?.Value.ToString(),
+            value        => string.IsNullOrEmpty(value) ? null : EmployeeId.Create(value));
 
-        builder.Property(engagement => engagement.Title).IsRequired().HasMaxLength(100);
-        builder.Property(engagement => engagement.StartDate).IsRequired(false);
-        builder.Property(engagement => engagement.EndDate).IsRequired(false);
-        builder.Property(engagement => engagement.Description).IsRequired().HasMaxLength(200);
+builder.Property(engagement => engagement.Title)
+       .IsRequired()
+       .HasMaxLength(100);
+
+builder.Property(engagement => engagement.StartDate)
+       .IsRequired(false);
+
+builder.Property(engagement => engagement.EndDate)
+       .IsRequired(false);
+
+builder.Property(engagement => engagement.Description)
+       .IsRequired()
+       .HasMaxLength(200);
         builder.Property(engagement => engagement.EngagementStatus).IsRequired().HasConversion<string>().HasMaxLength(50);
     }
 }
