@@ -32,13 +32,13 @@ public class EngagementConfiguration : BaseEntityConfiguration<Engagement>
 builder.Property(engagement => engagement.ManagerId)
        .IsRequired(false)
        .HasConversion(
-            employeeId => employeeId?.Value.ToString(),
+            employeeId => employeeId == null ? null : employeeId.Value.ToString(),
             value        => string.IsNullOrEmpty(value) ? null : EmployeeId.Create(value));
 
 builder.Property(engagement => engagement.PartnerId)
        .IsRequired(false)
        .HasConversion(
-            employeeId => employeeId?.Value.ToString(),
+            employeeId => employeeId == null ? null : employeeId.Value.ToString(),
             value        => string.IsNullOrEmpty(value) ? null : EmployeeId.Create(value));
 
 builder.Property(engagement => engagement.Title)
