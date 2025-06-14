@@ -4,6 +4,7 @@ using EastSeat.ResourceIdea.DataStore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EastSeat.ResourceIdea.DataStore.Migrations
 {
     [DbContext(typeof(ResourceIdeaDBContext))]
-    partial class ResourceIdeaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250614135446_RemoveEngagementTasksTables")]
+    partial class RemoveEngagementTasksTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -303,6 +306,12 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTimeOffset?>("CommencementDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("CompletionDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
@@ -323,9 +332,6 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<DateTimeOffset?>("EndDate")
-                        .HasColumnType("datetimeoffset");
-
                     b.Property<string>("EngagementStatus")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -343,23 +349,9 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("ManagerId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PartnerId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset?>("StartDate")
-                        .HasColumnType("datetimeoffset");
-
                     b.Property<string>("TenantId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
