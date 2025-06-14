@@ -23,7 +23,7 @@ public record EngagementModel
     /// <summary>
     /// Gets or sets the description of the engagement.
     /// </summary>
-    public string Description { get; set; } = string.Empty;
+    public string Description { get; init; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the client ID.
@@ -33,12 +33,12 @@ public record EngagementModel
     /// <summary>
     /// Name of the client associated with the engagement.
     /// </summary>
-    public string ClientName { get; set; } = string.Empty;
+    public string ClientName { get; init; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the tenant ID.
     /// </summary>
-    public TenantId TenantId { get; set; }
+    public TenantId TenantId { get; init; }
 
     /// <summary>
     /// Gets or sets the start date of the engagement.
