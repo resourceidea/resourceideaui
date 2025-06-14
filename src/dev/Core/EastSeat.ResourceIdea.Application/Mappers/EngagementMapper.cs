@@ -87,8 +87,12 @@ public static class EngagementMapper
             Id = command.EngagementId,
             ClientId = command.ClientId,
             EngagementStatus = command.Status,
-            StartDate = command.StartDate,
-            EndDate = command.EndDate,
+            StartDate = command.StartDate == DateTimeOffset.MinValue
+                ? null
+                : command.StartDate,
+            EndDate = command.EndDate == DateTimeOffset.MinValue
+                ? null
+                : command.EndDate,
             Description = command.Description ?? string.Empty
         };
     }
