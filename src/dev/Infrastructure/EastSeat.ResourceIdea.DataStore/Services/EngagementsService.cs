@@ -247,9 +247,19 @@ public sealed class EngagementsService(ResourceIdeaDBContext dbContext) : IEngag
         {
             return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreCommandFailure);
         }
-        catch (Exception)
+        catch (ArgumentNullException)
         {
-            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.DataStoreCommandFailure);
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.InvalidArgument);
+        }
+        catch (InvalidOperationException)
+        {
+            return ResourceIdeaResponse<Engagement>.Failure(ErrorCode.InvalidOperation);
+        }
+        catch (Exception ex)
+        {
+            // Log unexpected exceptions
+            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+            throw; // Rethrow unexpected exceptions
         }
     }
 }
