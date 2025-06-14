@@ -2,7 +2,6 @@
 using EastSeat.ResourceIdea.Application.Features.Departments.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Employees.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
-using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
@@ -35,7 +34,6 @@ namespace EastSeat.ResourceIdea.Web
             services.AddScoped<IClientsService, ClientsService>();
             services.AddScoped<IDepartmentsService, DepartmentsService>();
             services.AddScoped<IEngagementsService, EngagementsService>();
-            services.AddScoped<IEngagementTasksService, EngagementTasksService>();
             services.AddScoped<ISubscriptionServicesService, SubscriptionServicesService>();
             services.AddScoped<ISubscriptionsService, SubscriptionsService>();
             services.AddScoped<IJobPositionService, JobPositionsService>();

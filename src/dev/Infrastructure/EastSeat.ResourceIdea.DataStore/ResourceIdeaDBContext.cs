@@ -4,7 +4,6 @@ using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Employees.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.Entities;
-using EastSeat.ResourceIdea.Domain.EngagementTasks.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
@@ -23,8 +22,6 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
     public DbSet<SubscriptionService> SubscriptionServices { get; set; }
     public DbSet<Client> Clients { get; set; }
     public DbSet<Engagement> Engagements { get; set; }
-    public DbSet<EngagementTask> EngagementTasks { get; set; }
-    public DbSet<EngagementTaskAssignment> EngagementTaskAssignments { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<JobPosition> JobPositions { get; set; }
     public DbSet<Employee> Employees { get; set; }
@@ -47,8 +44,6 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
         builder.ApplyConfiguration(new SubscriptionConfiguration());
         builder.ApplyConfiguration(new ClientConfiguration());
         builder.ApplyConfiguration(new EngagementConfiguration());
-        builder.ApplyConfiguration(new EngagementTaskConfiguration());
-        builder.ApplyConfiguration(new EngagementTaskAssignmentConfiguration());
         builder.ApplyConfiguration(new DepartmentConfiguration());
         builder.ApplyConfiguration(new JobPositionConfiguration());
         builder.ApplyConfiguration(new EmployeeConfiguration());
