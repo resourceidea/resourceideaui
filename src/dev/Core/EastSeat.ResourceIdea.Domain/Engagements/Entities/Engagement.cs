@@ -60,7 +60,6 @@ public class Engagement : BaseEntity
 
     /// <summary>Client associated with the engagement.</summary>
     public Client? Client { get; set; }
-
     public override TModel ToModel<TModel>()
     {
         // Only EngagementModel is supported for now
@@ -69,13 +68,16 @@ public class Engagement : BaseEntity
             var model = new Models.EngagementModel
             {
                 Id = Id,
+                Title = Title,
                 ClientId = ClientId,
                 TenantId = TenantId,
                 StartDate = StartDate,
                 EndDate = EndDate,
                 Status = EngagementStatus,
                 Description = Description ?? string.Empty,
-                ClientName = Client?.Name ?? string.Empty
+                ClientName = Client?.Name ?? string.Empty,
+                ManagerId = ManagerId,
+                PartnerId = PartnerId
             };
             return (TModel)(object)model;
         }

@@ -1,4 +1,5 @@
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
@@ -9,11 +10,15 @@ namespace EastSeat.ResourceIdea.Domain.Engagements.Models;
 /// Represents an engagement model.
 /// </summary>
 public record EngagementModel
-{
-    /// <summary>
-    /// Gets or sets the engagement ID.
-    /// </summary>
+{    /// <summary>
+     /// Gets or sets the engagement ID.
+     /// </summary>
     public EngagementId Id { get; init; }
+
+    /// <summary>
+    /// Gets or sets the title of the engagement.
+    /// </summary>
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the description of the engagement.
@@ -43,10 +48,18 @@ public record EngagementModel
     /// <summary>
     /// Gets or sets the end date of the engagement.
     /// </summary>
-    public DateTimeOffset? EndDate { get; init; }
+    public DateTimeOffset? EndDate { get; init; }    /// <summary>
+                                                     /// Gets or sets the status of the engagement.
+                                                     /// </summary>
+    public EngagementStatus Status { get; init; }
 
     /// <summary>
-    /// Gets or sets the status of the engagement.
+    /// Gets or sets the manager ID responsible for the engagement.
     /// </summary>
-    public EngagementStatus Status { get; init; }
+    public EmployeeId? ManagerId { get; init; }
+
+    /// <summary>
+    /// Gets or sets the partner ID responsible for the engagement.
+    /// </summary>
+    public EmployeeId? PartnerId { get; init; }
 }
