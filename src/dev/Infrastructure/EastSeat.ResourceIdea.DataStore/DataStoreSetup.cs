@@ -1,6 +1,5 @@
 using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
-using EastSeat.ResourceIdea.Application.Features.EngagementTasks.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
@@ -34,7 +33,6 @@ public static class DataStoreSetup
     {
         services.AddTransient<IClientsService, ClientsService>();
         services.AddTransient<IEngagementsService, EngagementsService>();
-        services.AddTransient<IEngagementTasksService, EngagementTasksService>();
         services.AddTransient<ISubscriptionsService, SubscriptionsService>();
         services.AddTransient<ISubscriptionServicesService, SubscriptionServicesService>();
         services.AddTransient<ITenantsService, TenantsService>();
