@@ -10,6 +10,11 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Drop the primary key first
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Tenants",
+                table: "Tenants");
+
             migrationBuilder.AlterColumn<string>(
                 name: "TenantId",
                 table: "Tenants",
@@ -125,6 +130,11 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Tenants",
+                table: "Tenants",
+                column: "TenantId");
         }
     }
 }

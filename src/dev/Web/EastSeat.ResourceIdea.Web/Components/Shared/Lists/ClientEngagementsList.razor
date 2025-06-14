@@ -74,7 +74,7 @@
                 {
                     <tr>
                         <td>
-                            <NavLink class="text-decoration-none" href=@($"/engagements/{engagement.Id.Value}")>
+                            <NavLink class="text-decoration-none" href=@($"/engagements/{engagement.Id.Value}?from=client&clientId={engagement.ClientId.Value}")>
                                 @engagement.Description
                             </NavLink>
                         </td>
