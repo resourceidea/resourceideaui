@@ -14,12 +14,12 @@ public sealed class UpdateEngagementCommandValidator : AbstractValidator<UpdateE
     /// </summary>
     public UpdateEngagementCommandValidator()
     {
-        RuleFor(engagement => engagement.CommencementDate)
-            .LessThanOrEqualTo(DateTime.Now)
-            .WithMessage("Invalid commencement date.");
+        RuleFor(engagement => engagement.StartDate)
+            .LessThanOrEqualTo(DateTimeOffset.Now)
+            .WithMessage("Invalid start date.");
 
-        RuleFor(engagement => engagement.CompletionDate)
+        RuleFor(engagement => engagement.EndDate)
             .GreaterThanOrEqualTo(DateTimeOffset.Now)
-            .WithMessage("Invalid completion date.");
+            .WithMessage("Invalid end date.");
     }
 }

@@ -4,6 +4,7 @@ using EastSeat.ResourceIdea.DataStore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EastSeat.ResourceIdea.DataStore.Migrations
 {
     [DbContext(typeof(ResourceIdeaDBContext))]
-    partial class ResourceIdeaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250614144230_ChangeEngagementsTable")]
+    partial class ChangeEngagementsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -292,6 +295,136 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                     b.HasIndex("JobPositionId");
 
                     b.ToTable("Employees", (string)null);
+                });
+
+            modelBuilder.Entity("EastSeat.ResourceIdea.Domain.EngagementTasks.Entities.EngagementTask", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset?>("Deleted")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTimeOffset?>("DueDate")
+                        .IsRequired()
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("EngagementId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsAssigned")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EngagementId");
+
+                    b.ToTable("EngagementTasks", (string)null);
+                });
+
+            modelBuilder.Entity("EastSeat.ResourceIdea.Domain.EngagementTasks.Entities.EngagementTaskAssignment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset?>("Deleted")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset>("EndDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("EngagementTaskId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset>("StartDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EngagementTaskId");
+
+                    b.ToTable("EngagementTaskAssignments", (string)null);
                 });
 
             modelBuilder.Entity("EastSeat.ResourceIdea.Domain.Engagements.Entities.Engagement", b =>
@@ -719,6 +852,28 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                     b.Navigation("JobPosition");
                 });
 
+            modelBuilder.Entity("EastSeat.ResourceIdea.Domain.EngagementTasks.Entities.EngagementTask", b =>
+                {
+                    b.HasOne("EastSeat.ResourceIdea.Domain.Engagements.Entities.Engagement", "Engagement")
+                        .WithMany("EngagementTasks")
+                        .HasForeignKey("EngagementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Engagement");
+                });
+
+            modelBuilder.Entity("EastSeat.ResourceIdea.Domain.EngagementTasks.Entities.EngagementTaskAssignment", b =>
+                {
+                    b.HasOne("EastSeat.ResourceIdea.Domain.EngagementTasks.Entities.EngagementTask", "EngagementTask")
+                        .WithMany("EngagementTaskAssignments")
+                        .HasForeignKey("EngagementTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EngagementTask");
+                });
+
             modelBuilder.Entity("EastSeat.ResourceIdea.Domain.Engagements.Entities.Engagement", b =>
                 {
                     b.HasOne("EastSeat.ResourceIdea.Domain.Clients.Entities.Client", "Client")
@@ -801,6 +956,16 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("EastSeat.ResourceIdea.Domain.EngagementTasks.Entities.EngagementTask", b =>
+                {
+                    b.Navigation("EngagementTaskAssignments");
+                });
+
+            modelBuilder.Entity("EastSeat.ResourceIdea.Domain.Engagements.Entities.Engagement", b =>
+                {
+                    b.Navigation("EngagementTasks");
                 });
 
             modelBuilder.Entity("EastSeat.ResourceIdea.Domain.JobPositions.Entities.JobPosition", b =>

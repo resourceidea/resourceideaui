@@ -62,8 +62,8 @@ public class GetEngagementsByClientQueryHandler(IEngagementsService engagementsS
         {
             "description" => isDescending ? engagements.OrderByDescending(e => e.Description) : engagements.OrderBy(e => e.Description),
             "status" => isDescending ? engagements.OrderByDescending(e => e.Status) : engagements.OrderBy(e => e.Status),
-            "commencementdate" => isDescending ? engagements.OrderByDescending(e => e.CommencementDate) : engagements.OrderBy(e => e.CommencementDate),
-            "completiondate" => isDescending ? engagements.OrderByDescending(e => e.CompletionDate) : engagements.OrderBy(e => e.CompletionDate),
+            "startdate" => isDescending ? engagements.OrderByDescending(e => e.StartDate) : engagements.OrderBy(e => e.StartDate),
+            "enddate" => isDescending ? engagements.OrderByDescending(e => e.EndDate) : engagements.OrderBy(e => e.EndDate),
             _ => engagements.OrderBy(e => e.Description)
         };
     }

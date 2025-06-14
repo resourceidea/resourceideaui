@@ -19,12 +19,15 @@ namespace EastSeat.ResourceIdea.Domain.UnitTests.Engagements
             var engagement = new Engagement
             {
                 Id = EngagementId.Create(Guid.NewGuid()),
+                Title = "Test Title",
                 ClientId = ClientId.Create(Guid.NewGuid()),
                 TenantId = TenantId.Create(Guid.NewGuid()),
-                CommencementDate = DateTimeOffset.UtcNow.AddDays(-10),
-                CompletionDate = DateTimeOffset.UtcNow,
+                StartDate = DateTimeOffset.UtcNow.AddDays(-10),
+                EndDate = DateTimeOffset.UtcNow,
                 EngagementStatus = EngagementStatus.Completed,
-                Description = "Test engagement"
+                Description = "Test engagement",
+                ManagerId = EastSeat.ResourceIdea.Domain.Employees.ValueObjects.EmployeeId.Create(Guid.NewGuid()),
+                PartnerId = EastSeat.ResourceIdea.Domain.Employees.ValueObjects.EmployeeId.Create(Guid.NewGuid())
             };
 
             // Act
@@ -33,12 +36,15 @@ namespace EastSeat.ResourceIdea.Domain.UnitTests.Engagements
             // Assert
             Assert.NotNull(model);
             Assert.Equal(engagement.Id, model.Id);
+            Assert.Equal(engagement.Title, model.Title);
             Assert.Equal(engagement.ClientId, model.ClientId);
             Assert.Equal(engagement.TenantId, model.TenantId);
-            Assert.Equal(engagement.CommencementDate, model.CommencementDate);
-            Assert.Equal(engagement.CompletionDate, model.CompletionDate);
+            Assert.Equal(engagement.StartDate, model.StartDate);
+            Assert.Equal(engagement.EndDate, model.EndDate);
             Assert.Equal(engagement.EngagementStatus, model.Status);
             Assert.Equal(engagement.Description, model.Description);
+            Assert.Equal(engagement.ManagerId, model.ManagerId);
+            Assert.Equal(engagement.PartnerId, model.PartnerId);
         }
 
         [Fact]
@@ -48,12 +54,15 @@ namespace EastSeat.ResourceIdea.Domain.UnitTests.Engagements
             var engagement = new Engagement
             {
                 Id = EngagementId.Create(Guid.NewGuid()),
+                Title = "Test Title",
                 ClientId = ClientId.Create(Guid.NewGuid()),
                 TenantId = TenantId.Create(Guid.NewGuid()),
-                CommencementDate = DateTimeOffset.UtcNow.AddDays(-10),
-                CompletionDate = DateTimeOffset.UtcNow,
+                StartDate = DateTimeOffset.UtcNow.AddDays(-10),
+                EndDate = DateTimeOffset.UtcNow,
                 EngagementStatus = EngagementStatus.InProgress,
-                Description = "Test engagement for response"
+                Description = "Test engagement for response",
+                ManagerId = EastSeat.ResourceIdea.Domain.Employees.ValueObjects.EmployeeId.Create(Guid.NewGuid()),
+                PartnerId = EastSeat.ResourceIdea.Domain.Employees.ValueObjects.EmployeeId.Create(Guid.NewGuid())
             };
 
             // Act
@@ -65,12 +74,15 @@ namespace EastSeat.ResourceIdea.Domain.UnitTests.Engagements
             Assert.True(response.Content.HasValue);
             var model = response.Content.Value;
             Assert.Equal(engagement.Id, model.Id);
+            Assert.Equal(engagement.Title, model.Title);
             Assert.Equal(engagement.ClientId, model.ClientId);
             Assert.Equal(engagement.TenantId, model.TenantId);
-            Assert.Equal(engagement.CommencementDate, model.CommencementDate);
-            Assert.Equal(engagement.CompletionDate, model.CompletionDate);
+            Assert.Equal(engagement.StartDate, model.StartDate);
+            Assert.Equal(engagement.EndDate, model.EndDate);
             Assert.Equal(engagement.EngagementStatus, model.Status);
             Assert.Equal(engagement.Description, model.Description);
+            Assert.Equal(engagement.ManagerId, model.ManagerId);
+            Assert.Equal(engagement.PartnerId, model.PartnerId);
         }
 
         [Fact]

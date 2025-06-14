@@ -34,52 +34,51 @@ public static class EngagementMapper
             Engagement e when typeof(TModel) == typeof(EngagementModel) => ToEngagementModel(e) as TModel ?? throw new InvalidCastException(),
             _ => throw new NotSupportedException($"Mapping of type {typeof(TModel).Name} is not supported")
         };
-    }
-
-    /// <summary>
-    /// Maps an EngagementModel to an Engagement entity.
-    /// </summary>
-    /// <param name="model">The engagement model to map.</param>
-    /// <returns>The mapped Engagement entity.</returns>
+    }    /// <summary>
+         /// Maps an EngagementModel to an Engagement entity.
+         /// </summary>
+         /// <param name="model">The engagement model to map.</param>
+         /// <returns>The mapped Engagement entity.</returns>
     public static Engagement ToEntity(this EngagementModel model)
     {
         return new Engagement
         {
             Id = model.Id,
+            Title = model.Title,
             ClientId = model.ClientId,
             TenantId = model.TenantId,
-            CommencementDate = model.CommencementDate,
-            CompletionDate = model.CompletionDate,
+            StartDate = model.StartDate,
+            EndDate = model.EndDate,
             EngagementStatus = model.Status,
-            Description = model.Description
+            Description = model.Description,
+            ManagerId = model.ManagerId,
+            PartnerId = model.PartnerId
         };
-    }
-
-    /// <summary>
-    /// Maps a CreateEngagementCommand to an Engagement entity.
-    /// </summary>
-    /// <param name="command">The create engagement command to map.</param>
-    /// <returns>The mapped Engagement entity.</returns>
+    }    /// <summary>
+         /// Maps a CreateEngagementCommand to an Engagement entity.
+         /// </summary>
+         /// <param name="command">The create engagement command to map.</param>
+         /// <returns>The mapped Engagement entity.</returns>
     public static Engagement ToEntity(this CreateEngagementCommand command)
     {
         return new Engagement
         {
             Id = EngagementId.Create(Guid.NewGuid()),
+            Title = command.Title,
             ClientId = command.ClientId,
             EngagementStatus = command.Status,
             Description = string.IsNullOrWhiteSpace(command.Title)
                 ? command.Description ?? string.Empty
                 : $"{command.Title}\n\n{command.Description ?? string.Empty}".Trim(),
-            CompletionDate = command.DueDate,
+            EndDate = command.DueDate,
             TenantId = command.TenantId
+            // Note: ManagerId and PartnerId are not set during creation as they are typically assigned later
         };
-    }
-
-    /// <summary>
-    /// Maps an UpdateEngagementCommand to an Engagement entity.
-    /// </summary>
-    /// <param name="command">The update engagement command to map.</param>
-    /// <returns>The mapped Engagement entity.</returns>
+    }    /// <summary>
+         /// Maps an UpdateEngagementCommand to an Engagement entity.
+         /// </summary>
+         /// <param name="command">The update engagement command to map.</param>
+         /// <returns>The mapped Engagement entity.</returns>
     public static Engagement ToEntity(this UpdateEngagementCommand command)
     {
         return new Engagement
@@ -87,9 +86,14 @@ public static class EngagementMapper
             Id = command.EngagementId,
             ClientId = command.ClientId,
             EngagementStatus = command.Status,
-            CommencementDate = command.CommencementDate,
-            CompletionDate = command.CompletionDate,
+            StartDate = command.StartDate == DateTimeOffset.MinValue
+                ? null
+                : command.StartDate,
+            EndDate = command.EndDate == DateTimeOffset.MinValue
+                ? null
+                : command.EndDate,
             Description = command.Description ?? string.Empty
+            // Note: Title, ManagerId, and PartnerId are not available in UpdateEngagementCommand and would need to be updated through separate operations
         };
     }
 
@@ -111,25 +115,26 @@ public static class EngagementMapper
     public static ResourceIdeaResponse<PagedListResponse<EngagementModel>> ToResourceIdeaResponse(this PagedListResponse<Engagement> engagements)
     {
         return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.Success(ToModelPagedListResponse(engagements));
-    }
-
-    /// <summary>
-    /// Maps an Engagement entity to an EngagementModel.
-    /// </summary>
-    /// <param name="engagement">The engagement entity to map.</param>
-    /// <returns>The mapped EngagementModel.</returns>
+    }    /// <summary>
+         /// Maps an Engagement entity to an EngagementModel.
+         /// </summary>
+         /// <param name="engagement">The engagement entity to map.</param>
+         /// <returns>The mapped EngagementModel.</returns>
     private static EngagementModel ToEngagementModel(Engagement engagement)
     {
         return new EngagementModel
         {
             Id = engagement.Id,
+            Title = engagement.Title,
             ClientId = engagement.ClientId,
             TenantId = engagement.TenantId,
-            CommencementDate = engagement.CommencementDate,
-            CompletionDate = engagement.CompletionDate,
+            StartDate = engagement.StartDate,
+            EndDate = engagement.EndDate,
             Status = engagement.EngagementStatus,
             Description = engagement.Description ?? string.Empty,
-            ClientName = engagement.Client?.Name ?? string.Empty
+            ClientName = engagement.Client?.Name ?? string.Empty,
+            ManagerId = engagement.ManagerId,
+            PartnerId = engagement.PartnerId
         };
     }
 

@@ -1,6 +1,7 @@
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
+using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
@@ -18,6 +19,11 @@ public class Engagement : BaseEntity
     public EngagementId Id { get; set; }
 
     /// <summary>
+    /// Title of the engagement.
+    /// </summary>
+    public string Title { get; set; } = string.Empty;
+
+    /// <summary>
     /// Description of the engagement.
     /// </summary>
     public string? Description { get; set; }
@@ -28,23 +34,32 @@ public class Engagement : BaseEntity
     public ClientId ClientId { get; set; }
 
     /// <summary>
-    /// Date when the engagement work is started.
+    /// Date when the engagement is to start.
     /// </summary>
-    public DateTimeOffset? CommencementDate { get; set; }
+    public DateTimeOffset? StartDate { get; set; }
 
     /// <summary>
-    /// Date when the engagement work is completed.
+    /// Date when the engagement is to end.
     /// </summary>
-    public DateTimeOffset? CompletionDate { get; set; }
+    public DateTimeOffset? EndDate { get; set; }
 
     /// <summary>
     /// Status of the engagement.
     /// </summary>
     public EngagementStatus EngagementStatus { get; set; }
 
+    /// <summary>
+    /// Id of the manager responsible for the engagement.
+    /// </summary>
+    public EmployeeId? ManagerId { get; set; }
+
+    /// <summary>
+    /// Id of the partner responsible for the engagement.
+    /// </summary>
+    public EmployeeId? PartnerId { get; set; }
+
     /// <summary>Client associated with the engagement.</summary>
     public Client? Client { get; set; }
-
     public override TModel ToModel<TModel>()
     {
         // Only EngagementModel is supported for now
@@ -53,13 +68,16 @@ public class Engagement : BaseEntity
             var model = new Models.EngagementModel
             {
                 Id = Id,
+                Title = Title,
                 ClientId = ClientId,
                 TenantId = TenantId,
-                CommencementDate = CommencementDate,
-                CompletionDate = CompletionDate,
+                StartDate = StartDate,
+                EndDate = EndDate,
                 Status = EngagementStatus,
                 Description = Description ?? string.Empty,
-                ClientName = Client?.Name ?? string.Empty
+                ClientName = Client?.Name ?? string.Empty,
+                ManagerId = ManagerId,
+                PartnerId = PartnerId
             };
             return (TModel)(object)model;
         }
