@@ -1,0 +1,25 @@
+@* ------------------------------------------------------------------------------
+    File: EditEngagement.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Pages/Engagements/EditEngagement.razor
+    Description: Edit Engagement Page
+   ------------------------------------------------------------------------------ *@
+
+@page "/engagements/edit/{Id:guid}"
+
+<ResourceIdeaPageTitle Title="Edit Engagement" />
+
+<PageHeader Text="Edit Engagement" />
+
+<NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2" href=@($"/engagements/{Id}") ActiveClass="">
+    <i class="fa fa-chevron-left"></i> Back to Engagement Details
+</NavLink>
+
+<div class="alert alert-info mt-3">
+    <i class="fa-solid fa-info-circle me-2"></i>
+    <strong>Coming Soon!</strong> The engagement editing functionality is not yet implemented. This page is a placeholder for future development.
+</div>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+}
