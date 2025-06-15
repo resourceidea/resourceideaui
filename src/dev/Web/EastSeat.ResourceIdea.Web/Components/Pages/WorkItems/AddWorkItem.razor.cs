@@ -13,8 +13,8 @@ using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Engagements.Models;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
-using EastSeat.ResourceIdea.Web.Extensions;
-using EastSeat.ResourceIdea.Web.Services.Contracts;
+using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.Web.Services;
 
 using MediatR;
 
@@ -198,7 +198,7 @@ public partial class AddWorkItem : ComponentBase
         // Set the engagement ID from the selected value
         if (Guid.TryParse(SelectedEngagementId, out var engagementGuid))
         {
-            Command.EngagementId = EngagementId.Create(engagementGuid);
+            Command.EngagementId = EastSeat.ResourceIdea.Domain.Engagements.ValueObjects.EngagementId.Create(engagementGuid);
         }
         else
         {

@@ -102,10 +102,7 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
     {
         try
         {
-            var query = _dbContext.WorkItems.AsQueryable();
-            query = specification.Apply(query);
-            
-            var workItem = await query.FirstOrDefaultAsync(cancellationToken);
+            var workItem = await _dbContext.WorkItems.AsNoTracking().FirstOrDefaultAsync(specification.Criteria, cancellationToken);
             if (workItem != null)
             {
                 return ResourceIdeaResponse<WorkItem>.Success(workItem);
@@ -141,7 +138,7 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
             
             if (specification.HasValue)
             {
-                query = specification.Value.Apply(query);
+                query = query.Where(specification.Value.Criteria);
             }
 
             var totalCount = await query.CountAsync(cancellationToken);

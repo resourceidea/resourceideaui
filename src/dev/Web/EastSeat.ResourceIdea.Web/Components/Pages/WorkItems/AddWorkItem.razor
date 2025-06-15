@@ -109,7 +109,7 @@ else
                                     {
                                         @foreach (var employee in Employees.Items)
                                         {
-                                            <option value="@employee.Id.Value">@employee.FullName</option>
+                                            <option value="@employee.EmployeeId.Value">@employee.FirstName @employee.LastName</option>
                                         }
                                     }
                                 </select>
