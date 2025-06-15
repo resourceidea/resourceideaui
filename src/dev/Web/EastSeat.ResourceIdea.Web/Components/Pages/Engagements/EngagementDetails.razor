@@ -37,6 +37,10 @@
             <NavLink class="btn btn-primary btn-sm ms-2" href=@($"/engagements/edit/{Engagement.Id.Value}") ActiveClass="">
                 <i class="fa-solid fa-pen-to-square"></i> Edit
             </NavLink>
+            @* Work Items button *@
+            <NavLink class="btn btn-outline-secondary btn-sm ms-2" href=@($"/workitems?engagementid={Engagement.Id.Value}") ActiveClass="">
+                <i class="fa-solid fa-tasks"></i> Work Items
+            </NavLink>
         </div>
 
         <hr/>
