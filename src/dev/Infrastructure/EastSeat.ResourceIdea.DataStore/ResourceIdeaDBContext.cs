@@ -47,5 +47,6 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
         builder.ApplyConfiguration(new DepartmentConfiguration());
         builder.ApplyConfiguration(new JobPositionConfiguration());
         builder.ApplyConfiguration(new EmployeeConfiguration());
+        builder.ApplyConfiguration(new WorkItemConfiguration());
     }
 }
