@@ -3,6 +3,7 @@ using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
+using EastSeat.ResourceIdea.Application.Features.WorkItems.Contracts;
 using EastSeat.ResourceIdea.DataStore.Configuration.DatabaseStartup;
 using EastSeat.ResourceIdea.DataStore.Services;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
@@ -36,6 +37,7 @@ public static class DataStoreSetup
         services.AddTransient<ISubscriptionsService, SubscriptionsService>();
         services.AddTransient<ISubscriptionServicesService, SubscriptionServicesService>();
         services.AddTransient<ITenantsService, TenantsService>();
+        services.AddTransient<IWorkItemsService, WorkItemsService>();
 
         return services;
     }
