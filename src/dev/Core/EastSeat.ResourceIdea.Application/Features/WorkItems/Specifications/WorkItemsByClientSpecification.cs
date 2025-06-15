@@ -29,7 +29,4 @@ public sealed class WorkItemsByClientSpecification(ClientId clientId, TenantId t
         workItem => workItem.Engagement != null && 
                     workItem.Engagement.ClientId == clientId && 
                     workItem.TenantId == tenantId;
-
-    public override List<Expression<Func<WorkItem, object>>> Includes =>
-        [workItem => workItem.Engagement!];
 }

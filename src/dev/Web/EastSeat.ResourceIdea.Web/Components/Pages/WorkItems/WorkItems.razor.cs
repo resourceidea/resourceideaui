@@ -34,8 +34,8 @@ public partial class WorkItems : ComponentBase
     private string SortDirection { get; set; } = "asc";
     
     // Navigation context
-    private Guid? EngagementId { get; set; }
-    private Guid? ClientId { get; set; }
+    private Guid? EngagementIdParam { get; set; }
+    private Guid? ClientIdParam { get; set; }
     private string NavigationSource { get; set; } = string.Empty;
     private bool ShowBackButton => !string.IsNullOrEmpty(NavigationSource);
 
@@ -55,14 +55,14 @@ public partial class WorkItems : ComponentBase
         if (queryParams.TryGetValue("engagementid", out var engagementIdValue) && 
             Guid.TryParse(engagementIdValue.ToString(), out var engagementId))
         {
-            EngagementId = engagementId;
+            EngagementIdParam = engagementId;
             NavigationSource = "engagement";
         }
         
         if (queryParams.TryGetValue("clientid", out var clientIdValue) && 
             Guid.TryParse(clientIdValue.ToString(), out var clientId))
         {
-            ClientId = clientId;
+            ClientIdParam = clientId;
             NavigationSource = "client";
         }
     }
@@ -77,10 +77,10 @@ public partial class WorkItems : ComponentBase
         {
             ResourceIdeaResponse<PagedListResponse<WorkItemModel>>? response = null;
 
-            if (EngagementId.HasValue)
+            if (EngagementIdParam.HasValue)
             {
                 var query = new GetWorkItemsByEngagementQuery(
-                    EngagementId.CreateInstance(EngagementId.Value), 
+                    EngagementId.Create(EngagementIdParam.Value), 
                     CurrentPage, 
                     PageSize, 
                     SearchTerm)
@@ -89,10 +89,10 @@ public partial class WorkItems : ComponentBase
                 };
                 response = await Mediator.Send(query);
             }
-            else if (ClientId.HasValue)
+            else if (ClientIdParam.HasValue)
             {
                 var query = new GetWorkItemsByClientQuery(
-                    ClientId.CreateInstance(ClientId.Value), 
+                    ClientId.Create(ClientIdParam.Value), 
                     CurrentPage, 
                     PageSize, 
                     SearchTerm)
@@ -179,8 +179,8 @@ public partial class WorkItems : ComponentBase
     {
         return NavigationSource switch
         {
-            "engagement" when EngagementId.HasValue => $"/engagements/{EngagementId.Value}",
-            "client" when ClientId.HasValue => $"/clients/{ClientId.Value}",
+            "engagement" when EngagementIdParam.HasValue => $"/engagements/{EngagementIdParam.Value}",
+            "client" when ClientIdParam.HasValue => $"/clients/{ClientIdParam.Value}",
             _ => "/"
         };
     }
