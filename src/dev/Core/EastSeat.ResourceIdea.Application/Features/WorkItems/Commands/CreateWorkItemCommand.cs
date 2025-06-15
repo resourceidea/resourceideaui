@@ -86,7 +86,7 @@ public sealed class CreateWorkItemCommand : BaseRequest<WorkItemModel>
         var validationFailureMessages = new[]
         {
             Title.ValidateRequired(nameof(Title)),
-            EngagementId.ValidateRequired(),
+            ValidateEngagementId(),
             TenantId.ValidateRequired(),
             ValidateStartDate(),
             ValidateCompletedDate()
@@ -96,6 +96,19 @@ public sealed class CreateWorkItemCommand : BaseRequest<WorkItemModel>
         return validationFailureMessages.Any()
             ? new ValidationResponse(false, validationFailureMessages)
             : new ValidationResponse(true, []);
+    }
+
+    /// <summary>
+    /// Validates the engagement ID.
+    /// </summary>
+    /// <returns>Validation error message or empty string if valid.</returns>
+    private string ValidateEngagementId()
+    {
+        if (EngagementId.Value == Guid.Empty)
+        {
+            return "Engagement ID is required.";
+        }
+        return string.Empty;
     }
 
     /// <summary>

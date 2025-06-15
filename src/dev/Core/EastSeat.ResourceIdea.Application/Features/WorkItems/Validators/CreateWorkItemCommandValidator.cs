@@ -25,11 +25,11 @@ public sealed class CreateWorkItemCommandValidator : AbstractValidator<CreateWor
             .WithMessage("Title is required.");
 
         RuleFor(workItem => workItem.EngagementId)
-            .Must(engagementId => !engagementId.IsEmpty())
+            .Must(engagementId => engagementId.Value != Guid.Empty)
             .WithMessage("Engagement ID is required.");
 
         RuleFor(workItem => workItem.TenantId)
-            .Must(tenantId => !tenantId.IsEmpty())
+            .Must(tenantId => tenantId.Value != Guid.Empty)
             .WithMessage("Tenant ID is required.");
 
         RuleFor(workItem => workItem.StartDate)

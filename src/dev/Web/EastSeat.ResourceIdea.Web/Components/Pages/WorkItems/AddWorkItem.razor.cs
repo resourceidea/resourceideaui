@@ -102,18 +102,42 @@ public partial class AddWorkItem : ComponentBase
     {
         try
         {
-            var query = new GetAllEngagementsQuery(1, 100); // Get a larger page size to include all engagements
-            query.TenantId = ResourceIdeaRequestContext.Tenant;
-
-            var response = await Mediator.Send(query);
-            if (response.IsSuccess && response.Content.HasValue)
+            if (ClientId.HasValue)
             {
-                Engagements = response.Content.Value;
+                // Load engagements for specific client
+                var clientQuery = new GetEngagementsByClientQuery(1, 100)
+                {
+                    ClientId = EastSeat.ResourceIdea.Domain.Clients.ValueObjects.ClientId.Create(ClientId.Value)
+                };
+                clientQuery.TenantId = ResourceIdeaRequestContext.Tenant;
+
+                var response = await Mediator.Send(clientQuery);
+                if (response.IsSuccess && response.Content.HasValue)
+                {
+                    Engagements = response.Content.Value;
+                }
+                else
+                {
+                    HasError = true;
+                    ErrorMessage = "Failed to load engagements for the selected client. Please try again later.";
+                }
             }
             else
             {
-                HasError = true;
-                ErrorMessage = "Failed to load engagements. Please try again later.";
+                // Load all engagements for the tenant
+                var query = new GetAllEngagementsQuery(1, 100);
+                query.TenantId = ResourceIdeaRequestContext.Tenant;
+
+                var response = await Mediator.Send(query);
+                if (response.IsSuccess && response.Content.HasValue)
+                {
+                    Engagements = response.Content.Value;
+                }
+                else
+                {
+                    HasError = true;
+                    ErrorMessage = "Failed to load engagements. Please try again later.";
+                }
             }
         }
         catch (InvalidOperationException ex)
