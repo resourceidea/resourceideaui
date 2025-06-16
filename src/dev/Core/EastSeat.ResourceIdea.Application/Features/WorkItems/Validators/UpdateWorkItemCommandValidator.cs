@@ -36,11 +36,5 @@ public sealed class UpdateWorkItemCommandValidator : AbstractValidator<UpdateWor
                 workItem.Status == WorkItemStatus.OnHold ||
                 completedDate == null)
             .WithMessage("End date can only be edited when status is NotStarted, InProgress or OnHold.");
-
-        // Business rule: Work item cannot be edited when status is Completed
-        RuleFor(workItem => workItem.Status)
-            .NotEqual(WorkItemStatus.Completed)
-            .When(workItem => workItem.Status == WorkItemStatus.Completed)
-            .WithMessage("Work item cannot be edited when status is Completed.");
     }
 }
