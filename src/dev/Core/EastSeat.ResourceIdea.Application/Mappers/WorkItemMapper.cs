@@ -139,4 +139,26 @@ public static class WorkItemMapper
 
         return $"{firstName} {lastName}";
     }
+
+    /// <summary>
+    /// Maps an UpdateWorkItemCommand to a WorkItem entity.
+    /// </summary>
+    /// <param name="command">The update work item command to map.</param>
+    /// <returns>The mapped WorkItem entity.</returns>
+    public static WorkItem ToEntity(this Application.Features.WorkItems.Commands.UpdateWorkItemCommand command)
+    {
+        return new WorkItem
+        {
+            Id = command.WorkItemId,
+            Title = command.Title,
+            Description = command.Description,
+            EngagementId = command.EngagementId,
+            TenantId = command.TenantId,
+            StartDate = command.StartDate,
+            CompletedDate = command.CompletedDate,
+            Status = command.Status,
+            Priority = command.Priority,
+            AssignedToId = command.AssignedToId
+        };
+    }
 }
