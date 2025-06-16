@@ -6,6 +6,7 @@ using EastSeat.ResourceIdea.Application.Features.JobPositions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
+using EastSeat.ResourceIdea.Application.Features.WorkItems.Contracts;
 using EastSeat.ResourceIdea.DataStore;
 using EastSeat.ResourceIdea.DataStore.Services;
 using EastSeat.ResourceIdea.Web.Services;
@@ -39,6 +40,7 @@ namespace EastSeat.ResourceIdea.Web
             services.AddScoped<IJobPositionService, JobPositionsService>();
             services.AddScoped<IEmployeeService, EmployeesService>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
+            services.AddScoped<IWorkItemsService, WorkItemsService>();
 
             services.AddScoped<NotificationService>();
         }

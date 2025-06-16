@@ -87,6 +87,8 @@ public class WorkItem : BaseEntity
                 Description = Description ?? string.Empty,
                 EngagementId = EngagementId,
                 EngagementTitle = Engagement?.Title ?? string.Empty,
+                ClientId = Engagement?.ClientId,
+                ClientName = Engagement?.Client?.Name ?? string.Empty,
                 TenantId = TenantId,
                 StartDate = StartDate,
                 CompletedDate = CompletedDate,
