@@ -122,11 +122,29 @@ public partial class WorkItems : ComponentBase
                 PagedWorkItemsList = null;
             }
         }
+        catch (TaskCanceledException ex)
+        {
+            HasError = true;
+            ErrorMessage = "The operation was canceled. Please try again.";
+            Console.Error.WriteLine($"Task canceled: {ex}");
+        }
+        catch (InvalidOperationException ex)
+        {
+            HasError = true;
+            ErrorMessage = "An invalid operation occurred while loading work items.";
+            Console.Error.WriteLine($"Invalid operation: {ex}");
+        }
+        catch (ArgumentException ex)
+        {
+            HasError = true;
+            ErrorMessage = "An error occurred due to invalid input. Please check your parameters.";
+            Console.Error.WriteLine($"Argument error: {ex}");
+        }
         catch (Exception ex)
         {
             HasError = true;
             ErrorMessage = "An unexpected error occurred while loading work items.";
-            Console.Error.WriteLine($"Error loading work items: {ex}");
+            Console.Error.WriteLine($"Unexpected error: {ex}");
         }
         finally
         {
