@@ -146,11 +146,22 @@ public partial class AddWorkItem : ComponentBase
             ErrorMessage = "An error occurred while loading engagements. Please try again later.";
             Console.Error.WriteLine($"InvalidOperationException in LoadEngagements: {ex}");
         }
-        catch (Exception ex)
+        catch (HttpRequestException ex)
         {
             HasError = true;
-            ErrorMessage = "An unexpected error occurred. Please try again later.";
+            ErrorMessage = "A network error occurred while loading engagements. Please check your connection and try again.";
+            Console.Error.WriteLine($"HttpRequestException in LoadEngagements: {ex}");
+        }
+        catch (TimeoutException ex)
+        {
+            HasError = true;
+            ErrorMessage = "The request timed out while loading engagements. Please try again later.";
+            Console.Error.WriteLine($"TimeoutException in LoadEngagements: {ex}");
+        }
+        catch (Exception ex)
+        {
             Console.Error.WriteLine($"Unexpected error in LoadEngagements: {ex}");
+            throw; // Rethrow unexpected exceptions to be handled at a higher level
         }
     }
 
