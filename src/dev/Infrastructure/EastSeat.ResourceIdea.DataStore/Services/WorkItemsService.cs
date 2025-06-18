@@ -47,18 +47,6 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
             Console.Error.WriteLine($"Database update error: {dbEx.Message}");
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
-        catch (OperationCanceledException ocEx)
-        {
-            // Log the operation canceled exception here if logging is available
-            Console.Error.WriteLine($"Operation canceled: {ocEx.Message}");
-            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreQueryFailure);
-        }
-        catch (Exception ex)
-        {
-            // Log the general exception here if logging is available
-            Console.Error.WriteLine($"General error: {ex.Message}");
-            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
-        }
     }
 
     /// <summary>
