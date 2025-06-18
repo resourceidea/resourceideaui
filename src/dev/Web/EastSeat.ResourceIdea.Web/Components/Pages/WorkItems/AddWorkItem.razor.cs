@@ -180,9 +180,18 @@ public partial class AddWorkItem : ComponentBase
         {
             Console.Error.WriteLine($"InvalidOperationException in LoadEmployees: {ex}");
         }
+        catch (HttpRequestException ex)
+        {
+            Console.Error.WriteLine($"Network error in LoadEmployees: {ex}");
+        }
+        catch (TimeoutException ex)
+        {
+            Console.Error.WriteLine($"Timeout error in LoadEmployees: {ex}");
+        }
         catch (Exception ex)
         {
             Console.Error.WriteLine($"Unexpected error in LoadEmployees: {ex}");
+            throw; // Rethrow unexpected exceptions to be handled at a higher level
         }
     }
 
