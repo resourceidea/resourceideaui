@@ -110,28 +110,28 @@ public partial class WorkItemDetails : ComponentBase
         };
     }
 
-    private string GetPriorityBadgeClass(int priority)
+    private string GetPriorityBadgeClass(Priority priority)
     {
         return priority switch
         {
-            1 => "bg-danger",      // Highest priority - red
-            2 => "bg-warning",     // High priority - yellow
-            3 => "bg-primary",     // Normal priority - blue
-            4 => "bg-info",        // Low priority - light blue
-            5 => "bg-secondary",   // Lowest priority - gray
+            Priority.Critical => "bg-danger",      // Highest priority - red
+            Priority.High => "bg-warning",         // High priority - yellow
+            Priority.Medium => "bg-primary",       // Normal priority - blue
+            Priority.Low => "bg-info",            // Low priority - light blue
+            Priority.Lowest => "bg-secondary",    // Lowest priority - gray
             _ => "bg-secondary"
         };
     }
 
-    private string GetPriorityText(int priority)
+    private string GetPriorityText(Priority priority)
     {
         return priority switch
         {
-            1 => "Critical",
-            2 => "High",
-            3 => "Medium",
-            4 => "Low",
-            5 => "Lowest",
+            Priority.Critical => "Critical",
+            Priority.High => "High",
+            Priority.Medium => "Medium",
+            Priority.Low => "Low",
+            Priority.Lowest => "Lowest",
             _ => "Medium"
         };
     }
