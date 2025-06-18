@@ -41,7 +41,7 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
 
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.EmptyEntityOnCreateWorkItem);
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException)
         {
             // Log the database update exception here if logging is available
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
@@ -67,7 +67,7 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
 
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException)
         {
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
@@ -91,7 +91,7 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
 
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.NotFound);
         }
-        catch (OperationCanceledException ocEx)
+        catch (OperationCanceledException)
         {
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreQueryFailure);
         }
@@ -132,7 +132,7 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
 
             return ResourceIdeaResponse<PagedListResponse<WorkItem>>.Success(pagedResponse);
         }
-        catch (OperationCanceledException ocEx)
+        catch (OperationCanceledException)
         {
             return ResourceIdeaResponse<PagedListResponse<WorkItem>>.Failure(ErrorCode.DataStoreQueryFailure);
         }
@@ -157,7 +157,7 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
 
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException)
         {
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }

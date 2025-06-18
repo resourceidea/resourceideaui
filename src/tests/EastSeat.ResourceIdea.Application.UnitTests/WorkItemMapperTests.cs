@@ -29,7 +29,7 @@ namespace EastSeat.ResourceIdea.Application.UnitTests.Mappers
                 StartDate = DateTimeOffset.UtcNow.AddDays(-5),
                 CompletedDate = DateTimeOffset.UtcNow,
                 Status = WorkItemStatus.Completed,
-                Priority = 1,
+                Priority = Priority.Critical,
                 AssignedToId = EmployeeId.Create(Guid.NewGuid())
             };
 
@@ -134,7 +134,7 @@ namespace EastSeat.ResourceIdea.Application.UnitTests.Mappers
                 StartDate = DateTimeOffset.UtcNow.AddDays(-5),
                 CompletedDate = DateTimeOffset.UtcNow,
                 Status = WorkItemStatus.Completed,
-                Priority = 2,
+                Priority = Priority.High,
                 AssignedToId = EmployeeId.Create(Guid.NewGuid())
             };
 

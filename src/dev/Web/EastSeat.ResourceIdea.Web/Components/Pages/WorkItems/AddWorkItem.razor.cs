@@ -140,17 +140,17 @@ public partial class AddWorkItem : ComponentBase
                 }
             }
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException)
         {
             HasError = true;
             ErrorMessage = "An error occurred while loading engagements. Please try again later.";
         }
-        catch (HttpRequestException ex)
+        catch (HttpRequestException)
         {
             HasError = true;
             ErrorMessage = "A network error occurred while loading engagements. Please check your connection and try again.";
         }
-        catch (TimeoutException ex)
+        catch (TimeoutException)
         {
             HasError = true;
             ErrorMessage = "The request timed out while loading engagements. Please try again later.";
@@ -179,15 +179,15 @@ public partial class AddWorkItem : ComponentBase
                 Console.WriteLine("Failed to load employees, but continuing as assignment is optional.");
             }
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException)
         {
             // Note: It's OK if employees loading fails, as assignment is optional
         }
-        catch (HttpRequestException ex)
+        catch (HttpRequestException)
         {
             // Note: It's OK if employees loading fails, as assignment is optional
         }
-        catch (TimeoutException ex)
+        catch (TimeoutException)
         {
             // Note: It's OK if employees loading fails, as assignment is optional
         }
@@ -241,11 +241,11 @@ public partial class AddWorkItem : ComponentBase
                 NotificationService.ShowErrorNotification("Failed to create work item. Please try again.");
             }
         }
-        catch (ArgumentException ex)
+        catch (ArgumentException)
         {
             NotificationService.ShowErrorNotification("An error occurred while creating the work item. Please check your input and try again.");
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException)
         {
             NotificationService.ShowErrorNotification("An unexpected error occurred. Please try again.");
         }
@@ -257,37 +257,27 @@ public partial class AddWorkItem : ComponentBase
         NavigationManager.NavigateTo(backUrl);
     }
 
-    private readonly Dictionary<string, Func<string>> _navigationUrlProviders = new()
-    {
-        ["client"] = () => ClientId.HasValue ? $"/clients/{ClientId.Value}" : "/workitems",
-        ["engagement"] = () => EngagementId.HasValue ? $"/engagements/{EngagementId.Value}" : "/workitems",
-        ["workitems"] = () => ClientId.HasValue && EngagementId.HasValue 
-            ? $"/workitems?clientid={ClientId.Value}&engagementid={EngagementId.Value}" 
-            : "/workitems"
-    };
-
-    private readonly Dictionary<string, string> _backButtonTexts = new()
-    {
-        ["client"] = "Back to client details",
-        ["engagement"] = "Back to engagement details",
-        ["workitems"] = "Back to work items list"
-    };
-
     private string GetBackNavigationUrl()
     {
-        if (_navigationUrlProviders.TryGetValue(NavigationSource, out var urlProvider))
+        return NavigationSource switch
         {
-            return urlProvider();
-        }
-        return "/workitems"; // Default fallback
+            "client" => ClientId.HasValue ? $"/clients/{ClientId.Value}" : "/workitems",
+            "engagement" => EngagementId.HasValue ? $"/engagements/{EngagementId.Value}" : "/workitems",
+            "workitems" => ClientId.HasValue && EngagementId.HasValue 
+                ? $"/workitems?clientid={ClientId.Value}&engagementid={EngagementId.Value}" 
+                : "/workitems",
+            _ => "/workitems" // Default fallback
+        };
     }
 
     private string GetBackButtonText()
     {
-        if (_backButtonTexts.TryGetValue(NavigationSource, out var buttonText))
+        return NavigationSource switch
         {
-            return buttonText;
-        }
-        return "Back to work items list"; // Default fallback
+            "client" => "Back to client details",
+            "engagement" => "Back to engagement details",
+            "workitems" => "Back to work items list",
+            _ => "Back to work items list" // Default fallback
+        };
     }
 }
