@@ -203,4 +203,24 @@ public partial class WorkItems : ComponentBase
             _ => "/"
         };
     }
+
+    private string GetAddWorkItemUrl()
+    {
+        if (EngagementIdParam.HasValue && ClientIdParam.HasValue)
+        {
+            return $"/workitems/add?clientid={ClientIdParam.Value}&engagementid={EngagementIdParam.Value}";
+        }
+        else if (ClientIdParam.HasValue)
+        {
+            return $"/workitems/add?clientid={ClientIdParam.Value}";
+        }
+        else if (EngagementIdParam.HasValue)
+        {
+            return $"/workitems/add?engagementid={EngagementIdParam.Value}";
+        }
+        else
+        {
+            return "/workitems/add";
+        }
+    }
 }
