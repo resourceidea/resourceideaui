@@ -39,3 +39,4 @@ jobs:
           AUTO_P: true
           AUTO_ASSIGN: true
           CLOSE_ISSUES: false
+          INCLUDE_PATTERN: "**/*.cs,**/*.razor,**/*.js,**/*.ts,**/*.md"
