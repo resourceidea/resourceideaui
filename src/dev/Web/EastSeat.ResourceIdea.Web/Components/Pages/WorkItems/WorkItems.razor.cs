@@ -11,21 +11,19 @@ using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.WorkItems;
 
-public partial class WorkItems : ComponentBase
+public partial class WorkItems : ResourceIdeaComponentBase
 {
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     
-    private bool IsLoadingPage { get; set; } = true;
-    private bool HasError { get; set; }
-    private string ErrorMessage { get; set; } = string.Empty;
     private PagedListResponse<WorkItemModel>? PagedWorkItemsList { get; set; }
     
     private int CurrentPage { get; set; } = 1;
@@ -70,11 +68,7 @@ public partial class WorkItems : ComponentBase
 
     private async Task LoadWorkItems()
     {
-        IsLoadingPage = true;
-        HasError = false;
-        StateHasChanged();
-
-        try
+        await ExecuteAsync(async () =>
         {
             ResourceIdeaResponse<PagedListResponse<WorkItemModel>>? response = null;
 
@@ -117,40 +111,10 @@ public partial class WorkItems : ComponentBase
             }
             else
             {
-                HasError = true;
-                ErrorMessage = "Failed to load work items. Please try again.";
                 PagedWorkItemsList = null;
+                throw new InvalidOperationException("Failed to load work items. Please try again.");
             }
-        }
-        catch (TaskCanceledException ex)
-        {
-            HasError = true;
-            ErrorMessage = "The operation was canceled. Please try again.";
-            Console.Error.WriteLine($"Task canceled: {ex}");
-        }
-        catch (InvalidOperationException ex)
-        {
-            HasError = true;
-            ErrorMessage = "An invalid operation occurred while loading work items.";
-            Console.Error.WriteLine($"Invalid operation: {ex}");
-        }
-        catch (ArgumentException ex)
-        {
-            HasError = true;
-            ErrorMessage = "An error occurred due to invalid input. Please check your parameters.";
-            Console.Error.WriteLine($"Argument error: {ex}");
-        }
-        catch (Exception ex)
-        {
-            HasError = true;
-            ErrorMessage = "An unexpected error occurred while loading work items.";
-            Console.Error.WriteLine($"Unexpected error: {ex}");
-        }
-        finally
-        {
-            IsLoadingPage = false;
-            StateHasChanged();
-        }
+        }, "Loading work items");
     }
 
     protected async Task HandlePageChangeAsync(int page)

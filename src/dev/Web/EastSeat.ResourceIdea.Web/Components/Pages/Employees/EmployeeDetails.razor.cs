@@ -7,12 +7,13 @@ using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.Employees;
 
-public partial class EmployeeDetails : ComponentBase
+public partial class EmployeeDetails : ResourceIdeaComponentBase
 {
     [Parameter]
     public Guid Id { get; set; }
@@ -147,7 +148,7 @@ public partial class EmployeeDetails : ComponentBase
 
     private async Task HandleValidSubmit()
     {
-        try
+        var success = await ExecuteAsync(async () =>
         {
             Command.TenantId = ResourceIdeaRequestContext.Tenant;
             var response = await Mediator.Send(Command);
@@ -158,15 +159,10 @@ public partial class EmployeeDetails : ComponentBase
             }
             else
             {
-                message = $"Failed to update employee details";
+                message = "Failed to update employee details";
                 isErrorMessage = true;
             }
-        }
-        catch (Exception ex)
-        {
-            message = $"Error updating employee: {ex.Message}";
-            isErrorMessage = true;
-        }
+        }, "Updating employee details", manageLoadingState: false);
 
         StateHasChanged();
     }
