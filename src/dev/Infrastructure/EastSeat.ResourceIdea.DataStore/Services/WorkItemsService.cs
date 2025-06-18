@@ -46,6 +46,11 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
             // Log the database update exception here if logging is available
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
+        catch (ObjectDisposedException)
+        {
+            // Handle context disposal scenarios
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
     }
 
     /// <summary>
@@ -69,6 +74,11 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
         }
         catch (DbUpdateException)
         {
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
+        catch (ObjectDisposedException)
+        {
+            // Handle context disposal scenarios
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
     }
@@ -159,6 +169,11 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
         }
         catch (DbUpdateException)
         {
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
+        catch (ObjectDisposedException)
+        {
+            // Handle context disposal scenarios
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
     }

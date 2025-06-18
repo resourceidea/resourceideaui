@@ -60,7 +60,7 @@ public class CreateWorkItemCommandValidatorTests
         var command = new CreateWorkItemCommand
         {
             Title = "Test Work Item",
-            EngagementId = EngagementId.Create(Guid.Empty),
+            EngagementId = EngagementId.Empty,
             TenantId = TenantId.Create(Guid.NewGuid())
         };
 
@@ -78,7 +78,7 @@ public class CreateWorkItemCommandValidatorTests
         {
             Title = "Test Work Item",
             EngagementId = EngagementId.Create(Guid.NewGuid()),
-            TenantId = TenantId.Create(Guid.Empty)
+            TenantId = TenantId.Empty
         };
 
         // Act & Assert

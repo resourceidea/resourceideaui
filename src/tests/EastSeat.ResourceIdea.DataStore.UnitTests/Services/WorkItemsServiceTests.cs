@@ -288,9 +288,13 @@ public class WorkItemsServiceTests : IDisposable
 
     private class TestWorkItemSpecification : BaseSpecification<WorkItem>
     {
+        private readonly System.Linq.Expressions.Expression<Func<WorkItem, bool>> _criteria;
+
         public TestWorkItemSpecification(System.Linq.Expressions.Expression<Func<WorkItem, bool>> criteria)
         {
-            Criteria = criteria;
+            _criteria = criteria;
         }
+
+        public override System.Linq.Expressions.Expression<Func<WorkItem, bool>> Criteria => _criteria;
     }
 }
