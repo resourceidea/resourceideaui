@@ -227,14 +227,9 @@ public partial class AddWorkItem : ComponentBase
         }
 
         // Set the assigned employee ID if selected
-        if (!string.IsNullOrWhiteSpace(SelectedAssignedToId) && Guid.TryParse(SelectedAssignedToId, out var assignedToGuid))
-        {
-            Command.AssignedToId = EmployeeId.Create(assignedToGuid);
-        }
-        else
-        {
-            Command.AssignedToId = null; // Optional assignment
-        }
+        Command.AssignedToId = !string.IsNullOrWhiteSpace(SelectedAssignedToId) && Guid.TryParse(SelectedAssignedToId, out var assignedToGuid)
+            ? EmployeeId.Create(assignedToGuid)
+            : null; // Optional assignment
 
         Command.TenantId = ResourceIdeaRequestContext.Tenant;
         
