@@ -39,7 +39,7 @@ public partial class EmployeeDetails : ResourceIdeaComponentBase
     {
         IsLoadingModelData = true;
 
-        try
+        await ExecuteAsync(async () =>
         {
             var query = new GetEmployeeByIdQuery
             {
@@ -69,22 +69,15 @@ public partial class EmployeeDetails : ResourceIdeaComponentBase
                 message = "Employee not found";
                 isErrorMessage = true;
             }
-        }
-        catch (Exception ex)
-        {
-            message = $"Error loading employee data: {ex.Message}";
-            isErrorMessage = true;
-        }
-        finally
-        {
-            IsLoadingModelData = false;
-            StateHasChanged();
-        }
+        }, "Loading employee data", manageLoadingState: false);
+
+        IsLoadingModelData = false;
+        StateHasChanged();
     }
 
     private async Task LoadDepartments()
     {
-        try
+        await ExecuteAsync(async () =>
         {
             var query = new GetAllDepartmentsQuery
             {
@@ -96,12 +89,11 @@ public partial class EmployeeDetails : ResourceIdeaComponentBase
             {
                 Departments = [.. response.Content.Value.Items];
             }
-        }
-        catch (Exception ex)
-        {
-            message = $"Error loading departments: {ex.Message}";
-            isErrorMessage = true;
-        }
+            else
+            {
+                throw new InvalidOperationException("Failed to load departments");
+            }
+        }, "Loading departments", manageLoadingState: false);
     }
 
     private async Task LoadJobPositions()
@@ -112,7 +104,7 @@ public partial class EmployeeDetails : ResourceIdeaComponentBase
             return;
         }
 
-        try
+        await ExecuteAsync(async () =>
         {
             var departmentId = Command.DepartmentId;
             var query = new GetJobPositionsByDepartmentIdQuery
@@ -135,13 +127,7 @@ public partial class EmployeeDetails : ResourceIdeaComponentBase
             {
                 JobPositions.Clear();
             }
-        }
-        catch (Exception ex)
-        {
-            message = $"Error loading job positions: {ex.Message}";
-            isErrorMessage = true;
-            JobPositions.Clear();
-        }
+        }, "Loading job positions", manageLoadingState: false);
 
         StateHasChanged();
     }
