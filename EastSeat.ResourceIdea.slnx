@@ -10,10 +10,10 @@
   </Folder>
   <Folder Name="/src/dev/Web/">
     <Project Path="src/dev/Web/EastSeat.ResourceIdea.Web/EastSeat.ResourceIdea.Web.csproj" />
-  </Folder>
-  <Folder Name="/src/tests/">
+  </Folder>  <Folder Name="/src/tests/">
     <Project Path="src/tests/EastSeat.ResourceIdea.Application.UnitTests/EastSeat.ResourceIdea.Application.UnitTests.csproj" />
     <Project Path="src/tests/EastSeat.ResourceIdea.DataStore.UnitTests/EastSeat.ResourceIdea.DataStore.UnitTests.csproj" />
     <Project Path="src/tests/EastSeat.ResourceIdea.Domain.UnitTests/EastSeat.ResourceIdea.Domain.UnitTests.csproj" />
+    <Project Path="src/tests/EastSeat.ResourceIdea.Web.UnitTests/EastSeat.ResourceIdea.Web.UnitTests.csproj" />
   </Folder>
 </Solution>

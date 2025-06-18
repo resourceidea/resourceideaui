@@ -74,9 +74,9 @@ public record WorkItemModel
     public WorkItemStatus Status { get; init; }
 
     /// <summary>
-    /// Gets or sets the priority of the work item (1-5, where 1 is highest priority).
+    /// Gets or sets the priority of the work item.
     /// </summary>
-    public int Priority { get; init; } = 3;
+    public Priority Priority { get; init; } = Priority.Medium;
 
     /// <summary>
     /// Gets or sets the employee ID assigned to this work item.

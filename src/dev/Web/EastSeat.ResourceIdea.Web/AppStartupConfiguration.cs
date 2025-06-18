@@ -28,7 +28,6 @@ namespace EastSeat.ResourceIdea.Web
             string sqlServerConnectionString = GetDbContextConnectionString();
             services.AddDbContext<ResourceIdeaDBContext>(options => options.UseSqlServer(sqlServerConnectionString));
         }
-
         public static void AddResourceIdeaServices(this IServiceCollection services)
         {
             services.AddScoped<ITenantsService, TenantsService>();
@@ -39,6 +38,7 @@ namespace EastSeat.ResourceIdea.Web
             services.AddScoped<ISubscriptionsService, SubscriptionsService>();
             services.AddScoped<IJobPositionService, JobPositionsService>();
             services.AddScoped<IEmployeeService, EmployeesService>();
+            services.AddScoped<IWorkItemsService, WorkItemsService>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
             services.AddScoped<IWorkItemsService, WorkItemsService>();
 

@@ -57,9 +57,9 @@ public class WorkItem : BaseEntity
     public WorkItemStatus Status { get; set; }
 
     /// <summary>
-    /// Priority of the work item (1-5, where 1 is highest priority).
+    /// Priority of the work item.
     /// </summary>
-    public int Priority { get; set; } = 3;
+    public Priority Priority { get; set; } = Priority.Medium;
 
     /// <summary>
     /// ID of the employee assigned to this work item.

@@ -313,4 +313,9 @@ public enum ErrorCode
     ClientAlreadyExists,
     DatabaseError,
     ClientQueryValidationFailure,
+
+    /// <summary>
+    /// Empty entity returned from repository on create work item.
+    /// </summary>
+    EmptyEntityOnCreateWorkItem,
 }

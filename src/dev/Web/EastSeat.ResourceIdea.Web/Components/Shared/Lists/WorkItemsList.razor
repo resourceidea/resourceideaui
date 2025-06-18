@@ -1,0 +1,298 @@
+@* ------------------------------------------------------------------------------
+    File: WorkItemsList.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Shared/Lists
+    Description: Work Items List component
+   ------------------------------------------------------------------------------ *@
+
+@using Microsoft.AspNetCore.Components.Routing
+@using EastSeat.ResourceIdea.Domain.WorkItems.Models
+@using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects
+
+<div class="card mt-1">
+    <div class="card-header">
+        <div class="input-group input-group-sm">
+            <input type="text" class="form-control" placeholder="Search work items..." aria-label="Search work items"
+                @bind="SearchTerm" @onkeypress="OnSearchKeyPress">
+            <button class="btn btn-outline-secondary" type="button" @onclick="OnSearch">
+                <i class="fa-solid fa-search"></i>
+            </button>
+        </div>
+    </div>
+    <table class="table table-sm table-striped table-hover table-borderless">
+        <thead>
+            <tr>
+                <th @onclick='() => OnSort("Title")' style="cursor: pointer;">
+                    Title
+                    @if (SortField == "Title")
+                    {
+                        <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-sort text-muted"></i>
+                    }
+                </th>
+                <th @onclick='() => OnSort("EngagementTitle")' style="cursor: pointer;">
+                    Engagement
+                    @if (SortField == "EngagementTitle")
+                    {
+                        <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-sort text-muted"></i>
+                    }
+                </th>
+                <th @onclick='() => OnSort("Status")' style="cursor: pointer;">
+                    Status
+                    @if (SortField == "Status")
+                    {
+                        <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-sort text-muted"></i>
+                    }
+                </th>
+                <th @onclick='() => OnSort("Priority")' style="cursor: pointer;">
+                    Priority
+                    @if (SortField == "Priority")
+                    {
+                        <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-sort text-muted"></i>
+                    }
+                </th>
+                <th @onclick='() => OnSort("AssignedToName")' style="cursor: pointer;">
+                    Assigned To
+                    @if (SortField == "AssignedToName")
+                    {
+                        <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-sort text-muted"></i>
+                    }
+                </th>
+                <th @onclick='() => OnSort("StartDate")' style="cursor: pointer;">
+                    Start Date
+                    @if (SortField == "StartDate")
+                    {
+                        <i class="fa @(SortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-sort text-muted"></i>
+                    }
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (PagedWorkItemsList != null && PagedWorkItemsList.Items.Count > 0)
+            {
+                foreach (var workItem in PagedWorkItemsList.Items)
+                {
+                    <tr>
+                        <td>
+                            <div class="text-truncate" style="max-width: 200px;" title="@workItem.Title">
+                                @workItem.Title
+                            </div>
+                            @if (!string.IsNullOrEmpty(workItem.Description))
+                            {
+                                <small class="text-muted d-block text-truncate" style="max-width: 200px;" title="@workItem.Description">
+                                    @workItem.Description
+                                </small>
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(workItem.EngagementTitle))
+                            {
+                                <NavLink class="text-decoration-none" href=@($"/engagements/{workItem.EngagementId.Value}")>
+                                    @workItem.EngagementTitle
+                                </NavLink>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No engagement</span>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge @GetStatusBadgeClass(workItem.Status)">
+                                @workItem.Status.ToString()
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge @GetPriorityBadgeClass(workItem.Priority)">
+                                @GetPriorityText(workItem.Priority)
+                            </span>
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(workItem.AssignedToName))
+                            {
+                                @workItem.AssignedToName
+                            }
+                            else
+                            {
+                                <span class="text-muted">Unassigned</span>
+                            }
+                        </td>
+                        <td>
+                            @if (workItem.StartDate.HasValue)
+                            {
+                                @workItem.StartDate.Value.ToString("MMM dd, yyyy")
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not started</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center py-4">
+                        <div class="text-muted">
+                            <i class="fa-solid fa-tasks fa-2x mb-3"></i>
+                            <p class="mb-1">No work items found</p>
+                            @if (!string.IsNullOrEmpty(SearchTerm))
+                            {
+                                <small>Try adjusting your search criteria</small>
+                            }
+                            else
+                            {
+                                <small>No work items have been created yet</small>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (PagedWorkItemsList != null && PagedWorkItemsList.TotalCount > 0)
+    {
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <div>
+                <span>Page @(PagedWorkItemsList.CurrentPage) of @PagedWorkItemsList.Pages</span>
+                <span class="text-muted ms-2">(@PagedWorkItemsList.TotalCount total work items)</span>
+            </div>
+            <div>
+                <button class="btn btn-outline-secondary btn-sm me-2" @onclick="GoToPreviousPage"
+                    disabled="@(PagedWorkItemsList.CurrentPage <= 1)">
+                    Previous
+                </button>
+                <button class="btn btn-outline-secondary btn-sm" @onclick="GoToNextPage"
+                    disabled="@(!PagedWorkItemsList.HasNextPage)">
+                    Next
+                </button>
+            </div>
+        </div>
+    }
+
+</div>
+<br />
+
+@code {
+    [Parameter]
+    public PagedListResponse<WorkItemModel>? PagedWorkItemsList { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnWorkItemsPageChange { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnSearchTermChange { get; set; }
+
+    [Parameter]
+    public EventCallback<(string field, string direction)> OnSortChange { get; set; }
+
+    private string SearchTerm { get; set; } = string.Empty;
+    private string SortField { get; set; } = string.Empty;
+    private string SortDirection { get; set; } = "asc";
+
+    private async Task GoToPreviousPage()
+    {
+        if (PagedWorkItemsList != null && PagedWorkItemsList.CurrentPage > 1)
+        {
+            await OnWorkItemsPageChange.InvokeAsync(PagedWorkItemsList.CurrentPage - 1);
+        }
+    }
+
+    private async Task GoToNextPage()
+    {
+        if (PagedWorkItemsList != null && PagedWorkItemsList.HasNextPage)
+        {
+            await OnWorkItemsPageChange.InvokeAsync(PagedWorkItemsList.CurrentPage + 1);
+        }
+    }
+
+    private async Task OnSearch()
+    {
+        await OnSearchTermChange.InvokeAsync(SearchTerm);
+    }
+
+    private async Task OnSearchKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await OnSearch();
+        }
+    }
+
+    private async Task OnSort(string field)
+    {
+        if (SortField == field)
+        {
+            SortDirection = SortDirection == "asc" ? "desc" : "asc";
+        }
+        else
+        {
+            SortField = field;
+            SortDirection = "asc";
+        }
+
+        await OnSortChange.InvokeAsync((SortField, SortDirection));
+    }
+
+    private string GetStatusBadgeClass(EastSeat.ResourceIdea.Domain.Enums.WorkItemStatus status)
+    {
+        return status switch
+        {
+            EastSeat.ResourceIdea.Domain.Enums.WorkItemStatus.NotStarted => "bg-secondary",
+            EastSeat.ResourceIdea.Domain.Enums.WorkItemStatus.InProgress => "bg-primary",
+            EastSeat.ResourceIdea.Domain.Enums.WorkItemStatus.OnHold => "bg-warning",
+            EastSeat.ResourceIdea.Domain.Enums.WorkItemStatus.Completed => "bg-success",
+            EastSeat.ResourceIdea.Domain.Enums.WorkItemStatus.Canceled => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+
+    private string GetPriorityBadgeClass(EastSeat.ResourceIdea.Domain.Enums.Priority priority)
+    {
+        return priority switch
+        {
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Critical => "bg-danger",      // Critical priority
+            EastSeat.ResourceIdea.Domain.Enums.Priority.High => "bg-warning",     // High priority
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Medium => "bg-info",        // Medium priority (default)
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Low => "bg-secondary",   // Low priority
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Lowest => "bg-light text-dark", // Lowest priority
+            _ => "bg-info"
+        };
+    }
+
+    private string GetPriorityText(EastSeat.ResourceIdea.Domain.Enums.Priority priority)
+    {
+        return priority switch
+        {
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Critical => "Critical",
+            EastSeat.ResourceIdea.Domain.Enums.Priority.High => "High",
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Medium => "Medium",
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Low => "Low",
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Lowest => "Lowest",
+            _ => "Medium"
+        };
+    }
+}
