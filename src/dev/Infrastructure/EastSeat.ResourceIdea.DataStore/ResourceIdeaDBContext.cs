@@ -7,6 +7,7 @@ using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.Entities;
+using EastSeat.ResourceIdea.Domain.WorkItems.Entities;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -25,6 +26,7 @@ public class ResourceIdeaDBContext(DbContextOptions<ResourceIdeaDBContext> optio
     public DbSet<Department> Departments { get; set; }
     public DbSet<JobPosition> JobPositions { get; set; }
     public DbSet<Employee> Employees { get; set; }
+    public DbSet<WorkItem> WorkItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
