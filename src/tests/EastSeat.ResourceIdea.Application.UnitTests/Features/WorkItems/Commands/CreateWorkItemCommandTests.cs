@@ -21,7 +21,7 @@ public class CreateWorkItemCommandTests
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             TenantId = TenantId.Create(Guid.NewGuid()),
             StartDate = DateTimeOffset.UtcNow.AddDays(1),
-            Priority = 3
+            Priority = Priority.Medium
         };
 
         // Act
@@ -107,7 +107,7 @@ public class CreateWorkItemCommandTests
             EngagementId = engagementId,
             TenantId = tenantId,
             StartDate = startDate,
-            Priority = 2
+            Priority = Priority.High
         };
 
         // Act

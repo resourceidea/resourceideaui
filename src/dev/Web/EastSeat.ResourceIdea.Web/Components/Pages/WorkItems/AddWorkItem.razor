@@ -92,11 +92,11 @@ else
                             <div class="form-group">
                                 <label for="priority">Priority <span class="text-danger">*</span></label>
                                 <InputSelect id="priority" class="form-control" @bind-Value="Command.Priority">
-                                    <option value="1">1 - Highest</option>
-                                    <option value="2">2 - High</option>
-                                    <option value="3">3 - Medium</option>
-                                    <option value="4">4 - Low</option>
-                                    <option value="5">5 - Lowest</option>
+                                    <option value="@Priority.Critical">Critical</option>
+                                    <option value="@Priority.High">High</option>
+                                    <option value="@Priority.Medium">Medium</option>
+                                    <option value="@Priority.Low">Low</option>
+                                    <option value="@Priority.Lowest">Lowest</option>
                                 </InputSelect>
                             </div>
                         </div>

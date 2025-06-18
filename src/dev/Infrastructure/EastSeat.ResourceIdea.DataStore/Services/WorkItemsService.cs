@@ -44,7 +44,6 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
         catch (DbUpdateException dbEx)
         {
             // Log the database update exception here if logging is available
-            Console.Error.WriteLine($"Database update error: {dbEx.Message}");
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
     }
@@ -70,12 +69,6 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
         }
         catch (DbUpdateException dbEx)
         {
-            Console.Error.WriteLine($"Database update error: {dbEx.Message}");
-            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"General error: {ex.Message}");
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
     }
@@ -100,12 +93,6 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
         }
         catch (OperationCanceledException ocEx)
         {
-            Console.Error.WriteLine($"Operation canceled: {ocEx.Message}");
-            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreQueryFailure);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"General error: {ex.Message}");
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreQueryFailure);
         }
     }
@@ -147,12 +134,6 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
         }
         catch (OperationCanceledException ocEx)
         {
-            Console.Error.WriteLine($"Operation canceled: {ocEx.Message}");
-            return ResourceIdeaResponse<PagedListResponse<WorkItem>>.Failure(ErrorCode.DataStoreQueryFailure);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"General error: {ex.Message}");
             return ResourceIdeaResponse<PagedListResponse<WorkItem>>.Failure(ErrorCode.DataStoreQueryFailure);
         }
     }
@@ -178,12 +159,6 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
         }
         catch (DbUpdateException dbEx)
         {
-            Console.Error.WriteLine($"Database update error: {dbEx.Message}");
-            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"General error: {ex.Message}");
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
     }

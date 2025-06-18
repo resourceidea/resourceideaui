@@ -43,8 +43,8 @@ public sealed class CreateWorkItemCommandValidator : AbstractValidator<CreateWor
             .WithMessage("Completed date cannot be earlier than the start date.");
 
         RuleFor(workItem => workItem.Priority)
-            .InclusiveBetween(1, 5)
-            .WithMessage("Priority must be between 1 and 5, where 1 is highest priority.");
+            .IsInEnum()
+            .WithMessage("Priority must be a valid priority level.");
     }
 
     /// <summary>

@@ -144,24 +144,16 @@ public partial class AddWorkItem : ComponentBase
         {
             HasError = true;
             ErrorMessage = "An error occurred while loading engagements. Please try again later.";
-            Console.Error.WriteLine($"InvalidOperationException in LoadEngagements: {ex}");
         }
         catch (HttpRequestException ex)
         {
             HasError = true;
             ErrorMessage = "A network error occurred while loading engagements. Please check your connection and try again.";
-            Console.Error.WriteLine($"HttpRequestException in LoadEngagements: {ex}");
         }
         catch (TimeoutException ex)
         {
             HasError = true;
             ErrorMessage = "The request timed out while loading engagements. Please try again later.";
-            Console.Error.WriteLine($"TimeoutException in LoadEngagements: {ex}");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Unexpected error in LoadEngagements: {ex}");
-            throw; // Rethrow unexpected exceptions to be handled at a higher level
         }
     }
 
@@ -189,20 +181,15 @@ public partial class AddWorkItem : ComponentBase
         }
         catch (InvalidOperationException ex)
         {
-            Console.Error.WriteLine($"InvalidOperationException in LoadEmployees: {ex}");
+            // Note: It's OK if employees loading fails, as assignment is optional
         }
         catch (HttpRequestException ex)
         {
-            Console.Error.WriteLine($"Network error in LoadEmployees: {ex}");
+            // Note: It's OK if employees loading fails, as assignment is optional
         }
         catch (TimeoutException ex)
         {
-            Console.Error.WriteLine($"Timeout error in LoadEmployees: {ex}");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Unexpected error in LoadEmployees: {ex}");
-            throw; // Rethrow unexpected exceptions to be handled at a higher level
+            // Note: It's OK if employees loading fails, as assignment is optional
         }
     }
 
@@ -254,10 +241,13 @@ public partial class AddWorkItem : ComponentBase
                 NotificationService.ShowErrorNotification("Failed to create work item. Please try again.");
             }
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
+        {
+            NotificationService.ShowErrorNotification("An error occurred while creating the work item. Please check your input and try again.");
+        }
+        catch (InvalidOperationException ex)
         {
             NotificationService.ShowErrorNotification("An unexpected error occurred. Please try again.");
-            Console.Error.WriteLine($"Error creating work item: {ex}");
         }
     }
 
@@ -267,25 +257,37 @@ public partial class AddWorkItem : ComponentBase
         NavigationManager.NavigateTo(backUrl);
     }
 
+    private readonly Dictionary<string, Func<string>> _navigationUrlProviders = new()
+    {
+        ["client"] = () => ClientId.HasValue ? $"/clients/{ClientId.Value}" : "/workitems",
+        ["engagement"] = () => EngagementId.HasValue ? $"/engagements/{EngagementId.Value}" : "/workitems",
+        ["workitems"] = () => ClientId.HasValue && EngagementId.HasValue 
+            ? $"/workitems?clientid={ClientId.Value}&engagementid={EngagementId.Value}" 
+            : "/workitems"
+    };
+
+    private readonly Dictionary<string, string> _backButtonTexts = new()
+    {
+        ["client"] = "Back to client details",
+        ["engagement"] = "Back to engagement details",
+        ["workitems"] = "Back to work items list"
+    };
+
     private string GetBackNavigationUrl()
     {
-        return NavigationSource switch
+        if (_navigationUrlProviders.TryGetValue(NavigationSource, out var urlProvider))
         {
-            "client" when ClientId.HasValue => $"/clients/{ClientId.Value}",
-            "engagement" when EngagementId.HasValue => $"/engagements/{EngagementId.Value}",
-            "workitems" when ClientId.HasValue && EngagementId.HasValue => $"/workitems?clientid={ClientId.Value}&engagementid={EngagementId.Value}",
-            _ => "/workitems" // Default fallback
-        };
+            return urlProvider();
+        }
+        return "/workitems"; // Default fallback
     }
 
     private string GetBackButtonText()
     {
-        return NavigationSource switch
+        if (_backButtonTexts.TryGetValue(NavigationSource, out var buttonText))
         {
-            "client" => "Back to client details",
-            "engagement" => "Back to engagement details", 
-            "workitems" => "Back to work items list",
-            _ => "Back to work items list" // Default fallback
-        };
+            return buttonText;
+        }
+        return "Back to work items list"; // Default fallback
     }
 }

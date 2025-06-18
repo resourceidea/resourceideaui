@@ -47,9 +47,9 @@ public sealed class CreateWorkItemCommand : BaseRequest<WorkItemModel>
     public DateTimeOffset? CompletedDate { get; set; }
 
     /// <summary>
-    /// Gets or sets the priority of the work item (1-5, where 1 is highest priority).
+    /// Gets or sets the priority of the work item.
     /// </summary>
-    public int Priority { get; set; } = 3;
+    public Priority Priority { get; set; } = Priority.Medium;
 
     /// <summary>
     /// Gets or sets the employee ID assigned to this work item.
