@@ -106,7 +106,7 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
 
             return ResourceIdeaResponse<WorkItem>.Success(workItem);
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException)
         {
             // TODO: Log the exception using Azure ApplicationInsights
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
