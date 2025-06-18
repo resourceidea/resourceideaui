@@ -95,7 +95,6 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
         {
             WorkItem? workItem = await _dbContext.WorkItems
                 .Include(w => w.Engagement)
-                    .ThenInclude(e => e!.Client)
                 .Include(w => w.AssignedTo)
                 .Where(specification.Criteria)
                 .FirstOrDefaultAsync(cancellationToken);
@@ -109,12 +108,12 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
         }
         catch (DbUpdateException dbEx)
         {
-            Console.Error.WriteLine($"Database update error: {dbEx.Message}");
+            // TODO: Log the exception using Azure ApplicationInsights
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
         catch (OperationCanceledException ocEx)
         {
-            Console.Error.WriteLine($"Operation canceled: {ocEx.Message}");
+            // TODO: Log the exception using Azure ApplicationInsights
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreQueryFailure);
         }
     }
@@ -132,7 +131,7 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
         try
         {
             var query = _dbContext.WorkItems.AsQueryable();
-            
+
             if (specification.HasValue)
             {
                 query = query.Where(specification.Value.Criteria);

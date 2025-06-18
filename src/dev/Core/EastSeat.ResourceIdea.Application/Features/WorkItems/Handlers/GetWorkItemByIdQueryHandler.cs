@@ -1,6 +1,7 @@
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Contracts;
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Queries;
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Specifications;
+using EastSeat.ResourceIdea.Domain.WorkItems.Entities;
 using EastSeat.ResourceIdea.Domain.WorkItems.Models;
 using EastSeat.ResourceIdea.Domain.Types;
 using MediatR;
@@ -20,7 +21,7 @@ public sealed class GetWorkItemByIdQueryHandler(IWorkItemsService workItemsServi
         GetWorkItemByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var getWorkItemByIdSpecification = new GetWorkItemByIdSpecification(request.WorkItemId);
+        var getWorkItemByIdSpecification = new GetWorkItemByIdSpecification(request.WorkItemId, request.TenantId);
         var result = await _workItemsService.GetByIdAsync(getWorkItemByIdSpecification, cancellationToken);
         if (result.IsFailure)
         {
@@ -32,6 +33,6 @@ public sealed class GetWorkItemByIdQueryHandler(IWorkItemsService workItemsServi
             return ResourceIdeaResponse<WorkItemModel>.NotFound();
         }
 
-        return result.Content.Value.ToResourceIdeaResponse<Domain.WorkItems.Entities.WorkItem, WorkItemModel>();
+        return result.Content.Value.ToResourceIdeaResponse<WorkItem, WorkItemModel>();
     }
 }

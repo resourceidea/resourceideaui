@@ -31,12 +31,12 @@ public partial class WorkItemDetails : ComponentBase
         // Parse query parameters to determine navigation source
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         var queryParams = QueryHelpers.ParseQuery(uri.Query);
-        
+
         if (queryParams.TryGetValue("from", out var fromValue))
         {
             NavigationSource = fromValue.ToString();
         }
-        
+
         if (queryParams.TryGetValue("engagementId", out var engagementIdValue))
         {
             EngagementId = engagementIdValue.ToString();
@@ -68,7 +68,8 @@ public partial class WorkItemDetails : ComponentBase
         {
             var query = new GetWorkItemByIdQuery
             {
-                WorkItemId = WorkItemId.Create(Id)
+                WorkItemId = WorkItemId.Create(Id),
+                TenantId = ResourceIdeaRequestContext.Tenant
             };
 
             var response = await Mediator.Send(query);
@@ -82,13 +83,6 @@ public partial class WorkItemDetails : ComponentBase
                 HasError = true;
                 ErrorMessage = GetErrorMessage(response.Error);
             }
-        }
-        catch (Exception ex)
-        {
-            HasError = true;
-            ErrorMessage = "An unexpected error occurred. Please try again later.";
-            Console.Error.WriteLine($"Unexpected error: {ex}"); // Replace with proper logging
-            throw;
         }
         finally
         {
