@@ -269,7 +269,7 @@ else if (IsWorkItemCompleted)
                 Title = workItem.Title,
                 Description = workItem.Description,
                 Status = workItem.Status,
-                Priority = workItem.Priority,
+                Priority = (int)workItem.Priority,
                 AssignedToId = workItem.AssignedToId
             };
 
@@ -339,7 +339,7 @@ else if (IsWorkItemCompleted)
     private string GetBackNavigationUrl()
     {
         // Parse query parameters to determine navigation context
-        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
         var queryParams = QueryHelpers.ParseQuery(uri.Query);
         
         var backUrl = $"/workitems/{Id}";

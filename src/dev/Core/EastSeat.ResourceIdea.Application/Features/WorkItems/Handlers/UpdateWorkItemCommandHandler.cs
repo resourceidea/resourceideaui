@@ -2,6 +2,7 @@ using EastSeat.ResourceIdea.Application.Features.WorkItems.Commands;
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Contracts;
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Validators;
 using EastSeat.ResourceIdea.Application.Mappers;
+using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.WorkItems.Entities;
 using EastSeat.ResourceIdea.Domain.WorkItems.Models;

@@ -50,7 +50,7 @@ public class UpdateWorkItemCommandTests
         Assert.Equal("Test Work Item", workItem.Title);
         Assert.Equal("Test description", workItem.Description);
         Assert.Equal(WorkItemStatus.InProgress, workItem.Status);
-        Assert.Equal(2, workItem.Priority);
+        Assert.Equal(Priority.High, workItem.Priority);
         Assert.Equal(assignedToId, workItem.AssignedToId);
         Assert.Equal(startDate, workItem.StartDate);
         Assert.Equal(completedDate, workItem.CompletedDate);

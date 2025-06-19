@@ -5,6 +5,7 @@
 // ----------------------------------------------------------------------------------
 
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.WorkItems.Entities;
 using EastSeat.ResourceIdea.Domain.WorkItems.Models;
@@ -157,7 +158,7 @@ public static class WorkItemMapper
             StartDate = command.StartDate,
             CompletedDate = command.CompletedDate,
             Status = command.Status,
-            Priority = command.Priority,
+            Priority = (Priority)command.Priority,
             AssignedToId = command.AssignedToId
         };
     }
