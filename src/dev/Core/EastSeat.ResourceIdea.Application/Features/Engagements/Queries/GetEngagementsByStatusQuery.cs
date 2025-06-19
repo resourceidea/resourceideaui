@@ -7,7 +7,7 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Queries;
 
-public sealed class GetEngagementsByStatusQuery (
+public sealed class GetEngagementsByStatusQuery(
     int pageNumber,
     int pageSize) : IRequest<ResourceIdeaResponse<PagedListResponse<EngagementModel>>>
 {

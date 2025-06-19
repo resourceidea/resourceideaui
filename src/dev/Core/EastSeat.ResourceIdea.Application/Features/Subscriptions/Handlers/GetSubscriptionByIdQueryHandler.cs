@@ -18,7 +18,7 @@ public sealed class GetSubscriptionByIdQueryHandler(ISubscriptionsService subscr
 
     public async Task<ResourceIdeaResponse<SubscriptionModel>> Handle(GetSubscriptionByIdQuery request, CancellationToken cancellationToken)
     {
-        GetSubscriptionByIdSpecification getSubscriptionByIdSpecification = new (request.SubscriptionId);
+        GetSubscriptionByIdSpecification getSubscriptionByIdSpecification = new(request.SubscriptionId);
         var response = await _subscriptionsService.GetByIdAsync(getSubscriptionByIdSpecification, cancellationToken);
         var handlerResponse = GetHandlerResponse<Subscription, SubscriptionModel>(response, ErrorCode.NotFound);
 

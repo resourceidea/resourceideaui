@@ -33,7 +33,7 @@ public class TenantEmployeesQueryHandler(IEmployeeService employeeService)
         CancellationToken cancellationToken)
     {
         var querySpecification = new TenantEmployeesSpecification(query.TenantId);
-        var queryResponse  = await _employeeService.GetPagedListAsync(
+        var queryResponse = await _employeeService.GetPagedListAsync(
             query.PageNumber,
             query.PageSize,
             querySpecification,

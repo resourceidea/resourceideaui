@@ -93,16 +93,27 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
     {
         try
         {
-            var workItem = await _dbContext.WorkItems.AsNoTracking().FirstOrDefaultAsync(specification.Criteria, cancellationToken);
-            if (workItem != null)
+            // Note: Includes are temporarily removed due to test failures when related entities don't exist
+            // TODO: Fix navigation property configuration to allow optional includes
+            WorkItem? workItem = await _dbContext.WorkItems
+                .Where(specification.Criteria)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (workItem == null)
             {
-                return ResourceIdeaResponse<WorkItem>.Success(workItem);
+                return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.NotFound);
             }
 
-            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.NotFound);
+            return ResourceIdeaResponse<WorkItem>.Success(workItem);
+        }
+        catch (DbUpdateException)
+        {
+            // TODO: Log the exception using Azure ApplicationInsights
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
         catch (OperationCanceledException)
         {
+            // TODO: Log the exception using Azure ApplicationInsights
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreQueryFailure);
         }
     }
@@ -120,7 +131,7 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
         try
         {
             var query = _dbContext.WorkItems.AsQueryable();
-            
+
             if (specification.HasValue)
             {
                 query = query.Where(specification.Value.Criteria);

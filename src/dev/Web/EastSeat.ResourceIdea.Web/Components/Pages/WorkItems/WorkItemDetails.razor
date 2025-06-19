@@ -1,0 +1,168 @@
+@* ------------------------------------------------------------------------------
+    File: WorkItemDetails.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Pages/WorkItems/WorkItemDetails.razor
+    Description: Work Item Details Page
+   ------------------------------------------------------------------------------ *@
+
+@page "/workitems/{Id:guid}"
+@using EastSeat.ResourceIdea.Web.Components.Shared.Cards
+@using EastSeat.ResourceIdea.Web.Components.Shared.Alerts
+
+<ResourceIdeaPageTitle Title="Work Item Details" />
+
+<div class="page-container">
+
+    @if (IsLoading)
+    {
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else if (HasError)
+    {
+        <DismissibleAlert ErrorMessage="@ErrorMessage" IsErrorMessage="true" />
+    }
+    else if (WorkItem != null)
+    {
+        <PageHeader Text=@($"Work Item: {WorkItem.Title}") />
+
+        <div class="mt-2 mb-2">
+            @* Back navigation button *@
+            <NavLink class="btn btn-outline-dark btn-sm" href="@GetBackNavigationUrl()" ActiveClass="">
+                <i class="fa fa-chevron-left"></i> @GetBackButtonText()
+            </NavLink>
+            @* Edit button *@
+            <NavLink class="btn btn-primary btn-sm ms-2" href=@($"/workitems/edit/{WorkItem.Id.Value}") ActiveClass="">
+                <i class="fa-solid fa-pen-to-square"></i> Edit
+            </NavLink>
+        </div>
+
+        <hr/>
+
+        @* Work Item Information *@
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">Work Item Information</h6>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-4">Title:</dt>
+                            <dd class="col-sm-8">@WorkItem.Title</dd>
+                            
+                            <dt class="col-sm-4">Description:</dt>
+                            <dd class="col-sm-8">
+                                @if (!string.IsNullOrEmpty(WorkItem.Description))
+                                {
+                                    @WorkItem.Description
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No description provided</span>
+                                }
+                            </dd>
+                            
+                            <dt class="col-sm-4">Status:</dt>
+                            <dd class="col-sm-8">
+                                <span class="badge @GetStatusBadgeClass(WorkItem.Status)">
+                                    @WorkItem.Status.ToString()
+                                </span>
+                            </dd>
+                            
+                            <dt class="col-sm-4">Priority:</dt>
+                            <dd class="col-sm-8">
+                                <span class="badge @GetPriorityBadgeClass(WorkItem.Priority)">
+                                    @GetPriorityText(WorkItem.Priority)
+                                </span>
+                            </dd>
+                            
+                            <dt class="col-sm-4">Start Date:</dt>
+                            <dd class="col-sm-8">
+                                @if (WorkItem.StartDate.HasValue)
+                                {
+                                    @WorkItem.StartDate.Value.ToString("MMM dd, yyyy")
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not started</span>
+                                }
+                            </dd>
+                            
+                            <dt class="col-sm-4">Completed Date:</dt>
+                            <dd class="col-sm-8">
+                                @if (WorkItem.CompletedDate.HasValue)
+                                {
+                                    @WorkItem.CompletedDate.Value.ToString("MMM dd, yyyy")
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not completed</span>
+                                }
+                            </dd>
+                            
+                            <dt class="col-sm-4">Assigned To:</dt>
+                            <dd class="col-sm-8">
+                                @if (!string.IsNullOrEmpty(WorkItem.AssignedToName))
+                                {
+                                    @WorkItem.AssignedToName
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Unassigned</span>
+                                }
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">Engagement & Client Information</h6>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-4">Engagement:</dt>
+                            <dd class="col-sm-8">
+                                @if (!string.IsNullOrEmpty(WorkItem.EngagementTitle))
+                                {
+                                    <NavLink href=@($"/engagements/{WorkItem.EngagementId.Value}") ActiveClass="">
+                                        @WorkItem.EngagementTitle
+                                    </NavLink>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No engagement linked</span>
+                                }
+                            </dd>
+                            
+                            <dt class="col-sm-4">Client:</dt>
+                            <dd class="col-sm-8">
+                                @if (!string.IsNullOrEmpty(WorkItem.ClientName) && WorkItem.ClientId.HasValue)
+                                {
+                                    <NavLink href=@($"/clients/{WorkItem.ClientId.Value.Value}") ActiveClass="">
+                                        @WorkItem.ClientName
+                                    </NavLink>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No client linked</span>
+                                }
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            Work item not found.
+        </div>
+    }
+</div>

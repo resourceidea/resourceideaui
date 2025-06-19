@@ -28,7 +28,7 @@ public class TenantEmployeeModel
     public string? DepartmentName { get; init; }
     public ApplicationUserId ApplicationUserId { get; init; }
     public TenantId TenantId { get; init; }
-    
+
     /// <summary>
     /// Represents an empty instance of TenantEmployeeModel with default values.
     /// </summary>
@@ -45,7 +45,7 @@ public class TenantEmployeeModel
         LastName = string.Empty,
         TenantId = TenantId.Empty
     };
-    
+
     /// <summary>
     /// Checks if the current instance is empty (equivalent to the Empty property).
     /// </summary>

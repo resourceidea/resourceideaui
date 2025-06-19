@@ -99,7 +99,7 @@ public class CreateWorkItemCommandTests
         var engagementId = EngagementId.Create(Guid.NewGuid());
         var tenantId = TenantId.Create(Guid.NewGuid());
         var startDate = DateTimeOffset.UtcNow.AddDays(1);
-        
+
         var command = new CreateWorkItemCommand
         {
             Title = "Test Work Item",

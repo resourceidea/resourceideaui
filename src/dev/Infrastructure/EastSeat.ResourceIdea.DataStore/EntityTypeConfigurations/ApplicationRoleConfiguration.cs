@@ -24,6 +24,6 @@ public class ApplicationRoleConfiguration : IEntityTypeConfiguration<Application
                 tenantId => tenantId.Value.ToString(),
                 value => TenantId.Create(value));
 
-        builder.Property(e => e.IsBackendRole).IsRequired(true);       
+        builder.Property(e => e.IsBackendRole).IsRequired(true);
     }
 }

@@ -5,7 +5,7 @@ using EastSeat.ResourceIdea.Domain.Types;
 
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Queries;
 
-public sealed class GetAllEngagementsQuery (int pageNumber, int pageSize)
+public sealed class GetAllEngagementsQuery(int pageNumber, int pageSize)
     : BaseRequest<PagedListResponse<EngagementModel>>
 {
     public int PageNumber { get; } = pageNumber;

@@ -30,19 +30,19 @@ public sealed class GetJobPositionByIdQueryHandler(IJobPositionService jobPositi
     {
         // Create specification for the job position with the given ID
         var specification = new JobPositionByIdSpecification(request.JobPositionId, request.TenantId);
-        
+
         // Get the job position using the specification
         var response = await _jobPositionService.GetByIdAsync(specification, cancellationToken);
         if (response.IsFailure)
         {
             return ResourceIdeaResponse<JobPositionModel>.Failure(response.Error);
         }
-        
+
         if (response.Content.HasValue is false)
         {
             return ResourceIdeaResponse<JobPositionModel>.NotFound();
         }
-        
+
         // Map the entity to model and return
         var jobPositionModel = response.Content.Value.ToModel<JobPositionModel>();
         return ResourceIdeaResponse<JobPositionModel>.Success(Optional<JobPositionModel>.Some(jobPositionModel));

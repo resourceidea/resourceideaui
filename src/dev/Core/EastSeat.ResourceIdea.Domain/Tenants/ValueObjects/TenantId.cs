@@ -55,7 +55,7 @@ public readonly record struct TenantId
 
     /// <summary>Tenant DepartmentId is not empty.</summary>
     public bool IsNotEmpty() => this != TenantId.Empty;
-    
+
     /// <summary>
     /// Validate that the Tenant ID is not empty.
     /// </summary>

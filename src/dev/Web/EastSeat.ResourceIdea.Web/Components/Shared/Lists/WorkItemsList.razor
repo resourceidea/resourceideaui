@@ -97,7 +97,9 @@
                     <tr>
                         <td>
                             <div class="text-truncate" style="max-width: 200px;" title="@workItem.Title">
-                                @workItem.Title
+                                <NavLink class="text-decoration-none" href=@($"/workitems/{workItem.Id.Value}")>
+                                    @workItem.Title
+                                </NavLink>
                             </div>
                             @if (!string.IsNullOrEmpty(workItem.Description))
                             {
