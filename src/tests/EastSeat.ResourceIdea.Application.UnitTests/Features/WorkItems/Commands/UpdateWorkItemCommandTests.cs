@@ -29,16 +29,16 @@ public class UpdateWorkItemCommandTests
         var command = new UpdateWorkItemCommand
         {
             WorkItemId = workItemId,
-            TenantId = tenantId,
             EngagementId = engagementId,
             Title = "Test Work Item",
             Description = "Test description",
             Status = WorkItemStatus.InProgress,
-            Priority = 2,
+            Priority = Priority.High,
             AssignedToId = assignedToId,
             StartDate = startDate,
             CompletedDate = completedDate
         };
+        command.TenantId = tenantId;
 
         // Act
         var workItem = command.ToEntity();
@@ -63,13 +63,13 @@ public class UpdateWorkItemCommandTests
         var command = new UpdateWorkItemCommand
         {
             WorkItemId = WorkItemId.Create(Guid.NewGuid()),
-            TenantId = TenantId.Create(Guid.NewGuid()),
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             Title = "Test Work Item",
             Description = null,
             Status = WorkItemStatus.NotStarted,
-            Priority = 3
+            Priority = Priority.Medium
         };
+        command.TenantId = TenantId.Create(Guid.NewGuid());
 
         // Act
         var workItem = command.ToEntity();
@@ -85,14 +85,14 @@ public class UpdateWorkItemCommandTests
         var command = new UpdateWorkItemCommand
         {
             WorkItemId = WorkItemId.Create(Guid.NewGuid()),
-            TenantId = TenantId.Create(Guid.NewGuid()),
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             Title = "Test Work Item",
             Status = WorkItemStatus.NotStarted,
-            Priority = 3,
+            Priority = Priority.Medium,
             StartDate = null,
             CompletedDate = null
         };
+        command.TenantId = TenantId.Create(Guid.NewGuid());
 
         // Act
         var workItem = command.ToEntity();
@@ -109,13 +109,13 @@ public class UpdateWorkItemCommandTests
         var command = new UpdateWorkItemCommand
         {
             WorkItemId = WorkItemId.Create(Guid.NewGuid()),
-            TenantId = TenantId.Create(Guid.NewGuid()),
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             Title = "Test Work Item",
             Status = WorkItemStatus.NotStarted,
-            Priority = 3,
+            Priority = Priority.Medium,
             AssignedToId = null
         };
+        command.TenantId = TenantId.Create(Guid.NewGuid());
 
         // Act
         var workItem = command.ToEntity();

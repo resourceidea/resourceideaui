@@ -101,11 +101,11 @@ else if (Command != null && !IsWorkItemCompleted)
                             <div class="form-group">
                                 <label for="priority">Priority</label>
                                 <InputSelect id="priority" class="form-control" @bind-Value="Command.Priority">
-                                    <option value="1">1 - Highest</option>
-                                    <option value="2">2 - High</option>
-                                    <option value="3">3 - Medium</option>
-                                    <option value="4">4 - Low</option>
-                                    <option value="5">5 - Lowest</option>
+                                    <option value="@Priority.Critical">1 - Highest</option>
+                                    <option value="@Priority.High">2 - High</option>
+                                    <option value="@Priority.Medium">3 - Medium</option>
+                                    <option value="@Priority.Low">4 - Low</option>
+                                    <option value="@Priority.Lowest">5 - Lowest</option>
                                 </InputSelect>
                             </div>
                         </div>
@@ -264,14 +264,14 @@ else if (IsWorkItemCompleted)
             Command = new UpdateWorkItemCommand
             {
                 WorkItemId = workItem.Id,
-                TenantId = workItem.TenantId,
                 EngagementId = workItem.EngagementId,
                 Title = workItem.Title,
                 Description = workItem.Description,
                 Status = workItem.Status,
-                Priority = (int)workItem.Priority,
+                Priority = workItem.Priority,
                 AssignedToId = workItem.AssignedToId
             };
+            Command.TenantId = workItem.TenantId;
 
             StartDate = workItem.StartDate;
             CompletedDate = workItem.CompletedDate;

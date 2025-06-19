@@ -1,29 +1,25 @@
+using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
-using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Extensions;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.WorkItems.Models;
 using EastSeat.ResourceIdea.Domain.WorkItems.ValueObjects;
 
-using MediatR;
+using System.Linq;
 
 namespace EastSeat.ResourceIdea.Application.Features.WorkItems.Commands;
 
 /// <summary>
 /// Represents a command to update a work item.
 /// </summary>
-public sealed class UpdateWorkItemCommand : IRequest<ResourceIdeaResponse<WorkItemModel>>
+public sealed class UpdateWorkItemCommand : BaseRequest<WorkItemModel>
 {
     /// <summary>
     /// Gets or sets the work item ID.
     /// </summary>
     public WorkItemId WorkItemId { get; init; }
-
-    /// <summary>
-    /// Gets or sets the tenant ID.
-    /// </summary>
-    public TenantId TenantId { get; set; }
 
     /// <summary>
     /// Gets or sets the engagement ID.
@@ -56,12 +52,58 @@ public sealed class UpdateWorkItemCommand : IRequest<ResourceIdeaResponse<WorkIt
     public WorkItemStatus Status { get; set; }
 
     /// <summary>
-    /// Gets or sets the priority of the work item (1-5, where 1 is highest priority).
+    /// Gets or sets the priority of the work item.
     /// </summary>
-    public int Priority { get; set; } = 3;
+    public Priority Priority { get; set; } = Priority.Medium;
 
     /// <summary>
     /// Gets or sets the employee ID assigned to this work item.
     /// </summary>
     public EmployeeId? AssignedToId { get; set; }
+
+    /// <summary>
+    /// Validates the command.
+    /// </summary>
+    /// <returns><see cref="ValidationResponse"/></returns>
+    public override ValidationResponse Validate()
+    {
+        var validationFailureMessages = new[]
+        {
+            Title.ValidateRequired(nameof(Title)),
+            ValidateEngagementId(),
+            TenantId.ValidateRequired(),
+            ValidateWorkItemId()
+        }
+        .Where(message => !string.IsNullOrWhiteSpace(message));
+
+        return validationFailureMessages.Any()
+            ? new ValidationResponse(false, validationFailureMessages)
+            : new ValidationResponse(true, []);
+    }
+
+    /// <summary>
+    /// Validates the engagement ID.
+    /// </summary>
+    /// <returns>Validation error message or empty string if valid.</returns>
+    private string ValidateEngagementId()
+    {
+        if (EngagementId.Value == Guid.Empty)
+        {
+            return "Engagement ID is required.";
+        }
+        return string.Empty;
+    }
+
+    /// <summary>
+    /// Validates the work item ID.
+    /// </summary>
+    /// <returns>Validation error message or empty string if valid.</returns>
+    private string ValidateWorkItemId()
+    {
+        if (WorkItemId.Value == Guid.Empty)
+        {
+            return "Work Item ID is required.";
+        }
+        return string.Empty;
+    }
 }

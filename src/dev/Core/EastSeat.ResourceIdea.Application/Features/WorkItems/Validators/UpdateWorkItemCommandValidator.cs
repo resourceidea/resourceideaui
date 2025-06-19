@@ -20,8 +20,8 @@ public sealed class UpdateWorkItemCommandValidator : AbstractValidator<UpdateWor
             .WithMessage("Title is required.");
 
         RuleFor(workItem => workItem.Priority)
-            .InclusiveBetween(1, 5)
-            .WithMessage("Priority must be between 1 and 5.");
+            .IsInEnum()
+            .WithMessage("Priority must be a valid priority level.");
 
         // Business rule: Start date cannot be edited when status is not NotStarted
         RuleFor(workItem => workItem.StartDate)

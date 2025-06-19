@@ -28,15 +28,15 @@ public class UpdateWorkItemCommandValidatorTests
         var command = new UpdateWorkItemCommand
         {
             WorkItemId = WorkItemId.Create(Guid.NewGuid()),
-            TenantId = TenantId.Create(Guid.NewGuid()),
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             Title = "Test Work Item",
             Description = "Test description",
             Status = WorkItemStatus.NotStarted,
-            Priority = 3,
+            Priority = Priority.Medium,
             StartDate = DateTimeOffset.UtcNow,
             CompletedDate = DateTimeOffset.UtcNow.AddDays(5)
         };
+        command.TenantId = TenantId.Create(Guid.NewGuid());
 
         // Act
         var result = _validator.Validate(command);
@@ -53,12 +53,12 @@ public class UpdateWorkItemCommandValidatorTests
         var command = new UpdateWorkItemCommand
         {
             WorkItemId = WorkItemId.Create(Guid.NewGuid()),
-            TenantId = TenantId.Create(Guid.NewGuid()),
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             Title = "",
             Status = WorkItemStatus.NotStarted,
-            Priority = 3
+            Priority = Priority.Medium
         };
+        command.TenantId = TenantId.Create(Guid.NewGuid());
 
         // Act
         var result = _validator.Validate(command);
@@ -68,29 +68,26 @@ public class UpdateWorkItemCommandValidatorTests
         Assert.Contains(result.Errors, e => e.ErrorMessage == "Title is required.");
     }
 
-    [Theory]
-    [InlineData(0)]
-    [InlineData(6)]
-    [InlineData(-1)]
-    public void Validate_WhenPriorityIsOutOfRange_ShouldReturnInvalid(int priority)
+    [Fact]
+    public void Validate_WhenPriorityIsInvalidEnum_ShouldReturnInvalid()
     {
-        // Arrange
+        // Arrange - Create command with valid enum value first
         var command = new UpdateWorkItemCommand
         {
             WorkItemId = WorkItemId.Create(Guid.NewGuid()),
-            TenantId = TenantId.Create(Guid.NewGuid()),
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             Title = "Test Work Item",
             Status = WorkItemStatus.NotStarted,
-            Priority = priority
+            Priority = (Priority)999 // Invalid enum value
         };
+        command.TenantId = TenantId.Create(Guid.NewGuid());
 
         // Act
         var result = _validator.Validate(command);
 
         // Assert
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.ErrorMessage == "Priority must be between 1 and 5.");
+        Assert.Contains(result.Errors, e => e.ErrorMessage == "Priority must be a valid priority level.");
     }
 
     [Theory]
@@ -104,13 +101,13 @@ public class UpdateWorkItemCommandValidatorTests
         var command = new UpdateWorkItemCommand
         {
             WorkItemId = WorkItemId.Create(Guid.NewGuid()),
-            TenantId = TenantId.Create(Guid.NewGuid()),
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             Title = "Test Work Item",
             Status = status,
-            Priority = 3,
+            Priority = Priority.Medium,
             StartDate = DateTimeOffset.UtcNow
         };
+        command.TenantId = TenantId.Create(Guid.NewGuid());
 
         // Act
         var result = _validator.Validate(command);
@@ -129,13 +126,13 @@ public class UpdateWorkItemCommandValidatorTests
         var command = new UpdateWorkItemCommand
         {
             WorkItemId = WorkItemId.Create(Guid.NewGuid()),
-            TenantId = TenantId.Create(Guid.NewGuid()),
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             Title = "Test Work Item",
             Status = status,
-            Priority = 3,
+            Priority = Priority.Medium,
             CompletedDate = DateTimeOffset.UtcNow
         };
+        command.TenantId = TenantId.Create(Guid.NewGuid());
 
         // Act
         var result = _validator.Validate(command);
@@ -155,13 +152,13 @@ public class UpdateWorkItemCommandValidatorTests
         var command = new UpdateWorkItemCommand
         {
             WorkItemId = WorkItemId.Create(Guid.NewGuid()),
-            TenantId = TenantId.Create(Guid.NewGuid()),
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             Title = "Test Work Item",
             Status = status,
-            Priority = 3,
+            Priority = Priority.Medium,
             CompletedDate = DateTimeOffset.UtcNow
         };
+        command.TenantId = TenantId.Create(Guid.NewGuid());
 
         // Act
         var result = _validator.Validate(command);
@@ -177,13 +174,13 @@ public class UpdateWorkItemCommandValidatorTests
         var command = new UpdateWorkItemCommand
         {
             WorkItemId = WorkItemId.Create(Guid.NewGuid()),
-            TenantId = TenantId.Create(Guid.NewGuid()),
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             Title = "Test Work Item",
             Status = WorkItemStatus.InProgress,
-            Priority = 3,
+            Priority = Priority.Medium,
             StartDate = null
         };
+        command.TenantId = TenantId.Create(Guid.NewGuid());
 
         // Act
         var result = _validator.Validate(command);
@@ -199,13 +196,13 @@ public class UpdateWorkItemCommandValidatorTests
         var command = new UpdateWorkItemCommand
         {
             WorkItemId = WorkItemId.Create(Guid.NewGuid()),
-            TenantId = TenantId.Create(Guid.NewGuid()),
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             Title = "Test Work Item",
             Status = WorkItemStatus.Completed,
-            Priority = 3,
+            Priority = Priority.Medium,
             CompletedDate = null
         };
+        command.TenantId = TenantId.Create(Guid.NewGuid());
 
         // Act
         var result = _validator.Validate(command);

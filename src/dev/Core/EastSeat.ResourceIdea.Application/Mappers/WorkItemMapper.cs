@@ -158,7 +158,7 @@ public static class WorkItemMapper
             StartDate = command.StartDate,
             CompletedDate = command.CompletedDate,
             Status = command.Status,
-            Priority = (Priority)command.Priority,
+            Priority = command.Priority,
             AssignedToId = command.AssignedToId
         };
     }
