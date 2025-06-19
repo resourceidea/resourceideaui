@@ -4,6 +4,7 @@ using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Extensions;
 using EastSeat.ResourceIdea.Domain.Types;
+using EastSeat.ResourceIdea.Domain.WorkItems.Entities;
 using EastSeat.ResourceIdea.Domain.WorkItems.Models;
 using EastSeat.ResourceIdea.Domain.WorkItems.ValueObjects;
 
@@ -60,6 +61,27 @@ public sealed class UpdateWorkItemCommand : BaseRequest<WorkItemModel>
     /// Gets or sets the employee ID assigned to this work item.
     /// </summary>
     public EmployeeId? AssignedToId { get; set; }
+
+    /// <summary>
+    /// Maps the command to <see cref="WorkItem"/> entity.
+    /// </summary>
+    /// <returns><see cref="WorkItem"/></returns>
+    public WorkItem ToEntity()
+    {
+        return new WorkItem
+        {
+            Id = WorkItemId,
+            Title = Title,
+            Description = Description,
+            EngagementId = EngagementId,
+            TenantId = TenantId,
+            StartDate = StartDate,
+            CompletedDate = CompletedDate,
+            Status = Status,
+            Priority = Priority,
+            AssignedToId = AssignedToId
+        };
+    }
 
     /// <summary>
     /// Validates the command.
