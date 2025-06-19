@@ -11,7 +11,7 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers;
 
-public sealed class CompleteEngagementCommandHandler (IEngagementsService engagementsService): IRequestHandler<CompleteEngagementCommand, ResourceIdeaResponse<EngagementModel>>
+public sealed class CompleteEngagementCommandHandler(IEngagementsService engagementsService) : IRequestHandler<CompleteEngagementCommand, ResourceIdeaResponse<EngagementModel>>
 {
     private readonly IEngagementsService _engagementsService = engagementsService;
 

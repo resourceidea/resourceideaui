@@ -1,10 +1,9 @@
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Contracts;
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Queries;
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Specifications;
-using EastSeat.ResourceIdea.Application.Mappers;
-using EastSeat.ResourceIdea.Domain.Types;
+using EastSeat.ResourceIdea.Domain.WorkItems.Entities;
 using EastSeat.ResourceIdea.Domain.WorkItems.Models;
-
+using EastSeat.ResourceIdea.Domain.Types;
 using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.WorkItems.Handlers;
@@ -34,6 +33,6 @@ public sealed class GetWorkItemByIdQueryHandler(IWorkItemsService workItemsServi
             return ResourceIdeaResponse<WorkItemModel>.NotFound();
         }
 
-        return result.Content.Value.ToResourceIdeaResponse();
+        return result.Content.Value.ToResourceIdeaResponse<WorkItem, WorkItemModel>();
     }
 }

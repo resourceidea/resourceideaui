@@ -1,17 +1,42 @@
-name: 'TODO'
+name: 'Create Issues from TODO Comments'
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
 jobs:
-  todo:
+  todo-to-issue:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
-    - name: Create issue from TODO
-      uses: alstr/todo-to-issue-action@v4
-      with:
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        IDENTIFIERS: '[{"name": "TODO,FIXME,BUG", "labels": ["todo,fixme,bug"]}]'
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Create issues from TODO comments
+        uses: alstr/todo-to-issue-action@v4
+        with:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IDENTIFIERS: |
+            [
+              {
+                "name": "TODO",
+                "labels": ["todo", "enhancement"]
+              },
+              {
+                "name": "FIXME", 
+                "labels": ["fixme", "bug"]
+              },
+              {
+                "name": "BUG",
+                "labels": ["bug"]
+              }
+            ]
+          LABEL: "auto-generated"
+          AUTO_P: true
+          AUTO_ASSIGN: true
+          CLOSE_ISSUES: false
+          INCLUDE_PATTERN: "**/*.cs,**/*.razor,**/*.js,**/*.ts,**/*.md"

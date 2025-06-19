@@ -93,7 +93,7 @@ public class JobPosition : BaseEntity
             Description = Description ?? string.Empty,
             DepartmentId = DepartmentId
         };
-    
+
     /// <summary>
     /// Maps this entity to a <see cref="TenantJobPositionModel"/>.
     /// </summary>

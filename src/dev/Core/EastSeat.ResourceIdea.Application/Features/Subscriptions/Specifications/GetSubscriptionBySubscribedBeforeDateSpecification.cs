@@ -9,7 +9,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Specification
 /// <summary>
 /// Specification to query subscriptions by subscription date.
 /// </summary>
-public sealed class GetSubscriptionBySubscribedBeforeDateSpecification (Dictionary<string, string>? filters)
+public sealed class GetSubscriptionBySubscribedBeforeDateSpecification(Dictionary<string, string>? filters)
     : BaseSpecification<Subscription>
 {
     private readonly Dictionary<string, string>? _filters = filters;

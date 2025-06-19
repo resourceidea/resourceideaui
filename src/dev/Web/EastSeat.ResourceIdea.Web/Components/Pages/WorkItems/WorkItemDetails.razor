@@ -1,15 +1,12 @@
-@page "/workitems/{Id:guid}"
+@* ------------------------------------------------------------------------------
+    File: WorkItemDetails.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Pages/WorkItems/WorkItemDetails.razor
+    Description: Work Item Details Page
+   ------------------------------------------------------------------------------ *@
 
-@using Microsoft.AspNetCore.WebUtilities
-@using EastSeat.ResourceIdea.Application.Features.WorkItems.Queries
-@using EastSeat.ResourceIdea.Application.Features.Engagements.Queries
-@using EastSeat.ResourceIdea.Application.Features.Clients.Queries
-@using EastSeat.ResourceIdea.Domain.WorkItems.ValueObjects
-@using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects
-@using EastSeat.ResourceIdea.Domain.Clients.ValueObjects
-@using EastSeat.ResourceIdea.Domain.Enums
-@using EastSeat.ResourceIdea.Web.RequestContext
-@using MediatR
+@page "/workitems/{Id:guid}"
+@using EastSeat.ResourceIdea.Web.Components.Shared.Cards
+@using EastSeat.ResourceIdea.Web.Components.Shared.Alerts
 
 <ResourceIdeaPageTitle Title="Work Item Details" />
 
@@ -36,19 +33,10 @@
             <NavLink class="btn btn-outline-dark btn-sm" href="@GetBackNavigationUrl()" ActiveClass="">
                 <i class="fa fa-chevron-left"></i> @GetBackButtonText()
             </NavLink>
-            @* Edit button - disabled if completed *@
-            @if (WorkItem.Status != WorkItemStatus.Completed)
-            {
-                <NavLink class="btn btn-primary btn-sm ms-2" href=@($"/workitems/edit/{WorkItem.Id.Value}?engagementId={EngagementId}&clientId={ClientId}") ActiveClass="">
-                    <i class="fa-solid fa-pen-to-square"></i> Edit
-                </NavLink>
-            }
-            else
-            {
-                <button type="button" class="btn btn-secondary btn-sm ms-2" disabled>
-                    <i class="fa-solid fa-pen-to-square"></i> Edit (Completed)
-                </button>
-            }
+            @* Edit button *@
+            <NavLink class="btn btn-primary btn-sm ms-2" href=@($"/workitems/edit/{WorkItem.Id.Value}") ActiveClass="">
+                <i class="fa-solid fa-pen-to-square"></i> Edit
+            </NavLink>
         </div>
 
         <hr/>
@@ -73,7 +61,7 @@
                                 }
                                 else
                                 {
-                                    <span class="text-muted">No description</span>
+                                    <span class="text-muted">No description provided</span>
                                 }
                             </dd>
                             
@@ -114,7 +102,7 @@
                                     <span class="text-muted">Not completed</span>
                                 }
                             </dd>
-
+                            
                             <dt class="col-sm-4">Assigned To:</dt>
                             <dd class="col-sm-8">
                                 @if (!string.IsNullOrEmpty(WorkItem.AssignedToName))
@@ -134,22 +122,36 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <h6 class="mb-0">Engagement & Client</h6>
+                        <h6 class="mb-0">Engagement & Client Information</h6>
                     </div>
                     <div class="card-body">
                         <dl class="row">
                             <dt class="col-sm-4">Engagement:</dt>
                             <dd class="col-sm-8">
-                                <NavLink href=@($"/engagements/{EngagementId}") ActiveClass="">
-                                    @EngagementName
-                                </NavLink>
+                                @if (!string.IsNullOrEmpty(WorkItem.EngagementTitle))
+                                {
+                                    <NavLink href=@($"/engagements/{WorkItem.EngagementId.Value}") ActiveClass="">
+                                        @WorkItem.EngagementTitle
+                                    </NavLink>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No engagement linked</span>
+                                }
                             </dd>
                             
                             <dt class="col-sm-4">Client:</dt>
                             <dd class="col-sm-8">
-                                <NavLink href=@($"/clients/{ClientId}") ActiveClass="">
-                                    @ClientName
-                                </NavLink>
+                                @if (!string.IsNullOrEmpty(WorkItem.ClientName) && WorkItem.ClientId.HasValue)
+                                {
+                                    <NavLink href=@($"/clients/{WorkItem.ClientId.Value.Value}") ActiveClass="">
+                                        @WorkItem.ClientName
+                                    </NavLink>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No client linked</span>
+                                }
                             </dd>
                         </dl>
                     </div>
@@ -157,238 +159,10 @@
             </div>
         </div>
     }
+    else
+    {
+        <div class="alert alert-warning">
+            Work item not found.
+        </div>
+    }
 </div>
-
-@code {
-    [Parameter]
-    public Guid Id { get; set; }
-
-    private WorkItemModel? WorkItem;
-    private string EngagementName = string.Empty;
-    private string ClientName = string.Empty;
-    private string EngagementId = string.Empty;
-    private string ClientId = string.Empty;
-    private string NavigationSource = string.Empty;
-    private bool IsLoading = true;
-    private bool HasError = false;
-    private string ErrorMessage = string.Empty;
-
-    [Inject] public IMediator Mediator { get; set; } = default!;
-    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
-    [Inject] public IResourceIdeaRequestContext RequestContext { get; set; } = default!;
-
-    protected override async Task OnInitializedAsync()
-    {
-        // Parse query parameters to determine navigation source
-        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-        var queryParams = QueryHelpers.ParseQuery(uri.Query);
-        
-        if (queryParams.TryGetValue("from", out var fromValue))
-        {
-            NavigationSource = fromValue.ToString();
-        }
-        
-        if (queryParams.TryGetValue("engagementId", out var engagementIdValue))
-        {
-            EngagementId = engagementIdValue.ToString();
-        }
-        
-        if (queryParams.TryGetValue("clientId", out var clientIdValue))
-        {
-            ClientId = clientIdValue.ToString();
-        }
-
-        await LoadWorkItemAsync();
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        if (Id != Guid.Empty)
-        {
-            await LoadWorkItemAsync();
-        }
-    }
-
-    private async Task LoadWorkItemAsync()
-    {
-        try
-        {
-            // Load work item details
-            GetWorkItemByIdQuery workItemQuery = new()
-            {
-                WorkItemId = WorkItemId.Create(Id),
-                TenantId = RequestContext.Tenant
-            };
-
-            var workItemResponse = await Mediator.Send(workItemQuery);
-            if (workItemResponse.IsFailure || !workItemResponse.Content.HasValue)
-            {
-                HasError = true;
-                ErrorMessage = GetErrorMessage(workItemResponse.Error);
-                return;
-            }
-
-            WorkItem = workItemResponse.Content.Value;
-
-            // Load engagement details to get engagement name and client id
-            GetEngagementByIdQuery engagementQuery = new()
-            {
-                EngagementId = WorkItem.EngagementId
-            };
-
-            var engagementResponse = await Mediator.Send(engagementQuery);
-            if (engagementResponse.IsFailure || !engagementResponse.Content.HasValue)
-            {
-                HasError = true;
-                ErrorMessage = "Failed to load engagement details.";
-                return;
-            }
-
-            var engagement = engagementResponse.Content.Value;
-            EngagementName = engagement.Description;
-            if (string.IsNullOrEmpty(EngagementId))
-            {
-                EngagementId = engagement.Id.Value.ToString();
-            }
-
-            // Load client details to get client name
-            GetClientByIdQuery clientQuery = new()
-            {
-                ClientId = engagement.ClientId,
-                TenantId = RequestContext.Tenant
-            };
-
-            var clientResponse = await Mediator.Send(clientQuery);
-            if (clientResponse.IsFailure || !clientResponse.Content.HasValue)
-            {
-                HasError = true;
-                ErrorMessage = "Failed to load client details.";
-                return;
-            }
-
-            var client = clientResponse.Content.Value;
-            ClientName = client.Name;
-            if (string.IsNullOrEmpty(ClientId))
-            {
-                ClientId = client.ClientId.Value.ToString();
-            }
-        }
-        catch (InvalidOperationException ex)
-        {
-            HasError = true;
-            ErrorMessage = "An invalid operation occurred while loading the work item details: " + ex.Message;
-        }
-        catch (ArgumentException ex)
-        {
-            HasError = true;
-            ErrorMessage = "An argument error occurred while loading the work item details: " + ex.Message;
-        }
-        catch (Exception ex) when (ex is not InvalidOperationException && ex is not ArgumentException)
-        {
-            HasError = true;
-            ErrorMessage = "An unexpected error occurred. Please try again later.";
-            Console.Error.WriteLine($"Unexpected error: {ex}"); // Replace with proper logging
-            throw;
-        }
-        finally
-        {
-            IsLoading = false;
-            StateHasChanged();
-        }
-    }
-
-    private string GetStatusBadgeClass(WorkItemStatus status)
-    {
-        return status switch
-        {
-            WorkItemStatus.NotStarted => "bg-secondary",
-            WorkItemStatus.InProgress => "bg-primary",
-            WorkItemStatus.OnHold => "bg-warning text-dark",
-            WorkItemStatus.Completed => "bg-success",
-            WorkItemStatus.Canceled => "bg-danger",
-            _ => "bg-secondary"
-        };
-    }
-
-    private string GetPriorityBadgeClass(int priority)
-    {
-        return priority switch
-        {
-            1 => "bg-danger",
-            2 => "bg-warning text-dark",
-            3 => "bg-primary",
-            4 => "bg-info text-dark",
-            5 => "bg-secondary",
-            _ => "bg-secondary"
-        };
-    }
-
-    private string GetPriorityText(int priority)
-    {
-        return priority switch
-        {
-            1 => "1 - Highest",
-            2 => "2 - High",
-            3 => "3 - Medium",
-            4 => "4 - Low",
-            5 => "5 - Lowest",
-            _ => $"{priority} - Unknown"
-        };
-    }
-
-    private string GetBackButtonText()
-    {
-        return NavigationSource switch
-        {
-            "engagement" => "Back to engagement details",
-            "client" => "Back to client details",
-            "workitems" => "Back to work items list",
-            _ => "Back to work items list" // Default fallback
-        };
-    }
-
-    private string GetBackNavigationUrl()
-    {
-        return NavigationSource switch
-        {
-            "engagement" when !string.IsNullOrEmpty(EngagementId) => $"/engagements/{EngagementId}",
-            "client" when !string.IsNullOrEmpty(ClientId) => $"/clients/{ClientId}",
-            "workitems" => BuildWorkItemsListUrl(),
-            _ => BuildWorkItemsListUrl() // Default fallback
-        };
-    }
-
-    private string BuildWorkItemsListUrl()
-    {
-        var url = "/workitems";
-        var queryParams = new List<string>();
-        
-        if (!string.IsNullOrEmpty(EngagementId))
-        {
-            queryParams.Add($"engagementId={EngagementId}");
-        }
-        
-        if (!string.IsNullOrEmpty(ClientId))
-        {
-            queryParams.Add($"clientId={ClientId}");
-        }
-        
-        if (queryParams.Any())
-        {
-            url += "?" + string.Join("&", queryParams);
-        }
-        
-        return url;
-    }
-
-    private static string GetErrorMessage(ErrorCode errorCode)
-    {
-        return errorCode switch
-        {
-            ErrorCode.NotFound => "Work item not found.",
-            ErrorCode.DataStoreQueryFailure => "Failed to query work item details from the data store.",
-            ErrorCode.BadRequest => "Invalid request to load work item details.",
-            _ => "Failed to load work item details."
-        };
-    }
-}

@@ -15,7 +15,7 @@ namespace EastSeat.ResourceIdea.Application.Features.JobPositions.Specifications
 /// <summary>
 /// Specification for retrieving job position by ID.
 /// </summary>
-public class JobPositionByIdSpecification (JobPositionId jobPositionId, TenantId tenantId)
+public class JobPositionByIdSpecification(JobPositionId jobPositionId, TenantId tenantId)
     : BaseSpecification<JobPosition>
 {
     private readonly JobPositionId _jobPositionId = jobPositionId;

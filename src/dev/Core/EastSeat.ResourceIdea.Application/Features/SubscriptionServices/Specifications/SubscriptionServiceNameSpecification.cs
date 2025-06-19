@@ -9,9 +9,9 @@ namespace EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Specif
 /// <summary>
 /// Specification used to filter subscription services whose name contains the filter provided.
 /// </summary>
-/// <param name="filters">Values used by the specification to filter the values returned 
+/// <param name="filters">Values used by the specification to filter the values returned
 /// when querying for subscription services.</param>
-public sealed class SubscriptionServiceNameSpecification (Dictionary<string, string>? filters) : BaseSpecification<SubscriptionService>
+public sealed class SubscriptionServiceNameSpecification(Dictionary<string, string>? filters) : BaseSpecification<SubscriptionService>
 {
     private readonly Dictionary<string, string>? _filters = filters;
 

@@ -17,7 +17,7 @@ public partial class Engagements : ComponentBase
 {
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
     [Inject] private IMediator Mediator { get; set; } = null!;
-    
+
     private bool IsLoadingPage { get; set; } = true;
     private PagedListResponse<EngagementModel>? TenantEngagements { get; set; }
     private int CurrentPage { get; set; } = 1;
@@ -42,8 +42,8 @@ public partial class Engagements : ComponentBase
 
         var response = await Mediator.Send(query);
         // Handle error response: For now, just set to null if the condition fails.
-        TenantEngagements = response.IsSuccess && response.Content.HasValue 
-            ? response.Content.Value 
+        TenantEngagements = response.IsSuccess && response.Content.HasValue
+            ? response.Content.Value
             : null;
 
         IsLoadingPage = false;

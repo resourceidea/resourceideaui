@@ -18,7 +18,7 @@ public sealed class PagedListResponse<T> where T : class
     /// <summary>Maximum number of items on a page.</summary>
     public int PageSize { get; set; } = 10;
 
-    /// <summary>Total number of pages for the paged list.</summary>        
+    /// <summary>Total number of pages for the paged list.</summary>
     public int Pages => (int)Math.Ceiling(TotalCount / (double)PageSize);
 
     /// <summary>Paged list has next page.</summary>

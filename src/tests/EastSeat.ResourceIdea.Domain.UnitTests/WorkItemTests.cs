@@ -27,7 +27,7 @@ namespace EastSeat.ResourceIdea.Domain.UnitTests.WorkItems
                 StartDate = DateTimeOffset.UtcNow.AddDays(-5),
                 CompletedDate = DateTimeOffset.UtcNow,
                 Status = WorkItemStatus.Completed,
-                Priority = 1,
+                Priority = Priority.Critical,
                 AssignedToId = EmployeeId.Create(Guid.NewGuid())
             };
 
