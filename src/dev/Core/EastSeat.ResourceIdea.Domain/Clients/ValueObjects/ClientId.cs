@@ -42,7 +42,7 @@ public readonly record struct ClientId
     /// </summary>
     /// <param name="value">Client ID as a string.</param>
     /// <returns>Instance of <see cref="ClientId"/>.</returns>
-    /// <exception cref="InvalidEntityIdException">Thrown when creating a new <see cref="ClientId"/> 
+    /// <exception cref="InvalidEntityIdException">Thrown when creating a new <see cref="ClientId"/>
     /// from a string that cannot be parsed to a Guid.</exception>
     public static ClientId Create(string value)
     {

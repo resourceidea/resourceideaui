@@ -38,7 +38,7 @@ public readonly record struct EngagementId
     /// </summary>
     /// <param name="value">Engagement ID as a string.</param>
     /// <returns>Instance of <see cref="EngagementId"/>.</returns>
-    /// <exception cref="InvalidEntityIdException">Thrown when creating a new <see cref="EngagementId"/> 
+    /// <exception cref="InvalidEntityIdException">Thrown when creating a new <see cref="EngagementId"/>
     /// from a string that cannot be parsed to a Guid.</exception>
     public static EngagementId Create(string value)
     {

@@ -22,7 +22,7 @@ public partial class CreateDepartment : ComponentBase
             errorMessage = string.Join(", ", validationResponse.ValidationFailureMessages);
             return;
         }
-        
+
         var result = await Mediator.Send(Command);
         if (result != null && result.IsSuccess)
         {

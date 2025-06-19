@@ -131,7 +131,7 @@ public enum ErrorCode
 
     /// <summary>
     /// Empty entity returned from repository on create tenant.
-    /// </summary>  
+    /// </summary>
     EmptyEntityOnCreateTenant,
 
     /// <summary>

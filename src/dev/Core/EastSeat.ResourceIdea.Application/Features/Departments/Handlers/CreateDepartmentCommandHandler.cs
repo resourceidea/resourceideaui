@@ -17,7 +17,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
 /// <summary>
 /// Handles the command to create a department.
 /// </summary>
-public sealed class CreateDepartmentCommandHandler (
+public sealed class CreateDepartmentCommandHandler(
     ITenantsService tenantsService,
     IDepartmentsService departmentsService)
     : IRequestHandler<CreateDepartmentCommand, ResourceIdeaResponse<DepartmentModel>>

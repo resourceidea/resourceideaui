@@ -11,11 +11,11 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers;
 
-public sealed class UpdateEngagementCommandHandler (IEngagementsService engagementsService)
+public sealed class UpdateEngagementCommandHandler(IEngagementsService engagementsService)
     : IRequestHandler<UpdateEngagementCommand, ResourceIdeaResponse<EngagementModel>>
 {
     private readonly IEngagementsService _engagementsService = engagementsService;
-    
+
     /// <inheritdoc />
     public async Task<ResourceIdeaResponse<EngagementModel>> Handle(
         UpdateEngagementCommand request,
@@ -23,7 +23,7 @@ public sealed class UpdateEngagementCommandHandler (IEngagementsService engageme
     {
         UpdateEngagementCommandValidator updateEngagementValidator = new();
         var validationResult = updateEngagementValidator.Validate(request);
-        
+
         if (validationResult.IsValid is false || validationResult.Errors.Count > 0)
         {
             return ResourceIdeaResponse<EngagementModel>.Failure(ErrorCode.UpdateEngagementCommandValidationFailure);

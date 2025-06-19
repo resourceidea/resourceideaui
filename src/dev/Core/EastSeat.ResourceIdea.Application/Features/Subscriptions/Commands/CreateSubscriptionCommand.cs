@@ -10,7 +10,8 @@ namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Commands;
 /// <summary>
 /// Command to create a subscription.
 /// </summary>
-public sealed class CreateSubscriptionCommand : IRequest<ResourceIdeaResponse<SubscriptionModel>> {
+public sealed class CreateSubscriptionCommand : IRequest<ResourceIdeaResponse<SubscriptionModel>>
+{
     /// <summary>
     /// DepartmentId of the tenant to create the subscription for.
     /// </summary>
@@ -20,4 +21,4 @@ public sealed class CreateSubscriptionCommand : IRequest<ResourceIdeaResponse<Su
     /// DepartmentId of the subscription service to subscribe to.
     /// </summary>
     public SubscriptionServiceId SubscriptionServiceId { get; set; }
- }
+}

@@ -37,20 +37,20 @@ public partial class AddEngagement : ComponentBase
     private string SelectedClientId { get; set; } = string.Empty;
     private bool IsClientPreSelected => ClientId.HasValue && ClientId.Value != Guid.Empty;
     private bool HasAnyClients => Clients != null && Clients.Items.Count > 0;
-    private bool CanSubmit => HasAnyClients 
-        && !string.IsNullOrEmpty(SelectedClientId) 
+    private bool CanSubmit => HasAnyClients
+        && !string.IsNullOrEmpty(SelectedClientId)
         && !string.IsNullOrWhiteSpace(Command.Title)
         && !string.IsNullOrWhiteSpace(Command.Description);
 
     protected override async Task OnInitializedAsync()
     {
         await LoadClients();
-        
+
         if (IsClientPreSelected)
         {
             SelectedClientId = ClientId!.Value.ToString();
         }
-        
+
         IsLoading = false;
         StateHasChanged();
     }
@@ -124,7 +124,7 @@ public partial class AddEngagement : ComponentBase
         }
 
         Command.TenantId = ResourceIdeaRequestContext.Tenant;
-        
+
         ValidationResponse commandValidation = Command.Validate();
         if (!commandValidation.IsValid && commandValidation.ValidationFailureMessages.Any())
         {
@@ -137,7 +137,7 @@ public partial class AddEngagement : ComponentBase
         if (response.IsSuccess)
         {
             NotificationService.ShowSuccessNotification("Engagement added successfully.");
-            
+
             // Navigate based on whether client ID was provided in the query parameter
             if (IsClientPreSelected)
             {

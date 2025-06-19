@@ -14,7 +14,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers;
 /// </summary>
 /// <param name="engagementsService">Engagement repository.</param>
 /// <param name="mapper">Object mapper.</param>
-public sealed class GetEngagementByIdQueryHandler (IEngagementsService engagementsService)
+public sealed class GetEngagementByIdQueryHandler(IEngagementsService engagementsService)
     : IRequestHandler<GetEngagementByIdQuery, ResourceIdeaResponse<EngagementModel>>
 {
     private readonly IEngagementsService _engagementsService = engagementsService;
