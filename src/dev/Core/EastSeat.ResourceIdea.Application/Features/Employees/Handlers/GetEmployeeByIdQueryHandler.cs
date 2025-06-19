@@ -38,7 +38,7 @@ public sealed class GetEmployeeByIdQueryHandler(IEmployeeService employeeService
         {
             return ResourceIdeaResponse<EmployeeModel>.Failure(employeeQuery.Error);
         }
-        
+
         if (!employeeQuery.Content.HasValue)
         {
             return ResourceIdeaResponse<EmployeeModel>.Failure(ErrorCode.EmployeeNotFound);

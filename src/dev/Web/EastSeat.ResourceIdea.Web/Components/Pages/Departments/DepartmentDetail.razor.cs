@@ -137,7 +137,7 @@ public partial class DepartmentDetail : ComponentBase
         }
         else
         {
-            // TODO: Log failure to query for department.                
+            // TODO: Log failure to query for department.
             DisplayMessage(message: "Failed to query for department.", isError: true);
         }
     }

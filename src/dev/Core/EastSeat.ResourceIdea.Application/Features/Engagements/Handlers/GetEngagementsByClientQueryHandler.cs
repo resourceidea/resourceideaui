@@ -25,11 +25,11 @@ public class GetEngagementsByClientQueryHandler(IEngagementsService engagementsS
         // For now, we'll get all matching engagements and handle sorting/paging in memory
         // In a production system, this should be handled at the database level
         var result = await _engagementsService.GetPagedListAsync(
-            1, 
+            1,
             int.MaxValue, // Get all records for now to handle sorting
             getEngagementsByClientSpecification,
             cancellationToken);
-            
+
         if (result.IsFailure)
         {
             return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.Failure(result.Error);
@@ -41,13 +41,13 @@ public class GetEngagementsByClientQueryHandler(IEngagementsService engagementsS
         }
 
         var engagements = result.Content.Value.ToResourceIdeaResponse().Content.Value;
-        
+
         // Apply sorting
         var sortedEngagements = ApplySorting(engagements.Items, request.SortField, request.SortDirection);
-        
+
         // Apply paging
         var pagedResult = ApplyPaging(sortedEngagements, request.PageNumber, request.PageSize);
-        
+
         return ResourceIdeaResponse<PagedListResponse<EngagementModel>>.Success(pagedResult);
     }
 
@@ -72,7 +72,7 @@ public class GetEngagementsByClientQueryHandler(IEngagementsService engagementsS
     {
         var totalCount = engagements.Count();
         var items = engagements.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-        
+
         return new PagedListResponse<EngagementModel>
         {
             Items = items,

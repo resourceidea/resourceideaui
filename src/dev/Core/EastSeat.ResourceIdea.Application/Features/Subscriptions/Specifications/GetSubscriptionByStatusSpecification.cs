@@ -6,7 +6,7 @@ using EastSeat.ResourceIdea.Domain.Types;
 
 namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Specifications;
 
-public sealed class GetSubscriptionByStatusSpecification (Dictionary<string, string>? filters) : BaseSpecification<Subscription>
+public sealed class GetSubscriptionByStatusSpecification(Dictionary<string, string>? filters) : BaseSpecification<Subscription>
 {
     private readonly Dictionary<string, string>? _filters = filters;
 

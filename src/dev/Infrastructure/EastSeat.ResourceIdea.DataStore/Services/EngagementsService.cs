@@ -220,7 +220,7 @@ public sealed class EngagementsService(ResourceIdeaDBContext dbContext) : IEngag
             // Update properties (engagement ID and client ID are read-only as per requirements)
             existingEngagement.Description = entity.Description;
             existingEngagement.EngagementStatus = entity.EngagementStatus;
-            
+
             // Handle nullable dates - only update if not MinValue (which represents null in our UI)
             existingEngagement.StartDate = entity.StartDate == DateTimeOffset.MinValue
                 ? null

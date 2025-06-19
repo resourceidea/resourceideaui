@@ -22,13 +22,13 @@ public partial class JobPositionDetail : ComponentBase
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
-    
+
     private string? message;
     private bool isErrorMessage;
     private bool IsLoadingModelData = true;
 
     public JobPositionModel Model { get; set; } = new();
-    
+
     protected override async Task OnInitializedAsync()
     {
         await LoadJobPositionData();
@@ -37,7 +37,7 @@ public partial class JobPositionDetail : ComponentBase
     private async Task LoadJobPositionData()
     {
         IsLoadingModelData = true;
-        
+
         try
         {
             var jobPositionId = JobPositionId.Create(Id);

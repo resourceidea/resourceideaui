@@ -135,7 +135,7 @@ public class CreateWorkItemCommandHandlerTests
 
         // Assert
         _mockWorkItemsService.Verify(s => s.AddAsync(
-            It.Is<WorkItem>(w => 
+            It.Is<WorkItem>(w =>
                 w.Title == command.Title &&
                 w.Description == command.Description &&
                 w.EngagementId == command.EngagementId &&

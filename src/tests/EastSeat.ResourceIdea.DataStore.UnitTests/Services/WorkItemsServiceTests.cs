@@ -58,7 +58,7 @@ public class WorkItemsServiceTests : IDisposable
     {
         // Arrange
         var workItem = CreateTestWorkItem();
-        
+
         // Dispose the context to simulate a database error
         await _context.DisposeAsync();
 
@@ -96,7 +96,7 @@ public class WorkItemsServiceTests : IDisposable
     {
         // Arrange
         var workItem = CreateTestWorkItem();
-        
+
         // Dispose the context to simulate a database error
         await _context.DisposeAsync();
 
@@ -182,7 +182,7 @@ public class WorkItemsServiceTests : IDisposable
         // Assert
         Assert.True(result.IsSuccess);
         Assert.True(result.Content.HasValue);
-        
+
         var pagedResponse = result.Content.Value;
         Assert.Equal(1, pagedResponse.CurrentPage);
         Assert.Equal(2, pagedResponse.PageSize);
@@ -214,7 +214,7 @@ public class WorkItemsServiceTests : IDisposable
         // Assert
         Assert.True(result.IsSuccess);
         Assert.True(result.Content.HasValue);
-        
+
         var pagedResponse = result.Content.Value;
         Assert.Equal(2, pagedResponse.TotalCount);
         Assert.Equal(2, pagedResponse.Items.Count);
@@ -254,7 +254,7 @@ public class WorkItemsServiceTests : IDisposable
     {
         // Arrange
         var workItem = CreateTestWorkItem();
-        
+
         // Dispose the context to simulate a database error
         await _context.DisposeAsync();
 

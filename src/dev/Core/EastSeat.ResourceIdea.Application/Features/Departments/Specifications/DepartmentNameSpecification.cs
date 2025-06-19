@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace EastSeat.ResourceIdea.Application.Features.Departments.Specifications;
 
-public sealed class DepartmentNameSpecification (Dictionary<string, string> filters)
+public sealed class DepartmentNameSpecification(Dictionary<string, string> filters)
     : BaseStringSpecification<Department>(filters)
 {
     protected override Expression<Func<Department, bool>> GetExpression()
