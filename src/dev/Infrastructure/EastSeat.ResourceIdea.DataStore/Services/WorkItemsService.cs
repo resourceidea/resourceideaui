@@ -169,11 +169,27 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
     {
         try
         {
-            _dbContext.WorkItems.Update(entity);
+            WorkItem? existingWorkItem = await _dbContext.WorkItems
+            .FirstOrDefaultAsync(wi => wi.Id == entity.Id
+                              && wi.TenantId == entity.TenantId
+                              && wi.EngagementId == entity.EngagementId, cancellationToken);
+            if (existingWorkItem == null)
+            {
+                return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.NotFound);
+            }
+
+            existingWorkItem.Title = entity.Title;
+            existingWorkItem.Description = entity.Description;
+            existingWorkItem.Status = entity.Status;
+            existingWorkItem.Priority = entity.Priority;
+            existingWorkItem.StartDate = entity.StartDate;
+            existingWorkItem.CompletedDate = entity.CompletedDate;
+
+            _dbContext.WorkItems.Update(existingWorkItem);
             int result = await _dbContext.SaveChangesAsync(cancellationToken);
             if (result > 0)
             {
-                return ResourceIdeaResponse<WorkItem>.Success(entity);
+                return ResourceIdeaResponse<WorkItem>.Success(existingWorkItem);
             }
 
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
