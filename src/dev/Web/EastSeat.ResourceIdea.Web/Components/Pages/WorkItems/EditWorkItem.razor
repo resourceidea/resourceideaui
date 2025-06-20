@@ -326,12 +326,12 @@ else if (IsWorkItemCompleted)
                 NotificationService.ShowErrorNotification("Failed to update work item details. Please try again.");
             }
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException)
         {
             NotificationService.ShowErrorNotification("An invalid operation occurred. Please check your input and try again.");
             // Log the exception if necessary
         }
-        catch (TaskCanceledException ex)
+        catch (TaskCanceledException)
         {
             NotificationService.ShowErrorNotification("The operation was canceled. Please try again.");
             // Log the exception if necessary
