@@ -10,18 +10,18 @@ $env:MIGRATION_Migration__EnableDetailedLogging = "true"
 
 # Build the migration application
 Write-Host "Building migration application..." -ForegroundColor Green
-dotnet build src/Infrastructure/EastSeat.ResourceIdea.Migration/EastSeat.ResourceIdea.Migration.csproj
+dotnet build src/dev/Infrastructure/EastSeat.ResourceIdea.Migration/EastSeat.ResourceIdea.Migration.csproj
 
 # Show help
 Write-Host "Migration tool help:" -ForegroundColor Green
-dotnet run --project src/Infrastructure/EastSeat.ResourceIdea.Migration/EastSeat.ResourceIdea.Migration.csproj -- --help
+dotnet run --project src/dev/Infrastructure/EastSeat.ResourceIdea.Migration/EastSeat.ResourceIdea.Migration.csproj -- --help
 
 # Example commands
 Write-Host "To migrate all tables, run:" -ForegroundColor Yellow
-Write-Host "dotnet run --project src/Infrastructure/EastSeat.ResourceIdea.Migration/EastSeat.ResourceIdea.Migration.csproj -- migrate-all" -ForegroundColor Cyan
+Write-Host "dotnet run --project src/dev/Infrastructure/EastSeat.ResourceIdea.Migration/EastSeat.ResourceIdea.Migration.csproj -- migrate-all" -ForegroundColor Cyan
 
 Write-Host "To migrate a specific table, run:" -ForegroundColor Yellow
-Write-Host "dotnet run --project src/Infrastructure/EastSeat.ResourceIdea.Migration/EastSeat.ResourceIdea.Migration.csproj -- migrate-table `"TableName`"" -ForegroundColor Cyan
+Write-Host "dotnet run --project src/dev/Infrastructure/EastSeat.ResourceIdea.Migration/EastSeat.ResourceIdea.Migration.csproj -- migrate-table `"TableName`"" -ForegroundColor Cyan
 
 Write-Host "Note: Ensure your Azure Key Vault contains the following secrets:" -ForegroundColor Red
 Write-Host "  - source-database-connection-string" -ForegroundColor Red

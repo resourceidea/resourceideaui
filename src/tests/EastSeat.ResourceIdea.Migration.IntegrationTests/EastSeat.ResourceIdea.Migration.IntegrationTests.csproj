@@ -25,9 +25,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
     <PackageReference Include="Testcontainers.MsSql" Version="4.0.0" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\EastSeat.ResourceIdea.Migration\EastSeat.ResourceIdea.Migration.csproj" />
+    <ProjectReference Include="..\..\dev\Infrastructure\EastSeat.ResourceIdea.Migration\EastSeat.ResourceIdea.Migration.csproj" />
   </ItemGroup>
 
 </Project>

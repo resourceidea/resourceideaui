@@ -6,9 +6,7 @@
     <Project Path="src/dev/Core/EastSeat.ResourceIdea.Domain/EastSeat.ResourceIdea.Domain.csproj" />
   </Folder>  <Folder Name="/src/dev/Infrastructure/">
     <Project Path="src/dev/Infrastructure/EastSeat.ResourceIdea.DataStore/EastSeat.ResourceIdea.DataStore.csproj" />
-  </Folder>
-  <Folder Name="/src/Infrastructure/">
-    <Project Path="src/Infrastructure/EastSeat.ResourceIdea.Migration/EastSeat.ResourceIdea.Migration.csproj" />
+    <Project Path="src/dev/Infrastructure/EastSeat.ResourceIdea.Migration/EastSeat.ResourceIdea.Migration.csproj" />
   </Folder>
   <Folder Name="/src/dev/Web/">
     <Project Path="src/dev/Web/EastSeat.ResourceIdea.Web/EastSeat.ResourceIdea.Web.csproj" />

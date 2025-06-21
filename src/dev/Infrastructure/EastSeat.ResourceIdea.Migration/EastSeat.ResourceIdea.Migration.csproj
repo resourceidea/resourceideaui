@@ -22,9 +22,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0" />
     <PackageReference Include="Polly" Version="8.5.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\dev\Core\EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj" />
+  </ItemGroup>  <ItemGroup>
+    <ProjectReference Include="..\..\Core\EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
