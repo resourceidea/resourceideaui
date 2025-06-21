@@ -31,7 +31,15 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme = IdentityConstants.ApplicationScheme;
     options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
 })
-.AddIdentityCookies();
+.AddIdentityCookies(options =>
+{
+    options.ApplicationCookie?.Configure(config =>
+    {
+        config.LoginPath = "/login";
+        config.LogoutPath = "/logout";
+        config.AccessDeniedPath = "/login";
+    });
+});
 
 // Add authorization services
 builder.Services.AddAuthorizationCore();
@@ -41,12 +49,19 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Creat
 
 var app = builder.Build();
 
-// Seed test user in development
-if (app.Environment.IsDevelopment())
+// Seed test user in development only, not during testing
+if (app.Environment.IsDevelopment() && !app.Environment.EnvironmentName.Contains("Test"))
 {
-    using var scope = app.Services.CreateScope();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-    await SeedTestUserAsync(userManager);
+    try
+    {
+        using var scope = app.Services.CreateScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        await SeedTestUserAsync(userManager);
+    }
+    catch
+    {
+        // Ignore seeding errors in test environments
+    }
 }
 
 // Configure the HTTP request pipeline.
@@ -72,7 +87,7 @@ app.Run();
 
 static async Task SeedTestUserAsync(UserManager<ApplicationUser> userManager)
 {
-    var testUser = await userManager.FindByEmailAsync("test@example.com");
+    var testUser = await userManager.FindByNameAsync("test@example.com");
     if (testUser == null)
     {
         testUser = new ApplicationUser
@@ -93,3 +108,6 @@ static async Task SeedTestUserAsync(UserManager<ApplicationUser> userManager)
         }
     }
 }
+
+// Make Program accessible for testing
+public partial class Program { }
