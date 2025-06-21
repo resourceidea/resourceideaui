@@ -101,13 +101,29 @@ public sealed class DatabaseMigrationService : IDatabaseMigrationService
             _logger.LogInformation("Successfully migrated {RecordsProcessed} records from table: {TableName} in {Duration}ms",
                 result.RecordsProcessed, tableName, result.Duration.TotalMilliseconds);
         }
+        catch (SqlException sqlEx)
+        {
+            result.Success = false;
+            result.ErrorMessage = $"Database error: {sqlEx.Message}";
+            result.EndTime = DateTime.UtcNow;
+
+            _logger.LogError(sqlEx, "Database error while migrating table: {TableName}", tableName);
+        }
+        catch (OperationCanceledException canceledEx) when (cancellationToken.IsCancellationRequested)
+        {
+            result.Success = false;
+            result.ErrorMessage = "Migration was canceled.";
+            result.EndTime = DateTime.UtcNow;
+
+            _logger.LogWarning(canceledEx, "Migration was canceled for table: {TableName}", tableName);
+        }
         catch (Exception ex)
         {
             result.Success = false;
-            result.ErrorMessage = ex.Message;
+            result.ErrorMessage = $"Unexpected error: {ex.Message}";
             result.EndTime = DateTime.UtcNow;
 
-            _logger.LogError(ex, "Failed to migrate table: {TableName}", tableName);
+            _logger.LogError(ex, "Unexpected error while migrating table: {TableName}", tableName);
         }
 
         return result;
