@@ -51,8 +51,39 @@ public class ExceptionHandlingService : IExceptionHandlingService
             var result = await operation();
             return ExceptionHandlingResult<T>.Success(result);
         }
+        catch (TaskCanceledException ex)
+        {
+            var errorMessage = await HandleExceptionAsync(ex, context);
+            return ExceptionHandlingResult<T>.Failure(errorMessage, ex);
+        }
+        catch (TimeoutException ex)
+        {
+            var errorMessage = await HandleExceptionAsync(ex, context);
+            return ExceptionHandlingResult<T>.Failure(errorMessage, ex);
+        }
+        catch (ArgumentException ex)
+        {
+            var errorMessage = await HandleExceptionAsync(ex, context);
+            return ExceptionHandlingResult<T>.Failure(errorMessage, ex);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            var errorMessage = await HandleExceptionAsync(ex, context);
+            return ExceptionHandlingResult<T>.Failure(errorMessage, ex);
+        }
+        catch (ResourceIdeaException ex)
+        {
+            var errorMessage = await HandleExceptionAsync(ex, context);
+            return ExceptionHandlingResult<T>.Failure(errorMessage, ex);
+        }
         catch (Exception ex)
         {
+            // Rethrow critical exceptions
+            if (ex is OutOfMemoryException || ex is StackOverflowException || ex is ThreadAbortException)
+            {
+                throw;
+            }
+            
             var errorMessage = await HandleExceptionAsync(ex, context);
             return ExceptionHandlingResult<T>.Failure(errorMessage, ex);
         }
