@@ -9,22 +9,20 @@ using EastSeat.ResourceIdea.Domain.Employees.Models;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.Employees;
 
-public partial class EmployeesTimeline : ComponentBase
+public partial class EmployeesTimeline : ResourceIdeaComponentBase
 {
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
 
-    private bool IsLoadingPage { get; set; } = true;
-    private bool HasError { get; set; }
-    private string ErrorMessage { get; set; } = string.Empty;
     private List<EmployeeTimelineModel>? EmployeeTimelines { get; set; }
 
     // Timeline controls
@@ -54,17 +52,11 @@ public partial class EmployeesTimeline : ComponentBase
         EndYear = endDate.Year;
 
         await LoadTimelineData();
-        IsLoadingPage = false;
-        StateHasChanged();
     }
 
     private async Task LoadTimelineData()
     {
-        IsLoadingPage = true;
-        HasError = false;
-        StateHasChanged();
-
-        try
+        await ExecuteAsync(async () =>
         {
             var startDate = new DateOnly(StartYear, StartMonth, 1);
             var endDate = new DateOnly(EndYear, EndMonth, DateTime.DaysInMonth(EndYear, EndMonth));
@@ -82,40 +74,9 @@ public partial class EmployeesTimeline : ComponentBase
             }
             else
             {
-                HasError = true;
-                ErrorMessage = "Failed to load employees timeline. Please try again.";
                 EmployeeTimelines = null;
             }
-        }
-        catch (TaskCanceledException ex)
-        {
-            HasError = true;
-            ErrorMessage = "The operation was canceled. Please try again.";
-            Console.Error.WriteLine($"Task canceled: {ex}");
-        }
-        catch (InvalidOperationException ex)
-        {
-            HasError = true;
-            ErrorMessage = "An invalid operation occurred while loading the timeline.";
-            Console.Error.WriteLine($"Invalid operation: {ex}");
-        }
-        catch (ArgumentException ex)
-        {
-            HasError = true;
-            ErrorMessage = "An error occurred due to invalid input. Please check your date range.";
-            Console.Error.WriteLine($"Argument error: {ex}");
-        }
-        catch (Exception ex)
-        {
-            HasError = true;
-            ErrorMessage = "An unexpected error occurred while loading the timeline.";
-            Console.Error.WriteLine($"Unexpected error: {ex}");
-        }
-        finally
-        {
-            IsLoadingPage = false;
-            StateHasChanged();
-        }
+        }, "Loading employees timeline");
     }
 
     private void NavigateToWorkItem(Guid workItemId)
