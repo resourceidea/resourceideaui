@@ -57,15 +57,21 @@ var app = builder.Build();
 // Seed test user in development only, not during testing
 if (app.Environment.IsDevelopment() && !app.Environment.EnvironmentName.Contains("Test"))
 {
+    using var scope = app.Services.CreateScope();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    
     try
     {
-        using var scope = app.Services.CreateScope();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         await SeedTestUserAsync(userManager);
     }
-    catch
+    catch (InvalidOperationException ex)
     {
-        // Ignore seeding errors in test environments
+        logger.LogWarning(ex, "Failed to seed test user during development startup - database may not be ready");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Unexpected error occurred while seeding test user");
     }
 }
 
