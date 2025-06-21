@@ -9,12 +9,13 @@ using EastSeat.ResourceIdea.Application.Features.JobPositions.Queries;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.JobPositions;
 
-public partial class JobPositionDetail : ComponentBase
+public partial class JobPositionDetail : ResourceIdeaComponentBase
 {
     [Parameter]
     public Guid Id { get; set; }
@@ -37,8 +38,7 @@ public partial class JobPositionDetail : ComponentBase
     private async Task LoadJobPositionData()
     {
         IsLoadingModelData = true;
-
-        try
+        await ExecuteAsync(async () =>
         {
             var jobPositionId = JobPositionId.Create(Id);
             var query = new GetJobPositionByIdQuery
@@ -53,24 +53,18 @@ public partial class JobPositionDetail : ComponentBase
             {
                 message = "Failed to load job position details";
                 isErrorMessage = true;
+                return;
             }
 
             Model = response.Content.Value;
-        }
-        catch (Exception ex)
-        {
-            message = $"Unexpected error: {ex.Message}";
-            isErrorMessage = true;
-        }
-        finally
-        {
-            IsLoadingModelData = false;
-        }
+        }, "Loading job position data", manageLoadingState: false);
+
+        IsLoadingModelData = false;
     }
 
     private async Task HandleValidSubmit()
     {
-        try
+        await ExecuteAsync(async () =>
         {
             var command = new UpdateJobPositionCommand
             {
@@ -105,11 +99,6 @@ public partial class JobPositionDetail : ComponentBase
                 message = "Failed to update job position";
                 isErrorMessage = true;
             }
-        }
-        catch (Exception ex)
-        {
-            message = $"Error updating job position: {ex.Message}";
-            isErrorMessage = true;
-        }
+        }, "Updating job position", manageLoadingState: false);
     }
 }
