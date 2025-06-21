@@ -142,6 +142,16 @@ public sealed class Program
             logger.LogWarning("Migration was cancelled by user request");
             Environment.Exit(130); // Standard exit code for process terminated by Ctrl+C
         }
+        catch (InvalidOperationException ex)
+        {
+            logger.LogError(ex, "An invalid operation occurred during migration");
+            Environment.Exit(1);
+        }
+        catch (TimeoutException ex)
+        {
+            logger.LogError(ex, "The migration process timed out");
+            Environment.Exit(1);
+        }
         catch (Exception ex)
         {
             logger.LogCritical(ex, "An unexpected error occurred during migration");
