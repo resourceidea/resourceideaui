@@ -28,7 +28,9 @@ public sealed class Program
 
         // Execute the command
         return await rootCommand.InvokeAsync(args);
-    }    /// <summary>
+    }
+    
+    /// <summary>
          /// Creates the host builder with configuration and dependency injection.
          /// </summary>
          /// <param name="args">Command line arguments.</param>
