@@ -15,6 +15,7 @@ using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.Web.Services;
+using EastSeat.ResourceIdea.Web.Components.Base;
 
 using MediatR;
 
@@ -23,7 +24,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.WorkItems;
 
-public partial class AddWorkItem : ComponentBase
+public partial class AddWorkItem : ResourceIdeaComponentBase
 {
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
@@ -41,9 +42,6 @@ public partial class AddWorkItem : ComponentBase
     public CreateWorkItemCommand Command { get; set; } = new();
     private PagedListResponse<EngagementModel>? Engagements { get; set; }
     private PagedListResponse<TenantEmployeeModel>? Employees { get; set; }
-    private bool IsLoading { get; set; } = true;
-    private bool HasError { get; set; } = false;
-    private string ErrorMessage { get; set; } = string.Empty;
     private string SelectedEngagementId { get; set; } = string.Empty;
     private string SelectedAssignedToId { get; set; } = string.Empty;
     private string NavigationSource { get; set; } = string.Empty;
@@ -86,74 +84,54 @@ public partial class AddWorkItem : ComponentBase
             }
         }
 
-        await LoadEngagements();
-        await LoadEmployees();
-
-        if (IsEngagementPreSelected)
+        await ExecuteAsync(async () =>
         {
-            SelectedEngagementId = EngagementId!.Value.ToString();
-        }
+            await LoadEngagements();
+            await LoadEmployees();
 
-        IsLoading = false;
-        StateHasChanged();
+            if (IsEngagementPreSelected)
+            {
+                SelectedEngagementId = EngagementId!.Value.ToString();
+            }
+        }, "Loading work item creation data");
     }
 
     private async Task LoadEngagements()
     {
-        try
+        if (ClientId.HasValue)
         {
-            if (ClientId.HasValue)
+            // Load engagements for specific client
+            var clientQuery = new GetEngagementsByClientQuery(1, 100)
             {
-                // Load engagements for specific client
-                var clientQuery = new GetEngagementsByClientQuery(1, 100)
-                {
-                    ClientId = EastSeat.ResourceIdea.Domain.Clients.ValueObjects.ClientId.Create(ClientId.Value)
-                };
-                clientQuery.TenantId = ResourceIdeaRequestContext.Tenant;
+                ClientId = EastSeat.ResourceIdea.Domain.Clients.ValueObjects.ClientId.Create(ClientId.Value)
+            };
+            clientQuery.TenantId = ResourceIdeaRequestContext.Tenant;
 
-                var response = await Mediator.Send(clientQuery);
-                if (response.IsSuccess && response.Content.HasValue)
-                {
-                    Engagements = response.Content.Value;
-                }
-                else
-                {
-                    HasError = true;
-                    ErrorMessage = "Failed to load engagements for the selected client. Please try again later.";
-                }
+            var response = await Mediator.Send(clientQuery);
+            if (response.IsSuccess && response.Content.HasValue)
+            {
+                Engagements = response.Content.Value;
             }
             else
             {
-                // Load all engagements for the tenant
-                var query = new GetAllEngagementsQuery(1, 100);
-                query.TenantId = ResourceIdeaRequestContext.Tenant;
-
-                var response = await Mediator.Send(query);
-                if (response.IsSuccess && response.Content.HasValue)
-                {
-                    Engagements = response.Content.Value;
-                }
-                else
-                {
-                    HasError = true;
-                    ErrorMessage = "Failed to load engagements. Please try again later.";
-                }
+                throw new InvalidOperationException("Failed to load engagements for the selected client. Please try again later.");
             }
         }
-        catch (InvalidOperationException)
+        else
         {
-            HasError = true;
-            ErrorMessage = "An error occurred while loading engagements. Please try again later.";
-        }
-        catch (HttpRequestException)
-        {
-            HasError = true;
-            ErrorMessage = "A network error occurred while loading engagements. Please check your connection and try again.";
-        }
-        catch (TimeoutException)
-        {
-            HasError = true;
-            ErrorMessage = "The request timed out while loading engagements. Please try again later.";
+            // Load all engagements for the tenant
+            var query = new GetAllEngagementsQuery(1, 100);
+            query.TenantId = ResourceIdeaRequestContext.Tenant;
+
+            var response = await Mediator.Send(query);
+            if (response.IsSuccess && response.Content.HasValue)
+            {
+                Engagements = response.Content.Value;
+            }
+            else
+            {
+                throw new InvalidOperationException("Failed to load engagements. Please try again later.");
+            }
         }
     }
 
@@ -173,23 +151,12 @@ public partial class AddWorkItem : ComponentBase
             {
                 Employees = response.Content.Value;
             }
-            else
-            {
-                // Note: It's OK if employees loading fails, as assignment is optional
-                Console.WriteLine("Failed to load employees, but continuing as assignment is optional.");
-            }
-        }
-        catch (InvalidOperationException)
-        {
             // Note: It's OK if employees loading fails, as assignment is optional
         }
-        catch (HttpRequestException)
+        catch
         {
             // Note: It's OK if employees loading fails, as assignment is optional
-        }
-        catch (TimeoutException)
-        {
-            // Note: It's OK if employees loading fails, as assignment is optional
+            // The centralized exception handling will log this appropriately
         }
     }
 
@@ -228,7 +195,7 @@ public partial class AddWorkItem : ComponentBase
             return;
         }
 
-        try
+        var success = await ExecuteAsync(async () =>
         {
             var response = await Mediator.Send(Command);
             if (response.IsSuccess)
@@ -238,16 +205,13 @@ public partial class AddWorkItem : ComponentBase
             }
             else
             {
-                NotificationService.ShowErrorNotification("Failed to create work item. Please try again.");
+                throw new InvalidOperationException("Failed to create work item. Please try again.");
             }
-        }
-        catch (ArgumentException)
+        }, "Creating work item", manageLoadingState: false);
+
+        if (!success)
         {
-            NotificationService.ShowErrorNotification("An error occurred while creating the work item. Please check your input and try again.");
-        }
-        catch (InvalidOperationException)
-        {
-            NotificationService.ShowErrorNotification("An unexpected error occurred. Please try again.");
+            NotificationService.ShowErrorNotification(ErrorMessage ?? "Failed to create work item. Please try again.");
         }
     }
 

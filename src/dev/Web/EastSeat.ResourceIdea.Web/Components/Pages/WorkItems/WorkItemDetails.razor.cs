@@ -4,13 +4,14 @@ using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.WorkItems.Models;
 using EastSeat.ResourceIdea.Domain.WorkItems.ValueObjects;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.WorkItems;
 
-public partial class WorkItemDetails : ComponentBase
+public partial class WorkItemDetails : ResourceIdeaComponentBase
 {
     [Inject] private IMediator Mediator { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
@@ -19,9 +20,6 @@ public partial class WorkItemDetails : ComponentBase
     [Parameter] public Guid Id { get; set; }
 
     private WorkItemModel? WorkItem { get; set; }
-    private bool IsLoading { get; set; } = true;
-    private bool HasError { get; set; }
-    private string ErrorMessage { get; set; } = string.Empty;
     private string NavigationSource { get; set; } = string.Empty;
     private string? EngagementId { get; set; }
     private string? ClientId { get; set; }
@@ -60,11 +58,7 @@ public partial class WorkItemDetails : ComponentBase
 
     private async Task LoadWorkItemAsync()
     {
-        IsLoading = true;
-        HasError = false;
-        ErrorMessage = string.Empty;
-
-        try
+        await ExecuteAsync(async () =>
         {
             var query = new GetWorkItemByIdQuery
             {
@@ -80,15 +74,9 @@ public partial class WorkItemDetails : ComponentBase
             }
             else
             {
-                HasError = true;
-                ErrorMessage = GetErrorMessage(response.Error);
+                throw new InvalidOperationException(GetErrorMessage(response.Error));
             }
-        }
-        finally
-        {
-            IsLoading = false;
-            StateHasChanged();
-        }
+        }, "Loading work item details");
     }
 
     private string GetStatusBadgeClass(WorkItemStatus status)
