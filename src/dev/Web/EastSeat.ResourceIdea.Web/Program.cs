@@ -25,6 +25,7 @@ builder.Services.AddScoped<IUserStore<ApplicationUser>, CustomUserStore>();
 builder.Services.AddIdentityCore<ApplicationUser>()
     .AddRoles<ApplicationRole>()
     .AddEntityFrameworkStores<ResourceIdeaDBContext>()
+    .AddSignInManager()
     .AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(options =>
@@ -32,7 +33,15 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme = IdentityConstants.ApplicationScheme;
     options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
 })
-.AddIdentityCookies();
+.AddIdentityCookies(options =>
+{
+    options.ApplicationCookie?.Configure(config =>
+    {
+        config.LoginPath = "/login";
+        config.LogoutPath = "/logout";
+        config.AccessDeniedPath = "/login";
+    });
+});
 
 // Add authorization services
 builder.Services.AddAuthorizationCore();
@@ -44,6 +53,27 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Creat
 builder.Services.AddScoped<IExceptionHandlingService, ExceptionHandlingService>();
 
 var app = builder.Build();
+
+// Seed test user in development only, not during testing
+if (app.Environment.IsDevelopment() && !app.Environment.EnvironmentName.Contains("Test"))
+{
+    using var scope = app.Services.CreateScope();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    
+    try
+    {
+        await SeedTestUserAsync(userManager);
+    }
+    catch (InvalidOperationException ex)
+    {
+        logger.LogWarning(ex, "Failed to seed test user during development startup - database may not be ready");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Unexpected error occurred while seeding test user");
+    }
+}
 
 // Add global exception handling middleware
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
@@ -58,6 +88,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseAntiforgery();
 
 app.UseStaticFiles();
@@ -65,3 +98,30 @@ app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
 
 app.Run();
+
+static async Task SeedTestUserAsync(UserManager<ApplicationUser> userManager)
+{
+    var testUser = await userManager.FindByNameAsync("test@example.com");
+    if (testUser == null)
+    {
+        testUser = new ApplicationUser
+        {
+            UserName = "test@example.com",
+            Email = "test@example.com",
+            EmailConfirmed = true,
+            FirstName = "Test",
+            LastName = "User",
+            ApplicationUserId = EastSeat.ResourceIdea.Domain.Users.ValueObjects.ApplicationUserId.Create(Guid.NewGuid()),
+            TenantId = EastSeat.ResourceIdea.Domain.Tenants.ValueObjects.TenantId.Create(Guid.NewGuid())
+        };
+
+        var result = await userManager.CreateAsync(testUser, "Test123!");
+        if (!result.Succeeded)
+        {
+            throw new Exception($"Failed to create test user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+        }
+    }
+}
+
+// Make Program accessible for testing
+public partial class Program { }

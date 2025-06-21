@@ -1,6 +1,15 @@
 ﻿<Router AppAssembly="typeof(Program).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+            <NotAuthorized>
+                @{
+                    var returnUrl = Uri.EscapeDataString(Navigation.Uri);
+                    Navigation.NavigateTo($"/login?returnUrl={returnUrl}", forceLoad: true);
+                }
+            </NotAuthorized>
+        </AuthorizeRouteView>
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
 </Router>
+
+@inject NavigationManager Navigation
