@@ -25,12 +25,12 @@ public partial class EngagementDetails : ComponentBase
 
     [Parameter]
     public Guid Id { get; set; }
-    
+
     private bool IsLoading { get; set; } = true;
     private bool HasError { get; set; }
     private string ErrorMessage { get; set; } = string.Empty;
     private EngagementModel? Engagement { get; set; }
-    
+
     // Navigation tracking properties
     private string NavigationSource { get; set; } = string.Empty;
     private string? ClientId { get; set; }
@@ -40,12 +40,12 @@ public partial class EngagementDetails : ComponentBase
         // Parse query parameters to determine navigation source
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         var queryParams = QueryHelpers.ParseQuery(uri.Query);
-        
+
         if (queryParams.TryGetValue("from", out var fromValue))
         {
             NavigationSource = fromValue.ToString();
         }
-        
+
         if (queryParams.TryGetValue("clientId", out var clientIdValue))
         {
             ClientId = clientIdValue.ToString();
@@ -97,11 +97,11 @@ public partial class EngagementDetails : ComponentBase
         catch (Exception ex)
         {
             // Log unexpected exceptions and rethrow
-           HasError = true;
-           ErrorMessage = "An unexpected error occurred. Please try again later.";
-           Console.Error.WriteLine($"Unexpected error: {ex}"); // Replace with proper logging
-           throw;
-       }
+            HasError = true;
+            ErrorMessage = "An unexpected error occurred. Please try again later.";
+            Console.Error.WriteLine($"Unexpected error: {ex}"); // Replace with proper logging
+            throw;
+        }
         finally
         {
             IsLoading = false;

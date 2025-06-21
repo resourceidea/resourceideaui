@@ -26,12 +26,12 @@ public partial class ClientDetails : ComponentBase
 
     [Parameter]
     public Guid Id { get; set; }
-    
+
     private bool IsLoading { get; set; } = true;
     private bool HasError { get; set; }
     private string ErrorMessage { get; set; } = string.Empty;
     private ClientModel? Client { get; set; }
-    
+
     // Engagement list properties
     private PagedListResponse<EngagementModel>? PagedEngagementsList { get; set; }
     private bool IsLoadingEngagements { get; set; } = true;

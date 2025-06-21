@@ -36,7 +36,7 @@ public class Subscription : BaseEntity
     /// DepartmentId of the service subscribed to by the tenant.
     /// </summary>
     public SubscriptionServiceId SubscriptionServiceId { get; set; }
-    
+
     /// <summary>
     /// Type of subscription for the service.
     /// </summary>

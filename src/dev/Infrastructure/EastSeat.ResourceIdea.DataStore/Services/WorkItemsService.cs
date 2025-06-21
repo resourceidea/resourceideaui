@@ -93,16 +93,27 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
     {
         try
         {
-            var workItem = await _dbContext.WorkItems.AsNoTracking().FirstOrDefaultAsync(specification.Criteria, cancellationToken);
-            if (workItem != null)
+            // Note: Includes are temporarily removed due to test failures when related entities don't exist
+            // TODO: Fix navigation property configuration to allow optional includes
+            WorkItem? workItem = await _dbContext.WorkItems
+                .Where(specification.Criteria)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (workItem == null)
             {
-                return ResourceIdeaResponse<WorkItem>.Success(workItem);
+                return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.NotFound);
             }
 
-            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.NotFound);
+            return ResourceIdeaResponse<WorkItem>.Success(workItem);
+        }
+        catch (DbUpdateException)
+        {
+            // TODO: Log the exception using Azure ApplicationInsights
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
         catch (OperationCanceledException)
         {
+            // TODO: Log the exception using Azure ApplicationInsights
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreQueryFailure);
         }
     }
@@ -120,7 +131,7 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
         try
         {
             var query = _dbContext.WorkItems.AsQueryable();
-            
+
             if (specification.HasValue)
             {
                 query = query.Where(specification.Value.Criteria);
@@ -158,11 +169,27 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
     {
         try
         {
-            _dbContext.WorkItems.Update(entity);
+            WorkItem? existingWorkItem = await _dbContext.WorkItems
+            .FirstOrDefaultAsync(wi => wi.Id == entity.Id
+                              && wi.TenantId == entity.TenantId
+                              && wi.EngagementId == entity.EngagementId, cancellationToken);
+            if (existingWorkItem == null)
+            {
+                return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.NotFound);
+            }
+
+            existingWorkItem.Title = entity.Title;
+            existingWorkItem.Description = entity.Description;
+            existingWorkItem.Status = entity.Status;
+            existingWorkItem.Priority = entity.Priority;
+            existingWorkItem.StartDate = entity.StartDate;
+            existingWorkItem.CompletedDate = entity.CompletedDate;
+
+            _dbContext.WorkItems.Update(existingWorkItem);
             int result = await _dbContext.SaveChangesAsync(cancellationToken);
             if (result > 0)
             {
-                return ResourceIdeaResponse<WorkItem>.Success(entity);
+                return ResourceIdeaResponse<WorkItem>.Success(existingWorkItem);
             }
 
             return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);

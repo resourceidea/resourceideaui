@@ -9,7 +9,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Subscriptions.Specification
 /// <summary>
 /// Specification to filter subscriptions by type.
 /// </summary>
-public sealed class GetSubscriptionByTypeSpecification(Dictionary<string, string>? filters):
+public sealed class GetSubscriptionByTypeSpecification(Dictionary<string, string>? filters) :
     BaseSpecification<Subscription>
 {
     private readonly Dictionary<string, string>? _filters = filters;
@@ -37,7 +37,7 @@ public sealed class GetSubscriptionByTypeSpecification(Dictionary<string, string
             || string.IsNullOrEmpty(typeValue))
         {
             return Optional<string>.None;
-        } 
+        }
 
         return Optional<string>.Some(typeValue);
     }

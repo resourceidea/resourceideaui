@@ -13,10 +13,10 @@ public class ApplicationUser : IdentityUser, IApplicationUser
 {
     /// <inheritdoc />
     public ApplicationUserId ApplicationUserId { get; set; }
-    
+
     /// <inheritdoc />
     public TenantId TenantId { get; set; }
-    
+
     /// <inheritdoc />
     public string FirstName { get; set; } = string.Empty;
 

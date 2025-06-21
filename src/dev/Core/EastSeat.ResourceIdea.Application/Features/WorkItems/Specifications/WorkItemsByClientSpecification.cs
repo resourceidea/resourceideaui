@@ -19,14 +19,14 @@ namespace EastSeat.ResourceIdea.Application.Features.WorkItems.Specifications;
 /// This specification returns work items associated with engagements that belong to the provided <see cref="ClientId"/> and <see cref="TenantId"/>.
 /// </remarks>
 /// <param name="clientId">The identifier of the client to filter work items by.</param>
-/// <param name="tenantId">The identifier of the tenant to filter work items by.</param> 
+/// <param name="tenantId">The identifier of the tenant to filter work items by.</param>
 public sealed class WorkItemsByClientSpecification(ClientId clientId, TenantId tenantId) : BaseSpecification<WorkItem>
 {
     public ClientId ClientId => clientId;
     public TenantId TenantId => tenantId;
 
     public override Expression<Func<WorkItem, bool>> Criteria =>
-        workItem => workItem.Engagement != null && 
-                    workItem.Engagement.ClientId == clientId && 
+        workItem => workItem.Engagement != null &&
+                    workItem.Engagement.ClientId == clientId &&
                     workItem.TenantId == tenantId;
 }

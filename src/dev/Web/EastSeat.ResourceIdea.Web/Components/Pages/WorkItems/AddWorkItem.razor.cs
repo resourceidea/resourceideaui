@@ -51,8 +51,8 @@ public partial class AddWorkItem : ComponentBase
     private bool IsEngagementPreSelected => EngagementId.HasValue;
     private bool HasAnyEngagements => Engagements?.Items.Any() == true;
     private bool HasAnyEmployees => Employees?.Items.Any() == true;
-    private bool CanSubmit => !string.IsNullOrWhiteSpace(Command.Title) && 
-                             !string.IsNullOrWhiteSpace(SelectedEngagementId) && 
+    private bool CanSubmit => !string.IsNullOrWhiteSpace(Command.Title) &&
+                             !string.IsNullOrWhiteSpace(SelectedEngagementId) &&
                              HasAnyEngagements;
 
     protected override async Task OnInitializedAsync()
@@ -60,7 +60,7 @@ public partial class AddWorkItem : ComponentBase
         // Parse query parameters to determine navigation source and context
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         var queryParams = QueryHelpers.ParseQuery(uri.Query);
-        
+
         if (queryParams.TryGetValue("from", out var fromValue))
         {
             NavigationSource = fromValue.ToString();
@@ -88,12 +88,12 @@ public partial class AddWorkItem : ComponentBase
 
         await LoadEngagements();
         await LoadEmployees();
-        
+
         if (IsEngagementPreSelected)
         {
             SelectedEngagementId = EngagementId!.Value.ToString();
         }
-        
+
         IsLoading = false;
         StateHasChanged();
     }
@@ -219,7 +219,7 @@ public partial class AddWorkItem : ComponentBase
             : null; // Optional assignment
 
         Command.TenantId = ResourceIdeaRequestContext.Tenant;
-        
+
         ValidationResponse commandValidation = Command.Validate();
         if (!commandValidation.IsValid && commandValidation.ValidationFailureMessages.Any())
         {
@@ -263,8 +263,8 @@ public partial class AddWorkItem : ComponentBase
         {
             "client" => ClientId.HasValue ? $"/clients/{ClientId.Value}" : "/workitems",
             "engagement" => EngagementId.HasValue ? $"/engagements/{EngagementId.Value}" : "/workitems",
-            "workitems" => ClientId.HasValue && EngagementId.HasValue 
-                ? $"/workitems?clientid={ClientId.Value}&engagementid={EngagementId.Value}" 
+            "workitems" => ClientId.HasValue && EngagementId.HasValue
+                ? $"/workitems?clientid={ClientId.Value}&engagementid={EngagementId.Value}"
                 : "/workitems",
             _ => "/workitems" // Default fallback
         };

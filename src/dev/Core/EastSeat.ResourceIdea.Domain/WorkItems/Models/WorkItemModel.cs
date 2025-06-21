@@ -4,6 +4,7 @@
 // Description: Work Item model.
 // ----------------------------------------------------------------------------------
 
+using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
@@ -41,6 +42,16 @@ public record WorkItemModel
     /// Gets or sets the title of the engagement that this work item belongs to.
     /// </summary>
     public string EngagementTitle { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the client ID that this work item's engagement belongs to.
+    /// </summary>
+    public ClientId? ClientId { get; init; }
+
+    /// <summary>
+    /// Gets or sets the name of the client that this work item's engagement belongs to.
+    /// </summary>
+    public string ClientName { get; init; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the tenant ID.

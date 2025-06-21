@@ -40,6 +40,7 @@ namespace EastSeat.ResourceIdea.Web
             services.AddScoped<IEmployeeService, EmployeesService>();
             services.AddScoped<IWorkItemsService, WorkItemsService>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
+            services.AddScoped<IWorkItemsService, WorkItemsService>();
 
             services.AddScoped<NotificationService>();
         }

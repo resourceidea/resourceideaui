@@ -17,7 +17,7 @@ namespace EastSeat.ResourceIdea.Application.Features.WorkItems.Specifications;
 /// <remarks>
 /// This specification returns work items associated with the provided <see cref="TenantId"/>.
 /// </remarks>
-/// <param name="tenantId">The identifier of the tenant to filter work items by.</param> 
+/// <param name="tenantId">The identifier of the tenant to filter work items by.</param>
 public sealed class TenantWorkItemsSpecification(TenantId tenantId) : BaseSpecification<WorkItem>
 {
     public TenantId TenantId => tenantId;

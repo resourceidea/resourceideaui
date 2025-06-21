@@ -12,7 +12,7 @@ using EastSeat.ResourceIdea.Application.Mappers;
 
 namespace EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
 
-public class UpdateDepartmentCommandHandler (
+public class UpdateDepartmentCommandHandler(
     IDepartmentsService departmentsService,
     ITenantsService tenantsService)
     : IRequestHandler<UpdateDepartmentCommand, ResourceIdeaResponse<DepartmentModel>>

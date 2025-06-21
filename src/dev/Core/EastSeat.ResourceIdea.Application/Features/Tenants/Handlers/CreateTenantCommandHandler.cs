@@ -14,7 +14,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Tenants.Handlers;
 /// <summary>
 /// Handles the operations required to create a tenant.
 /// </summary>
-public sealed class CreateTenantCommandHandler (ITenantsService tenantsService)
+public sealed class CreateTenantCommandHandler(ITenantsService tenantsService)
     : IRequestHandler<CreateTenantCommand, ResourceIdeaResponse<TenantModel>>
 {
     private readonly ITenantsService _tenantsService = tenantsService;

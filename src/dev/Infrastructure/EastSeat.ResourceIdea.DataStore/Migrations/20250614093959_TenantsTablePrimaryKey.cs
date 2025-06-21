@@ -40,7 +40,7 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            
+
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Tenants",
                 table: "Tenants");

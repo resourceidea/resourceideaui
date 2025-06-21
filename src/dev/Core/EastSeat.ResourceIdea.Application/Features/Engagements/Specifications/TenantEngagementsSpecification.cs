@@ -17,7 +17,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Engagements.Specifications;
 /// <remarks>
 /// This specification returns engagements associated with the provided <see cref="TenantId"/>.
 /// </remarks>
-/// <param name="tenantId">The identifier of the tenant to filter engagements by.</param> 
+/// <param name="tenantId">The identifier of the tenant to filter engagements by.</param>
 public sealed class TenantEngagementsSpecification(TenantId tenantId) : BaseSpecification<Engagement>
 {
     public TenantId TenantId => tenantId;

@@ -19,12 +19,12 @@ public partial class CreateJobPosition : ComponentBase
     [Parameter, SupplyParameterFromQuery]
     public Guid Department { get; set; }
 
-    [Inject] private IMediator Mediator { get; set; } = null!;    
+    [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
     private string? errorMessage;
     private bool isErrorMessage;
-    
+
     public CreateJobPositionCommand Command { get; set; } = new();
 
     private async Task HandleValidSubmit()
