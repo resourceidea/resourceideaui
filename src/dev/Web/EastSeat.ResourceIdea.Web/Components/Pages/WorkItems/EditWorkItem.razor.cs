@@ -14,13 +14,14 @@ using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Web.Services;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.WorkItems;
 
-public partial class EditWorkItem : ComponentBase
+public partial class EditWorkItem : ResourceIdeaComponentBase
 {
     [Parameter]
     public Guid Id { get; set; }
@@ -37,10 +38,7 @@ public partial class EditWorkItem : ComponentBase
     private string EngagementId = string.Empty;
     private DateTimeOffset? StartDate;
     private DateTimeOffset? CompletedDate;
-    private bool IsLoading = true;
     private bool IsSubmitting = false;
-    private bool HasError = false;
-    private string ErrorMessage = string.Empty;
     private bool IsWorkItemCompleted = false;
 
     // Business rule properties
@@ -51,7 +49,7 @@ public partial class EditWorkItem : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        try
+        await ExecuteAsync(async () =>
         {
             // Load work item details
             GetWorkItemByIdQuery workItemQuery = new()
@@ -63,9 +61,7 @@ public partial class EditWorkItem : ComponentBase
             var workItemResponse = await Mediator.Send(workItemQuery);
             if (workItemResponse.IsFailure || !workItemResponse.Content.HasValue)
             {
-                HasError = true;
-                ErrorMessage = "Failed to load work item details.";
-                return;
+                throw new InvalidOperationException("Failed to load work item details.");
             }
 
             var workItem = workItemResponse.Content.Value;
@@ -74,7 +70,6 @@ public partial class EditWorkItem : ComponentBase
             if (workItem.Status == WorkItemStatus.Completed)
             {
                 IsWorkItemCompleted = true;
-                IsLoading = false;
                 return;
             }
 
@@ -87,9 +82,7 @@ public partial class EditWorkItem : ComponentBase
             var engagementResponse = await Mediator.Send(engagementQuery);
             if (engagementResponse.IsFailure || !engagementResponse.Content.HasValue)
             {
-                HasError = true;
-                ErrorMessage = "Failed to load engagement details.";
-                return;
+                throw new InvalidOperationException("Failed to load engagement details.");
             }
 
             var engagement = engagementResponse.Content.Value;
@@ -106,9 +99,7 @@ public partial class EditWorkItem : ComponentBase
             var clientResponse = await Mediator.Send(clientQuery);
             if (clientResponse.IsFailure || !clientResponse.Content.HasValue)
             {
-                HasError = true;
-                ErrorMessage = "Failed to load client details.";
-                return;
+                throw new InvalidOperationException("Failed to load client details.");
             }
 
             var client = clientResponse.Content.Value;
@@ -130,21 +121,7 @@ public partial class EditWorkItem : ComponentBase
 
             StartDate = workItem.StartDate;
             CompletedDate = workItem.CompletedDate;
-        }
-        catch (InvalidOperationException ex)
-        {
-            HasError = true;
-            ErrorMessage = "An invalid operation occurred while loading the work item details: " + ex.Message;
-        }
-        catch (ArgumentException ex)
-        {
-            HasError = true;
-            ErrorMessage = "An argument error occurred while loading the work item details: " + ex.Message;
-        }
-        finally
-        {
-            IsLoading = false;
-        }
+        }, "Loading work item details for editing");
     }
 
     private async Task HandleValidSubmit()
@@ -154,10 +131,11 @@ public partial class EditWorkItem : ComponentBase
             return;
         }
 
-        try
-        {
-            IsSubmitting = true;
+        IsSubmitting = true;
+        StateHasChanged();
 
+        var success = await ExecuteAsync(async () =>
+        {
             // Update command with date values
             Command.StartDate = StartDate;
             Command.CompletedDate = CompletedDate;
@@ -171,23 +149,17 @@ public partial class EditWorkItem : ComponentBase
             }
             else
             {
-                NotificationService.ShowErrorNotification("Failed to update work item details. Please try again.");
+                throw new InvalidOperationException("Failed to update work item details. Please try again.");
             }
-        }
-        catch (InvalidOperationException)
+        }, "Updating work item details", manageLoadingState: false);
+
+        if (!success)
         {
-            NotificationService.ShowErrorNotification("An invalid operation occurred. Please check your input and try again.");
-            // Log the exception if necessary
+            NotificationService.ShowErrorNotification(ErrorMessage ?? "Failed to update work item details. Please try again.");
         }
-        catch (TaskCanceledException)
-        {
-            NotificationService.ShowErrorNotification("The operation was canceled. Please try again.");
-            // Log the exception if necessary
-        }
-        finally
-        {
-            IsSubmitting = false;
-        }
+
+        IsSubmitting = false;
+        StateHasChanged();
     }
 
     private string GetBackNavigationUrl()

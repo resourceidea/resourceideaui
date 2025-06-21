@@ -7,12 +7,13 @@ using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.Employees;
 
-public partial class EmployeeDetails : ComponentBase
+public partial class EmployeeDetails : ResourceIdeaComponentBase
 {
     [Parameter]
     public Guid Id { get; set; }
@@ -38,7 +39,7 @@ public partial class EmployeeDetails : ComponentBase
     {
         IsLoadingModelData = true;
 
-        try
+        await ExecuteAsync(async () =>
         {
             var query = new GetEmployeeByIdQuery
             {
@@ -68,22 +69,15 @@ public partial class EmployeeDetails : ComponentBase
                 message = "Employee not found";
                 isErrorMessage = true;
             }
-        }
-        catch (Exception ex)
-        {
-            message = $"Error loading employee data: {ex.Message}";
-            isErrorMessage = true;
-        }
-        finally
-        {
-            IsLoadingModelData = false;
-            StateHasChanged();
-        }
+        }, "Loading employee data", manageLoadingState: false);
+
+        IsLoadingModelData = false;
+        StateHasChanged();
     }
 
     private async Task LoadDepartments()
     {
-        try
+        await ExecuteAsync(async () =>
         {
             var query = new GetAllDepartmentsQuery
             {
@@ -95,12 +89,11 @@ public partial class EmployeeDetails : ComponentBase
             {
                 Departments = [.. response.Content.Value.Items];
             }
-        }
-        catch (Exception ex)
-        {
-            message = $"Error loading departments: {ex.Message}";
-            isErrorMessage = true;
-        }
+            else
+            {
+                throw new InvalidOperationException("Failed to load departments");
+            }
+        }, "Loading departments", manageLoadingState: false);
     }
 
     private async Task LoadJobPositions()
@@ -111,7 +104,7 @@ public partial class EmployeeDetails : ComponentBase
             return;
         }
 
-        try
+        await ExecuteAsync(async () =>
         {
             var departmentId = Command.DepartmentId;
             var query = new GetJobPositionsByDepartmentIdQuery
@@ -134,20 +127,14 @@ public partial class EmployeeDetails : ComponentBase
             {
                 JobPositions.Clear();
             }
-        }
-        catch (Exception ex)
-        {
-            message = $"Error loading job positions: {ex.Message}";
-            isErrorMessage = true;
-            JobPositions.Clear();
-        }
+        }, "Loading job positions", manageLoadingState: false);
 
         StateHasChanged();
     }
 
     private async Task HandleValidSubmit()
     {
-        try
+        await ExecuteAsync(async () =>
         {
             Command.TenantId = ResourceIdeaRequestContext.Tenant;
             var response = await Mediator.Send(Command);
@@ -158,15 +145,10 @@ public partial class EmployeeDetails : ComponentBase
             }
             else
             {
-                message = $"Failed to update employee details";
+                message = "Failed to update employee details";
                 isErrorMessage = true;
             }
-        }
-        catch (Exception ex)
-        {
-            message = $"Error updating employee: {ex.Message}";
-            isErrorMessage = true;
-        }
+        }, "Updating employee details", manageLoadingState: false);
 
         StateHasChanged();
     }

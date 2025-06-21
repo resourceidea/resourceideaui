@@ -1,4 +1,5 @@
 ﻿@page "/employees/{id:guid}"
+@inherits ResourceIdeaComponentBase
 
 @using EastSeat.ResourceIdea.Application.Features.Employees.Commands
 @using EastSeat.ResourceIdea.Application.Features.Departments.Queries
@@ -6,6 +7,7 @@
 @using EastSeat.ResourceIdea.Domain.Departments.Models
 @using EastSeat.ResourceIdea.Domain.JobPositions.Models
 @using EastSeat.ResourceIdea.Domain.Employees.Models
+@using EastSeat.ResourceIdea.Web.Components.Base
 
 @layout AdminLayout
 
