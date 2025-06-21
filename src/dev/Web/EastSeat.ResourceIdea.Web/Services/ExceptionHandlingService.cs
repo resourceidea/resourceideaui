@@ -26,9 +26,7 @@ public class ExceptionHandlingService : IExceptionHandlingService
     {
         var errorMessage = await HandleExceptionAsync(exception, context);
         
-        // Trigger state change if component is provided
-        component?.StateHasChanged();
-        
+        // Component state change is handled by the ResourceIdeaComponentBase
         return errorMessage;
     }
 
@@ -66,8 +64,8 @@ public class ExceptionHandlingService : IExceptionHandlingService
         {
             TaskCanceledException => "The operation was canceled. Please try again.",
             TimeoutException => "The operation timed out. Please try again.",
-            ArgumentException => "An error occurred due to invalid input. Please check your parameters.",
             ArgumentNullException => "Required information is missing. Please provide all necessary details.",
+            ArgumentException => "An error occurred due to invalid input. Please check your parameters.",
             InvalidOperationException => "An invalid operation occurred. Please try again.",
             UnauthorizedAccessException => "You don't have permission to perform this operation.",
             ResourceIdeaException domain => GetDomainExceptionMessage(domain),
@@ -100,8 +98,8 @@ public class ExceptionHandlingService : IExceptionHandlingService
                 _logger.LogWarning(exception, "Operation canceled or timed out{Context}", logContext);
                 break;
             
-            case ArgumentException:
             case ArgumentNullException:
+            case ArgumentException:
                 _logger.LogWarning(exception, "Invalid argument provided{Context}", logContext);
                 break;
             
