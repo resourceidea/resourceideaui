@@ -67,9 +67,7 @@ public static class EngagementMapper
             Title = command.Title,
             ClientId = command.ClientId,
             EngagementStatus = command.Status,
-            Description = string.IsNullOrWhiteSpace(command.Title)
-                ? command.Description ?? string.Empty
-                : $"{command.Title}\n\n{command.Description ?? string.Empty}".Trim(),
+            Description = command.Description ?? string.Empty,
             EndDate = command.DueDate,
             TenantId = command.TenantId
             // Note: ManagerId and PartnerId are not set during creation as they are typically assigned later
