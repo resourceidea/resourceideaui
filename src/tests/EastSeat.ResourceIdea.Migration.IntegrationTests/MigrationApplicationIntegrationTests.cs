@@ -138,12 +138,12 @@ internal sealed class TestConnectionStringService : IConnectionStringService
     /// <inheritdoc />
     public Task<string> GetSourceConnectionStringAsync(CancellationToken cancellationToken = default)
     {
-        return Task.FromResult("Server=test-source;Database=TestSource;Integrated Security=true;");
+        return Task.FromResult("Server=test-source;Database=TestSource;Integrated Security=true;Encrypt=True;");
     }
 
     /// <inheritdoc />
     public Task<string> GetDestinationConnectionStringAsync(CancellationToken cancellationToken = default)
     {
-        return Task.FromResult("Server=test-destination;Database=TestDestination;Integrated Security=true;");
+        return Task.FromResult("Server=test-destination;Database=TestDestination;Integrated Security=true;Encrypt=True;");
     }
 }
