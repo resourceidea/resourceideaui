@@ -26,7 +26,8 @@ public class GlobalExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unhandled exception occurred. Request Path: {Path}", context.Request.Path);
+            var sanitizedPath = context.Request.Path.Value?.Replace("\r", "").Replace("\n", "");
+            _logger.LogError(ex, "An unhandled exception occurred. Request Path: {Path}", sanitizedPath);
             await HandleExceptionAsync(context, ex);
         }
     }
