@@ -6,6 +6,8 @@ using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.DataStore;
 using Microsoft.AspNetCore.Identity;
 using EastSeat.ResourceIdea.DataStore.Identity;
+using EastSeat.ResourceIdea.Web.Services;
+using EastSeat.ResourceIdea.Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +40,13 @@ builder.Services.AddAuthorizationCore();
 // Add MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateDepartmentCommandHandler).Assembly));
 
+// Add centralized exception handling service
+builder.Services.AddScoped<IExceptionHandlingService, ExceptionHandlingService>();
+
 var app = builder.Build();
+
+// Add global exception handling middleware
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
