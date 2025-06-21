@@ -131,7 +131,7 @@ public enum ErrorCode
 
     /// <summary>
     /// Empty entity returned from repository on create tenant.
-    /// </summary>  
+    /// </summary>
     EmptyEntityOnCreateTenant,
 
     /// <summary>
@@ -313,4 +313,9 @@ public enum ErrorCode
     ClientAlreadyExists,
     DatabaseError,
     ClientQueryValidationFailure,
+
+    /// <summary>
+    /// Empty entity returned from repository on create work item.
+    /// </summary>
+    EmptyEntityOnCreateWorkItem,
 }

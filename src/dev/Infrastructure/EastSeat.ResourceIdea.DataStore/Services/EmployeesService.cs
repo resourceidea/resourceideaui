@@ -195,7 +195,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
 
         string sql = @"SELECT TOP 1 e.EmployeeId, e.JobPositionId, e.EmployeeNumber, e.ApplicationUserId, e.TenantId,
                           u.FirstName, u.LastName, u.Email,
-                          jp.Title as 'JobPositionTitle', 
+                          jp.Title as 'JobPositionTitle',
                           d.Id as 'DepartmentId', d.Name as 'DepartmentName'
                    FROM [dbo].[Employees] e
                    JOIN [Identity].[ApplicationUsers] u ON e.ApplicationUserId = u.ApplicationUserId
@@ -242,7 +242,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
 
         string sql = @"SELECT e.EmployeeId, e.JobPositionId, e.EmployeeNumber,
                               u.FirstName, u.LastName, u.Email,
-                              jp.Title as 'JobPositionTitle', 
+                              jp.Title as 'JobPositionTitle',
                               d.Id as 'DepartmentId', d.Name as 'DepartmentName'
                        FROM [dbo].[Employees] e
                        JOIN [Identity].[ApplicationUsers] u ON e.ApplicationUserId = u.ApplicationUserId

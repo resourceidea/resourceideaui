@@ -10,11 +10,11 @@ using MediatR;
 
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Handlers;
 
-public sealed class CreateEngagementCommandHandler (IEngagementsService engagementsService)
+public sealed class CreateEngagementCommandHandler(IEngagementsService engagementsService)
     : IRequestHandler<CreateEngagementCommand, ResourceIdeaResponse<EngagementModel>>
 {
     private readonly IEngagementsService _engagementsService = engagementsService;
-    
+
     /// <inheritdoc />
     public async Task<ResourceIdeaResponse<EngagementModel>> Handle(
         CreateEngagementCommand request,

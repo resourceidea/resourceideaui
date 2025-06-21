@@ -23,7 +23,7 @@ public sealed class UpdateJobPositionCommand : BaseRequest<JobPositionModel>
     /// ID of the job position to update.
     /// </summary>
     public JobPositionId Id { get; set; }
-    
+
     /// <summary>
     /// Title of the job position to update.
     /// </summary>

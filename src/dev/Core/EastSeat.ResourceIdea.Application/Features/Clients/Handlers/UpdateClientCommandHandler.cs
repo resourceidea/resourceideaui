@@ -13,7 +13,7 @@ namespace EastSeat.ResourceIdea.Application.Features.Clients.Handlers;
 /// <summary>
 /// Handles command to update a client.
 /// </summary>
-public sealed class UpdateClientCommandHandler (IClientsService clientsService)
+public sealed class UpdateClientCommandHandler(IClientsService clientsService)
     : BaseHandler,
       IRequestHandler<UpdateClientCommand, ResourceIdeaResponse<ClientModel>>
 {

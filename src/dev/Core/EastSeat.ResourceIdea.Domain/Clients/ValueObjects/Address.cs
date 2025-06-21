@@ -52,7 +52,7 @@ public class Address
     }
 
     /// <inheritdoc />
-    public override string ToString() => 
+    public override string ToString() =>
         string.IsNullOrEmpty(_building)
         ? $"{_street}, {_city}"
         : $"{_building}, {_street}, {_city}";

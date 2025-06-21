@@ -17,7 +17,7 @@ public class DepartmentIdConverter : TypeConverter
         {
             return true;
         }
-        
+
         return base.CanConvertFrom(context, sourceType);
     }
 
@@ -39,7 +39,7 @@ public class DepartmentIdConverter : TypeConverter
         {
             return true;
         }
-        
+
         return base.CanConvertTo(context, destinationType);
     }
 

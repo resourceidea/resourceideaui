@@ -23,15 +23,15 @@ public partial class WorkItems : ResourceIdeaComponentBase
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
-    
+
     private PagedListResponse<WorkItemModel>? PagedWorkItemsList { get; set; }
-    
+
     private int CurrentPage { get; set; } = 1;
     private const int PageSize = 10;
     private string SearchTerm { get; set; } = string.Empty;
     private string SortField { get; set; } = string.Empty;
     private string SortDirection { get; set; } = "asc";
-    
+
     // Navigation context
     private Guid? EngagementIdParam { get; set; }
     private Guid? ClientIdParam { get; set; }
@@ -50,15 +50,15 @@ public partial class WorkItems : ResourceIdeaComponentBase
     {
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         var queryParams = QueryHelpers.ParseQuery(uri.Query);
-        
-        if (queryParams.TryGetValue("engagementid", out var engagementIdValue) && 
+
+        if (queryParams.TryGetValue("engagementid", out var engagementIdValue) &&
             Guid.TryParse(engagementIdValue.ToString(), out var engagementId))
         {
             EngagementIdParam = engagementId;
             NavigationSource = "engagement";
         }
-        
-        if (queryParams.TryGetValue("clientid", out var clientIdValue) && 
+
+        if (queryParams.TryGetValue("clientid", out var clientIdValue) &&
             Guid.TryParse(clientIdValue.ToString(), out var clientId))
         {
             ClientIdParam = clientId;
@@ -75,9 +75,9 @@ public partial class WorkItems : ResourceIdeaComponentBase
             if (EngagementIdParam.HasValue)
             {
                 var query = new GetWorkItemsByEngagementQuery(
-                    EngagementId.Create(EngagementIdParam.Value), 
-                    CurrentPage, 
-                    PageSize, 
+                    EngagementId.Create(EngagementIdParam.Value),
+                    CurrentPage,
+                    PageSize,
                     SearchTerm)
                 {
                     TenantId = ResourceIdeaRequestContext.Tenant
@@ -87,9 +87,9 @@ public partial class WorkItems : ResourceIdeaComponentBase
             else if (ClientIdParam.HasValue)
             {
                 var query = new GetWorkItemsByClientQuery(
-                    ClientId.Create(ClientIdParam.Value), 
-                    CurrentPage, 
-                    PageSize, 
+                    ClientId.Create(ClientIdParam.Value),
+                    CurrentPage,
+                    PageSize,
                     SearchTerm)
                 {
                     TenantId = ResourceIdeaRequestContext.Tenant
@@ -166,5 +166,25 @@ public partial class WorkItems : ResourceIdeaComponentBase
             "client" when ClientIdParam.HasValue => $"/clients/{ClientIdParam.Value}",
             _ => "/"
         };
+    }
+
+    private string GetAddWorkItemUrl()
+    {
+        if (EngagementIdParam.HasValue && ClientIdParam.HasValue)
+        {
+            return $"/workitems/add?clientid={ClientIdParam.Value}&engagementid={EngagementIdParam.Value}";
+        }
+        else if (ClientIdParam.HasValue)
+        {
+            return $"/workitems/add?clientid={ClientIdParam.Value}";
+        }
+        else if (EngagementIdParam.HasValue)
+        {
+            return $"/workitems/add?engagementid={EngagementIdParam.Value}";
+        }
+        else
+        {
+            return "/workitems/add";
+        }
     }
 }

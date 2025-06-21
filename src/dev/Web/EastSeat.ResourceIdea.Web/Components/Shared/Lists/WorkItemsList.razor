@@ -97,7 +97,9 @@
                     <tr>
                         <td>
                             <div class="text-truncate" style="max-width: 200px;" title="@workItem.Title">
-                                @workItem.Title
+                                <NavLink class="text-decoration-none" href=@($"/workitems/{workItem.Id.Value}")>
+                                    @workItem.Title
+                                </NavLink>
                             </div>
                             @if (!string.IsNullOrEmpty(workItem.Description))
                             {
@@ -270,28 +272,28 @@
         };
     }
 
-    private string GetPriorityBadgeClass(int priority)
+    private string GetPriorityBadgeClass(EastSeat.ResourceIdea.Domain.Enums.Priority priority)
     {
         return priority switch
         {
-            1 => "bg-danger",      // Highest priority
-            2 => "bg-warning",     // High priority
-            3 => "bg-info",        // Medium priority (default)
-            4 => "bg-secondary",   // Low priority
-            5 => "bg-light text-dark", // Lowest priority
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Critical => "bg-danger",      // Critical priority
+            EastSeat.ResourceIdea.Domain.Enums.Priority.High => "bg-warning",     // High priority
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Medium => "bg-info",        // Medium priority (default)
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Low => "bg-secondary",   // Low priority
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Lowest => "bg-light text-dark", // Lowest priority
             _ => "bg-info"
         };
     }
 
-    private string GetPriorityText(int priority)
+    private string GetPriorityText(EastSeat.ResourceIdea.Domain.Enums.Priority priority)
     {
         return priority switch
         {
-            1 => "Highest",
-            2 => "High",
-            3 => "Medium",
-            4 => "Low",
-            5 => "Lowest",
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Critical => "Critical",
+            EastSeat.ResourceIdea.Domain.Enums.Priority.High => "High",
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Medium => "Medium",
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Low => "Low",
+            EastSeat.ResourceIdea.Domain.Enums.Priority.Lowest => "Lowest",
             _ => "Medium"
         };
     }

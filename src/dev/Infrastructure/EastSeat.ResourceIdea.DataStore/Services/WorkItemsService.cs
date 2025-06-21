@@ -1,28 +1,33 @@
-// =============================================================================================================
+// ----------------------------------------------------------------------------------
 // File: WorkItemsService.cs
 // Path: src\dev\Infrastructure\EastSeat.ResourceIdea.DataStore\Services\WorkItemsService.cs
-// Description: This file contains the WorkItemsService class implementation.
-// =============================================================================================================
+// Description: Service for managing work items.
+// ----------------------------------------------------------------------------------
 
-using EastSeat.ResourceIdea.Application.Features.WorkItems.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
-using EastSeat.ResourceIdea.Domain.WorkItems.Entities;
-using EastSeat.ResourceIdea.Domain.Types;
+using EastSeat.ResourceIdea.Application.Features.WorkItems.Contracts;
 using EastSeat.ResourceIdea.Domain.Enums;
+using EastSeat.ResourceIdea.Domain.Types;
+using EastSeat.ResourceIdea.Domain.WorkItems.Entities;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EastSeat.ResourceIdea.DataStore.Services;
 
 /// <summary>
-/// Service for managing work items in the data store.
+/// Service for managing work items.
 /// </summary>
-/// <param name="dbContext">The database context.</param>
 public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkItemsService
 {
     private readonly ResourceIdeaDBContext _dbContext = dbContext;
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Adds a new work item asynchronously.
+    /// </summary>
+    /// <param name="entity">The work item entity to add.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{WorkItem}"/>.</returns>
     public async Task<ResourceIdeaResponse<WorkItem>> AddAsync(WorkItem entity, CancellationToken cancellationToken)
     {
         try
@@ -34,81 +39,169 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
                 return ResourceIdeaResponse<WorkItem>.Success(entity);
             }
 
-            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DatabaseError);
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.EmptyEntityOnCreateWorkItem);
         }
         catch (DbUpdateException)
         {
-            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DatabaseError);
+            // Log the database update exception here if logging is available
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
+        catch (ObjectDisposedException)
+        {
+            // Handle context disposal scenarios
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
     }
 
-    /// <inheritdoc />
-    public Task<ResourceIdeaResponse<WorkItem>> DeleteAsync(WorkItem entity, CancellationToken cancellationToken)
+    /// <summary>
+    /// Deletes a work item asynchronously.
+    /// </summary>
+    /// <param name="entity">The work item entity to delete.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{WorkItem}"/>.</returns>
+    public async Task<ResourceIdeaResponse<WorkItem>> DeleteAsync(WorkItem entity, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            _dbContext.WorkItems.Remove(entity);
+            int result = await _dbContext.SaveChangesAsync(cancellationToken);
+            if (result > 0)
+            {
+                return ResourceIdeaResponse<WorkItem>.Success(entity);
+            }
+
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
+        catch (DbUpdateException)
+        {
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
+        catch (ObjectDisposedException)
+        {
+            // Handle context disposal scenarios
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets a work item by ID asynchronously using a specification.
+    /// </summary>
+    /// <param name="specification">The specification to filter the work item.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{WorkItem}"/>.</returns>
     public async Task<ResourceIdeaResponse<WorkItem>> GetByIdAsync(BaseSpecification<WorkItem> specification, CancellationToken cancellationToken)
     {
-        WorkItem? workItem = await _dbContext.WorkItems.AsNoTracking().FirstOrDefaultAsync(specification.Criteria, cancellationToken);
-        if (workItem == null)
+        try
         {
-            return ResourceIdeaResponse<WorkItem>.NotFound();
-        }
+            // Note: Includes are temporarily removed due to test failures when related entities don't exist
+            // TODO: Fix navigation property configuration to allow optional includes
+            WorkItem? workItem = await _dbContext.WorkItems
+                .Where(specification.Criteria)
+                .FirstOrDefaultAsync(cancellationToken);
 
-        return ResourceIdeaResponse<WorkItem>.Success(workItem);
+            if (workItem == null)
+            {
+                return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.NotFound);
+            }
+
+            return ResourceIdeaResponse<WorkItem>.Success(workItem);
+        }
+        catch (DbUpdateException)
+        {
+            // TODO: Log the exception using Azure ApplicationInsights
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
+        catch (OperationCanceledException)
+        {
+            // TODO: Log the exception using Azure ApplicationInsights
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreQueryFailure);
+        }
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets a paged list of work items asynchronously.
+    /// </summary>
+    /// <param name="page">The page number.</param>
+    /// <param name="size">The number of items per page.</param>
+    /// <param name="specification">The optional specification to filter the work items.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{PagedListResponse{WorkItem}}"/>.</returns>
     public async Task<ResourceIdeaResponse<PagedListResponse<WorkItem>>> GetPagedListAsync(int page, int size, Optional<BaseSpecification<WorkItem>> specification, CancellationToken cancellationToken)
     {
-        IQueryable<WorkItem> query = _dbContext.WorkItems.AsNoTracking();
-        
-        if (specification.HasValue)
+        try
         {
-            query = query.Where(specification.Value.Criteria);
+            var query = _dbContext.WorkItems.AsQueryable();
+
+            if (specification.HasValue)
+            {
+                query = query.Where(specification.Value.Criteria);
+            }
+
+            var totalCount = await query.CountAsync(cancellationToken);
+            var items = await query
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToListAsync(cancellationToken);
+
+            var pagedResponse = new PagedListResponse<WorkItem>
+            {
+                Items = items,
+                CurrentPage = page,
+                PageSize = size,
+                TotalCount = totalCount
+            };
+
+            return ResourceIdeaResponse<PagedListResponse<WorkItem>>.Success(pagedResponse);
         }
-
-        int totalCount = await query.CountAsync(cancellationToken);
-        IReadOnlyList<WorkItem> workItems = await query
-            .Skip((page - 1) * size)
-            .Take(size)
-            .ToListAsync(cancellationToken);
-
-        var pagedListResponse = new PagedListResponse<WorkItem>
+        catch (OperationCanceledException)
         {
-            Items = workItems,
-            TotalCount = totalCount,
-            CurrentPage = page,
-            PageSize = size,
-        };
-
-        return ResourceIdeaResponse<PagedListResponse<WorkItem>>.Success(pagedListResponse);
+            return ResourceIdeaResponse<PagedListResponse<WorkItem>>.Failure(ErrorCode.DataStoreQueryFailure);
+        }
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Updates a work item asynchronously.
+    /// </summary>
+    /// <param name="entity">The work item entity to update.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation that returns a <see cref="ResourceIdeaResponse{WorkItem}"/>.</returns>
     public async Task<ResourceIdeaResponse<WorkItem>> UpdateAsync(WorkItem entity, CancellationToken cancellationToken)
     {
         try
         {
-            var existingWorkItem = await _dbContext.WorkItems.FirstOrDefaultAsync(w => w.Id == entity.Id, cancellationToken);
+            WorkItem? existingWorkItem = await _dbContext.WorkItems
+            .FirstOrDefaultAsync(wi => wi.Id == entity.Id
+                              && wi.TenantId == entity.TenantId
+                              && wi.EngagementId == entity.EngagementId, cancellationToken);
             if (existingWorkItem == null)
             {
-                return ResourceIdeaResponse<WorkItem>.NotFound();
+                return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.NotFound);
             }
 
-            _dbContext.Entry(existingWorkItem).CurrentValues.SetValues(entity);
+            existingWorkItem.Title = entity.Title;
+            existingWorkItem.Description = entity.Description;
+            existingWorkItem.Status = entity.Status;
+            existingWorkItem.Priority = entity.Priority;
+            existingWorkItem.StartDate = entity.StartDate;
+            existingWorkItem.CompletedDate = entity.CompletedDate;
+
+            _dbContext.WorkItems.Update(existingWorkItem);
             int result = await _dbContext.SaveChangesAsync(cancellationToken);
             if (result > 0)
             {
                 return ResourceIdeaResponse<WorkItem>.Success(existingWorkItem);
             }
-            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DatabaseError);
+
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
         catch (DbUpdateException)
         {
-            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DatabaseError);
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
+        catch (ObjectDisposedException)
+        {
+            // Handle context disposal scenarios
+            return ResourceIdeaResponse<WorkItem>.Failure(ErrorCode.DataStoreCommandFailure);
         }
     }
 }
