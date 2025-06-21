@@ -1,4 +1,5 @@
 @page "/workitems/edit/{Id:guid}"
+@inherits ResourceIdeaComponentBase
 
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.WebUtilities
@@ -12,6 +13,7 @@
 @using EastSeat.ResourceIdea.Domain.Enums
 @using EastSeat.ResourceIdea.Web.Services
 @using EastSeat.ResourceIdea.Web.RequestContext
+@using EastSeat.ResourceIdea.Web.Components.Base
 @using MediatR
 
 <ResourceIdeaPageTitle Title="Edit Work Item" />
