@@ -134,7 +134,7 @@ public partial class EmployeeDetails : ResourceIdeaComponentBase
 
     private async Task HandleValidSubmit()
     {
-        var success = await ExecuteAsync(async () =>
+        await ExecuteAsync(async () =>
         {
             Command.TenantId = ResourceIdeaRequestContext.Tenant;
             var response = await Mediator.Send(Command);
