@@ -1,0 +1,99 @@
+@page "/login"
+@using EastSeat.ResourceIdea.Domain.Users.Models
+@using EastSeat.ResourceIdea.DataStore.Identity.Entities
+@using Microsoft.AspNetCore.Identity
+@layout AuthLayout
+@attribute [AllowAnonymous]
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager Navigation
+
+<PageTitle>Login</PageTitle>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h4 class="text-center">Login</h4>
+                </div>
+                <div class="card-body">
+                    <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
+
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="alert alert-danger">@errorMessage</div>
+                        }
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <InputText id="email" class="form-control" @bind-Value="loginModel.Email" />
+                            <ValidationMessage For="() => loginModel.Email" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <InputText type="password" id="password" class="form-control" @bind-Value="loginModel.Password" />
+                            <ValidationMessage For="() => loginModel.Password" />
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary" disabled="@isLoading">
+                                @if (isLoading)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                }
+                                Login
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new();
+    private string errorMessage = string.Empty;
+    private bool isLoading = false;
+
+    [SupplyParameterFromQuery]
+    public string? ReturnUrl { get; set; }
+
+    private async Task HandleLogin()
+    {
+        isLoading = true;
+        errorMessage = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            var result = await SignInManager.PasswordSignInAsync(
+                loginModel.Email!,
+                loginModel.Password!,
+                isPersistent: false,
+                lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                Navigation.NavigateTo(ReturnUrl ?? "/departments", forceLoad: true);
+            }
+            else
+            {
+                errorMessage = "Invalid email or password.";
+            }
+        }
+        catch (Exception)
+        {
+            errorMessage = "An error occurred during login. Please try again.";
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+}
