@@ -4,9 +4,11 @@
   <Folder Name="/src/dev/Core/">
     <Project Path="src/dev/Core/EastSeat.ResourceIdea.Application/EastSeat.ResourceIdea.Application.csproj" />
     <Project Path="src/dev/Core/EastSeat.ResourceIdea.Domain/EastSeat.ResourceIdea.Domain.csproj" />
-  </Folder>
-  <Folder Name="/src/dev/Infrastructure/">
+  </Folder>  <Folder Name="/src/dev/Infrastructure/">
     <Project Path="src/dev/Infrastructure/EastSeat.ResourceIdea.DataStore/EastSeat.ResourceIdea.DataStore.csproj" />
+  </Folder>
+  <Folder Name="/src/Infrastructure/">
+    <Project Path="src/Infrastructure/EastSeat.ResourceIdea.Migration/EastSeat.ResourceIdea.Migration.csproj" />
   </Folder>
   <Folder Name="/src/dev/Web/">
     <Project Path="src/dev/Web/EastSeat.ResourceIdea.Web/EastSeat.ResourceIdea.Web.csproj" />
@@ -14,6 +16,8 @@
     <Project Path="src/tests/EastSeat.ResourceIdea.Application.UnitTests/EastSeat.ResourceIdea.Application.UnitTests.csproj" />
     <Project Path="src/tests/EastSeat.ResourceIdea.DataStore.UnitTests/EastSeat.ResourceIdea.DataStore.UnitTests.csproj" />
     <Project Path="src/tests/EastSeat.ResourceIdea.Domain.UnitTests/EastSeat.ResourceIdea.Domain.UnitTests.csproj" />
+    <Project Path="src/tests/EastSeat.ResourceIdea.Migration.UnitTests/EastSeat.ResourceIdea.Migration.UnitTests.csproj" />
+    <Project Path="src/tests/EastSeat.ResourceIdea.Migration.IntegrationTests/EastSeat.ResourceIdea.Migration.IntegrationTests.csproj" />
     <Project Path="src/tests/EastSeat.ResourceIdea.Web.UnitTests/EastSeat.ResourceIdea.Web.UnitTests.csproj" />
   </Folder>
 </Solution>
