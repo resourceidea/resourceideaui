@@ -1,0 +1,336 @@
+@page "/employees-timeline"
+@using EastSeat.ResourceIdea.Web.Components.Shared.Alerts
+@using EastSeat.ResourceIdea.Web.Components.Shared.PageTitles
+@using EastSeat.ResourceIdea.Web.Components.Shared.Cards
+
+<ResourceIdeaPageTitle Title="Employees Timeline" />
+
+<div class="page-container">
+    <PageHeader Text="Employees Timeline" />
+
+    <div class="timeline-controls mb-4">
+        <div class="row">
+            <div class="col-md-3">
+                <label for="startMonth" class="form-label">Start Month/Year</label>
+                <div class="d-flex">
+                    <select @bind="StartMonth" class="form-select me-2" id="startMonth">
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <option value="@i">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                        }
+                    </select>
+                    <input @bind="StartYear" type="number" class="form-control" style="width: 100px;" min="2020" max="2030" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="endMonth" class="form-label">End Month/Year</label>
+                <div class="d-flex">
+                    <select @bind="EndMonth" class="form-select me-2" id="endMonth">
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <option value="@i">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                        }
+                    </select>
+                    <input @bind="EndYear" type="number" class="form-control" style="width: 100px;" min="2020" max="2030" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="searchTerm" class="form-label">Search Employees</label>
+                <input @bind="SearchTerm" @bind:event="oninput" @onkeypress="@(async (e) => { if (e.Key == "Enter") await LoadTimelineData(); })" 
+                       type="text" class="form-control" id="searchTerm" placeholder="Search by name, email, job title..." />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-flex">
+                    <button @onclick="LoadTimelineData" class="btn btn-primary me-2" disabled="@IsLoadingPage">
+                        <i class="fa fa-refresh"></i> Load Timeline
+                    </button>
+                    <NavLink class="btn btn-outline-secondary" href="/workitems?unassigned=true">
+                        <i class="fa fa-plus"></i> Assign Work Items
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-container">
+        @if (IsLoadingPage)
+        {
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
+        else if (HasError)
+        {
+            <DismissibleAlert ErrorMessage="@ErrorMessage" IsErrorMessage="true" />
+        }
+        else if (EmployeeTimelines != null && EmployeeTimelines.Any())
+        {
+            <div class="timeline-container">
+                <div class="timeline-header">
+                    <div class="timeline-dates">
+                        @{
+                            var startDate = new DateOnly(StartYear, StartMonth, 1);
+                            var endDate = new DateOnly(EndYear, EndMonth, DateTime.DaysInMonth(EndYear, EndMonth));
+                            var totalDays = endDate.DayNumber - startDate.DayNumber + 1;
+                            var currentDate = DateOnly.FromDateTime(DateTime.Today);
+                        }
+                        
+                        @for (var date = startDate; date <= endDate; date = date.AddDays(1))
+                        {
+                            <div class="timeline-date-header @(date == currentDate ? "current-date" : "")" 
+                                 style="width: @(100.0 / totalDays)%">
+                                @if (date.Day == 1 || date == startDate || date == endDate)
+                                {
+                                    <span class="date-label">@date.ToString("MMM dd")</span>
+                                }
+                                else if (date.DayOfWeek == DayOfWeek.Monday)
+                                {
+                                    <span class="week-marker">@date.Day</span>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="timeline-body">
+                    @foreach (var employee in EmployeeTimelines)
+                    {
+                        <div class="timeline-row">
+                            <div class="employee-info">
+                                <div class="employee-name">@employee.FullName</div>
+                                <div class="employee-details">
+                                    <small class="text-muted">@employee.JobPositionTitle</small>
+                                    @if (!string.IsNullOrEmpty(employee.DepartmentName))
+                                    {
+                                        <small class="text-muted"> - @employee.DepartmentName</small>
+                                    }
+                                </div>
+                            </div>
+                            <div class="timeline-items">
+                                @foreach (var workItem in employee.WorkItems.Where(wi => wi.StartDate.HasValue))
+                                {
+                                    <div class="timeline-item @GetWorkItemStatusClass(workItem.Status)" 
+                                         style="@GetWorkItemStyles(workItem, startDate, endDate)"
+                                         @onclick="() => NavigateToWorkItem(workItem.Id.Value)"
+                                         title="@GetWorkItemTooltip(workItem)">
+                                        <div class="timeline-item-content">
+                                            <div class="item-title">@TruncateText(workItem.Title, 20)</div>
+                                            @if (!string.IsNullOrEmpty(workItem.ClientName))
+                                            {
+                                                <div class="item-client">@workItem.ClientName</div>
+                                            }
+                                            @if (!string.IsNullOrEmpty(workItem.EngagementTitle))
+                                            {
+                                                <div class="item-engagement">@TruncateText(workItem.EngagementTitle, 15)</div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+
+                                @* Current date indicator *@
+                                @if (currentDate >= startDate && currentDate <= endDate)
+                                {
+                                    <div class="current-date-line" style="@GetCurrentDateLineStyle(currentDate, startDate, totalDays)"></div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center">
+                <i class="fa fa-info-circle fa-2x mb-3"></i>
+                <p class="mb-1">No employees found</p>
+                @if (!string.IsNullOrEmpty(SearchTerm))
+                {
+                    <small>Try adjusting your search criteria or date range</small>
+                }
+                else
+                {
+                    <small>Try adjusting your date range or check if employees have work items assigned</small>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .timeline-container {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .timeline-header {
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        padding: 10px 200px 10px 10px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .timeline-dates {
+        display: flex;
+        position: relative;
+        height: 40px;
+    }
+
+    .timeline-date-header {
+        position: relative;
+        border-right: 1px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+    }
+
+    .timeline-date-header.current-date {
+        background-color: #fff3cd;
+        border-left: 2px solid #ff6b6b;
+        border-right: 2px solid #ff6b6b;
+    }
+
+    .date-label {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .week-marker {
+        color: #6c757d;
+        font-size: 10px;
+    }
+
+    .timeline-row {
+        display: flex;
+        border-bottom: 1px solid #f1f3f4;
+        min-height: 80px;
+        position: relative;
+    }
+
+    .timeline-row:hover {
+        background-color: #f8f9fa;
+    }
+
+    .employee-info {
+        width: 200px;
+        padding: 15px;
+        border-right: 1px solid #dee2e6;
+        background: white;
+        position: sticky;
+        left: 0;
+        z-index: 5;
+    }
+
+    .employee-name {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 4px;
+    }
+
+    .employee-details {
+        font-size: 12px;
+    }
+
+    .timeline-items {
+        flex: 1;
+        position: relative;
+        padding: 10px;
+        min-height: 60px;
+    }
+
+    .timeline-item {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #007bff;
+        color: white;
+        border-radius: 4px;
+        padding: 8px;
+        cursor: pointer;
+        min-height: 40px;
+        border: 1px solid rgba(255,255,255,0.2);
+        transition: all 0.2s ease;
+    }
+
+    .timeline-item:hover {
+        transform: translateY(-50%) scale(1.05);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        z-index: 15;
+    }
+
+    .timeline-item.status-completed {
+        background: #28a745;
+    }
+
+    .timeline-item.status-inprogress {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .timeline-item.status-onhold {
+        background: #6c757d;
+    }
+
+    .timeline-item.status-cancelled {
+        background: #dc3545;
+    }
+
+    .timeline-item-content {
+        font-size: 11px;
+        line-height: 1.2;
+    }
+
+    .item-title {
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+
+    .item-client {
+        opacity: 0.9;
+        margin-bottom: 1px;
+    }
+
+    .item-engagement {
+        opacity: 0.8;
+        font-size: 10px;
+    }
+
+    .current-date-line {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #ff6b6b;
+        z-index: 20;
+        pointer-events: none;
+    }
+
+    .timeline-controls {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+    }
+
+    @@media (max-width: 768px) {
+        .timeline-header {
+            padding-left: 150px;
+        }
+        
+        .employee-info {
+            width: 150px;
+            padding: 10px;
+        }
+        
+        .employee-name {
+            font-size: 14px;
+        }
+    }
+</style>
