@@ -24,10 +24,34 @@ public class GlobalExceptionHandlingMiddleware
         {
             await _next(context);
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
         {
             var sanitizedPath = context.Request.Path.Value?.Replace("\r", "").Replace("\n", "");
-            _logger.LogError(ex, "An unhandled exception occurred. Request Path: {Path}", sanitizedPath);
+            _logger.LogError(ex, "An argument exception occurred. Request Path: {Path}", sanitizedPath);
+            await HandleExceptionAsync(context, ex);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            var sanitizedPath = context.Request.Path.Value?.Replace("\r", "").Replace("\n", "");
+            _logger.LogError(ex, "An unauthorized access exception occurred. Request Path: {Path}", sanitizedPath);
+            await HandleExceptionAsync(context, ex);
+        }
+        catch (ResourceIdeaException ex)
+        {
+            var sanitizedPath = context.Request.Path.Value?.Replace("\r", "").Replace("\n", "");
+            _logger.LogError(ex, "A domain exception occurred. Request Path: {Path}", sanitizedPath);
+            await HandleExceptionAsync(context, ex);
+        }
+        catch (TaskCanceledException ex)
+        {
+            var sanitizedPath = context.Request.Path.Value?.Replace("\r", "").Replace("\n", "");
+            _logger.LogError(ex, "A task cancellation exception occurred. Request Path: {Path}", sanitizedPath);
+            await HandleExceptionAsync(context, ex);
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException && ex is not StackOverflowException)
+        {
+            var sanitizedPath = context.Request.Path.Value?.Replace("\r", "").Replace("\n", "");
+            _logger.LogError(ex, "An unexpected exception occurred. Request Path: {Path}", sanitizedPath);
             await HandleExceptionAsync(context, ex);
         }
     }
