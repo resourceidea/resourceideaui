@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.Auth;
 
-public partial class Login
+public partial class Login : ResourceIdeaComponentBase
 {
     [Inject] private SignInManager<ApplicationUser> SignInManager { get; set; } = default!;
     [Inject] private UserManager<ApplicationUser> UserManager { get; set; } = default!;
@@ -19,10 +19,9 @@ public partial class Login
 
     [SupplyParameterFromQuery]
     public string? ReturnUrl { get; set; }
-
     private async Task HandleLogin()
     {
-        await ExecuteAsync(async () =>
+        try
         {
             var result = await SignInManager.PasswordSignInAsync(
                 loginModel.Email!,
@@ -32,15 +31,23 @@ public partial class Login
 
             if (result.Succeeded)
             {
+                // Navigation will trigger redirect - avoid any further StateHasChanged calls
                 Navigation.NavigateTo(ReturnUrl ?? "/departments", forceLoad: true);
+                return;
             }
             else
             {
                 // Set authentication-specific error message
                 authErrorMessage = "Invalid email or password.";
-                StateHasChanged();
             }
-        }, "User login", manageLoadingState: false);
+        }
+        catch (Exception ex)
+        {
+            // Use direct exception handling to avoid StateHasChanged during auth process
+            authErrorMessage = "An error occurred during login. Please try again.";
+            // Log the exception in the background without triggering UI updates
+            _ = Task.Run(async () => await ExceptionHandlingService.HandleExceptionAsync(ex, "User login"));
+        }
     }
 
     private async Task HandleLoginWithLoadingState()
@@ -59,12 +66,10 @@ public partial class Login
             isLoading = false;
             StateHasChanged();
         }
-    }
-
-    /// <summary>
-    /// Gets the current error message to display, prioritizing authentication-specific errors.
-    /// </summary>
-    protected string GetDisplayErrorMessage()
+    }    /// <summary>
+         /// Gets the current error message to display, prioritizing authentication-specific errors.
+         /// </summary>
+    public string GetDisplayErrorMessage()
     {
         return !string.IsNullOrEmpty(authErrorMessage) ? authErrorMessage : (ErrorMessage ?? string.Empty);
     }

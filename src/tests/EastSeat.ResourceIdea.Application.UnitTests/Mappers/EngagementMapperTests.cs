@@ -91,9 +91,13 @@ namespace EastSeat.ResourceIdea.Application.UnitTests.Mappers
             {
                 ClientId = ClientId.Create(Guid.NewGuid()),
                 Title = "Test Title",
-                Description = null,
                 TenantId = TenantId.Create(Guid.NewGuid())
             };
+
+            // Explicitly set Description to null for testing null handling scenario
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type
+            command.Description = null;
+#pragma warning restore CS8625
 
             // Act
             var entity = command.ToEntity();

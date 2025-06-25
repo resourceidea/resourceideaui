@@ -7,6 +7,7 @@ using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.WorkItems.Entities;
 using EastSeat.ResourceIdea.Domain.WorkItems.Models;
+using EastSeat.ResourceIdea.Domain.WorkItems.ValueObjects;
 
 using Moq;
 
@@ -95,7 +96,18 @@ public class CreateWorkItemCommandHandlerTests
             TenantId = TenantId.Create(Guid.NewGuid())
         };
 
-        var serviceResponse = ResourceIdeaResponse<WorkItem>.Success(default(WorkItem));
+        // Create a test WorkItem instance for the response
+        var testWorkItem = new WorkItem
+        {
+            Id = WorkItemId.NewId(),
+            Title = command.Title,
+            Description = command.Description,
+            EngagementId = command.EngagementId,
+            TenantId = command.TenantId,
+            Status = WorkItemStatus.NotStarted,
+            Priority = Priority.Medium
+        };
+        var serviceResponse = ResourceIdeaResponse<WorkItem>.Success(testWorkItem);
 
         _mockWorkItemsService
             .Setup(s => s.AddAsync(It.IsAny<WorkItem>(), It.IsAny<CancellationToken>()))

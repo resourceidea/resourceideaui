@@ -43,10 +43,14 @@ public class CreateWorkItemCommandValidatorTests
         // Arrange
         var command = new CreateWorkItemCommand
         {
-            Title = null,
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             TenantId = TenantId.Create(Guid.NewGuid())
         };
+
+        // Explicitly set Title to null for testing null validation scenario
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type
+        command.Title = null;
+#pragma warning restore CS8625
 
         // Act & Assert
         var result = _validator.TestValidate(command);
