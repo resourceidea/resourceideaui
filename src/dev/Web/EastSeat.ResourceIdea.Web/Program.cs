@@ -5,6 +5,7 @@ using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.DataStore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using EastSeat.ResourceIdea.DataStore.Identity;
 using EastSeat.ResourceIdea.Web.Services;
 using EastSeat.ResourceIdea.Web.Middleware;
@@ -21,10 +22,10 @@ builder.Services.AddResourceIdeaServices();
 
 builder.Services.AddScoped<IUserStore<ApplicationUser>, CustomUserStore>();
 
-// Add this after builder.Services.AddResourceIdeaServices();
+// Add Identity services with custom user store but EF role store  
 builder.Services.AddIdentityCore<ApplicationUser>()
     .AddRoles<ApplicationRole>()
-    .AddEntityFrameworkStores<ResourceIdeaDBContext>()
+    .AddRoleStore<RoleStore<ApplicationRole, ResourceIdeaDBContext>>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
@@ -60,7 +61,7 @@ if (app.Environment.IsDevelopment() && !app.Environment.EnvironmentName.Contains
     using var scope = app.Services.CreateScope();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    
+
     try
     {
         await SeedTestUserAsync(userManager);
@@ -75,9 +76,6 @@ if (app.Environment.IsDevelopment() && !app.Environment.EnvironmentName.Contains
     }
 }
 
-// Add global exception handling middleware
-app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -90,6 +88,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Add global exception handling middleware after authentication/authorization
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.UseAntiforgery();
 

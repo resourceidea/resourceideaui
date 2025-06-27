@@ -1,5 +1,8 @@
 @page "/login"
 @using EastSeat.ResourceIdea.Domain.Users.Models
+@using EastSeat.ResourceIdea.Web.Components.Layout
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Authorization
 @layout AuthLayout
 @inherits EastSeat.ResourceIdea.Web.Components.Base.ResourceIdeaComponentBase
 @attribute [AllowAnonymous]
@@ -14,7 +17,8 @@
                     <h4 class="text-center">Login</h4>
                 </div>
                 <div class="card-body">
-                    <EditForm Model="loginModel" OnValidSubmit="HandleLoginWithLoadingState">
+                    <EditForm Model="loginModel" OnValidSubmit="HandleLoginWithLoadingState"
+                        OnInvalidSubmit="HandleInvalidSubmit" FormName="LoginForm">
                         <DataAnnotationsValidator />
                         <ValidationSummary class="text-danger" />
 
@@ -31,13 +35,14 @@
 
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <InputText type="password" id="password" class="form-control" @bind-Value="loginModel.Password" />
+                            <InputText type="password" id="password" class="form-control"
+                                @bind-Value="loginModel.Password" />
                             <ValidationMessage For="() => loginModel.Password" />
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary" disabled="@isLoading">
-                                @if (isLoading)
+                            <button type="submit" class="btn btn-primary" disabled="@IsLoading">
+                                @if (IsLoading)
                                 {
                                     <span class="spinner-border spinner-border-sm me-2" role="status"></span>
                                 }
@@ -50,4 +55,3 @@
         </div>
     </div>
 </div>
-

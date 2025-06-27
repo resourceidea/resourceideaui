@@ -13,64 +13,80 @@ public partial class Login : ResourceIdeaComponentBase
     [Inject] private UserManager<ApplicationUser> UserManager { get; set; } = default!;
     [Inject] private NavigationManager Navigation { get; set; } = default!;
 
-    private readonly LoginModel loginModel = new();
-    private string authErrorMessage = string.Empty;
-    private bool isLoading = false;
+    private LoginModel loginModel { get; set; } = new();
 
     [SupplyParameterFromQuery]
     public string? ReturnUrl { get; set; }
-    private async Task HandleLogin()
+    private async Task HandleLoginWithLoadingState()
     {
+        IsLoading = true;
+        StateHasChanged(); // Show loading state immediately
+
+        Microsoft.AspNetCore.Identity.SignInResult? signInResult = null;
+
         try
         {
-            var result = await SignInManager.PasswordSignInAsync(
-                loginModel.Email!,
+            ClearError();
+
+            // Find user by email first, then use username for sign-in
+            var user = await UserManager.FindByEmailAsync(loginModel.Email!);
+            if (user == null)
+            {
+                SetError("Invalid email or password.");
+                return;
+            }
+
+            signInResult = await SignInManager.PasswordSignInAsync(
+                user.UserName!,
                 loginModel.Password!,
                 isPersistent: false,
                 lockoutOnFailure: false);
 
-            if (result.Succeeded)
+            if (signInResult.Succeeded)
             {
-                // Navigation will trigger redirect - avoid any further StateHasChanged calls
-                Navigation.NavigateTo(ReturnUrl ?? "/departments", forceLoad: true);
+                // Successful login - navigation will handle page transition
+                // Don't call StateHasChanged here to avoid interfering with authentication
+                Navigation.NavigateTo(ReturnUrl ?? "/");
                 return;
             }
             else
             {
-                // Set authentication-specific error message
-                authErrorMessage = "Invalid email or password.";
+                SetError("Invalid email or password.");
             }
         }
         catch (Exception ex)
         {
-            // Use direct exception handling to avoid StateHasChanged during auth process
-            authErrorMessage = "An error occurred during login. Please try again.";
-            // Log the exception in the background without triggering UI updates
-            _ = Task.Run(async () => await ExceptionHandlingService.HandleExceptionAsync(ex, "User login"));
-        }
-    }
-
-    private async Task HandleLoginWithLoadingState()
-    {
-        isLoading = true;
-        authErrorMessage = string.Empty;
-        ClearError();
-        StateHasChanged();
-
-        try
-        {
-            await HandleLogin();
+            SetError("An error occurred during login. Please try again.");
+            // Log the exception for debugging without using centralized handling
+            Console.WriteLine($"Login error: {ex.Message}");
         }
         finally
         {
-            isLoading = false;
-            StateHasChanged();
+            IsLoading = false;
+            // Only update UI if login failed or threw exception
+            // Successful logins will navigate away, so no need to update state
+            if (signInResult?.Succeeded != true)
+            {
+                StateHasChanged();
+            }
         }
-    }    /// <summary>
-         /// Gets the current error message to display, prioritizing authentication-specific errors.
-         /// </summary>
+    }
+
+    /// <summary>
+    /// Gets the current error message to display for authentication errors.
+    /// </summary>
     public string GetDisplayErrorMessage()
     {
-        return !string.IsNullOrEmpty(authErrorMessage) ? authErrorMessage : (ErrorMessage ?? string.Empty);
+        return ErrorMessage ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Handles invalid form submission to help with debugging.
+    /// </summary>
+    private void HandleInvalidSubmit()
+    {
+        // This helps identify when validation is failing
+        Console.WriteLine($"Form validation failed. Email: '{loginModel.Email}', Password length: {loginModel.Password?.Length ?? 0}");
+        SetError("Please fill in all required fields.");
     }
 }

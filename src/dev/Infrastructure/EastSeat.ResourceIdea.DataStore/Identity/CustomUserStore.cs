@@ -6,7 +6,7 @@ using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 namespace EastSeat.ResourceIdea.DataStore.Identity;
 
 public class CustomUserStore(ResourceIdeaDBContext dbContext)
-    : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>
+    : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>, IUserEmailStore<ApplicationUser>
 {
     private readonly ResourceIdeaDBContext _dbContext = dbContext;
 
@@ -14,21 +14,24 @@ public class CustomUserStore(ResourceIdeaDBContext dbContext)
     {
         cancellationToken.ThrowIfCancellationRequested();
         await _dbContext.Users!.AddAsync(user, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
         return IdentityResult.Success;
     }
 
-    public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken)
+    public async Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         _dbContext.Users!.Update(user);
-        return Task.FromResult(IdentityResult.Success);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        return IdentityResult.Success;
     }
 
-    public Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken)
+    public async Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         _dbContext.Users!.Remove(user);
-        return Task.FromResult(IdentityResult.Success);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        return IdentityResult.Success;
     }
 
     public async Task<ApplicationUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
@@ -93,6 +96,52 @@ public class CustomUserStore(ResourceIdeaDBContext dbContext)
     {
         cancellationToken.ThrowIfCancellationRequested();
         return Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
+    }
+
+    // IUserEmailStore<ApplicationUser> implementation
+    public Task<string?> GetEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(user.Email);
+    }
+
+    public Task SetEmailAsync(ApplicationUser user, string? email, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.Email = email;
+        return Task.CompletedTask;
+    }
+
+    public Task<bool> GetEmailConfirmedAsync(ApplicationUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(user.EmailConfirmed);
+    }
+
+    public Task SetEmailConfirmedAsync(ApplicationUser user, bool confirmed, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.EmailConfirmed = confirmed;
+        return Task.CompletedTask;
+    }
+
+    public async Task<ApplicationUser?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return await _dbContext.Users!.FirstOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail, cancellationToken);
+    }
+
+    public Task<string?> GetNormalizedEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(user.NormalizedEmail);
+    }
+
+    public Task SetNormalizedEmailAsync(ApplicationUser user, string? normalizedEmail, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.NormalizedEmail = normalizedEmail;
+        return Task.CompletedTask;
     }
 
     public void Dispose()

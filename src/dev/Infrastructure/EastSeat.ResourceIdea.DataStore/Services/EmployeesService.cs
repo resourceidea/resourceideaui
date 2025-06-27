@@ -49,6 +49,8 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
             UserName = entity.Email,
             ApplicationUserId = entity.ApplicationUserId,
             TenantId = entity.TenantId,
+            NormalizedEmail = entity.Email.ToUpperInvariant(),
+            NormalizedUserName = entity.Email.ToUpperInvariant()
         };
 
         string temporaryPassword = $"Temp@{Guid.NewGuid().ToString("N")[..8]}";

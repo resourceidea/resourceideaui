@@ -3,6 +3,7 @@ using EastSeat.ResourceIdea.Domain.Users.Models;
 using EastSeat.ResourceIdea.Web.Components.Pages.Auth;
 using EastSeat.ResourceIdea.Web.Services;
 using EastSeat.ResourceIdea.Web.UnitTests.TestHelpers;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -47,7 +48,7 @@ public class LoginTests
     }
 
     [Fact]
-    public void Login_WithValidCredentials_ShouldNavigateToDefaultPage()
+    public async Task HandleLoginWithLoadingState_WithValidCredentials_ShouldNavigateToDefaultPage()
     {
         // Arrange
         _mockSignInManager
@@ -61,17 +62,18 @@ public class LoginTests
         SetPrivateField(login, "loginModel", new LoginModel { Email = "test@example.com", Password = "password123" });
 
         // Act
-        var handleLoginMethod = typeof(Login).GetMethod("HandleLogin",
+        var handleLoginMethod = typeof(Login).GetMethod("HandleLoginWithLoadingState",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        handleLoginMethod?.Invoke(login, null);
+        var task = (Task?)handleLoginMethod?.Invoke(login, null);
+        if (task != null) await task;
 
         // Assert
-        _testNavigationManager.VerifyNavigatedTo("/departments", true);
+        _testNavigationManager.VerifyNavigatedTo("/", true);
         _testNavigationManager.VerifyNavigationCallCount(1);
     }
 
     [Fact]
-    public void Login_WithReturnUrl_ShouldNavigateToReturnUrl()
+    public async Task HandleLoginWithLoadingState_WithReturnUrl_ShouldNavigateToReturnUrl()
     {
         // Arrange
         _mockSignInManager
@@ -86,9 +88,10 @@ public class LoginTests
         SetPrivateField(login, "loginModel", new LoginModel { Email = "test@example.com", Password = "password123" });
 
         // Act
-        var handleLoginMethod = typeof(Login).GetMethod("HandleLogin",
+        var handleLoginMethod = typeof(Login).GetMethod("HandleLoginWithLoadingState",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        handleLoginMethod?.Invoke(login, null);
+        var task = (Task?)handleLoginMethod?.Invoke(login, null);
+        if (task != null) await task;
 
         // Assert
         _testNavigationManager.VerifyNavigatedTo("/custom-page", true);
@@ -96,7 +99,7 @@ public class LoginTests
     }
 
     [Fact]
-    public void Login_WithInvalidCredentials_ShouldSetErrorMessage()
+    public async Task HandleLoginWithLoadingState_WithInvalidCredentials_ShouldSetErrorMessage()
     {
         // Arrange
         _mockSignInManager
@@ -110,20 +113,23 @@ public class LoginTests
         SetPrivateField(login, "loginModel", new LoginModel { Email = "test@example.com", Password = "wrongpassword" });
 
         // Act
-        var handleLoginMethod = typeof(Login).GetMethod("HandleLogin",
+        var handleLoginMethod = typeof(Login).GetMethod("HandleLoginWithLoadingState",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        handleLoginMethod?.Invoke(login, null);
+        var task = (Task?)handleLoginMethod?.Invoke(login, null);
+        if (task != null) await task;
 
         // Assert
-        var authErrorMessage = GetPrivateField<string>(login, "authErrorMessage");
-        Assert.Equal("Invalid email or password.", authErrorMessage);
+        var hasError = GetPrivateProperty<bool>(login, "HasError");
+        var errorMessage = GetPrivateProperty<string>(login, "ErrorMessage");
+        Assert.True(hasError);
+        Assert.Equal("Invalid email or password.", errorMessage);
 
         // Verify no navigation occurred
         _testNavigationManager.VerifyNavigationCallCount(0);
     }
 
     [Fact]
-    public void Login_WhenException_ShouldSetGenericErrorMessage()
+    public async Task HandleLoginWithLoadingState_WhenException_ShouldSetGenericErrorMessage()
     {
         // Arrange
         _mockSignInManager
@@ -131,8 +137,8 @@ public class LoginTests
             .ThrowsAsync(new InvalidOperationException("Test exception"));
 
         _mockExceptionHandlingService
-            .Setup(x => x.HandleExceptionAsync(It.IsAny<Exception>(), It.IsAny<string>()))
-            .ReturnsAsync("Error logged");
+            .Setup(x => x.HandleExceptionAsync(It.IsAny<Exception>(), It.IsAny<ComponentBase>(), It.IsAny<string>()))
+            .ReturnsAsync("An error occurred during login. Please try again.");
 
         var login = new Login();
         SetPrivateProperty(login, "SignInManager", _mockSignInManager.Object);
@@ -141,23 +147,26 @@ public class LoginTests
         SetPrivateField(login, "loginModel", new LoginModel { Email = "test@example.com", Password = "password123" });
 
         // Act
-        var handleLoginMethod = typeof(Login).GetMethod("HandleLogin",
+        var handleLoginMethod = typeof(Login).GetMethod("HandleLoginWithLoadingState",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        handleLoginMethod?.Invoke(login, null);
+        var task = (Task?)handleLoginMethod?.Invoke(login, null);
+        if (task != null) await task;
 
         // Assert
-        var authErrorMessage = GetPrivateField<string>(login, "authErrorMessage");
-        Assert.Equal("An error occurred during login. Please try again.", authErrorMessage);
+        var hasError = GetPrivateProperty<bool>(login, "HasError");
+        var errorMessage = GetPrivateProperty<string>(login, "ErrorMessage");
+        Assert.True(hasError);
+        Assert.Equal("An error occurred during login. Please try again.", errorMessage);
 
         // Verify no navigation occurred
         _testNavigationManager.VerifyNavigationCallCount(0);
     }
     [Fact]
-    public void GetDisplayErrorMessage_WithAuthError_ShouldReturnAuthError()
+    public void GetDisplayErrorMessage_WithErrorMessage_ShouldReturnErrorMessage()
     {
         // Arrange
         var login = new Login();
-        SetPrivateField(login, "authErrorMessage", "Auth error");
+        SetPrivateProperty(login, "ErrorMessage", "Test error message");
 
         // Act
         var method = typeof(Login).GetMethod("GetDisplayErrorMessage",
@@ -165,16 +174,15 @@ public class LoginTests
         var result = method?.Invoke(login, null) as string;
 
         // Assert
-        Assert.Equal("Auth error", result);
+        Assert.Equal("Test error message", result);
     }
 
     [Fact]
-    public void GetDisplayErrorMessage_WithoutAuthError_ShouldReturnBaseError()
+    public void GetDisplayErrorMessage_WithoutErrorMessage_ShouldReturnEmptyString()
     {
         // Arrange
         var login = new Login();
-        SetPrivateField(login, "authErrorMessage", string.Empty);
-        SetPrivateProperty(login, "ErrorMessage", "Base error");
+        // ErrorMessage is null by default, no need to set it
 
         // Act
         var method = typeof(Login).GetMethod("GetDisplayErrorMessage",
@@ -182,7 +190,7 @@ public class LoginTests
         var result = method?.Invoke(login, null) as string;
 
         // Assert
-        Assert.Equal("Base error", result);
+        Assert.Equal(string.Empty, result);
     }
 
     private static void SetPrivateProperty(object obj, string propertyName, object value)
@@ -204,5 +212,12 @@ public class LoginTests
         var field = obj.GetType().GetField(fieldName,
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         return (T)(field?.GetValue(obj) ?? default(T)!);
+    }
+
+    private static T GetPrivateProperty<T>(object obj, string propertyName)
+    {
+        var property = obj.GetType().GetProperty(propertyName,
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        return (T)(property?.GetValue(obj) ?? default(T)!);
     }
 }

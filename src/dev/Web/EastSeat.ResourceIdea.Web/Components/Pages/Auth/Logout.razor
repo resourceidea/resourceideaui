@@ -1,6 +1,8 @@
 @page "/logout"
 @using EastSeat.ResourceIdea.DataStore.Identity.Entities
 @using Microsoft.AspNetCore.Identity
+@using EastSeat.ResourceIdea.Web.Components.Base
+@inherits ResourceIdeaComponentBase
 @attribute [AllowAnonymous]
 @inject SignInManager<ApplicationUser> SignInManager
 @inject NavigationManager Navigation
@@ -8,7 +10,18 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await SignInManager.SignOutAsync();
-        Navigation.NavigateTo("/", forceLoad: true);
+        try
+        {
+            await SignInManager.SignOutAsync();
+            Navigation.NavigateTo("/");
+        }
+        catch (Exception)
+        {
+            // Handle logout-specific exceptions
+            // In case of logout failure, still redirect to home
+            Navigation.NavigateTo("/");
+            // Optionally log the exception
+            // Logger?.LogError(ex, "Logout failed");
+        }
     }
 }
