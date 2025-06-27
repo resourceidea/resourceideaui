@@ -30,6 +30,9 @@ public partial class EmployeesTimeline : ResourceIdeaComponentBase
     private int EndYear { get; set; } = DateTime.Today.Year;
     private string SearchTerm { get; set; } = string.Empty;
 
+    // Modal state
+    private Domain.WorkItems.Models.WorkItemModel? SelectedWorkItem { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         // Set default date range to current month to next 3 months
@@ -67,6 +70,18 @@ public partial class EmployeesTimeline : ResourceIdeaComponentBase
     private void NavigateToWorkItem(Guid workItemId)
     {
         NavigationManager.NavigateTo($"/workitems/{workItemId}");
+    }
+
+    private void ShowWorkItemDetails(Domain.WorkItems.Models.WorkItemModel workItem)
+    {
+        SelectedWorkItem = workItem;
+        StateHasChanged();
+    }
+
+    private void CloseWorkItemModal()
+    {
+        SelectedWorkItem = null;
+        StateHasChanged();
     }
 
     private string GetWorkItemStatusClass(WorkItemStatus status)
@@ -149,5 +164,91 @@ public partial class EmployeesTimeline : ResourceIdeaComponentBase
     {
         var currentDateOffset = ((currentDate.DayNumber - startDate.DayNumber) / (double)totalDays) * 100;
         return $"left: {currentDateOffset:F2}%";
+    }
+
+    private List<DateOnly> GetTimelineDates(DateOnly startDate, DateOnly endDate)
+    {
+        var dates = new List<DateOnly>();
+        for (var date = startDate; date <= endDate; date = date.AddDays(1))
+        {
+            dates.Add(date);
+        }
+        return dates;
+    }
+
+    private bool IsWeekend(DateOnly date)
+    {
+        return date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
+    }
+
+    private Domain.WorkItems.Models.WorkItemModel? GetWorkItemForDate(EmployeeTimelineModel employee, DateOnly date)
+    {
+        return employee.WorkItems.FirstOrDefault(wi => 
+            wi.StartDate.HasValue && 
+            IsDateInWorkItemRange(wi, date));
+    }
+
+    private bool IsDateInWorkItemRange(Domain.WorkItems.Models.WorkItemModel workItem, DateOnly date)
+    {
+        if (!workItem.StartDate.HasValue) return false;
+        
+        var startDate = DateOnly.FromDateTime(workItem.StartDate.Value.Date);
+        var endDate = workItem.CompletedDate.HasValue 
+            ? DateOnly.FromDateTime(workItem.CompletedDate.Value.Date)
+            : DateOnly.FromDateTime(DateTime.Today.AddDays(365)); // Default to 1 year if no end date
+        
+        return date >= startDate && date <= endDate;
+    }
+
+    private string GetWorkItemDisplayText(Domain.WorkItems.Models.WorkItemModel workItem)
+    {
+        var displayText = "";
+        
+        if (!string.IsNullOrEmpty(workItem.ClientName))
+        {
+            displayText = workItem.ClientName;
+            
+            if (!string.IsNullOrEmpty(workItem.EngagementTitle))
+            {
+                displayText += $" - {workItem.EngagementTitle}";
+            }
+        }
+        else if (!string.IsNullOrEmpty(workItem.EngagementTitle))
+        {
+            displayText = workItem.EngagementTitle;
+        }
+        else
+        {
+            displayText = workItem.Title;
+        }
+
+        // Truncate if too long for cell display
+        return TruncateText(displayText, 15);
+    }
+
+    private string CalculateUtilization(EmployeeTimelineModel employee)
+    {
+        // Simple calculation based on work items assigned
+        // In a real implementation, this would calculate based on hours or capacity
+        var totalWorkItems = employee.WorkItems.Count;
+        var activeWorkItems = employee.WorkItems.Count(wi => 
+            wi.Status == WorkItemStatus.InProgress || wi.Status == WorkItemStatus.Completed);
+        
+        if (totalWorkItems == 0) return "0";
+        
+        var utilization = (activeWorkItems * 100.0) / totalWorkItems;
+        return utilization.ToString("F1");
+    }
+
+    private string GetStatusBadgeClass(WorkItemStatus status)
+    {
+        return status switch
+        {
+            WorkItemStatus.Completed => "badge bg-success",
+            WorkItemStatus.InProgress => "badge bg-warning",
+            WorkItemStatus.OnHold => "badge bg-secondary",
+            WorkItemStatus.Canceled => "badge bg-danger",
+            _ => "badge bg-primary"
+        };
     }
 }

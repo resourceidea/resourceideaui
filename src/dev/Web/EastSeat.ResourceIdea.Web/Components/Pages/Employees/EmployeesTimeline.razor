@@ -71,72 +71,65 @@
         }
         else if (EmployeeTimelines != null && EmployeeTimelines.Any())
         {
-            <div class="timeline-container">
-                <div class="timeline-header">
-                    <div class="timeline-dates">
-                        @{
-                            var startDate = new DateOnly(StartYear, StartMonth, 1);
-                            var endDate = new DateOnly(EndYear, EndMonth, DateTime.DaysInMonth(EndYear, EndMonth));
-                            var totalDays = endDate.DayNumber - startDate.DayNumber + 1;
-                            var currentDate = DateOnly.FromDateTime(DateTime.Today);
-                        }
-                        
-                        @for (var date = startDate; date <= endDate; date = date.AddDays(1))
+            var startDate = new DateOnly(StartYear, StartMonth, 1);
+            var endDate = new DateOnly(EndYear, EndMonth, DateTime.DaysInMonth(EndYear, EndMonth));
+            var currentDate = DateOnly.FromDateTime(DateTime.Today);
+            var timelineDates = GetTimelineDates(startDate, endDate);
+
+            <div class="timeline-grid-container">
+                <!-- Header Row -->
+                <div class="timeline-grid-header">
+                    <!-- Frozen Employee Column Header -->
+                    <div class="employee-header-cell">
+                        <div class="employee-header-content">
+                            <span>Employee</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Date Headers -->
+                    <div class="date-headers-container">
+                        @foreach (var date in timelineDates)
                         {
-                            <div class="timeline-date-header @(date == currentDate ? "current-date" : "")" 
-                                 style="width: @(100.0 / totalDays)%">
-                                @if (date.Day == 1 || date == startDate || date == endDate)
+                            <div class="date-header-cell @(IsWeekend(date) ? "weekend" : "") @(date == currentDate ? "current-date" : "")">
+                                <div class="date-number">@date.Day</div>
+                                @if (date.Day == 1 || date == timelineDates.First())
                                 {
-                                    <span class="date-label">@date.ToString("MMM dd")</span>
-                                }
-                                else if (date.DayOfWeek == DayOfWeek.Monday)
-                                {
-                                    <span class="week-marker">@date.Day</span>
+                                    <div class="month-label">@date.ToString("MMM")</div>
                                 }
                             </div>
                         }
                     </div>
                 </div>
 
-                <div class="timeline-body">
+                <!-- Employee Rows -->
+                <div class="timeline-grid-body">
                     @foreach (var employee in EmployeeTimelines)
                     {
-                        <div class="timeline-row">
-                            <div class="employee-info">
+                        <div class="timeline-grid-row">
+                            <!-- Frozen Employee Info -->
+                            <div class="employee-info-cell">
                                 <div class="employee-name">@employee.FullName</div>
-                                <div class="employee-details">
-                                    <small class="text-muted">@employee.JobPositionTitle</small>
-                                    @if (!string.IsNullOrEmpty(employee.DepartmentName))
-                                    {
-                                        <small class="text-muted"> - @employee.DepartmentName</small>
-                                    }
-                                </div>
+                                <div class="employee-position">@employee.JobPositionTitle</div>
+                                <div class="employee-utilization">@CalculateUtilization(employee)%</div>
                             </div>
-                            <div class="timeline-items">
-                                @foreach (var workItem in employee.WorkItems.Where(wi => wi.StartDate.HasValue))
+                            
+                            <!-- Timeline Cells -->
+                            <div class="timeline-cells-container">
+                                @foreach (var date in timelineDates)
                                 {
-                                    <div class="timeline-item @GetWorkItemStatusClass(workItem.Status)" 
-                                         style="@GetWorkItemStyles(workItem, startDate, endDate)"
-                                         @onclick="() => NavigateToWorkItem(workItem.Id.Value)"
-                                         title="@GetWorkItemTooltip(workItem)">
-                                        <div class="timeline-item-content">
-                                            <div class="item-title">@TruncateText(workItem.Title, 20)</div>
-                                            @if (!string.IsNullOrEmpty(workItem.ClientName))
-                                            {
-                                                <div class="item-client">@workItem.ClientName</div>
-                                            }
-                                            @if (!string.IsNullOrEmpty(workItem.EngagementTitle))
-                                            {
-                                                <div class="item-engagement">@TruncateText(workItem.EngagementTitle, 15)</div>
-                                            }
-                                        </div>
+                                    <div class="timeline-cell @(IsWeekend(date) ? "weekend" : "")">
+                                        @{
+                                            var workItem = GetWorkItemForDate(employee, date);
+                                        }
+                                        @if (workItem != null)
+                                        {
+                                            <div class="work-assignment @GetWorkItemStatusClass(workItem.Status)"
+                                                 @onclick="() => ShowWorkItemDetails(workItem)"
+                                                 title="@GetWorkItemTooltip(workItem)">
+                                                @GetWorkItemDisplayText(workItem)
+                                            </div>
+                                        }
                                     </div>
-                                }
-
-                                @* Current date indicator *@
-                                @if (currentDate >= startDate && currentDate <= endDate)
-                                {
-                                    <div class="current-date-line" style="@GetCurrentDateLineStyle(currentDate, startDate, totalDays)"></div>
                                 }
                             </div>
                         </div>
@@ -162,157 +155,257 @@
     </div>
 </div>
 
+<!-- Work Item Details Modal -->
+@if (SelectedWorkItem != null)
+{
+    <div class="modal show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Work Item Details</h5>
+                    <button type="button" class="btn-close" @onclick="CloseWorkItemModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Title</label>
+                                <p>@SelectedWorkItem.Title</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Client</label>
+                                <p>@(SelectedWorkItem.ClientName ?? "N/A")</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Engagement</label>
+                                <p>@(SelectedWorkItem.EngagementTitle ?? "N/A")</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Status</label>
+                                <p><span class="badge @GetStatusBadgeClass(SelectedWorkItem.Status)">@SelectedWorkItem.Status</span></p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Priority</label>
+                                <p>@SelectedWorkItem.Priority</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Start Date</label>
+                                <p>@(SelectedWorkItem.StartDate?.ToString("MMM dd, yyyy") ?? "N/A")</p>
+                            </div>
+                            @if (SelectedWorkItem.CompletedDate.HasValue)
+                            {
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Completed Date</label>
+                                    <p>@SelectedWorkItem.CompletedDate.Value.ToString("MMM dd, yyyy")</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(SelectedWorkItem.Description))
+                    {
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Description</label>
+                            <p>@SelectedWorkItem.Description</p>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseWorkItemModal">Close</button>
+                    <button type="button" class="btn btn-primary" @onclick="() => NavigateToWorkItem(SelectedWorkItem.Id.Value)">View Full Details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 <style>
-    .timeline-container {
+    .timeline-grid-container {
         background: white;
         border: 1px solid #dee2e6;
         border-radius: 8px;
         overflow: hidden;
+        position: relative;
+        height: 70vh;
+        overflow-x: auto;
+        overflow-y: auto;
     }
 
-    .timeline-header {
-        background: #f8f9fa;
-        border-bottom: 1px solid #dee2e6;
-        padding: 10px 200px 10px 10px;
+    .timeline-grid-header {
+        display: flex;
         position: sticky;
         top: 0;
-        z-index: 10;
+        z-index: 100;
+        background: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
     }
 
-    .timeline-dates {
-        display: flex;
-        position: relative;
-        height: 40px;
-    }
-
-    .timeline-date-header {
-        position: relative;
-        border-right: 1px solid #e9ecef;
+    .employee-header-cell {
+        width: 200px;
+        min-width: 200px;
+        position: sticky;
+        left: 0;
+        z-index: 101;
+        background: #f8f9fa;
+        border-right: 2px solid #dee2e6;
+        padding: 12px;
+        font-weight: 600;
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .date-headers-container {
+        display: flex;
+        min-width: max-content;
+    }
+
+    .date-header-cell {
+        width: 40px;
+        min-width: 40px;
+        padding: 8px 4px;
+        text-align: center;
+        border-right: 1px solid #e9ecef;
+        background: #f8f9fa;
         font-size: 12px;
     }
 
-    .timeline-date-header.current-date {
-        background-color: #fff3cd;
+    .date-header-cell.weekend {
+        background: #e3f2fd;
+    }
+
+    .date-header-cell.current-date {
+        background: #fff3cd;
         border-left: 2px solid #ff6b6b;
         border-right: 2px solid #ff6b6b;
     }
 
-    .date-label {
+    .date-number {
         font-weight: 600;
         color: #495057;
     }
 
-    .week-marker {
-        color: #6c757d;
+    .month-label {
         font-size: 10px;
+        color: #6c757d;
+        margin-top: 2px;
     }
 
-    .timeline-row {
+    .timeline-grid-body {
+        overflow-y: auto;
+    }
+
+    .timeline-grid-row {
         display: flex;
         border-bottom: 1px solid #f1f3f4;
-        min-height: 80px;
-        position: relative;
+        min-height: 60px;
     }
 
-    .timeline-row:hover {
+    .timeline-grid-row:hover {
         background-color: #f8f9fa;
     }
 
-    .employee-info {
+    .employee-info-cell {
         width: 200px;
-        padding: 15px;
-        border-right: 1px solid #dee2e6;
-        background: white;
+        min-width: 200px;
         position: sticky;
         left: 0;
-        z-index: 5;
+        z-index: 10;
+        background: white;
+        border-right: 2px solid #dee2e6;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .timeline-grid-row:hover .employee-info-cell {
+        background-color: #f8f9fa;
     }
 
     .employee-name {
         font-weight: 600;
         color: #495057;
         margin-bottom: 4px;
+        font-size: 14px;
     }
 
-    .employee-details {
+    .employee-position {
         font-size: 12px;
+        color: #6c757d;
+        margin-bottom: 2px;
     }
 
-    .timeline-items {
-        flex: 1;
-        position: relative;
-        padding: 10px;
+    .employee-utilization {
+        font-size: 12px;
+        font-weight: 600;
+        color: #28a745;
+    }
+
+    .timeline-cells-container {
+        display: flex;
+        min-width: max-content;
+    }
+
+    .timeline-cell {
+        width: 40px;
+        min-width: 40px;
         min-height: 60px;
+        border-right: 1px solid #e9ecef;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px;
     }
 
-    .timeline-item {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
+    .timeline-cell.weekend {
+        background: #f3e5f5;
+    }
+
+    .work-assignment {
         background: #007bff;
         color: white;
         border-radius: 4px;
-        padding: 8px;
+        padding: 4px 6px;
         cursor: pointer;
-        min-height: 40px;
-        border: 1px solid rgba(255,255,255,0.2);
+        font-size: 10px;
+        line-height: 1.2;
+        text-align: center;
+        min-height: 24px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         transition: all 0.2s ease;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
-    .timeline-item:hover {
-        transform: translateY(-50%) scale(1.05);
+    .work-assignment:hover {
+        transform: scale(1.05);
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         z-index: 15;
+        position: relative;
     }
 
-    .timeline-item.status-completed {
+    .work-assignment.status-completed {
         background: #28a745;
     }
 
-    .timeline-item.status-inprogress {
+    .work-assignment.status-inprogress {
         background: #ffc107;
         color: #212529;
     }
 
-    .timeline-item.status-onhold {
+    .work-assignment.status-onhold {
         background: #6c757d;
     }
 
-    .timeline-item.status-cancelled {
+    .work-assignment.status-cancelled {
         background: #dc3545;
-    }
-
-    .timeline-item-content {
-        font-size: 11px;
-        line-height: 1.2;
-    }
-
-    .item-title {
-        font-weight: 600;
-        margin-bottom: 2px;
-    }
-
-    .item-client {
-        opacity: 0.9;
-        margin-bottom: 1px;
-    }
-
-    .item-engagement {
-        opacity: 0.8;
-        font-size: 10px;
-    }
-
-    .current-date-line {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: #ff6b6b;
-        z-index: 20;
-        pointer-events: none;
     }
 
     .timeline-controls {
@@ -322,18 +415,52 @@
         border: 1px solid #dee2e6;
     }
 
+    /* Modal styling */
+    .modal-content {
+        border-radius: 8px;
+    }
+
+    .modal-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .badge.bg-success {
+        background-color: #28a745 !important;
+    }
+
+    .badge.bg-warning {
+        background-color: #ffc107 !important;
+        color: #212529 !important;
+    }
+
+    .badge.bg-secondary {
+        background-color: #6c757d !important;
+    }
+
+    .badge.bg-danger {
+        background-color: #dc3545 !important;
+    }
+
+    .badge.bg-primary {
+        background-color: #007bff !important;
+    }
+
     @@media (max-width: 768px) {
-        .timeline-header {
-            padding-left: 150px;
-        }
-        
-        .employee-info {
+        .employee-info-cell,
+        .employee-header-cell {
             width: 150px;
-            padding: 10px;
+            min-width: 150px;
         }
         
         .employee-name {
-            font-size: 14px;
+            font-size: 12px;
+        }
+        
+        .date-header-cell,
+        .timeline-cell {
+            width: 35px;
+            min-width: 35px;
         }
     }
 </style>
