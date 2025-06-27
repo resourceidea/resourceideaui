@@ -28,10 +28,10 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
     /// <summary>
     /// Indicates if the page is currently loading (alias for IsLoading for backward compatibility).
     /// </summary>
-    protected bool IsLoadingPage 
-    { 
-        get => IsLoading; 
-        set => IsLoading = value; 
+    protected bool IsLoadingPage
+    {
+        get => IsLoading;
+        set => IsLoading = value;
     }
 
     /// <summary>
@@ -53,9 +53,9 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
         try
         {
             ClearError();
-            
+
             var result = await ExceptionHandlingService.ExecuteAsync(operation, context);
-            
+
             if (!result.IsSuccess)
             {
                 SetError(result.ErrorMessage!);
@@ -94,9 +94,9 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
         try
         {
             ClearError();
-            
+
             var result = await ExceptionHandlingService.ExecuteAsync(operation, context);
-            
+
             if (!result.IsSuccess)
             {
                 SetError(result.ErrorMessage!);

@@ -6,6 +6,7 @@
 @layout AuthLayout
 @inherits EastSeat.ResourceIdea.Web.Components.Base.ResourceIdeaComponentBase
 @attribute [AllowAnonymous]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Login</PageTitle>
 

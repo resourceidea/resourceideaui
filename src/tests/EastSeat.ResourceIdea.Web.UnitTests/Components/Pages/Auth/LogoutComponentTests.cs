@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using EastSeat.ResourceIdea.Web.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace EastSeat.ResourceIdea.Web.UnitTests.Components.Pages.Auth;
 
@@ -23,10 +24,12 @@ public class LogoutComponentTests : TestContext
         var mockSignInManager = CreateMockSignInManager();
         var mockAuthStateProvider = CreateMockAuthenticationStateProvider();
         var mockExceptionHandlingService = CreateMockExceptionHandlingService();
+        var mockHttpContextAccessor = CreateMockHttpContextAccessor();
 
         Services.AddSingleton(mockSignInManager.Object);
         Services.AddSingleton<AuthenticationStateProvider>(mockAuthStateProvider.Object);
         Services.AddSingleton(mockExceptionHandlingService.Object);
+        Services.AddSingleton(mockHttpContextAccessor.Object);
         Services.AddAuthorizationCore();
 
         // Add a real NavigationManager
@@ -47,7 +50,7 @@ public class LogoutComponentTests : TestContext
         // Arrange
         var mockSignInManager = CreateMockSignInManager();
         var mockExceptionHandlingService = CreateMockExceptionHandlingService();
-        
+
         Services.AddSingleton(mockSignInManager.Object);
         Services.AddSingleton(mockExceptionHandlingService.Object);
         Services.AddSingleton<NavigationManager>(new MockNavigationManager("https://localhost/"));
@@ -66,7 +69,7 @@ public class LogoutComponentTests : TestContext
         var mockSignInManager = CreateMockSignInManager();
         var mockExceptionHandlingService = CreateMockExceptionHandlingService();
         var mockNavigationManager = new MockNavigationManager("https://localhost/");
-        
+
         Services.AddSingleton(mockSignInManager.Object);
         Services.AddSingleton(mockExceptionHandlingService.Object);
         Services.AddSingleton<NavigationManager>(mockNavigationManager);
@@ -132,20 +135,31 @@ public class LogoutComponentTests : TestContext
         var mockAuthStateProvider = new Mock<AuthenticationStateProvider>();
         var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
         var authState = new AuthenticationState(anonymousUser);
-        
+
         mockAuthStateProvider.Setup(x => x.GetAuthenticationStateAsync())
             .ReturnsAsync(authState);
-        
+
         return mockAuthStateProvider;
     }
 
     private static Mock<IExceptionHandlingService> CreateMockExceptionHandlingService()
     {
         var mock = new Mock<IExceptionHandlingService>();
-        
+
         mock.Setup(x => x.ExecuteAsync(It.IsAny<Func<Task>>(), It.IsAny<string>()))
             .Returns(Task.FromResult(ExceptionHandlingResult.Success()));
-        
+
+        return mock;
+    }
+
+    private static Mock<IHttpContextAccessor> CreateMockHttpContextAccessor()
+    {
+        var mock = new Mock<IHttpContextAccessor>();
+        var mockHttpContext = new Mock<HttpContext>();
+
+        // Setup HttpContext to be available for the components
+        mock.Setup(x => x.HttpContext).Returns(mockHttpContext.Object);
+
         return mock;
     }
 

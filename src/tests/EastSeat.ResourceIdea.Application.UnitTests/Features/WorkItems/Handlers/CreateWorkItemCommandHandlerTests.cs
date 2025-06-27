@@ -96,18 +96,8 @@ public class CreateWorkItemCommandHandlerTests
             TenantId = TenantId.Create(Guid.NewGuid())
         };
 
-        // Create a test WorkItem instance for the response
-        var testWorkItem = new WorkItem
-        {
-            Id = WorkItemId.NewId(),
-            Title = command.Title,
-            Description = command.Description,
-            EngagementId = command.EngagementId,
-            TenantId = command.TenantId,
-            Status = WorkItemStatus.NotStarted,
-            Priority = Priority.Medium
-        };
-        var serviceResponse = ResourceIdeaResponse<WorkItem>.Success(testWorkItem);
+        // Create a service response with success but null content to simulate empty entity
+        var serviceResponse = ResourceIdeaResponse<WorkItem>.Success(null!);
 
         _mockWorkItemsService
             .Setup(s => s.AddAsync(It.IsAny<WorkItem>(), It.IsAny<CancellationToken>()))

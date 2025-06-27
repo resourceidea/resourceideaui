@@ -4,24 +4,40 @@
 @using EastSeat.ResourceIdea.Web.Components.Base
 @inherits ResourceIdeaComponentBase
 @attribute [AllowAnonymous]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inject SignInManager<ApplicationUser> SignInManager
 @inject NavigationManager Navigation
+@inject IHttpContextAccessor HttpContextAccessor
 
 @code {
     protected override async Task OnInitializedAsync()
     {
+        // Ensure we only perform logout operations when HttpContext is available
+        if (HttpContextAccessor.HttpContext == null)
+        {
+            // If HttpContext is not available (during prerendering), just redirect
+            Navigation.NavigateTo("/");
+            return;
+        }
+
         try
         {
             await SignInManager.SignOutAsync();
             Navigation.NavigateTo("/");
         }
-        catch (Exception)
+        catch (InvalidOperationException ex) when (ex.Message.Contains("HttpContext"))
         {
-            // Handle logout-specific exceptions
+            // Handle HttpContext-related exceptions during logout
+            // In case of logout failure due to HttpContext issues, still redirect to home
+            Navigation.NavigateTo("/");
+            Console.WriteLine($"HttpContext error during logout: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Handle other logout-specific exceptions
             // In case of logout failure, still redirect to home
             Navigation.NavigateTo("/");
-            // Optionally log the exception
-            // Logger?.LogError(ex, "Logout failed");
+            Console.WriteLine($"Logout error: {ex.Message}");
         }
     }
 }
