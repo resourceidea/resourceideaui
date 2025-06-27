@@ -20,7 +20,7 @@ public partial class Login : ResourceIdeaComponentBase
     private async Task HandleLoginWithLoadingState()
     {
         IsLoading = true;
-        StateHasChanged(); // Show loading state immediately
+        await SafeStateHasChangedAsync(); // Show loading state immediately
 
         Microsoft.AspNetCore.Identity.SignInResult? signInResult = null;
 
@@ -67,7 +67,7 @@ public partial class Login : ResourceIdeaComponentBase
             // Successful logins will navigate away, so no need to update state
             if (signInResult?.Succeeded != true)
             {
-                StateHasChanged();
+                await SafeStateHasChangedAsync();
             }
         }
     }

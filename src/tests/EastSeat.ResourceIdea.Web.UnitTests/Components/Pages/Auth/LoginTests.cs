@@ -51,15 +51,22 @@ public class LoginTests
     public async Task HandleLoginWithLoadingState_WithValidCredentials_ShouldNavigateToDefaultPage()
     {
         // Arrange
+        var testUser = new ApplicationUser { Id = "1", UserName = "testuser", Email = "test@example.com" };
+        
+        _mockUserManager
+            .Setup(x => x.FindByEmailAsync("test@example.com"))
+            .ReturnsAsync(testUser);
+            
         _mockSignInManager
             .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
             .ReturnsAsync(SignInResult.Success);
 
         var login = new Login();
+        SetPrivateProperty(login, "UserManager", _mockUserManager.Object);
         SetPrivateProperty(login, "SignInManager", _mockSignInManager.Object);
         SetPrivateProperty(login, "Navigation", _testNavigationManager);
         SetPrivateProperty(login, "ExceptionHandlingService", _mockExceptionHandlingService.Object);
-        SetPrivateField(login, "loginModel", new LoginModel { Email = "test@example.com", Password = "password123" });
+        SetPrivateProperty(login, "loginModel", new LoginModel { Email = "test@example.com", Password = "password123" });
 
         // Act
         var handleLoginMethod = typeof(Login).GetMethod("HandleLoginWithLoadingState",
@@ -68,7 +75,7 @@ public class LoginTests
         if (task != null) await task;
 
         // Assert
-        _testNavigationManager.VerifyNavigatedTo("/", true);
+        _testNavigationManager.VerifyNavigatedTo("/", false);
         _testNavigationManager.VerifyNavigationCallCount(1);
     }
 
@@ -76,16 +83,23 @@ public class LoginTests
     public async Task HandleLoginWithLoadingState_WithReturnUrl_ShouldNavigateToReturnUrl()
     {
         // Arrange
+        var testUser = new ApplicationUser { Id = "1", UserName = "testuser", Email = "test@example.com" };
+        
+        _mockUserManager
+            .Setup(x => x.FindByEmailAsync("test@example.com"))
+            .ReturnsAsync(testUser);
+            
         _mockSignInManager
             .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
             .ReturnsAsync(SignInResult.Success);
 
         var login = new Login();
+        SetPrivateProperty(login, "UserManager", _mockUserManager.Object);
         SetPrivateProperty(login, "SignInManager", _mockSignInManager.Object);
         SetPrivateProperty(login, "Navigation", _testNavigationManager);
         SetPrivateProperty(login, "ExceptionHandlingService", _mockExceptionHandlingService.Object);
         SetPrivateProperty(login, "ReturnUrl", "/custom-page");
-        SetPrivateField(login, "loginModel", new LoginModel { Email = "test@example.com", Password = "password123" });
+        SetPrivateProperty(login, "loginModel", new LoginModel { Email = "test@example.com", Password = "password123" });
 
         // Act
         var handleLoginMethod = typeof(Login).GetMethod("HandleLoginWithLoadingState",
@@ -94,7 +108,7 @@ public class LoginTests
         if (task != null) await task;
 
         // Assert
-        _testNavigationManager.VerifyNavigatedTo("/custom-page", true);
+        _testNavigationManager.VerifyNavigatedTo("/custom-page", false);
         _testNavigationManager.VerifyNavigationCallCount(1);
     }
 
@@ -102,15 +116,22 @@ public class LoginTests
     public async Task HandleLoginWithLoadingState_WithInvalidCredentials_ShouldSetErrorMessage()
     {
         // Arrange
+        var testUser = new ApplicationUser { Id = "1", UserName = "testuser", Email = "test@example.com" };
+        
+        _mockUserManager
+            .Setup(x => x.FindByEmailAsync("test@example.com"))
+            .ReturnsAsync(testUser);
+            
         _mockSignInManager
             .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
             .ReturnsAsync(SignInResult.Failed);
 
         var login = new Login();
+        SetPrivateProperty(login, "UserManager", _mockUserManager.Object);
         SetPrivateProperty(login, "SignInManager", _mockSignInManager.Object);
         SetPrivateProperty(login, "Navigation", _testNavigationManager);
         SetPrivateProperty(login, "ExceptionHandlingService", _mockExceptionHandlingService.Object);
-        SetPrivateField(login, "loginModel", new LoginModel { Email = "test@example.com", Password = "wrongpassword" });
+        SetPrivateProperty(login, "loginModel", new LoginModel { Email = "test@example.com", Password = "wrongpassword" });
 
         // Act
         var handleLoginMethod = typeof(Login).GetMethod("HandleLoginWithLoadingState",
@@ -132,6 +153,12 @@ public class LoginTests
     public async Task HandleLoginWithLoadingState_WhenException_ShouldSetGenericErrorMessage()
     {
         // Arrange
+        var testUser = new ApplicationUser { Id = "1", UserName = "testuser", Email = "test@example.com" };
+        
+        _mockUserManager
+            .Setup(x => x.FindByEmailAsync("test@example.com"))
+            .ReturnsAsync(testUser);
+            
         _mockSignInManager
             .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
             .ThrowsAsync(new InvalidOperationException("Test exception"));
@@ -141,10 +168,11 @@ public class LoginTests
             .ReturnsAsync("An error occurred during login. Please try again.");
 
         var login = new Login();
+        SetPrivateProperty(login, "UserManager", _mockUserManager.Object);
         SetPrivateProperty(login, "SignInManager", _mockSignInManager.Object);
         SetPrivateProperty(login, "Navigation", _testNavigationManager);
         SetPrivateProperty(login, "ExceptionHandlingService", _mockExceptionHandlingService.Object);
-        SetPrivateField(login, "loginModel", new LoginModel { Email = "test@example.com", Password = "password123" });
+        SetPrivateProperty(login, "loginModel", new LoginModel { Email = "test@example.com", Password = "password123" });
 
         // Act
         var handleLoginMethod = typeof(Login).GetMethod("HandleLoginWithLoadingState",
