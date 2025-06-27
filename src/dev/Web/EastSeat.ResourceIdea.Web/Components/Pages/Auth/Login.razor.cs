@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.Auth;
 
@@ -13,6 +14,7 @@ public partial class Login : ResourceIdeaComponentBase
     [Inject] private SignInManager<ApplicationUser> SignInManager { get; set; } = default!;
     [Inject] private UserManager<ApplicationUser> UserManager { get; set; } = default!;
     [Inject] private NavigationManager Navigation { get; set; } = default!;
+    [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
 
     private LoginModel loginModel = new();
 
@@ -21,28 +23,19 @@ public partial class Login : ResourceIdeaComponentBase
 
     private async Task HandleLoginWithLoadingState()
     {
-        // Clear any previous errors
-        ClearError();
-
-        // Set loading state manually for authentication operations
-        IsLoading = true;
-        SafeStateHasChanged();
-
-        try
+        await ExecuteAsync(async () =>
         {
             // Validate input before proceeding
             if (string.IsNullOrWhiteSpace(loginModel.Email) || string.IsNullOrWhiteSpace(loginModel.Password))
             {
-                SetError("Please fill in all required fields.");
-                return;
+                throw new InvalidOperationException("Please fill in all required fields.");
             }
 
             // Find user by email first, then use username for sign-in
             var user = await UserManager.FindByEmailAsync(loginModel.Email!);
             if (user == null)
             {
-                SetError("Invalid email or password.");
-                return;
+                throw new InvalidOperationException("Invalid email or password.");
             }
 
             var signInResult = await SignInManager.PasswordSignInAsync(
@@ -53,35 +46,24 @@ public partial class Login : ResourceIdeaComponentBase
 
             if (signInResult.Succeeded)
             {
-                // Successful login - navigation will handle page transition
-                Navigation.NavigateTo(ReturnUrl ?? "/", forceLoad: true);
+                // Successful login - use JavaScript redirect to avoid Blazor Server response issues
+                var redirectUrl = ReturnUrl ?? "/";
+                await JSRuntime.InvokeVoidAsync("window.location.href", redirectUrl);
                 return;
             }
             else if (signInResult.IsLockedOut)
             {
-                SetError("Account is locked out. Please try again later.");
+                throw new InvalidOperationException("Account is locked out. Please try again later.");
             }
             else if (signInResult.RequiresTwoFactor)
             {
-                SetError("Two-factor authentication is required.");
+                throw new InvalidOperationException("Two-factor authentication is required.");
             }
             else
             {
-                SetError("Invalid email or password.");
+                throw new InvalidOperationException("Invalid email or password.");
             }
-        }
-        catch (Exception ex)
-        {
-            // Handle unexpected exceptions during login
-            SetError("An error occurred during login. Please try again.");
-            // Log the exception for debugging purposes
-            Console.WriteLine($"Login error: {ex.Message}");
-        }
-        finally
-        {
-            IsLoading = false;
-            SafeStateHasChanged();
-        }
+        }, "User login attempt");
     }
 
     /// <summary>

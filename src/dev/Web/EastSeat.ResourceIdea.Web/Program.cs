@@ -5,8 +5,6 @@ using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.DataStore;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using EastSeat.ResourceIdea.DataStore.Identity;
 using EastSeat.ResourceIdea.Web.Services;
 using EastSeat.ResourceIdea.Web.Middleware;
 
@@ -20,28 +18,25 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddResourceIdeaDbContext();
 builder.Services.AddResourceIdeaServices();
 
-builder.Services.AddScoped<IUserStore<ApplicationUser>, CustomUserStore>();
-
-// Add Identity services with custom user store but EF role store  
-builder.Services.AddIdentityCore<ApplicationUser>()
-    .AddRoles<ApplicationRole>()
-    .AddRoleStore<RoleStore<ApplicationRole, ResourceIdeaDBContext>>()
-    .AddSignInManager()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddAuthentication(options =>
+// Add Identity services with Entity Framework stores
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
-    options.DefaultScheme = IdentityConstants.ApplicationScheme;
-    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+    // Configure Identity options if needed
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 6;
 })
-.AddIdentityCookies(options =>
+.AddEntityFrameworkStores<ResourceIdeaDBContext>()
+.AddDefaultTokenProviders();
+
+// Configure Identity cookie settings
+builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.ApplicationCookie?.Configure(config =>
-    {
-        config.LoginPath = "/login";
-        config.LogoutPath = "/logout";
-        config.AccessDeniedPath = "/login";
-    });
+    options.LoginPath = "/login";
+    options.LogoutPath = "/logout";
+    options.AccessDeniedPath = "/login";
 });
 
 // Add authorization services
