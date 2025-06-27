@@ -12,7 +12,6 @@ using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.Employees;
 
@@ -21,7 +20,6 @@ public partial class EmployeesTimeline : ResourceIdeaComponentBase
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
-    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
 
     private List<EmployeeTimelineModel>? EmployeeTimelines { get; set; }
 
@@ -34,14 +32,6 @@ public partial class EmployeesTimeline : ResourceIdeaComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        // Check authentication
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (!authState.User.Identity?.IsAuthenticated == true)
-        {
-            NavigationManager.NavigateTo("/login");
-            return;
-        }
-
         // Set default date range to current month to next 3 months
         var today = DateTime.Today;
         StartMonth = today.Month;
