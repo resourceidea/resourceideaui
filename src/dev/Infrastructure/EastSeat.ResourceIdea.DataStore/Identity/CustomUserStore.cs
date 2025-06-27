@@ -38,25 +38,29 @@ public class CustomUserStore(ResourceIdeaDBContext dbContext)
     {
         cancellationToken.ThrowIfCancellationRequested();
         ApplicationUserId applicationUserId = ApplicationUserId.Create(userId);
-        return await _dbContext.Users!.FirstOrDefaultAsync(u => u.ApplicationUserId == applicationUserId, cancellationToken);
+        var user = await _dbContext.Users!.FirstOrDefaultAsync(u => u.ApplicationUserId == applicationUserId, cancellationToken);
+        return user;
     }
 
     public async Task<ApplicationUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        return await _dbContext.Users!.FirstOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName, cancellationToken);
+        var user = await _dbContext.Users!.FirstOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName, cancellationToken);
+        return user;
     }
 
     public Task<string> GetUserIdAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        return Task.FromResult(user.Id);
+        var userId = Task.FromResult(user.Id);
+        return userId;
     }
 
     public Task<string?> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        return Task.FromResult(user.UserName);
+        var userName = Task.FromResult(user.UserName);
+        return userName;
     }
 
     public Task SetUserNameAsync(ApplicationUser user, string? userName, CancellationToken cancellationToken)
@@ -69,7 +73,8 @@ public class CustomUserStore(ResourceIdeaDBContext dbContext)
     public Task<string?> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        return Task.FromResult(user.NormalizedUserName);
+        var normalizedUserName = Task.FromResult(user.NormalizedUserName);
+        return normalizedUserName;
     }
 
     public Task SetNormalizedUserNameAsync(ApplicationUser user, string? normalizedName, CancellationToken cancellationToken)
@@ -89,13 +94,15 @@ public class CustomUserStore(ResourceIdeaDBContext dbContext)
     public Task<string?> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        return Task.FromResult(user.PasswordHash);
+        var passwordHash = Task.FromResult(user.PasswordHash);
+        return passwordHash;
     }
 
     public Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        return Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
+        bool hasPassword = !string.IsNullOrEmpty(user.PasswordHash);
+        return Task.FromResult(hasPassword);
     }
 
     // IUserEmailStore<ApplicationUser> implementation
@@ -128,7 +135,8 @@ public class CustomUserStore(ResourceIdeaDBContext dbContext)
     public async Task<ApplicationUser?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        return await _dbContext.Users!.FirstOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail, cancellationToken);
+        var user = await _dbContext.Users!.FirstOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail, cancellationToken);
+        return user;
     }
 
     public Task<string?> GetNormalizedEmailAsync(ApplicationUser user, CancellationToken cancellationToken)

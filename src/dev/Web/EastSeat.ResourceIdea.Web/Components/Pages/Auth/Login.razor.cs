@@ -13,67 +13,74 @@ public partial class Login : ResourceIdeaComponentBase
     [Inject] private SignInManager<ApplicationUser> SignInManager { get; set; } = default!;
     [Inject] private UserManager<ApplicationUser> UserManager { get; set; } = default!;
     [Inject] private NavigationManager Navigation { get; set; } = default!;
-    [Inject] private IHttpContextAccessor HttpContextAccessor { get; set; } = default!;
 
-    private LoginModel loginModel { get; set; } = new();
+    private LoginModel loginModel = new();
 
     [SupplyParameterFromQuery]
     public string? ReturnUrl { get; set; }
 
-    /// <summary>
-    /// Checks if the component is running in an interactive context with HttpContext available.
-    /// </summary>
-    private bool IsInteractiveWithHttpContext =>
-        HttpContextAccessor?.HttpContext != null && !HttpContextAccessor.HttpContext.Response.HasStarted;
-
     private async Task HandleLoginWithLoadingState()
     {
-        if (!IsInteractiveWithHttpContext)
-        {
-            SetError("Authentication services are temporarily unavailable. Please refresh and try again.");
-            return;
-        }
+        // Clear any previous errors
+        ClearError();
 
+        // Set loading state manually for authentication operations
         IsLoading = true;
-        StateHasChanged(); // Show loading state immediately
+        SafeStateHasChanged();
 
         try
         {
-            await ExecuteAsync(async () =>
+            // Validate input before proceeding
+            if (string.IsNullOrWhiteSpace(loginModel.Email) || string.IsNullOrWhiteSpace(loginModel.Password))
             {
-                ClearError();
+                SetError("Please fill in all required fields.");
+                return;
+            }
 
-                // Find user by email first, then use username for sign-in
-                var user = await UserManager.FindByEmailAsync(loginModel.Email!);
-                if (user == null)
-                {
-                    SetError("Invalid email or password.");
-                    return;
-                }
+            // Find user by email first, then use username for sign-in
+            var user = await UserManager.FindByEmailAsync(loginModel.Email!);
+            if (user == null)
+            {
+                SetError("Invalid email or password.");
+                return;
+            }
 
-                var signInResult = await SignInManager.PasswordSignInAsync(
-                    user.UserName!,
-                    loginModel.Password!,
-                    isPersistent: false,
-                    lockoutOnFailure: false);
+            var signInResult = await SignInManager.PasswordSignInAsync(
+                user.UserName!,
+                loginModel.Password!,
+                isPersistent: false,
+                lockoutOnFailure: false);
 
-                if (signInResult.Succeeded)
-                {
-                    // Successful login - navigation will handle page transition
-                    // Don't call StateHasChanged here to avoid interfering with authentication
-                    Navigation.NavigateTo(ReturnUrl ?? "/");
-                    return;
-                }
-                else
-                {
-                    SetError("Invalid email or password.");
-                }
-            }, "Login authentication");
+            if (signInResult.Succeeded)
+            {
+                // Successful login - navigation will handle page transition
+                Navigation.NavigateTo(ReturnUrl ?? "/", forceLoad: true);
+                return;
+            }
+            else if (signInResult.IsLockedOut)
+            {
+                SetError("Account is locked out. Please try again later.");
+            }
+            else if (signInResult.RequiresTwoFactor)
+            {
+                SetError("Two-factor authentication is required.");
+            }
+            else
+            {
+                SetError("Invalid email or password.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected exceptions during login
+            SetError("An error occurred during login. Please try again.");
+            // Log the exception for debugging purposes
+            Console.WriteLine($"Login error: {ex.Message}");
         }
         finally
         {
             IsLoading = false;
-            StateHasChanged();
+            SafeStateHasChanged();
         }
     }
 

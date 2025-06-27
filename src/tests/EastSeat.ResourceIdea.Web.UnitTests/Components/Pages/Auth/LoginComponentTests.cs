@@ -12,7 +12,6 @@ using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using EastSeat.ResourceIdea.Web.Services;
-using Microsoft.AspNetCore.Http;
 
 namespace EastSeat.ResourceIdea.Web.UnitTests.Components.Pages.Auth;
 
@@ -25,13 +24,11 @@ public class LoginComponentTests : TestContext
         var mockUserManager = CreateMockUserManager();
         var mockAuthStateProvider = CreateMockAuthenticationStateProvider();
         var mockExceptionHandlingService = CreateMockExceptionHandlingService();
-        var mockHttpContextAccessor = CreateMockHttpContextAccessor();
 
         Services.AddSingleton(mockSignInManager.Object);
         Services.AddSingleton(mockUserManager.Object);
         Services.AddSingleton<AuthenticationStateProvider>(mockAuthStateProvider.Object);
         Services.AddSingleton(mockExceptionHandlingService.Object);
-        Services.AddSingleton(mockHttpContextAccessor.Object);
         Services.AddAuthorizationCore();
 
         // Add a real NavigationManager
@@ -111,6 +108,25 @@ public class LoginComponentTests : TestContext
         Assert.True(component.Markup.Contains("Login") || component.Markup.Contains("Loading"));
     }
 
+    [Fact]
+    public void LoginComponent_Should_Handle_Empty_Fields_Validation()
+    {
+        // Arrange
+        var component = RenderComponent<Login>();
+        var form = component.Find("form");
+
+        // Act - Submit form without filling in any fields
+        form.Submit();
+
+        // Assert - Should show validation error for empty fields
+        component.WaitForAssertion(() =>
+        {
+            Assert.True(component.Markup.Contains("Please fill in all required fields") ||
+                       component.Markup.Contains("required") ||
+                       component.HasComponent<Microsoft.AspNetCore.Components.Forms.ValidationSummary>());
+        }, TimeSpan.FromSeconds(2));
+    }
+
     private static Mock<SignInManager<ApplicationUser>> CreateMockSignInManager()
     {
         var mockUserManager = CreateMockUserManager();
@@ -173,17 +189,6 @@ public class LoginComponentTests : TestContext
 
         mock.Setup(x => x.ExecuteAsync(It.IsAny<Func<Task>>(), It.IsAny<string>()))
             .Returns(Task.FromResult(ExceptionHandlingResult.Success()));
-
-        return mock;
-    }
-
-    private static Mock<IHttpContextAccessor> CreateMockHttpContextAccessor()
-    {
-        var mock = new Mock<IHttpContextAccessor>();
-        var mockHttpContext = new Mock<HttpContext>();
-
-        // Setup HttpContext to be available for the components
-        mock.Setup(x => x.HttpContext).Returns(mockHttpContext.Object);
 
         return mock;
     }
