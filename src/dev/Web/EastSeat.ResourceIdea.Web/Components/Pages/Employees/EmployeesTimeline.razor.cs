@@ -58,14 +58,9 @@ public partial class EmployeesTimeline : ResourceIdeaComponentBase
 
             var response = await Mediator.Send(query);
 
-            if (response?.IsSuccess == true && response.Content.HasValue)
-            {
-                EmployeeTimelines = response.Content.Value;
-            }
-            else
-            {
-                EmployeeTimelines = null;
-            }
+            EmployeeTimelines = response?.IsSuccess == true && response.Content.HasValue
+                ? response.Content.Value
+                : null;
         }, "Loading employees timeline");
     }
 
