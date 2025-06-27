@@ -7,6 +7,7 @@
 using EastSeat.ResourceIdea.Application.Features.Employees.Commands;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
@@ -97,6 +98,12 @@ public partial class AddEmployee : ComponentBase
                 await LoadJobPositionsForDepartmentAsync(DepartmentId.Create(SelectedDepartmentId));
             }
         }
+        else if (response.IsFailure && response.Error == ErrorCode.NotFound)
+        {
+            // Handle the case where no departments exist yet - this is acceptable for adding employees
+            Departments = [];
+            // No need to show an error message as empty departments list is valid
+        }
         else
         {
             NotificationService.ShowErrorNotification("Failed to load departments");
@@ -135,6 +142,12 @@ public partial class AddEmployee : ComponentBase
             {
                 SelectedJobPositionId = JobPositions.First().Id.Value;
             }
+        }
+        else if (response.IsFailure && response.Error == ErrorCode.NotFound)
+        {
+            // Handle the case where no job positions exist for the department - this is acceptable
+            JobPositions = [];
+            // No need to show an error message as empty job positions list is valid
         }
         else
         {
