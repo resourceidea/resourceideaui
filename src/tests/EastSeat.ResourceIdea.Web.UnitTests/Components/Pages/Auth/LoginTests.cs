@@ -67,6 +67,12 @@ public class LoginTests : TestContext
     public async Task HandleLoginWithLoadingState_WithValidCredentials_ShouldNavigateToDefaultPage()
     {
         // Arrange
+        var testUser = new ApplicationUser { Id = "1", UserName = "testuser", Email = "test@example.com" };
+        
+        _mockUserManager
+            .Setup(x => x.FindByEmailAsync("test@example.com"))
+            .ReturnsAsync(testUser);
+            
         _mockSignInManager
             .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
             .ReturnsAsync(SignInResult.Success);
@@ -113,6 +119,12 @@ public class LoginTests : TestContext
     public async Task HandleLoginWithLoadingState_WithReturnUrl_ShouldNavigateToReturnUrl()
     {
         // Arrange
+        var testUser = new ApplicationUser { Id = "1", UserName = "testuser", Email = "test@example.com" };
+        
+        _mockUserManager
+            .Setup(x => x.FindByEmailAsync("test@example.com"))
+            .ReturnsAsync(testUser);
+            
         _mockSignInManager
             .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
             .ReturnsAsync(SignInResult.Success);
@@ -168,6 +180,12 @@ public class LoginTests : TestContext
     public async Task HandleLoginWithLoadingState_WithInvalidCredentials_ShouldSetErrorMessage()
     {
         // Arrange
+        var testUser = new ApplicationUser { Id = "1", UserName = "testuser", Email = "test@example.com" };
+        
+        _mockUserManager
+            .Setup(x => x.FindByEmailAsync("test@example.com"))
+            .ReturnsAsync(testUser);
+            
         _mockSignInManager
             .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
             .ReturnsAsync(SignInResult.Failed);
@@ -229,6 +247,12 @@ public class LoginTests : TestContext
     public async Task HandleLoginWithLoadingState_WhenException_ShouldSetGenericErrorMessage()
     {
         // Arrange
+        var testUser = new ApplicationUser { Id = "1", UserName = "testuser", Email = "test@example.com" };
+        
+        _mockUserManager
+            .Setup(x => x.FindByEmailAsync("test@example.com"))
+            .ReturnsAsync(testUser);
+            
         _mockSignInManager
             .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
             .ThrowsAsync(new InvalidOperationException("Test exception"));
