@@ -68,19 +68,14 @@ public class LoginTests : TestContext
     {
         // Arrange
         var testUser = new ApplicationUser { Id = "1", UserName = "testuser", Email = "test@example.com" };
-        
+
         _mockUserManager
             .Setup(x => x.FindByEmailAsync("test@example.com"))
             .ReturnsAsync(testUser);
-            
+
         _mockSignInManager
             .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
             .ReturnsAsync(SignInResult.Success);
-
-        var testUser = new ApplicationUser { UserName = "test@example.com", Email = "test@example.com" };
-        _mockUserManager
-            .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
-            .ReturnsAsync(testUser);
 
         // Setup exception handling service to return success
         _mockExceptionHandlingService
@@ -120,19 +115,14 @@ public class LoginTests : TestContext
     {
         // Arrange
         var testUser = new ApplicationUser { Id = "1", UserName = "testuser", Email = "test@example.com" };
-        
+
         _mockUserManager
             .Setup(x => x.FindByEmailAsync("test@example.com"))
             .ReturnsAsync(testUser);
-            
+
         _mockSignInManager
             .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
             .ReturnsAsync(SignInResult.Success);
-
-        var testUser = new ApplicationUser { UserName = "test@example.com", Email = "test@example.com" };
-        _mockUserManager
-            .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
-            .ReturnsAsync(testUser);
 
         // Setup exception handling service to actually execute the operation
         _mockExceptionHandlingService
@@ -181,19 +171,14 @@ public class LoginTests : TestContext
     {
         // Arrange
         var testUser = new ApplicationUser { Id = "1", UserName = "testuser", Email = "test@example.com" };
-        
+
         _mockUserManager
             .Setup(x => x.FindByEmailAsync("test@example.com"))
             .ReturnsAsync(testUser);
-            
+
         _mockSignInManager
             .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
             .ReturnsAsync(SignInResult.Failed);
-
-        var testUser = new ApplicationUser { UserName = "test@example.com", Email = "test@example.com" };
-        _mockUserManager
-            .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
-            .ReturnsAsync(testUser);
 
         // Setup exception handling service to actually execute the operation
         _mockExceptionHandlingService
@@ -248,11 +233,11 @@ public class LoginTests : TestContext
     {
         // Arrange
         var testUser = new ApplicationUser { Id = "1", UserName = "testuser", Email = "test@example.com" };
-        
+
         _mockUserManager
             .Setup(x => x.FindByEmailAsync("test@example.com"))
             .ReturnsAsync(testUser);
-            
+
         _mockSignInManager
             .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
             .ThrowsAsync(new InvalidOperationException("Test exception"));
