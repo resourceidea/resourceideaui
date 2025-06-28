@@ -1,0 +1,105 @@
+@page "/login"
+@using Microsoft.AspNetCore.Identity
+@using EastSeat.ResourceIdea.DataStore.Identity.Entities
+@using EastSeat.ResourceIdea.Web.Components.Shared.PageTitles
+
+<ResourceIdeaPageTitle Title="Login" />
+
+<div class="container-fluid vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div class="row w-100 justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2 class="mb-0">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        ResourceIdea Login
+                    </h2>
+                </div>
+                <div class="card-body p-5">
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            @errorMessage
+                            <button type="button" class="btn-close" @onclick="() => errorMessage = null"
+                                aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <EditForm Model="@loginModel" OnValidSubmit="@HandleLoginAsync" FormName="LoginForm">
+                        <DataAnnotationsValidator />
+
+                        <div class="mb-4">
+                            <label for="username" class="form-label fw-semibold">
+                                <i class="fas fa-user me-2 text-primary"></i>Username
+                            </label>
+                            <InputText @bind-Value="loginModel.Username" class="form-control form-control-lg"
+                                id="username" placeholder="Enter your username" />
+                            <ValidationMessage For="@(() => loginModel.Username)" class="text-danger small mt-1" />
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-semibold">
+                                <i class="fas fa-lock me-2 text-primary"></i>Password
+                            </label>
+                            <InputText @bind-Value="loginModel.Password" type="password"
+                                class="form-control form-control-lg" id="password" placeholder="Enter your password" />
+                            <ValidationMessage For="@(() => loginModel.Password)" class="text-danger small mt-1" />
+                        </div>
+
+                        <div class="mb-4 form-check">
+                            <InputCheckbox @bind-Value="loginModel.RememberMe" class="form-check-input"
+                                id="rememberMe" />
+                            <label class="form-check-label" for="rememberMe">
+                                Remember me
+                            </label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>
+                                <span>Sign In</span>
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="card-footer text-center bg-light">
+                    <small class="text-muted">
+                        © @DateTime.Now.Year ResourceIdea. All rights reserved.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 15px;
+    }
+
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+
+    .btn-primary {
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 12px 24px;
+    }
+
+    .alert {
+        border-radius: 8px;
+    }
+</style>

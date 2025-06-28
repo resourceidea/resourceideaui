@@ -1,9 +1,11 @@
 @page "/workitems"
 @page "/workitems/index"
+@attribute [Authorize]
 @inherits ResourceIdeaComponentBase
 @using EastSeat.ResourceIdea.Web.Components.Shared.Lists
 @using EastSeat.ResourceIdea.Web.Components.Shared.Alerts
 @using EastSeat.ResourceIdea.Web.Components.Base
+@using Microsoft.AspNetCore.Authorization
 
 <ResourceIdeaPageTitle Title="Work Items" />
 
@@ -38,11 +40,8 @@
         }
         else
         {
-            <WorkItemsList
-                PagedWorkItemsList="@PagedWorkItemsList"
-                OnWorkItemsPageChange="HandlePageChangeAsync"
-                OnSearchTermChange="HandleSearchTermChangeAsync"
-                OnSortChange="HandleSortChangeAsync" />
+            <WorkItemsList PagedWorkItemsList="@PagedWorkItemsList" OnWorkItemsPageChange="HandlePageChangeAsync"
+                OnSearchTermChange="HandleSearchTermChangeAsync" OnSortChange="HandleSortChangeAsync" />
         }
     </div>
 </div>

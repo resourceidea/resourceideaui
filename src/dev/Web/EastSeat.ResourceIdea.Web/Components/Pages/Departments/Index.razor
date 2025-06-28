@@ -1,7 +1,9 @@
 ﻿@page "/departments"
 @page "/departments/index"
+@attribute [Authorize]
 @using EastSeat.ResourceIdea.Application.Features.Departments.Queries
 @using EastSeat.ResourceIdea.Web.RequestContext
+@using Microsoft.AspNetCore.Authorization
 
 @layout AdminLayout
 
@@ -43,7 +45,7 @@ else
                         <td>@department.Name</td>
                         <td>
                             <NavLink class="btn btn-outline-primary btn-sm"
-                            href="@($"/departments/{department.DepartmentId.Value}")">
+                                href="@($"/departments/{department.DepartmentId.Value}")">
                                 Details
                             </NavLink>
                         </td>

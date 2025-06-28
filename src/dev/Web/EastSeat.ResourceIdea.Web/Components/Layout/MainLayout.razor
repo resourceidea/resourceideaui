@@ -1,46 +1,68 @@
 @inherits LayoutComponentBase
 @inject NotificationService NotificationService
 
-<div class="app-container">
-    <!-- Sidebar Navigation -->
-    <SidebarNavigation />
-    
-    <!-- Main Content Area -->
-    <div class="main-content">
-        <!-- Top Header with User Profile -->
-        <header class="top-header">
-            <div class="header-content">
-                <div class="header-left">
-                    <!-- Space for future header content -->
-                </div>
-                <div class="header-right">
-                    <div class="user-profile-dropdown">
-                        <button class="user-profile-btn" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle"></i>
-                            <span class="user-name">User</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/profile"><i class="fas fa-user"></i> Profile</a></li>
-                            <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog"></i> Settings</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                        </ul>
+<AuthorizeView>
+    <Authorized>
+        <div class="app-container">
+            <!-- Sidebar Navigation -->
+            <SidebarNavigation />
+
+            <!-- Main Content Area -->
+            <div class="main-content">
+                <!-- Top Header with User Profile -->
+                <header class="top-header">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <!-- Space for future header content -->
+                        </div>
+                        <div class="header-right">
+                            <div class="user-profile-dropdown">
+                                <button class="user-profile-btn" type="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span class="user-name">@context.User.Identity?.Name</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="/profile"><i class="fas fa-user"></i> Profile</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog"></i>
+                                            Settings</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i>
+                                            Logout</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </header>
+                </header>
 
-        <!-- Page Content -->
-        <main class="page-content">
+                <!-- Page Content -->
+                <main class="page-content">
+                    @Body
+                </main>
+
+                <!-- Footer -->
+                <footer class="app-footer">
+                    <div class="footer-content">
+                        <span>&copy; 2015-@DateTime.Now.Year EastSeat</span>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <!-- Minimal layout for login/logout pages -->
+        <div class="auth-layout">
             @Body
-        </main>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
 
-        <!-- Footer -->
-        <footer class="app-footer">
-            <div class="footer-content">
-                <span>&copy; 2015-@DateTime.Now.Year EastSeat</span>
-            </div>
-        </footer>
-    </div>
-</div>
+<style>
+    .auth-layout {
+        min-height: 100vh;
+        background-color: #f8f9fa;
+    }
+</style>

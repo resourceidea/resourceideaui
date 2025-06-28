@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using EastSeat.ResourceIdea.DataStore.Identity;
 using EastSeat.ResourceIdea.Web.Services;
 using EastSeat.ResourceIdea.Web.Middleware;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,32 +17,64 @@ builder.Services.AddScoped<IResourceIdeaRequestContext, ResourceIdeaRequestConte
 
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
+// Add controllers for API endpoints
+builder.Services.AddControllers();
+
+// Add basic HttpClient support
+builder.Services.AddHttpClient();
+
 builder.Services.AddResourceIdeaDbContext();
 builder.Services.AddResourceIdeaServices();
 
-builder.Services.AddScoped<IUserStore<ApplicationUser>, CustomUserStore>();
-
-// Add this after builder.Services.AddResourceIdeaServices();
-builder.Services.AddIdentityCore<ApplicationUser>()
-    .AddRoles<ApplicationRole>()
-    .AddEntityFrameworkStores<ResourceIdeaDBContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddAuthentication(options =>
+// Add Identity with SignInManager and other required services
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
-    options.DefaultScheme = IdentityConstants.ApplicationScheme;
-    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+    // Configure password requirements
+    options.Password.RequiredLength = 6;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+
+    // Configure user requirements
+    options.User.RequireUniqueEmail = false;
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedPhoneNumber = false;
 })
-.AddIdentityCookies();
+.AddEntityFrameworkStores<ResourceIdeaDBContext>()
+.AddDefaultTokenProviders();
+
+// Configure cookie authentication
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/login";
+    options.LogoutPath = "/logout";
+    options.AccessDeniedPath = "/access-denied";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.SlidingExpiration = true;
+});
 
 // Add authorization services
-builder.Services.AddAuthorizationCore();
+builder.Services.AddAuthorizationCore(options =>
+{
+    // Add default policy that requires authentication
+    options.DefaultPolicy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+
+    // Add policy for admin users
+    options.AddPolicy("RequireAdminRole", policy =>
+        policy.RequireRole("Admin"));
+});
+
+
 
 // Add MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateDepartmentCommandHandler).Assembly));
 
 // Add centralized exception handling service
 builder.Services.AddScoped<IExceptionHandlingService, ExceptionHandlingService>();
+// builder.Services.AddScoped<EastSeat.ResourceIdea.Web.Services.UserSeedService>();
 
 var app = builder.Build();
 
@@ -58,10 +91,21 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Add authentication and authorization middleware
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseAntiforgery();
 
 app.UseStaticFiles();
+
+// Map controllers for API endpoints
+app.MapControllers();
+
 app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
+
+// Run database startup tasks if configured
+await app.RunDatabaseStartupTasks();
 
 app.Run();

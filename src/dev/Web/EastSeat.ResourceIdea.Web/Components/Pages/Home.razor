@@ -1,7 +1,127 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<AuthorizeView>
+    <Authorized>
+        <h1>Welcome back, @context.User.Identity?.Name!</h1>
+        <p>You are successfully authenticated and can access the ResourceIdea application.</p>
 
-Welcome to your new app.
+        <div class="card mt-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Application Features
+                </h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <i class="fas fa-users me-2 text-primary"></i>
+                        Manage Employees and Departments
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-briefcase me-2 text-primary"></i>
+                        Track Client Engagements
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-tasks me-2 text-primary"></i>
+                        Monitor Work Items
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-chart-bar me-2 text-primary"></i>
+                        View Analytics and Reports
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a href="/logout" class="btn btn-outline-secondary">
+                <i class="fas fa-sign-out-alt me-2"></i>
+                Sign Out
+            </a>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="container-fluid vh-100 d-flex align-items-center justify-content-center bg-light">
+            <div class="row w-100 justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="text-center">
+                        <h1 class="display-4 mb-4">
+                            <i class="fas fa-lightbulb text-primary me-3"></i>
+                            ResourceIdea
+                        </h1>
+                        <p class="lead mb-5">
+                            Your comprehensive resource management solution for tracking employees,
+                            clients, and projects all in one place.
+                        </p>
+
+                        <div class="card shadow-lg border-0 mb-5">
+                            <div class="card-body p-5">
+                                <h3 class="card-title text-primary mb-4">Get Started Today</h3>
+                                <p class="card-text mb-4">
+                                    Sign in to access your dashboard and start managing your resources efficiently.
+                                </p>
+                                <a href="/login" class="btn btn-primary btn-lg px-5">
+                                    <i class="fas fa-sign-in-alt me-2"></i>
+                                    Sign In
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 text-start">
+                            <div class="col-md-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                                        <h5>Employee Management</h5>
+                                        <p class="small text-muted">Track your team members, departments, and
+                                            organizational structure.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-handshake fa-3x text-primary mb-3"></i>
+                                        <h5>Client Relations</h5>
+                                        <p class="small text-muted">Manage client information and engagement details
+                                            seamlessly.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-project-diagram fa-3x text-primary mb-3"></i>
+                                        <h5>Project Tracking</h5>
+                                        <p class="small text-muted">Monitor work items and project progress in
+                                            real-time.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+<style>
+    .card {
+        border-radius: 15px;
+    }
+
+    .btn-primary {
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 8px;
+        font-weight: 600;
+    }
+</style>
