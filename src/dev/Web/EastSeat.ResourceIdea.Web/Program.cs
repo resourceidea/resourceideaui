@@ -21,21 +21,44 @@ builder.Services.AddResourceIdeaServices();
 
 builder.Services.AddScoped<IUserStore<ApplicationUser>, CustomUserStore>();
 
-// Add this after builder.Services.AddResourceIdeaServices();
-builder.Services.AddIdentityCore<ApplicationUser>()
-    .AddRoles<ApplicationRole>()
-    .AddEntityFrameworkStores<ResourceIdeaDBContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddAuthentication(options =>
+// Configure Identity services with SignInManager
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
-    options.DefaultScheme = IdentityConstants.ApplicationScheme;
-    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+    // Password settings
+    options.Password.RequiredLength = 6;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+    
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+    
+    // User settings
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = true;
 })
-.AddIdentityCookies();
+.AddEntityFrameworkStores<ResourceIdeaDBContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/login";
+    options.LogoutPath = "/logout";
+    options.AccessDeniedPath = "/access-denied";
+    options.ExpireTimeSpan = TimeSpan.FromHours(24);
+    options.SlidingExpiration = true;
+});
 
 // Add authorization services
-builder.Services.AddAuthorizationCore();
+builder.Services.AddAuthorizationCore(options =>
+{
+    options.FallbackPolicy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
 
 // Add MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateDepartmentCommandHandler).Assembly));
@@ -57,6 +80,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseAntiforgery();
 

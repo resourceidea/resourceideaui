@@ -1,0 +1,64 @@
+@page "/logout"
+@using Microsoft.AspNetCore.Identity
+@using EastSeat.ResourceIdea.DataStore.Identity.Entities
+@inject SignInManager<ApplicationUser> SignInManager
+@inject NavigationManager Navigation
+
+<PageTitle>Logout - ResourceIdea</PageTitle>
+
+<div class="logout-container">
+    <div class="logout-card">
+        <div class="logout-icon">
+            <i class="fas fa-sign-out-alt"></i>
+        </div>
+        <h2 class="logout-title">Signing out...</h2>
+        <p class="logout-message">Please wait while we sign you out.</p>
+    </div>
+</div>
+
+<style>
+    .logout-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #00879c 0%, #006b7d 100%);
+        padding: 20px;
+    }
+
+    .logout-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        text-align: center;
+        max-width: 400px;
+        width: 100%;
+    }
+
+    .logout-icon {
+        color: #00879c;
+        font-size: 4rem;
+        margin-bottom: 20px;
+    }
+
+    .logout-title {
+        color: #495057;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .logout-message {
+        color: #6c757d;
+        font-size: 1rem;
+    }
+</style>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await SignInManager.SignOutAsync();
+        Navigation.NavigateTo("/", true);
+    }
+}

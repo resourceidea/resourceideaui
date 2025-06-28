@@ -1,10 +1,11 @@
 @inherits LayoutComponentBase
 @inject NotificationService NotificationService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="app-container">
     <!-- Sidebar Navigation -->
     <SidebarNavigation />
-    
+
     <!-- Main Content Area -->
     <div class="main-content">
         <!-- Top Header with User Profile -->
@@ -17,14 +18,17 @@
                     <div class="user-profile-dropdown">
                         <button class="user-profile-btn" type="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user-circle"></i>
-                            <span class="user-name">User</span>
+                            <span class="user-name">@currentUserName</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="/profile"><i class="fas fa-user"></i> Profile</a></li>
                             <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog"></i> Settings</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -44,3 +48,16 @@
         </footer>
     </div>
 </div>
+
+@code {
+    private string currentUserName = "User";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            currentUserName = authState.User.Identity.Name ?? "User";
+        }
+    }
+}
