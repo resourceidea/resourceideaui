@@ -81,64 +81,67 @@
             var currentDate = DateOnly.FromDateTime(DateTime.Today);
             var timelineDates = GetTimelineDates(startDate, endDate);
 
-            <div class="timeline-grid-container">
-                <!-- Header Row -->
-                <div class="timeline-grid-header">
-                    <!-- Frozen Employee Column Header -->
-                    <div class="employee-header-cell">
-                        <div class="employee-header-content">
+            <div class="timeline-container">
+                <div class="timeline-layout">
+                    <!-- Fixed Employee Column -->
+                    <div class="employee-column">
+                        <!-- Employee Column Header -->
+                        <div class="employee-header-cell">
                             <span>Employee</span>
                         </div>
-                    </div>
-                    
-                    <!-- Date Headers -->
-                    <div class="date-headers-container">
-                        @foreach (var date in timelineDates)
+                        
+                        <!-- Employee Rows -->
+                        @foreach (var employee in EmployeeTimelines)
                         {
-                            <div class="date-header-cell @(IsWeekend(date) ? "weekend" : "") @(date == currentDate ? "current-date" : "")">
-                                <div class="date-number">@date.Day</div>
-                                @if (date.Day == 1 || date == timelineDates.First())
-                                {
-                                    <div class="month-label">@date.ToString("MMM")</div>
-                                }
-                            </div>
-                        }
-                    </div>
-                </div>
-
-                <!-- Employee Rows -->
-                <div class="timeline-grid-body">
-                    @foreach (var employee in EmployeeTimelines)
-                    {
-                        <div class="timeline-grid-row">
-                            <!-- Frozen Employee Info -->
                             <div class="employee-info-cell">
                                 <div class="employee-name">@employee.FullName</div>
                                 <div class="employee-position">@employee.JobPositionTitle</div>
                                 <div class="employee-utilization">@CalculateUtilization(employee)%</div>
                             </div>
-                            
-                            <!-- Timeline Cells -->
-                            <div class="timeline-cells-container">
-                                @foreach (var date in timelineDates)
-                                {
-                                    <div class="timeline-cell @(IsWeekend(date) ? "weekend" : "")">
-                                        @{
-                                            var workItem = GetWorkItemForDate(employee, date);
-                                        }
-                                        @if (workItem != null)
-                                        {
-                                            <div class="work-assignment @GetWorkItemStatusClass(workItem.Status)"
-                                                 @onclick="() => ShowWorkItemDetails(workItem)"
-                                                 title="@GetWorkItemTooltip(workItem)">
-                                                @GetWorkItemDisplayText(workItem)
-                                            </div>
-                                        }
-                                    </div>
-                                }
-                            </div>
+                        }
+                    </div>
+
+                    <!-- Scrollable Timeline Section -->
+                    <div class="timeline-scroll-section">
+                        <!-- Date Headers -->
+                        <div class="date-headers-container">
+                            @foreach (var date in timelineDates)
+                            {
+                                <div class="date-header-cell @(IsWeekend(date) ? "weekend" : "") @(date == currentDate ? "current-date" : "")">
+                                    <div class="date-number">@date.Day</div>
+                                    @if (date.Day == 1 || date == timelineDates.First())
+                                    {
+                                        <div class="month-label">@date.ToString("MMM")</div>
+                                    }
+                                </div>
+                            }
                         </div>
-                    }
+
+                        <!-- Timeline Rows -->
+                        <div class="timeline-rows-container">
+                            @foreach (var employee in EmployeeTimelines)
+                            {
+                                <div class="timeline-row">
+                                    @foreach (var date in timelineDates)
+                                    {
+                                        <div class="timeline-cell @(IsWeekend(date) ? "weekend" : "")">
+                                            @{
+                                                var workItem = GetWorkItemForDate(employee, date);
+                                            }
+                                            @if (workItem != null)
+                                            {
+                                                <div class="work-assignment @GetWorkItemStatusClass(workItem.Status)"
+                                                     @onclick="() => ShowWorkItemDetails(workItem)"
+                                                     title="@GetWorkItemTooltip(workItem)">
+                                                    @GetWorkItemDisplayText(workItem)
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
         }
@@ -226,47 +229,98 @@
 }
 
 <style>
-    /* Ensure smooth scrolling */
-    .timeline-grid-container {
+    /* Main timeline container */
+    .timeline-container {
         background: white;
         border: 1px solid #dee2e6;
         border-radius: 8px;
         overflow: hidden;
-        position: relative;
         height: 70vh;
-        overflow-x: auto;
-        overflow-y: auto;
-        scroll-behavior: smooth;
+        display: flex;
+        flex-direction: column;
     }
 
-    .timeline-grid-header {
+    /* Layout wrapper */
+    .timeline-layout {
         display: flex;
-        position: sticky;
-        top: 0;
-        z-index: 100;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* Fixed Employee Column */
+    .employee-column {
+        width: 200px;
+        min-width: 200px;
         background: #f8f9fa;
-        border-bottom: 2px solid #dee2e6;
+        border-right: 2px solid #dee2e6;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 2px 0 4px rgba(0,0,0,0.1);
     }
 
     .employee-header-cell {
-        width: 200px;
-        min-width: 200px;
-        position: sticky;
-        left: 0;
-        z-index: 102;
-        background: #f8f9fa;
-        border-right: 2px solid #dee2e6;
         padding: 12px;
         font-weight: 600;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        border-bottom: 2px solid #dee2e6;
+        background: #f8f9fa;
+        min-height: 60px;
     }
 
+    .employee-info-cell {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-bottom: 1px solid #f1f3f4;
+        background: white;
+        min-height: 60px;
+    }
+
+    .employee-info-cell:hover {
+        background-color: #f8f9fa;
+    }
+
+    .employee-name {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 4px;
+        font-size: 14px;
+    }
+
+    .employee-position {
+        font-size: 12px;
+        color: #6c757d;
+        margin-bottom: 2px;
+    }
+
+    .employee-utilization {
+        font-size: 12px;
+        font-weight: 600;
+        color: #28a745;
+    }
+
+    /* Scrollable Timeline Section */
+    .timeline-scroll-section {
+        flex: 1;
+        overflow-x: auto;
+        overflow-y: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Date Headers */
     .date-headers-container {
         display: flex;
         min-width: max-content;
+        background: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
     .date-header-cell {
@@ -277,6 +331,10 @@
         border-right: 1px solid #e9ecef;
         background: #f8f9fa;
         font-size: 12px;
+        min-height: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .date-header-cell.weekend {
@@ -300,61 +358,21 @@
         margin-top: 2px;
     }
 
-    .timeline-grid-body {
+    /* Timeline Rows Container */
+    .timeline-rows-container {
+        flex: 1;
         overflow-y: auto;
+        min-width: max-content;
     }
 
-    .timeline-grid-row {
+    .timeline-row {
         display: flex;
         border-bottom: 1px solid #f1f3f4;
         min-height: 60px;
     }
 
-    .timeline-grid-row:hover {
+    .timeline-row:hover {
         background-color: #f8f9fa;
-    }
-
-    .employee-info-cell {
-        width: 200px;
-        min-width: 200px;
-        position: sticky;
-        left: 0;
-        z-index: 20;
-        background: white;
-        border-right: 2px solid #dee2e6;
-        padding: 12px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        box-shadow: 2px 0 4px rgba(0,0,0,0.1);
-    }
-
-    .timeline-grid-row:hover .employee-info-cell {
-        background-color: #f8f9fa;
-    }
-
-    .employee-name {
-        font-weight: 600;
-        color: #495057;
-        margin-bottom: 4px;
-        font-size: 14px;
-    }
-
-    .employee-position {
-        font-size: 12px;
-        color: #6c757d;
-        margin-bottom: 2px;
-    }
-
-    .employee-utilization {
-        font-size: 12px;
-        font-weight: 600;
-        color: #28a745;
-    }
-
-    .timeline-cells-container {
-        display: flex;
-        min-width: max-content;
     }
 
     .timeline-cell {
@@ -468,9 +486,45 @@
         background-color: #007bff !important;
     }
 
+    /* Custom scrollbar styling for the timeline scroll section */
+    .timeline-scroll-section::-webkit-scrollbar {
+        height: 12px;
+    }
+    
+    .timeline-scroll-section::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 6px;
+    }
+    
+    .timeline-scroll-section::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 6px;
+    }
+    
+    .timeline-scroll-section::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    .timeline-rows-container::-webkit-scrollbar {
+        width: 12px;
+    }
+    
+    .timeline-rows-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 6px;
+    }
+    
+    .timeline-rows-container::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 6px;
+    }
+    
+    .timeline-rows-container::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
     @@media (max-width: 768px) {
-        .employee-info-cell,
-        .employee-header-cell {
+        .employee-column {
             width: 150px;
             min-width: 150px;
         }
@@ -484,32 +538,5 @@
             width: 35px;
             min-width: 35px;
         }
-    }
-
-    /* Additional support for sticky positioning */
-    .timeline-grid-container::-webkit-scrollbar {
-        height: 12px;
-        width: 12px;
-    }
-    
-    .timeline-grid-container::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 6px;
-    }
-    
-    .timeline-grid-container::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 6px;
-    }
-    
-    .timeline-grid-container::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
-    }
-
-    /* Ensure sticky elements maintain their position during scroll */
-    .employee-header-cell,
-    .employee-info-cell {
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
     }
 </style>
