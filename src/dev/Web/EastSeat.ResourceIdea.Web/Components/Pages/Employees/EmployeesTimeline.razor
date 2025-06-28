@@ -12,8 +12,9 @@
     <PageHeader Text="Employees Timeline" />
 
     <div class="timeline-controls mb-4">
-        <div class="row">
-            <div class="col-md-3">
+        <!-- Month/Year Picker Row -->
+        <div class="row mb-3">
+            <div class="col-md-4">
                 <label for="startMonth" class="form-label">Start Month/Year</label>
                 <div class="d-flex">
                     <select @bind="StartMonth" class="form-select me-2" id="startMonth">
@@ -22,10 +23,10 @@
                             <option value="@i">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
                         }
                     </select>
-                    <input @bind="StartYear" type="number" class="form-control" style="width: 100px;" min="2020" max="2030" />
+                    <input @bind="StartYear" type="number" class="form-control year-input" min="2020" max="2030" />
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label for="endMonth" class="form-label">End Month/Year</label>
                 <div class="d-flex">
                     <select @bind="EndMonth" class="form-select me-2" id="endMonth">
@@ -34,21 +35,25 @@
                             <option value="@i">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
                         }
                     </select>
-                    <input @bind="EndYear" type="number" class="form-control" style="width: 100px;" min="2020" max="2030" />
+                    <input @bind="EndYear" type="number" class="form-control year-input" min="2020" max="2030" />
                 </div>
             </div>
-            <div class="col-md-3">
+        </div>
+        
+        <!-- Search and Action Buttons Row -->
+        <div class="row">
+            <div class="col-md-6">
                 <label for="searchTerm" class="form-label">Search Employees</label>
                 <input @bind="SearchTerm" @bind:event="oninput" @onkeypress="@(async (e) => { if (e.Key == "Enter") await LoadTimelineData(); })" 
                        type="text" class="form-control" id="searchTerm" placeholder="Search by name, email, job title..." />
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <label class="form-label">&nbsp;</label>
                 <div class="d-flex">
-                    <button @onclick="LoadTimelineData" class="btn btn-primary me-2" disabled="@IsLoadingPage">
+                    <button @onclick="LoadTimelineData" class="btn btn-primary me-2 compact-btn" disabled="@IsLoadingPage">
                         <i class="fa fa-refresh"></i> Load Timeline
                     </button>
-                    <NavLink class="btn btn-outline-secondary" href="/workitems?unassigned=true">
+                    <NavLink class="btn btn-outline-secondary compact-btn" href="/workitems?unassigned=true">
                         <i class="fa fa-plus"></i> Assign Work Items
                     </NavLink>
                 </div>
@@ -413,6 +418,19 @@
         padding: 20px;
         border-radius: 8px;
         border: 1px solid #dee2e6;
+        max-width: 800px;
+        width: 100%;
+    }
+
+    .year-input {
+        width: 100px;
+        flex-shrink: 0;
+    }
+
+    .compact-btn {
+        white-space: nowrap;
+        padding: 6px 12px;
+        font-size: 14px;
     }
 
     /* Modal styling */
