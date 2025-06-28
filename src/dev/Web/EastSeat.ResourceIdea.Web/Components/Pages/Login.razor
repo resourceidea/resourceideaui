@@ -1,0 +1,264 @@
+@page "/login"
+@layout PublicLayout
+@attribute [AllowAnonymous]
+@using EastSeat.ResourceIdea.DataStore.Identity.Entities
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using System.ComponentModel.DataAnnotations
+@inject SignInManager<ApplicationUser> SignInManager
+@inject NavigationManager Navigation
+@inject ProtectedSessionStorage ProtectedSessionStore
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Login - ResourceIdea</PageTitle>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="brand-logo">
+                <img src="/images/resourceidea-logo.svg" alt="ResourceIdea Logo" style="height: 48px; width: auto;"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                <div class="text-logo" style="display: none;">
+                    <span class="text-logo-icon">💡</span>
+                    <span class="text-logo-text">ResourceIdea</span>
+                </div>
+            </div>
+            <h2 class="login-title">Welcome to ResourceIdea</h2>
+            <p class="login-subtitle">Sign in to your account</p>
+        </div>
+
+        <EditForm Model="Input" OnValidSubmit="LoginUser" FormName="login">
+            <DataAnnotationsValidator />
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @errorMessage
+                </div>
+            }
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <InputText @bind-Value="Input.Email" class="form-control" id="email" placeholder="Enter your email" />
+                <ValidationMessage For="() => Input.Email" class="text-danger" />
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <InputText type="password" @bind-Value="Input.Password" class="form-control" id="password"
+                    placeholder="Enter your password" />
+                <ValidationMessage For="() => Input.Password" class="text-danger" />
+            </div>
+
+            <div class="form-check">
+                <InputCheckbox @bind-Value="Input.RememberMe" class="form-check-input" id="remember-me" />
+                <label class="form-check-label" for="remember-me">
+                    Remember me
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary login-btn" disabled="@isLoading">
+                @if (isLoading)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <text>Signing in...</text>
+                }
+                else
+                {
+                    <text>Sign In</text>
+                }
+            </button>
+        </EditForm>
+    </div>
+</div>
+
+<style>
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #00879c 0%, #006b7d 100%);
+        padding: 20px;
+    }
+
+    .login-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .brand-logo {
+        margin-bottom: 20px;
+    }
+
+    .text-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .text-logo-icon {
+        font-size: 32px;
+    }
+
+    .text-logo-text {
+        font-size: 24px;
+        font-weight: 700;
+        color: #00879c;
+    }
+
+    .login-title {
+        color: #00879c;
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+        color: #6c757d;
+        font-size: 1rem;
+        margin-bottom: 0;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        color: #495057;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-size: 1rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .form-control:focus {
+        border-color: #00879c;
+        box-shadow: 0 0 0 0.2rem rgba(0, 135, 156, 0.25);
+    }
+
+    .form-check {
+        margin-bottom: 25px;
+    }
+
+    .form-check-label {
+        color: #495057;
+        font-size: 0.95rem;
+    }
+
+    .login-btn {
+        width: 100%;
+        background-color: #00879c;
+        border-color: #00879c;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.15s ease-in-out;
+    }
+
+    .login-btn:hover:not(:disabled) {
+        background-color: #006b7d;
+        border-color: #006b7d;
+        transform: translateY(-1px);
+    }
+
+    .login-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    .alert {
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+</style>
+
+@code {
+    private string? errorMessage;
+    private bool isLoading;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Check if user is already authenticated
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            Navigation.NavigateTo(ReturnUrl ?? "/employees", true);
+        }
+    }
+
+    private async Task LoginUser()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            var result = await SignInManager.PasswordSignInAsync(
+            Input.Email,
+            Input.Password,
+            Input.RememberMe,
+            lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                Navigation.NavigateTo(ReturnUrl ?? "/employees", true);
+            }
+            else if (result.IsLockedOut)
+            {
+                errorMessage = "This account has been locked out. Please try again later.";
+            }
+            else if (result.IsNotAllowed)
+            {
+                errorMessage = "Sign in is not allowed for this account.";
+            }
+            else
+            {
+                errorMessage = "Invalid email or password.";
+            }
+        }
+        catch (Exception)
+        {
+            errorMessage = "An error occurred during sign in. Please try again.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; } = string.Empty;
+
+        public bool RememberMe { get; set; }
+    }
+}

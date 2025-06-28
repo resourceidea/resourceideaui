@@ -1,0 +1,101 @@
+@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div class="public-layout">
+    <nav class="navbar navbar-expand-lg navbar-dark public-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="@GetBrandHref()">
+                <img src="/images/resourceidea-logo.svg" alt="ResourceIdea Logo" style="height: 32px; width: auto;" />
+                <span class="brand-text">ResourceIdea</span>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/login">Sign In</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        @Body
+    </main>
+
+    <footer class="public-footer">
+        <div class="container">
+            <div class="footer-content">
+                <span>&copy; 2015-@DateTime.Now.Year EastSeat. All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<style>
+    .public-layout {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .public-navbar {
+        background-color: #00879c !important;
+        padding: 1rem 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        color: white !important;
+    }
+
+    .navbar-brand:hover {
+        color: #ffff99 !important;
+    }
+
+    .brand-text {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #ffff99;
+    }
+
+    .text-logo-fallback {
+        font-size: 24px;
+        margin-right: 4px;
+    }
+
+    .nav-link {
+        color: white !important;
+        font-weight: 500;
+        padding: 0.5rem 1rem !important;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #ffff99 !important;
+    }
+
+    main {
+        flex: 1;
+    }
+
+    .public-footer {
+        background-color: #495057;
+        color: white;
+        padding: 20px 0;
+        margin-top: auto;
+    }
+
+    .footer-content {
+        text-align: center;
+    }
+</style>
+
+@code {
+    private string GetBrandHref()
+    {
+        var authState = AuthenticationStateProvider.GetAuthenticationStateAsync().GetAwaiter().GetResult();
+        return authState.User.Identity?.IsAuthenticated == true ? "/employees" : "/";
+    }
+}
