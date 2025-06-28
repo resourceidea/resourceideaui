@@ -316,13 +316,13 @@
     /* Timeline Dates Section - This is where horizontal scrolling happens */
     .timeline-dates-section {
         flex: 1;
-        overflow-x: auto;
+        overflow-x: scroll; /* Always show horizontal scrollbar */
         overflow-y: hidden;
         display: flex;
         flex-direction: column;
         min-width: 0; /* Important for flex child to shrink */
-        scrollbar-width: thin; /* Firefox */
-        scrollbar-color: #c1c1c1 #f1f1f1; /* Firefox */
+        scrollbar-width: auto; /* Firefox - always show scrollbar */
+        scrollbar-color: #6c757d #f1f1f1; /* Firefox - make scrollbar more visible */
     }
 
     /* Date Headers Row */
@@ -518,20 +518,20 @@
 
     /* Enhanced scrollbar styling for the timeline dates section */
     .timeline-dates-section::-webkit-scrollbar {
-        height: 16px;
+        height: 18px; /* Make scrollbar more prominent */
         background-color: #f8f9fa;
     }
     
     .timeline-dates-section::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 8px;
-        border: 1px solid #e9ecef;
+        background: #e9ecef; /* More visible track background */
+        border-radius: 9px;
+        border: 1px solid #dee2e6;
     }
     
     .timeline-dates-section::-webkit-scrollbar-thumb {
-        background: #6c757d;
-        border-radius: 8px;
-        border: 2px solid #f1f1f1;
+        background: #6c757d; /* Darker thumb for better visibility */
+        border-radius: 9px;
+        border: 2px solid #e9ecef;
         min-width: 50px;
     }
     
@@ -552,6 +552,12 @@
     .date-headers-row,
     .timeline-row {
         min-width: fit-content;
+        min-width: max-content; /* Better browser support */
+    }
+
+    /* Ensure the timeline dates section content is wide enough */
+    .timeline-dates-section > * {
+        min-width: max-content;
     }
 
     /* Custom scrollbar for vertical scroll in data rows */
