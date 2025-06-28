@@ -8,8 +8,12 @@ using Microsoft.AspNetCore.Identity;
 using EastSeat.ResourceIdea.DataStore.Identity;
 using EastSeat.ResourceIdea.Web.Services;
 using EastSeat.ResourceIdea.Web.Middleware;
+using EastSeat.ResourceIdea.Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add Azure Monitor OpenTelemetry
+builder.Services.AddResourceIdeaTelemetry(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IResourceIdeaRequestContext, ResourceIdeaRequestContext>();
