@@ -92,56 +92,61 @@
                             <span>Employee</span>
                         </div>
                         
-                        <!-- Employee Rows -->
-                        @foreach (var employee in EmployeeTimelines)
-                        {
-                            <div class="employee-info-cell">
-                                <div class="employee-name">@employee.FullName</div>
-                                <div class="employee-position">@employee.JobPositionTitle</div>
-                                <div class="employee-utilization">@CalculateUtilization(employee)%</div>
-                            </div>
-                        }
-                    </div>
-
-                    <!-- Scrollable Timeline Section -->
-                    <div class="timeline-dates-section">
-                        <!-- Date Headers -->
-                        <div class="date-headers-row">
-                            @foreach (var date in timelineDates)
+                        <!-- Employee Rows Container with Vertical Scroll -->
+                        <div class="employee-rows-container">
+                            @foreach (var employee in EmployeeTimelines)
                             {
-                                <div class="date-header-cell @(IsWeekend(date) ? "weekend" : "") @(date == currentDate ? "current-date" : "")">
-                                    <div class="date-number">@date.Day</div>
-                                    @if (date.Day == 1 || date == timelineDates.First())
-                                    {
-                                        <div class="month-label">@date.ToString("MMM")</div>
-                                    }
+                                <div class="employee-info-cell">
+                                    <div class="employee-name">@employee.FullName</div>
+                                    <div class="employee-position">@employee.JobPositionTitle</div>
+                                    <div class="employee-utilization">@CalculateUtilization(employee)%</div>
                                 </div>
                             }
                         </div>
+                    </div>
 
-                        <!-- Timeline Data Rows -->
-                        <div class="timeline-data-rows">
-                            @foreach (var employee in EmployeeTimelines)
-                            {
-                                <div class="timeline-row">
-                                    @foreach (var date in timelineDates)
-                                    {
-                                        <div class="timeline-cell @(IsWeekend(date) ? "weekend" : "")">
-                                            @{
-                                                var workItem = GetWorkItemForDate(employee, date);
-                                            }
-                                            @if (workItem != null)
-                                            {
-                                                <div class="work-assignment @GetWorkItemStatusClass(workItem.Status)"
-                                                     @onclick="() => ShowWorkItemDetails(workItem)"
-                                                     title="@GetWorkItemTooltip(workItem)">
-                                                    @GetWorkItemDisplayText(workItem)
-                                                </div>
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                            }
+                    <!-- Timeline Dates Container - Parent container for scrolling dates only -->
+                    <div class="timeline-dates-container">
+                        <!-- Scrollable Timeline Section -->
+                        <div class="timeline-dates-section">
+                            <!-- Date Headers -->
+                            <div class="date-headers-row">
+                                @foreach (var date in timelineDates)
+                                {
+                                    <div class="date-header-cell @(IsWeekend(date) ? "weekend" : "") @(date == currentDate ? "current-date" : "")">
+                                        <div class="date-number">@date.Day</div>
+                                        @if (date.Day == 1 || date == timelineDates.First())
+                                        {
+                                            <div class="month-label">@date.ToString("MMM")</div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Timeline Data Rows -->
+                            <div class="timeline-data-rows">
+                                @foreach (var employee in EmployeeTimelines)
+                                {
+                                    <div class="timeline-row">
+                                        @foreach (var date in timelineDates)
+                                        {
+                                            <div class="timeline-cell @(IsWeekend(date) ? "weekend" : "")">
+                                                @{
+                                                    var workItem = GetWorkItemForDate(employee, date);
+                                                }
+                                                @if (workItem != null)
+                                                {
+                                                    <div class="work-assignment @GetWorkItemStatusClass(workItem.Status)"
+                                                         @onclick="() => ShowWorkItemDetails(workItem)"
+                                                         title="@GetWorkItemTooltip(workItem)">
+                                                        @GetWorkItemDisplayText(workItem)
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -265,6 +270,35 @@
         flex-direction: column;
         z-index: 20;
         position: relative;
+        height: 70vh;
+        overflow: hidden;
+    }
+
+    /* Employee rows container with vertical scroll */
+    .employee-rows-container {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: #6c757d #f1f1f1;
+    }
+
+    .employee-rows-container::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .employee-rows-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    
+    .employee-rows-container::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+    }
+    
+    .employee-rows-container::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
     }
 
     .employee-header-cell {
@@ -313,16 +347,27 @@
         color: #28a745;
     }
 
+    /* Timeline Dates Container - Parent container for dates section */
+    .timeline-dates-container {
+        flex: 1;
+        height: 70vh;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
     /* Timeline Dates Section - This is where horizontal scrolling happens */
     .timeline-dates-section {
-        flex: 1;
+        width: 100%;
+        height: 100%;
         overflow-x: scroll; /* Always show horizontal scrollbar */
         overflow-y: hidden;
         display: flex;
         flex-direction: column;
-        min-width: 0; /* Important for flex child to shrink */
         scrollbar-width: auto; /* Firefox - always show scrollbar */
         scrollbar-color: #6c757d #f1f1f1; /* Firefox - make scrollbar more visible */
+        position: relative;
     }
 
     /* Date Headers Row */
@@ -375,8 +420,10 @@
     .timeline-data-rows {
         flex: 1;
         overflow-y: auto;
+        overflow-x: hidden;
         display: flex;
         flex-direction: column;
+        min-height: 0; /* Important for flex child to shrink */
     }
 
     .timeline-row {
@@ -518,21 +565,22 @@
 
     /* Enhanced scrollbar styling for the timeline dates section */
     .timeline-dates-section::-webkit-scrollbar {
-        height: 18px; /* Make scrollbar more prominent */
+        height: 20px; /* Make scrollbar more prominent and always visible */
         background-color: #f8f9fa;
     }
     
     .timeline-dates-section::-webkit-scrollbar-track {
         background: #e9ecef; /* More visible track background */
-        border-radius: 9px;
+        border-radius: 10px;
         border: 1px solid #dee2e6;
+        margin: 2px;
     }
     
     .timeline-dates-section::-webkit-scrollbar-thumb {
         background: #6c757d; /* Darker thumb for better visibility */
-        border-radius: 9px;
+        border-radius: 10px;
         border: 2px solid #e9ecef;
-        min-width: 50px;
+        min-width: 60px;
     }
     
     .timeline-dates-section::-webkit-scrollbar-thumb:hover {
@@ -543,9 +591,10 @@
         background: #343a40;
     }
 
-    /* Force scrollbar to always be visible */
+    /* Force scrollbar to always be visible and ensure container width */
     .timeline-dates-section {
         scrollbar-width: auto !important;
+        scrollbar-gutter: stable both-edges; /* Reserve space for scrollbar */
     }
 
     /* Ensure minimum content width to trigger horizontal scroll */
@@ -553,9 +602,11 @@
     .timeline-row {
         min-width: fit-content;
         min-width: max-content; /* Better browser support */
+        display: flex;
+        flex-shrink: 0;
     }
 
-    /* Ensure the timeline dates section content is wide enough */
+    /* Ensure the timeline dates section content maintains proper width */
     .timeline-dates-section > * {
         min-width: max-content;
     }
