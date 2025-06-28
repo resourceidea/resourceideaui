@@ -83,72 +83,64 @@
             var currentDate = DateOnly.FromDateTime(DateTime.Today);
             var timelineDates = GetTimelineDates(startDate, endDate);
 
-            <div class="timeline-wrapper">
-                <div class="timeline-container">
-                    <!-- Fixed Employee Column -->
-                    <div class="employee-column">
-                        <!-- Employee Column Header -->
-                        <div class="employee-header-cell">
+            <div class="timeline-grid-container">
+                <!-- Header Row -->
+                <div class="timeline-grid-header">
+                    <!-- Frozen Employee Column Header -->
+                    <div class="employee-header-cell">
+                        <div class="employee-header-content">
                             <span>Employee</span>
                         </div>
-                        
-                        <!-- Employee Rows Container with Vertical Scroll -->
-                        <div class="employee-rows-container">
-                            @foreach (var employee in EmployeeTimelines)
-                            {
-                                <div class="employee-info-cell">
-                                    <div class="employee-name">@employee.FullName</div>
-                                    <div class="employee-position">@employee.JobPositionTitle</div>
-                                    <div class="employee-utilization">@CalculateUtilization(employee)%</div>
-                                </div>
-                            }
-                        </div>
                     </div>
-
-                    <!-- Timeline Dates Container - Parent container for scrolling dates only -->
-                    <div class="timeline-dates-container">
-                        <!-- Scrollable Timeline Section -->
-                        <div class="timeline-dates-section">
-                            <!-- Date Headers -->
-                            <div class="date-headers-row">
-                                @foreach (var date in timelineDates)
+                    
+                    <!-- Date Headers -->
+                    <div class="date-headers-container">
+                        @foreach (var date in timelineDates)
+                        {
+                            <div class="date-header-cell @(IsWeekend(date) ? "weekend" : "") @(date == currentDate ? "current-date" : "")">
+                                <div class="date-number">@date.Day</div>
+                                @if (date.Day == 1 || date == timelineDates.First())
                                 {
-                                    <div class="date-header-cell @(IsWeekend(date) ? "weekend" : "") @(date == currentDate ? "current-date" : "")">
-                                        <div class="date-number">@date.Day</div>
-                                        @if (date.Day == 1 || date == timelineDates.First())
-                                        {
-                                            <div class="month-label">@date.ToString("MMM")</div>
-                                        }
-                                    </div>
+                                    <div class="month-label">@date.ToString("MMM")</div>
                                 }
                             </div>
+                        }
+                    </div>
+                </div>
 
-                            <!-- Timeline Data Rows -->
-                            <div class="timeline-data-rows">
-                                @foreach (var employee in EmployeeTimelines)
+                <!-- Employee Rows -->
+                <div class="timeline-grid-body">
+                    @foreach (var employee in EmployeeTimelines)
+                    {
+                        <div class="timeline-grid-row">
+                            <!-- Frozen Employee Info -->
+                            <div class="employee-info-cell">
+                                <div class="employee-name">@employee.FullName</div>
+                                <div class="employee-position">@employee.JobPositionTitle</div>
+                                <div class="employee-utilization">@CalculateUtilization(employee)%</div>
+                            </div>
+                            
+                            <!-- Timeline Cells -->
+                            <div class="timeline-cells-container">
+                                @foreach (var date in timelineDates)
                                 {
-                                    <div class="timeline-row">
-                                        @foreach (var date in timelineDates)
+                                    <div class="timeline-cell @(IsWeekend(date) ? "weekend" : "")">
+                                        @{
+                                            var workItem = GetWorkItemForDate(employee, date);
+                                        }
+                                        @if (workItem != null)
                                         {
-                                            <div class="timeline-cell @(IsWeekend(date) ? "weekend" : "")">
-                                                @{
-                                                    var workItem = GetWorkItemForDate(employee, date);
-                                                }
-                                                @if (workItem != null)
-                                                {
-                                                    <div class="work-assignment @GetWorkItemStatusClass(workItem.Status)"
-                                                         @onclick="() => ShowWorkItemDetails(workItem)"
-                                                         title="@GetWorkItemTooltip(workItem)">
-                                                        @GetWorkItemDisplayText(workItem)
-                                                    </div>
-                                                }
+                                            <div class="work-assignment @GetWorkItemStatusClass(workItem.Status)"
+                                                 @onclick="() => ShowWorkItemDetails(workItem)"
+                                                 title="@GetWorkItemTooltip(workItem)">
+                                                @GetWorkItemDisplayText(workItem)
                                             </div>
                                         }
                                     </div>
                                 }
                             </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         }
@@ -236,163 +228,54 @@
 }
 
 <style>
-    /* Prevent any page-level horizontal scrolling */
-    body, html {
-        overflow-x: hidden;
-    }
-
-    /* Wrapper to contain the entire timeline */
-    .timeline-wrapper {
-        width: 100%;
-        overflow: hidden;
+    .timeline-grid-container {
         background: white;
         border: 1px solid #dee2e6;
         border-radius: 8px;
-    }
-
-    /* Main timeline container - flexbox layout */
-    .timeline-container {
-        display: flex;
-        height: 70vh;
-        width: 100%;
         overflow: hidden;
-    }
-
-    /* Fixed Employee Column - Always visible, never scrolls */
-    .employee-column {
-        width: 200px;
-        min-width: 200px;
-        max-width: 200px;
-        background: #f8f9fa;
-        border-right: 2px solid #dee2e6;
-        flex-shrink: 0;
-        display: flex;
-        flex-direction: column;
-        z-index: 20;
         position: relative;
         height: 70vh;
-        overflow: hidden;
-    }
-
-    /* Employee rows container with vertical scroll */
-    .employee-rows-container {
-        flex: 1;
+        overflow-x: auto;
         overflow-y: auto;
-        overflow-x: hidden;
-        scrollbar-width: thin;
-        scrollbar-color: #6c757d #f1f1f1;
     }
 
-    .employee-rows-container::-webkit-scrollbar {
-        width: 8px;
-    }
-    
-    .employee-rows-container::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-    
-    .employee-rows-container::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 4px;
-    }
-    
-    .employee-rows-container::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
+    .timeline-grid-header {
+        display: flex;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
     }
 
     .employee-header-cell {
+        width: 200px;
+        min-width: 200px;
+        position: sticky;
+        left: 0;
+        z-index: 101;
+        background: #f8f9fa;
+        border-right: 2px solid #dee2e6;
         padding: 12px;
         font-weight: 600;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-bottom: 2px solid #dee2e6;
-        background: #f8f9fa;
-        min-height: 60px;
-        max-height: 60px;
     }
 
-    .employee-info-cell {
-        padding: 12px;
+    .date-headers-container {
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        border-bottom: 1px solid #f1f3f4;
-        background: white;
-        min-height: 60px;
-        max-height: 60px;
-    }
-
-    .employee-info-cell:hover {
-        background-color: #f8f9fa;
-    }
-
-    .employee-name {
-        font-weight: 600;
-        color: #495057;
-        margin-bottom: 4px;
-        font-size: 14px;
-    }
-
-    .employee-position {
-        font-size: 12px;
-        color: #6c757d;
-        margin-bottom: 2px;
-    }
-
-    .employee-utilization {
-        font-size: 12px;
-        font-weight: 600;
-        color: #28a745;
-    }
-
-    /* Timeline Dates Container - Parent container for dates section */
-    .timeline-dates-container {
-        flex: 1;
-        height: 70vh;
-        overflow: hidden;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* Timeline Dates Section - This is where horizontal scrolling happens */
-    .timeline-dates-section {
-        width: 100%;
-        height: 100%;
-        overflow-x: scroll; /* Always show horizontal scrollbar */
-        overflow-y: hidden;
-        display: flex;
-        flex-direction: column;
-        scrollbar-width: auto; /* Firefox - always show scrollbar */
-        scrollbar-color: #6c757d #f1f1f1; /* Firefox - make scrollbar more visible */
-        position: relative;
-    }
-
-    /* Date Headers Row */
-    .date-headers-row {
-        display: flex;
-        background: #f8f9fa;
-        border-bottom: 2px solid #dee2e6;
-        min-height: 60px;
-        max-height: 60px;
-        flex-shrink: 0;
+        min-width: max-content;
     }
 
     .date-header-cell {
         width: 40px;
         min-width: 40px;
-        max-width: 40px;
         padding: 8px 4px;
         text-align: center;
         border-right: 1px solid #e9ecef;
         background: #f8f9fa;
         font-size: 12px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        flex-shrink: 0;
     }
 
     .date-header-cell.weekend {
@@ -416,41 +299,72 @@
         margin-top: 2px;
     }
 
-    /* Timeline Data Rows Container */
-    .timeline-data-rows {
-        flex: 1;
+    .timeline-grid-body {
         overflow-y: auto;
-        overflow-x: hidden;
-        display: flex;
-        flex-direction: column;
-        min-height: 0; /* Important for flex child to shrink */
     }
 
-    .timeline-row {
+    .timeline-grid-row {
         display: flex;
         border-bottom: 1px solid #f1f3f4;
         min-height: 60px;
-        max-height: 60px;
-        flex-shrink: 0;
     }
 
-    .timeline-row:hover {
+    .timeline-grid-row:hover {
         background-color: #f8f9fa;
+    }
+
+    .employee-info-cell {
+        width: 200px;
+        min-width: 200px;
+        position: sticky;
+        left: 0;
+        z-index: 10;
+        background: white;
+        border-right: 2px solid #dee2e6;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .timeline-grid-row:hover .employee-info-cell {
+        background-color: #f8f9fa;
+    }
+
+    .employee-name {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 4px;
+        font-size: 14px;
+    }
+
+    .employee-position {
+        font-size: 12px;
+        color: #6c757d;
+        margin-bottom: 2px;
+    }
+
+    .employee-utilization {
+        font-size: 12px;
+        font-weight: 600;
+        color: #28a745;
+    }
+
+    .timeline-cells-container {
+        display: flex;
+        min-width: max-content;
     }
 
     .timeline-cell {
         width: 40px;
         min-width: 40px;
-        max-width: 40px;
         min-height: 60px;
-        max-height: 60px;
         border-right: 1px solid #e9ecef;
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 2px;
-        flex-shrink: 0;
     }
 
     .timeline-cell.weekend {
@@ -480,7 +394,7 @@
     .work-assignment:hover {
         transform: scale(1.05);
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        z-index: 25;
+        z-index: 15;
         position: relative;
     }
 
@@ -563,78 +477,11 @@
         background-color: #007bff !important;
     }
 
-    /* Enhanced scrollbar styling for the timeline dates section */
-    .timeline-dates-section::-webkit-scrollbar {
-        height: 20px; /* Make scrollbar more prominent and always visible */
-        background-color: #f8f9fa;
-    }
-    
-    .timeline-dates-section::-webkit-scrollbar-track {
-        background: #e9ecef; /* More visible track background */
-        border-radius: 10px;
-        border: 1px solid #dee2e6;
-        margin: 2px;
-    }
-    
-    .timeline-dates-section::-webkit-scrollbar-thumb {
-        background: #6c757d; /* Darker thumb for better visibility */
-        border-radius: 10px;
-        border: 2px solid #e9ecef;
-        min-width: 60px;
-    }
-    
-    .timeline-dates-section::-webkit-scrollbar-thumb:hover {
-        background: #495057;
-    }
-
-    .timeline-dates-section::-webkit-scrollbar-thumb:active {
-        background: #343a40;
-    }
-
-    /* Force scrollbar to always be visible and ensure container width */
-    .timeline-dates-section {
-        scrollbar-width: auto !important;
-        scrollbar-gutter: stable both-edges; /* Reserve space for scrollbar */
-    }
-
-    /* Ensure minimum content width to trigger horizontal scroll */
-    .date-headers-row,
-    .timeline-row {
-        min-width: fit-content;
-        min-width: max-content; /* Better browser support */
-        display: flex;
-        flex-shrink: 0;
-    }
-
-    /* Ensure the timeline dates section content maintains proper width */
-    .timeline-dates-section > * {
-        min-width: max-content;
-    }
-
-    /* Custom scrollbar for vertical scroll in data rows */
-    .timeline-data-rows::-webkit-scrollbar {
-        width: 12px;
-    }
-    
-    .timeline-data-rows::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 6px;
-    }
-    
-    .timeline-data-rows::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 6px;
-    }
-    
-    .timeline-data-rows::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
-    }
-
-    @@media (max-width: 768px) {
-        .employee-column {
+    @media (max-width: 768px) {
+        .employee-info-cell,
+        .employee-header-cell {
             width: 150px;
             min-width: 150px;
-            max-width: 150px;
         }
         
         .employee-name {
@@ -645,7 +492,6 @@
         .timeline-cell {
             width: 35px;
             min-width: 35px;
-            max-width: 35px;
         }
     }
 </style>
