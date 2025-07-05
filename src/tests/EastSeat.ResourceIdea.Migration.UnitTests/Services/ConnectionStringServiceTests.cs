@@ -62,7 +62,9 @@ public sealed class ConnectionStringServiceTests : IDisposable
         // Act & Assert
         var act = () => new ConnectionStringService(_optionsMock.Object, null!);
         act.Should().Throw<ArgumentNullException>();
-    }    /// <summary>
+    }
+    
+    /// <summary>
          /// Tests that the constructor throws when Key Vault URI is empty.
          /// </summary>
     [Fact]
