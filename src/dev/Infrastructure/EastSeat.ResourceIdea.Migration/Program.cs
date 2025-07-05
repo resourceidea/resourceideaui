@@ -154,10 +154,20 @@ public sealed class Program
             logger.LogError(ex, "The migration process timed out");
             Environment.Exit(1);
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            logger.LogError(ex, "Unauthorized access occurred during migration");
+            Environment.Exit(1);
+        }
+        catch (System.IO.IOException ex)
+        {
+            logger.LogError(ex, "An I/O error occurred during migration");
+            Environment.Exit(1);
+        }
         catch (Exception ex)
         {
             logger.LogCritical(ex, "An unexpected error occurred during migration");
-            Environment.Exit(1);
+            throw; // Rethrow unexpected exceptions to avoid suppressing critical errors
         }
     }
 }
