@@ -276,7 +276,7 @@ public sealed class DatabaseMigrationService : IDatabaseMigrationService
                 };
 
                 await using var reader = await sourceCommand.ExecuteReaderAsync(cancellationToken);
-                var dataTable = new DataTable();
+                await using var dataTable = new DataTable();
                 dataTable.Load(reader);
 
                 if (dataTable.Rows.Count > 0)
