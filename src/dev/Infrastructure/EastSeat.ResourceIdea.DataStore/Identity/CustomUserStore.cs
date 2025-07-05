@@ -6,7 +6,10 @@ using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 namespace EastSeat.ResourceIdea.DataStore.Identity;
 
 public class CustomUserStore(ResourceIdeaDBContext dbContext)
-    : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>
+    : IUserStore<ApplicationUser>, 
+      IUserPasswordStore<ApplicationUser>,
+      IUserEmailStore<ApplicationUser>,
+      IUserSecurityStampStore<ApplicationUser>
 {
     private readonly ResourceIdeaDBContext _dbContext = dbContext;
 
@@ -93,6 +96,66 @@ public class CustomUserStore(ResourceIdeaDBContext dbContext)
     {
         cancellationToken.ThrowIfCancellationRequested();
         return Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
+    }
+
+    // Email store methods
+    public Task SetEmailAsync(ApplicationUser user, string? email, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.Email = email;
+        return Task.CompletedTask;
+    }
+
+    public Task<string?> GetEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(user.Email);
+    }
+
+    public Task<bool> GetEmailConfirmedAsync(ApplicationUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(user.EmailConfirmed);
+    }
+
+    public Task SetEmailConfirmedAsync(ApplicationUser user, bool confirmed, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.EmailConfirmed = confirmed;
+        return Task.CompletedTask;
+    }
+
+    public async Task<ApplicationUser?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return await _dbContext.Users!.FirstOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail, cancellationToken);
+    }
+
+    public Task<string?> GetNormalizedEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(user.NormalizedEmail);
+    }
+
+    public Task SetNormalizedEmailAsync(ApplicationUser user, string? normalizedEmail, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.NormalizedEmail = normalizedEmail;
+        return Task.CompletedTask;
+    }
+
+    // Security stamp methods
+    public Task SetSecurityStampAsync(ApplicationUser user, string stamp, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.SecurityStamp = stamp;
+        return Task.CompletedTask;
+    }
+
+    public Task<string?> GetSecurityStampAsync(ApplicationUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(user.SecurityStamp);
     }
 
     public void Dispose()

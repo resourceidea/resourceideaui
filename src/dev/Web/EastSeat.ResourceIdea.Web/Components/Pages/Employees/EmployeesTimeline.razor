@@ -1,0 +1,497 @@
+@page "/employees-timeline"
+@layout AdminLayout
+@inherits ResourceIdeaComponentBase
+@using EastSeat.ResourceIdea.Web.Components.Shared.Alerts
+@using EastSeat.ResourceIdea.Web.Components.Shared.PageTitles
+@using EastSeat.ResourceIdea.Web.Components.Shared.Cards
+@using EastSeat.ResourceIdea.Web.Components.Base
+
+<ResourceIdeaPageTitle Title="Employees Timeline" />
+
+<div class="page-container">
+    <PageHeader Text="Employees Timeline" />
+
+    <div class="timeline-controls-sticky">
+        <div class="timeline-controls mb-4">
+            <!-- Month/Year Picker Row -->
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="startMonth" class="form-label">Start Month/Year</label>
+                    <div class="d-flex">
+                        <select @bind="StartMonth" class="form-select me-2" id="startMonth">
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                            }
+                        </select>
+                        <input @bind="StartYear" type="number" class="form-control year-input" min="2020" max="2030" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="endMonth" class="form-label">End Month/Year</label>
+                    <div class="d-flex">
+                        <select @bind="EndMonth" class="form-select me-2" id="endMonth">
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                            }
+                        </select>
+                        <input @bind="EndYear" type="number" class="form-control year-input" min="2020" max="2030" />
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search and Action Buttons Row -->
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="searchTerm" class="form-label">Search Employees</label>
+                    <input @bind="SearchTerm" @bind:event="oninput" @onkeypress="@(async (e) => { if (e.Key == "Enter") await LoadTimelineData(); })" 
+                           type="text" class="form-control" id="searchTerm" placeholder="Search by name, email, job title..." />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-flex">
+                        <button @onclick="LoadTimelineData" class="btn btn-primary me-2 compact-btn" disabled="@IsLoadingPage">
+                            <i class="fa fa-refresh"></i> Load Timeline
+                        </button>
+                        <NavLink class="btn btn-outline-secondary compact-btn" href="/workitems?unassigned=true">
+                            <i class="fa fa-plus"></i> Assign Work Items
+                        </NavLink>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-container">
+        @if (IsLoadingPage)
+        {
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
+        else if (HasError)
+        {
+            <DismissibleAlert ErrorMessage="@ErrorMessage" IsErrorMessage="true" />
+        }
+        else if (EmployeeTimelines != null && EmployeeTimelines.Any())
+        {
+            var startDate = new DateOnly(StartYear, StartMonth, 1);
+            var endDate = new DateOnly(EndYear, EndMonth, DateTime.DaysInMonth(EndYear, EndMonth));
+            var currentDate = DateOnly.FromDateTime(DateTime.Today);
+            var timelineDates = GetTimelineDates(startDate, endDate);
+
+            <div class="timeline-grid-container">
+                <!-- Header Row -->
+                <div class="timeline-grid-header">
+                    <!-- Frozen Employee Column Header -->
+                    <div class="employee-header-cell">
+                        <div class="employee-header-content">
+                            <span>Employee</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Date Headers -->
+                    <div class="date-headers-container">
+                        @foreach (var date in timelineDates)
+                        {
+                            <div class="date-header-cell @(IsWeekend(date) ? "weekend" : "") @(date == currentDate ? "current-date" : "")">
+                                <div class="date-number">@date.Day</div>
+                                @if (date.Day == 1 || date == timelineDates.First())
+                                {
+                                    <div class="month-label">@date.ToString("MMM")</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Employee Rows -->
+                <div class="timeline-grid-body">
+                    @foreach (var employee in EmployeeTimelines)
+                    {
+                        <div class="timeline-grid-row">
+                            <!-- Frozen Employee Info -->
+                            <div class="employee-info-cell">
+                                <div class="employee-name">@employee.FullName</div>
+                                <div class="employee-position">@employee.JobPositionTitle</div>
+                                <div class="employee-utilization">@CalculateUtilization(employee)%</div>
+                            </div>
+                            
+                            <!-- Timeline Cells -->
+                            <div class="timeline-cells-container">
+                                @foreach (var date in timelineDates)
+                                {
+                                    <div class="timeline-cell @(IsWeekend(date) ? "weekend" : "")">
+                                        @{
+                                            var workItem = GetWorkItemForDate(employee, date);
+                                        }
+                                        @if (workItem != null)
+                                        {
+                                            <div class="work-assignment @GetWorkItemStatusClass(workItem.Status)"
+                                                 @onclick="() => ShowWorkItemDetails(workItem)"
+                                                 title="@GetWorkItemTooltip(workItem)">
+                                                @GetWorkItemDisplayText(workItem)
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center">
+                <i class="fa fa-info-circle fa-2x mb-3"></i>
+                <p class="mb-1">No employees found</p>
+                @if (!string.IsNullOrEmpty(SearchTerm))
+                {
+                    <small>Try adjusting your search criteria or date range</small>
+                }
+                else
+                {
+                    <small>Try adjusting your date range or check if employees have work items assigned</small>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Work Item Details Modal -->
+@if (SelectedWorkItem != null)
+{
+    <div class="modal show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Work Item Details</h5>
+                    <button type="button" class="btn-close" @onclick="CloseWorkItemModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Title</label>
+                                <p>@SelectedWorkItem.Title</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Client</label>
+                                <p>@(SelectedWorkItem.ClientName ?? "N/A")</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Engagement</label>
+                                <p>@(SelectedWorkItem.EngagementTitle ?? "N/A")</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Status</label>
+                                <p><span class="badge @GetStatusBadgeClass(SelectedWorkItem.Status)">@SelectedWorkItem.Status</span></p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Priority</label>
+                                <p>@SelectedWorkItem.Priority</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Start Date</label>
+                                <p>@(SelectedWorkItem.StartDate?.ToString("MMM dd, yyyy") ?? "N/A")</p>
+                            </div>
+                            @if (SelectedWorkItem.CompletedDate.HasValue)
+                            {
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Completed Date</label>
+                                    <p>@SelectedWorkItem.CompletedDate.Value.ToString("MMM dd, yyyy")</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(SelectedWorkItem.Description))
+                    {
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Description</label>
+                            <p>@SelectedWorkItem.Description</p>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseWorkItemModal">Close</button>
+                    <button type="button" class="btn btn-primary" @onclick="() => NavigateToWorkItem(SelectedWorkItem.Id.Value)">View Full Details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .timeline-grid-container {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        height: 70vh;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+
+    .timeline-grid-header {
+        display: flex;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .employee-header-cell {
+        width: 200px;
+        min-width: 200px;
+        position: sticky;
+        left: 0;
+        z-index: 101;
+        background: #f8f9fa;
+        border-right: 2px solid #dee2e6;
+        padding: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .date-headers-container {
+        display: flex;
+        min-width: max-content;
+    }
+
+    .date-header-cell {
+        width: 40px;
+        min-width: 40px;
+        padding: 8px 4px;
+        text-align: center;
+        border-right: 1px solid #e9ecef;
+        background: #f8f9fa;
+        font-size: 12px;
+    }
+
+    .date-header-cell.weekend {
+        background: #e3f2fd;
+    }
+
+    .date-header-cell.current-date {
+        background: #fff3cd;
+        border-left: 2px solid #ff6b6b;
+        border-right: 2px solid #ff6b6b;
+    }
+
+    .date-number {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .month-label {
+        font-size: 10px;
+        color: #6c757d;
+        margin-top: 2px;
+    }
+
+    .timeline-grid-body {
+        overflow-y: auto;
+    }
+
+    .timeline-grid-row {
+        display: flex;
+        border-bottom: 1px solid #f1f3f4;
+        min-height: 60px;
+    }
+
+    .timeline-grid-row:hover {
+        background-color: #f8f9fa;
+    }
+
+    .employee-info-cell {
+        width: 200px;
+        min-width: 200px;
+        position: sticky;
+        left: 0;
+        z-index: 10;
+        background: white;
+        border-right: 2px solid #dee2e6;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .timeline-grid-row:hover .employee-info-cell {
+        background-color: #f8f9fa;
+    }
+
+    .employee-name {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 4px;
+        font-size: 14px;
+    }
+
+    .employee-position {
+        font-size: 12px;
+        color: #6c757d;
+        margin-bottom: 2px;
+    }
+
+    .employee-utilization {
+        font-size: 12px;
+        font-weight: 600;
+        color: #28a745;
+    }
+
+    .timeline-cells-container {
+        display: flex;
+        min-width: max-content;
+    }
+
+    .timeline-cell {
+        width: 40px;
+        min-width: 40px;
+        min-height: 60px;
+        border-right: 1px solid #e9ecef;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px;
+    }
+
+    .timeline-cell.weekend {
+        background: #f3e5f5;
+    }
+
+    .work-assignment {
+        background: #007bff;
+        color: white;
+        border-radius: 4px;
+        padding: 4px 6px;
+        cursor: pointer;
+        font-size: 10px;
+        line-height: 1.2;
+        text-align: center;
+        min-height: 24px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .work-assignment:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        z-index: 15;
+        position: relative;
+    }
+
+    .work-assignment.status-completed {
+        background: #28a745;
+    }
+
+    .work-assignment.status-inprogress {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .work-assignment.status-onhold {
+        background: #6c757d;
+    }
+
+    .work-assignment.status-cancelled {
+        background: #dc3545;
+    }
+
+    /* Sticky wrapper for timeline controls */
+    .timeline-controls-sticky {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: #fff;
+        padding-bottom: 10px;
+        margin-bottom: 0;
+    }
+
+    .timeline-controls {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        max-width: 800px;
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+    .year-input {
+        width: 100px;
+        flex-shrink: 0;
+    }
+
+    .compact-btn {
+        white-space: nowrap;
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    /* Modal styling */
+    .modal-content {
+        border-radius: 8px;
+    }
+
+    .modal-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .badge.bg-success {
+        background-color: #28a745 !important;
+    }
+
+    .badge.bg-warning {
+        background-color: #ffc107 !important;
+        color: #212529 !important;
+    }
+
+    .badge.bg-secondary {
+        background-color: #6c757d !important;
+    }
+
+    .badge.bg-danger {
+        background-color: #dc3545 !important;
+    }
+
+    .badge.bg-primary {
+        background-color: #007bff !important;
+    }
+
+    @@media (max-width: 768px) {
+        .employee-info-cell,
+        .employee-header-cell {
+            width: 150px;
+            min-width: 150px;
+        }
+        
+        .employee-name {
+            font-size: 12px;
+        }
+        
+        .date-header-cell,
+        .timeline-cell {
+            width: 35px;
+            min-width: 35px;
+        }
+    }
+</style>
