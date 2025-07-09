@@ -9,6 +9,7 @@ using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Contracts;
 using EastSeat.ResourceIdea.DataStore;
 using EastSeat.ResourceIdea.DataStore.Services;
+using EastSeat.ResourceIdea.Domain.Exceptions;
 using EastSeat.ResourceIdea.Web.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -52,10 +53,10 @@ namespace EastSeat.ResourceIdea.Web
             // TODO: Setup getting connection string from Azure App Configuration.
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
             {
-                var serverInstance = Environment.GetEnvironmentVariable("RESOURCEIDEA_DB_HOST");
-                var database = Environment.GetEnvironmentVariable("RESOURCEIDEA_DB");
-                var userId = Environment.GetEnvironmentVariable("RESOURCEIDEA_DB_USER");
-                var password = Environment.GetEnvironmentVariable("RESOURCEIDEA_DB_PASSWORD");
+                var serverInstance = GetUserEnvironmentVariable("RESOURCEIDEA_DB_HOST");
+                var database = GetUserEnvironmentVariable("RESOURCEIDEA_DB_NAME");
+                var userId = GetUserEnvironmentVariable("RESOURCEIDEA_DB_USER");
+                var password = GetUserEnvironmentVariable("RESOURCEIDEA_DB_PASSWORD");
 
                 if (string.IsNullOrWhiteSpace(serverInstance) ||
                     string.IsNullOrWhiteSpace(database) ||
@@ -75,6 +76,17 @@ namespace EastSeat.ResourceIdea.Web
 
             Debug.WriteLine($"ResourceIdea :: SQL Server Connection String: {sqlServerConnectionString}");
             return sqlServerConnectionString;
+        }
+
+        private static string GetUserEnvironmentVariable(string environmentVariableKey)
+        {
+            string? value = Environment.GetEnvironmentVariable(environmentVariableKey, EnvironmentVariableTarget.User);
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new ResourceIdeaException($"Environment variable '{environmentVariableKey}' is not set.");
+            }
+
+            return value.Trim();
         }
     }
 }

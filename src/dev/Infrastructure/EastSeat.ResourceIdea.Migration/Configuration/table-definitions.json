@@ -1,0 +1,28 @@
+{
+  "tables": [
+    {
+      "schema": "dbo",
+      "table": "Company",
+      "columns": [
+        { "name": "CompanyCode", "type": "varchar(50)" },
+        { "name": "OrganizationName", "type": "varchar(256)" }
+      ],
+      "destination": {
+        "schema": "dbo",
+        "table": "Tenants",
+        "columns": [
+          { "name": "MigrationCompanyCode", "type": "varchar(50)", "isMigratable": true, "sourceColumn": "CompanyCode" },
+          { "name": "Organization", "type": "nvarchar(500)", "isMigratable": true, "sourceColumn": "OrganizationName" },
+          { "name": "TenantId", "type": "nvarchar(450)", "isMigratable": false },
+          { "name": "Created", "type": "datetimeoffset", "isMigratable": false },
+          { "name": "CreatedBy", "type": "nvarchar(100)", "isMigratable": false },
+          { "name": "LastModified", "type": "datetimeoffset", "isMigratable": false },
+          { "name": "LastModifiedBy", "type": "nvarchar(100)", "isMigratable": false },
+          { "name": "IsDeleted", "type": "bit", "isMigratable": false },
+          { "name": "Deleted", "type": "datetimeoffset", "isMigratable": false },
+          { "name": "DeletedBy", "type": "nvarchar(100)", "isMigratable": false }
+        ]
+      }
+    }
+  ]
+}
