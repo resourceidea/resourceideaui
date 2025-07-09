@@ -64,6 +64,7 @@ public partial class MyComponent : ResourceIdeaComponentBase
 - Unit tests for all handlers in `Tests/{Layer}.UnitTests/`
 - Test command validation, entity mapping, and business logic
 - Use existing test patterns with Moq for service dependencies
+- Always write unit tests for new changes made
 
 ### Development Workflow
 

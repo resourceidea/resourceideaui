@@ -13,6 +13,12 @@ public class Tenant : BaseEntity
     /// </summary>
     public string Organization { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Code used for migration purposes.
+    /// This code is used to identify the tenant during migration processes.
+    /// </summary>
+    public string MigrationCompanyCode { get; set; } = string.Empty;
+
     public override TModel ToModel<TModel>()
     {
         throw new NotImplementedException();
