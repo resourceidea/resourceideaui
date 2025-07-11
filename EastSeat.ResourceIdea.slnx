@@ -7,6 +7,7 @@
   </Folder>
   <Folder Name="/src/dev/Infrastructure/">
     <Project Path="src/dev/Infrastructure/EastSeat.ResourceIdea.DataStore/EastSeat.ResourceIdea.DataStore.csproj" />
+    <Project Path="src/dev/Infrastructure/EastSeat.ResourceIdea.Migration/EastSeat.ResourceIdea.Migration.csproj" />
   </Folder>
   <Folder Name="/src/dev/Web/">
     <Project Path="src/dev/Web/EastSeat.ResourceIdea.Web/EastSeat.ResourceIdea.Web.csproj" />

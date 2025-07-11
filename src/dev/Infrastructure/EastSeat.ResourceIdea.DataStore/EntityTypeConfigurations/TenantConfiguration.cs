@@ -18,5 +18,8 @@ public class TenantConfiguration : BaseEntityConfiguration<Tenant>
         builder.Property(tenant => tenant.Organization)
             .IsRequired()
             .HasMaxLength(500);
+
+        builder.Property(tenant => tenant.MigrationCompanyCode)
+            .HasMaxLength(50);
     }
 }
