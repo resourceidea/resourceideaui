@@ -9,21 +9,21 @@ namespace EastSeat.ResourceIdea.Migration.Configuration;
 /// </summary>
 public static class TableDefinitions
 {
-    private static readonly Lazy<HashSet<TableDefinition>> _tablesToMigrate
+    private static readonly Lazy<List<TableDefinition>> _tablesToMigrate
         = new(LoadTableDefinitions);
 
     /// <summary>
-    /// Gets the collection of tables to migrate with their definitions.
+    /// Gets the collection of tables to migrate with their definitions in migration order.
     /// </summary>
-    public static HashSet<TableDefinition> TablesToMigrate
+    public static List<TableDefinition> TablesToMigrate
         => _tablesToMigrate.Value;
 
     /// <summary>
     /// Loads table definitions from the embedded JSON file.
     /// </summary>
-    /// <returns>A collection of table definitions.</returns>
+    /// <returns>A collection of table definitions in migration order.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the table definitions file cannot be found or parsed.</exception>
-    private static HashSet<TableDefinition> LoadTableDefinitions()
+    private static List<TableDefinition> LoadTableDefinitions()
     {
         try
         {
@@ -60,8 +60,8 @@ public static class TableDefinitions
     /// Parses the JSON content and converts it to the required format.
     /// </summary>
     /// <param name="jsonContent">The JSON content containing table definitions.</param>
-    /// <returns>A collection of table definitions.</returns>
-    private static HashSet<TableDefinition> ParseTableDefinitions(string jsonContent)
+    /// <returns>A collection of table definitions ordered by migration order.</returns>
+    private static List<TableDefinition> ParseTableDefinitions(string jsonContent)
     {
         var options = new JsonSerializerOptions
         {
@@ -75,6 +75,11 @@ public static class TableDefinitions
             throw new InvalidOperationException("Invalid table definitions format.");
         }
 
-        return [.. tableDefinitionsRoot.Tables];
+        // Sort by migration order, then by schema and table name as fallback
+        return tableDefinitionsRoot.Tables
+            .OrderBy(t => t.MigrationOrder)
+            .ThenBy(t => t.Schema)
+            .ThenBy(t => t.Table)
+            .ToList();
     }
 }

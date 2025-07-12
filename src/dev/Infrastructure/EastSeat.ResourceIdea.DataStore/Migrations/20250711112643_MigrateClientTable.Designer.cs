@@ -4,6 +4,7 @@ using EastSeat.ResourceIdea.DataStore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EastSeat.ResourceIdea.DataStore.Migrations
 {
     [DbContext(typeof(ResourceIdeaDBContext))]
-    partial class ResourceIdeaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250711112643_MigrateClientTable")]
+    partial class MigrateClientTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,11 +175,11 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("MigrationClientId")
+                    b.Property<string>("MigratedClientId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("MigrationCompanyCode")
+                    b.Property<string>("MigratedCompanyCode")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -567,6 +570,7 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("MigrationCompanyCode")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -769,14 +773,17 @@ namespace EastSeat.ResourceIdea.DataStore.Migrations
                                 .HasColumnType("nvarchar(450)");
 
                             b1.Property<string>("Building")
+                                .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("nvarchar(100)");
 
                             b1.Property<string>("City")
+                                .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("nvarchar(100)");
 
                             b1.Property<string>("Street")
+                                .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("nvarchar(100)");
 

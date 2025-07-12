@@ -20,6 +20,7 @@ public class TenantConfiguration : BaseEntityConfiguration<Tenant>
             .HasMaxLength(500);
 
         builder.Property(tenant => tenant.MigrationCompanyCode)
-            .HasMaxLength(50);
+            .HasMaxLength(50)
+            .IsRequired(false);
     }
 }

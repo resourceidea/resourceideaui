@@ -34,6 +34,16 @@ public class Client : BaseEntity
     /// <returns>True if instance is empty; Otherwise, False.</returns>
     public bool IsEmpty() => this == EmptyClient.Instance;
 
+    /// <summary>
+    /// Client ID of the migrated client, if applicable.
+    /// </summary>
+    public string? MigrationClientId { get; set; }
+
+    /// <summary>
+    /// Company code of the migrated client, if applicable.
+    /// </summary>
+    public string? MigrationCompanyCode { get; set; }
+
     public override TModel ToModel<TModel>() where TModel : class =>
         typeof(TModel) switch
         {

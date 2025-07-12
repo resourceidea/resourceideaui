@@ -17,11 +17,11 @@ namespace EastSeat.ResourceIdea.Migration.UnitTests.Services
             var tableDefinition = new TableDefinition
             {
                 Schema = "dbo",
-                TableName = "Companies",
-                Columns = new List<ColumnDefinition>
+                Table = "Company",
+                Columns = new List<SourceColumnDefinition>
                 {
-                    new ColumnDefinition { Name = "CompanyCode" },
-                    new ColumnDefinition { Name = "OrganizationName" }
+                    new() { Name = "CompanyCode", Type = "varchar(50)" },
+                    new() { Name = "OrganizationName", Type = "varchar(256)" }
                 }
             };
 
@@ -40,22 +40,26 @@ namespace EastSeat.ResourceIdea.Migration.UnitTests.Services
                 .Returns("Org1").Returns("Org2");
 
             // Act
-            var data = new HashSet<CompanySourceDTO>
-            {
-                new CompanySourceDTO("C001", "Org1"),
-                new CompanySourceDTO("C002", "Org2")
-            };
+            var data = new HashSet<MigrationSourceData>();
+            var sourceData1 = new MigrationSourceData();
+            sourceData1.SetValue("CompanyCode", "C001");
+            sourceData1.SetValue("OrganizationName", "Org1");
+
+            var sourceData2 = new MigrationSourceData();
+            sourceData2.SetValue("CompanyCode", "C002");
+            sourceData2.SetValue("OrganizationName", "Org2");
+
+            data.Add(sourceData1);
+            data.Add(sourceData2);
 
             // Assert
-            Assert.Contains(new CompanySourceDTO("C001", "Org1"), data);
-            Assert.Contains(new CompanySourceDTO("C002", "Org2"), data);
             Assert.Equal(2, data.Count);
         }
 
         [Theory]
-        [InlineData(true, MigrationItemResult.Skipped)]
-        [InlineData(false, MigrationItemResult.Migrated)]
-        public void ExecuteDataMigrationCommands_ReturnsCorrectResult_BasedOnExistingRecord(bool recordExists, MigrationItemResult expectedResult)
+        [InlineData(true, ItemMigrationResult.Skipped)]
+        [InlineData(false, ItemMigrationResult.Migrated)]
+        public void ExecuteDataMigrationCommands_ReturnsCorrectResult_BasedOnExistingRecord(bool recordExists, ItemMigrationResult expectedResult)
         {
             // This test validates that the method correctly returns Skipped when a record exists
             // and Migrated when a new record is inserted
@@ -63,8 +67,8 @@ namespace EastSeat.ResourceIdea.Migration.UnitTests.Services
             // For integration testing, we would need actual database connections
             // For unit testing, we need to refactor the method to be more testable
             // This demonstrates the expected behavior
-            Assert.True(recordExists || expectedResult == MigrationItemResult.Migrated);
-            Assert.True(!recordExists || expectedResult == MigrationItemResult.Skipped);
+            Assert.True(recordExists || expectedResult == ItemMigrationResult.Migrated);
+            Assert.True(!recordExists || expectedResult == ItemMigrationResult.Skipped);
         }
 
         [Fact]
@@ -76,18 +80,23 @@ namespace EastSeat.ResourceIdea.Migration.UnitTests.Services
                 Total = 2
             };
 
-            var item1 = new CompanySourceDTO("C001", "Org1");
-            var item2 = new CompanySourceDTO("C002", "Org2");
+            var item1 = new MigrationSourceData();
+            item1.SetValue("CompanyCode", "C001");
+            item1.SetValue("OrganizationName", "Org1");
+
+            var item2 = new MigrationSourceData();
+            item2.SetValue("CompanyCode", "C002");
+            item2.SetValue("OrganizationName", "Org2");
 
             // Act - Simulate one skipped, one migrated
-            migrationResult.Skipped.Add($"{item1.CompanyCode}|{item1.OrganizationName}");
-            migrationResult.Migrated.Add($"{item2.CompanyCode}|{item2.OrganizationName}");
+            migrationResult.Skipped.Add(new Tuple<MigrationSourceData, ItemMigrationResult>(item1, ItemMigrationResult.Skipped));
+            migrationResult.Migrated.Add(new Tuple<MigrationSourceData, ItemMigrationResult>(item2, ItemMigrationResult.Migrated));
 
             // Assert
             Assert.Single(migrationResult.Skipped);
             Assert.Single(migrationResult.Migrated);
-            Assert.Contains("C001|Org1", migrationResult.Skipped);
-            Assert.Contains("C002|Org2", migrationResult.Migrated);
+            Assert.Equal("C001", migrationResult.Skipped.First().Item1.GetValue("CompanyCode"));
+            Assert.Equal("C002", migrationResult.Migrated.First().Item1.GetValue("CompanyCode"));
         }
     }
 }
