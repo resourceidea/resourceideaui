@@ -26,9 +26,16 @@ public class ClientConfiguration : BaseEntityConfiguration<Client>
 
         builder.OwnsOne(client => client.Address, addressBuilder =>
         {
-            addressBuilder.Property(a => a.Building).IsRequired().HasMaxLength(100);
-            addressBuilder.Property(a => a.Street).IsRequired().HasMaxLength(100);
-            addressBuilder.Property(a => a.City).IsRequired().HasMaxLength(100);
+            addressBuilder.Property(a => a.Building).IsRequired(false).HasMaxLength(100);
+            addressBuilder.Property(a => a.Street).IsRequired(false).HasMaxLength(100);
+            addressBuilder.Property(a => a.City).IsRequired(false).HasMaxLength(100);
         });
+
+        builder.Property(client => client.MigrationClientId)
+               .HasMaxLength(50)
+               .IsRequired(false);
+        builder.Property(client => client.MigrationCompanyCode)
+                .HasMaxLength(50)
+                .IsRequired(false);
     }
 }

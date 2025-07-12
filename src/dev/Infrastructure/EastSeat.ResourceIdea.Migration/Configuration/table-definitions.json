@@ -3,6 +3,7 @@
     {
       "schema": "dbo",
       "table": "Company",
+      "migrationOrder": 1,
       "columns": [
         { "name": "CompanyCode", "type": "varchar(50)" },
         { "name": "OrganizationName", "type": "varchar(256)" }
@@ -11,16 +12,158 @@
         "schema": "dbo",
         "table": "Tenants",
         "columns": [
-          { "name": "MigrationCompanyCode", "type": "varchar(50)", "isMigratable": true, "sourceColumn": "CompanyCode" },
-          { "name": "Organization", "type": "nvarchar(500)", "isMigratable": true, "sourceColumn": "OrganizationName" },
-          { "name": "TenantId", "type": "nvarchar(450)", "isMigratable": false },
-          { "name": "Created", "type": "datetimeoffset", "isMigratable": false },
-          { "name": "CreatedBy", "type": "nvarchar(100)", "isMigratable": false },
-          { "name": "LastModified", "type": "datetimeoffset", "isMigratable": false },
-          { "name": "LastModifiedBy", "type": "nvarchar(100)", "isMigratable": false },
+          {
+            "name": "MigrationCompanyCode",
+            "type": "varchar(50)",
+            "isMigratable": true,
+            "sourceColumn": "CompanyCode"
+          },
+          {
+            "name": "Organization",
+            "type": "nvarchar(500)",
+            "isMigratable": true,
+            "sourceColumn": "OrganizationName"
+          },
+          {
+            "name": "TenantId",
+            "type": "nvarchar(450)",
+            "isMigratable": false
+          },
+          {
+            "name": "Created",
+            "type": "datetimeoffset",
+            "isMigratable": false
+          },
+          {
+            "name": "CreatedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
+          {
+            "name": "LastModified",
+            "type": "datetimeoffset",
+            "isMigratable": false
+          },
+          {
+            "name": "LastModifiedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
           { "name": "IsDeleted", "type": "bit", "isMigratable": false },
-          { "name": "Deleted", "type": "datetimeoffset", "isMigratable": false },
-          { "name": "DeletedBy", "type": "nvarchar(100)", "isMigratable": false }
+          {
+            "name": "Deleted",
+            "type": "datetimeoffset",
+            "isMigratable": false
+          },
+          {
+            "name": "DeletedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          }
+        ]
+      }
+    },
+    {
+      "schema": "dbo",
+      "table": "Client",
+      "migrationOrder": 2,
+      "columns": [
+        { "name": "ClientId", "type": "varchar(40)" },
+        { "name": "Name", "type": "varchar(200)" },
+        { "name": "Address", "type": "varchar(100)" },
+        { "name": "Industry", "type": "varchar(100)" },
+        { "name": "CompanyCode", "type": "varchar(50)" },
+        { "name": "Active", "type": "bit" }
+      ],
+      "destination": {
+        "schema": "dbo",
+        "table": "Clients",
+        "columns": [
+          { "name": "Id", "type": "nvarchar(450)", "isMigratable": false },
+          {
+            "name": "MigrationClientId",
+            "type": "nvarchar(50)",
+            "isMigratable": true,
+            "sourceColumn": "ClientId"
+          },
+          {
+            "name": "Name",
+            "type": "nvarchar(500)",
+            "isMigratable": true,
+            "sourceColumn": "Name"
+          },
+          {
+            "name": "Address_Building",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
+          {
+            "name": "Address_Street",
+            "type": "nvarchar(100)",
+            "isMigratable": true,
+            "sourceColumn": "Address"
+          },
+          {
+            "name": "Address_City",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
+          {
+            "name": "MigrationCompanyCode",
+            "type": "nvarchar(50)",
+            "isMigratable": true,
+            "sourceColumn": "CompanyCode"
+          },
+          {
+            "name": "TenantId",
+            "type": "nvarchar(max)",
+            "isMigratable": false,
+            "lookupTable": "Tenants",
+            "lookupColumn": "TenantId",
+            "lookupCondition": "MigrationCompanyCode",
+            "lookupSource": "CompanyCode"
+          },
+          {
+            "name": "IsDeleted",
+            "type": "bit",
+            "isMigratable": false,
+            "transform": "InvertActive",
+            "sourceColumn": "Active"
+          },
+          {
+            "name": "Deleted",
+            "type": "datetimeoffset",
+            "isMigratable": false,
+            "transform": "ConditionalDeletedDate",
+            "sourceColumn": "Active"
+          },
+          {
+            "name": "DeletedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false,
+            "transform": "ConditionalDeletedBy",
+            "sourceColumn": "Active"
+          },
+          {
+            "name": "Created",
+            "type": "datetimeoffset",
+            "isMigratable": false
+          },
+          {
+            "name": "CreatedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
+          {
+            "name": "LastModified",
+            "type": "datetimeoffset",
+            "isMigratable": false
+          },
+          {
+            "name": "LastModifiedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          }
         ]
       }
     }

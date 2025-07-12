@@ -27,6 +27,11 @@ public sealed class TableDefinition
     public string Table { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets the migration order for this table. Lower numbers are migrated first.
+    /// </summary>
+    public int MigrationOrder { get; set; } = 0;
+
+    /// <summary>
     /// Gets or sets the collection of source column definitions for this table.
     /// </summary>
     public List<SourceColumnDefinition> Columns { get; set; } = [];
@@ -114,4 +119,29 @@ public sealed class DestinationColumnDefinition
     /// Gets or sets the name of the source column to map from (if migrable).
     /// </summary>
     public string? SourceColumn { get; set; }
+
+    /// <summary>
+    /// Gets or sets the name of the lookup table for foreign key resolution.
+    /// </summary>
+    public string? LookupTable { get; set; }
+
+    /// <summary>
+    /// Gets or sets the column in the lookup table to retrieve the value from.
+    /// </summary>
+    public string? LookupColumn { get; set; }
+
+    /// <summary>
+    /// Gets or sets the column in the lookup table to match against.
+    /// </summary>
+    public string? LookupCondition { get; set; }
+
+    /// <summary>
+    /// Gets or sets the source column that provides the value for the lookup condition.
+    /// </summary>
+    public string? LookupSource { get; set; }
+
+    /// <summary>
+    /// Gets or sets the transformation type to apply to the source value.
+    /// </summary>
+    public string? Transform { get; set; }
 }
