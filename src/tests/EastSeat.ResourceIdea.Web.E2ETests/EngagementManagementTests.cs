@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using EastSeat.ResourceIdea.Web.E2ETests.Helpers;
 
 namespace EastSeat.ResourceIdea.Web.E2ETests;
 
@@ -17,35 +18,23 @@ public class EngagementManagementTests : BaseE2ETest
         await NavigateToAsync("/engagements/add");
         
         // Wait for page to load
-        await _page!.WaitForSelectorAsync("h1:has-text('Add New Engagement')");
+        await _page!.WaitForSelectorAsync(TestHelpers.Selectors.AddEngagementHeader);
         
-        // Check if there are clients available
-        var clientOptions = await _page.QuerySelectorAllAsync("select[id='client'] option[value!='']");
+        // Get first available client
+        var clientValue = await TestHelpers.GetFirstAvailableClientAsync(_page);
         
-        if (clientOptions.Count > 0)
+        if (!string.IsNullOrEmpty(clientValue))
         {
-            // Select the first available client
-            await _page.SelectOptionAsync("select[id='client']", new[] { await clientOptions[0].GetAttributeAsync("value") ?? "" });
-            
-            // Fill in engagement details
-            await _page.FillAsync("input[id='title']", "Test Engagement Project");
-            await _page.FillAsync("textarea[id='description']", "This is a test engagement description for E2E testing purposes.");
-            
-            // Set due date (optional field)
-            await _page.FillAsync("input[id='dueDate']", "2024-12-31");
-            
-            // Select status
-            await _page.SelectOptionAsync("select[id='status']", "InProgress");
+            // Fill in engagement details using helper
+            await TestHelpers.FillEngagementFormAsync(_page, 
+                clientValue: clientValue,
+                dueDate: "2024-12-31");
             
             // Submit the form
-            await _page.ClickAsync("button[type='submit']:has-text('Save')");
+            await _page.ClickAsync(TestHelpers.Selectors.SaveButton);
             
-            // Assert - Check for success
-            await _page.WaitForTimeoutAsync(2000);
-            
-            // Verify we're no longer on the add page
-            var currentUrl = _page.Url;
-            Assert.DoesNotContain("/engagements/add", currentUrl);
+            // Assert - Check for successful navigation away from add page
+            await TestHelpers.WaitForFormSubmissionAsync(_page, "/engagements/add");
         }
         else
         {
@@ -65,17 +54,16 @@ public class EngagementManagementTests : BaseE2ETest
         await NavigateToAsync("/engagements/add");
         
         // Wait for page to load
-        await _page!.WaitForSelectorAsync("h1:has-text('Add New Engagement')");
+        await _page!.WaitForSelectorAsync(TestHelpers.Selectors.AddEngagementHeader);
         
         // Fill in other required fields but leave client empty
-        await _page.FillAsync("input[id='title']", "Test Engagement");
-        await _page.FillAsync("textarea[id='description']", "Test description");
+        await TestHelpers.FillEngagementFormAsync(_page, clientValue: null);
         
         // Submit the form without selecting a client
-        await _page.ClickAsync("button[type='submit']:has-text('Save')");
+        await _page.ClickAsync(TestHelpers.Selectors.SaveButton);
         
         // Assert - Check that we remain on the add page due to validation
-        await _page.WaitForTimeoutAsync(1000);
+        await _page.WaitForTimeoutAsync(TestHelpers.Timeouts.ShortWait);
         var currentUrl = _page.Url;
         Assert.Contains("/engagements/add", currentUrl);
     }
@@ -83,8 +71,6 @@ public class EngagementManagementTests : BaseE2ETest
     [Fact]
     public async Task EditEngagement_WithValidData_ShouldSucceed()
     {
-        // Note: This test assumes there's already an engagement to edit
-        
         // Arrange
         await InitializePlaywrightAsync();
         
@@ -94,11 +80,11 @@ public class EngagementManagementTests : BaseE2ETest
         // Wait for the engagements page to load
         await _page!.WaitForSelectorAsync("h1, h2, h3", new PageWaitForSelectorOptions 
         { 
-            Timeout = 5000 
+            Timeout = TestHelpers.Timeouts.PageLoad 
         });
         
-        // Look for an edit link/button
-        var editLinks = await _page.QuerySelectorAllAsync("a[href*='/engagements/edit/']");
+        // Look for an edit link
+        var editLinks = await _page.QuerySelectorAllAsync(TestHelpers.Selectors.EditEngagementLink);
         
         if (editLinks.Count > 0)
         {
@@ -106,27 +92,22 @@ public class EngagementManagementTests : BaseE2ETest
             await editLinks[0].ClickAsync();
             
             // Wait for edit page to load
-            await _page.WaitForSelectorAsync("h1:has-text('Edit Engagement'), h2:has-text('Edit Engagement'), h3:has-text('Edit Engagement')", new PageWaitForSelectorOptions 
+            await _page.WaitForSelectorAsync(TestHelpers.Selectors.EditEngagementHeader, new PageWaitForSelectorOptions 
             { 
-                Timeout = 5000 
+                Timeout = TestHelpers.Timeouts.PageLoad 
             });
             
             // Modify engagement details
-            await _page.FillAsync("textarea[id='description']", "Updated engagement description for E2E test");
+            await _page.FillAsync(TestHelpers.Selectors.EngagementDescriptionField, TestHelpers.Engagement.UpdatedDescription);
             
             // Change status
-            await _page.SelectOptionAsync("select[id='status']", "Completed");
+            await _page.SelectOptionAsync(TestHelpers.Selectors.EngagementStatusSelect, TestHelpers.Engagement.UpdatedStatus);
             
             // Submit the form
-            await _page.ClickAsync("button[type='submit']:has-text('Save')");
+            await _page.ClickAsync(TestHelpers.Selectors.SaveButton);
             
-            // Assert - Wait for save operation
-            await _page.WaitForTimeoutAsync(2000);
-            
-            // Check that save was processed (button text changes or navigation occurs)
-            var currentUrl = _page.Url;
-            // Note: Based on the EditEngagement.razor code, it seems to stay on the same page
-            // but shows a success notification, so we might need to check for that instead
+            // Assert - Wait for save operation (note: edit page may stay on same page with notification)
+            await _page.WaitForTimeoutAsync(TestHelpers.Timeouts.FormSubmission);
         }
         else
         {
@@ -143,19 +124,16 @@ public class EngagementManagementTests : BaseE2ETest
         // Act
         await NavigateToAsync("/engagements/add");
         
-        // Assert - Verify the form elements are present
-        await _page!.WaitForSelectorAsync("h1:has-text('Add New Engagement')");
-        
-        // Check that form fields are present
-        await _page.WaitForSelectorAsync("select[id='client']");
-        await _page.WaitForSelectorAsync("input[id='title']");
-        await _page.WaitForSelectorAsync("textarea[id='description']");
-        await _page.WaitForSelectorAsync("input[id='dueDate']");
-        await _page.WaitForSelectorAsync("select[id='status']");
-        await _page.WaitForSelectorAsync("button[type='submit']:has-text('Save')");
-        
-        // Verify back link is present
-        await _page.WaitForSelectorAsync("a[href='/engagements']:has-text('Back')");
+        // Assert - Verify the form elements are present using helper
+        await TestHelpers.VerifyFormElementsAsync(_page!,
+            TestHelpers.Selectors.AddEngagementHeader,
+            TestHelpers.Selectors.EngagementClientSelect,
+            TestHelpers.Selectors.EngagementTitleField,
+            TestHelpers.Selectors.EngagementDescriptionField,
+            TestHelpers.Selectors.EngagementDueDateField,
+            TestHelpers.Selectors.EngagementStatusSelect,
+            TestHelpers.Selectors.SaveButton,
+            "a[href='/engagements']:has-text('Back')");
     }
 
     [Fact]
@@ -168,17 +146,17 @@ public class EngagementManagementTests : BaseE2ETest
         await NavigateToAsync("/engagements/add");
         
         // Wait for page to load
-        await _page!.WaitForSelectorAsync("h1:has-text('Add New Engagement')");
+        await _page!.WaitForSelectorAsync(TestHelpers.Selectors.AddEngagementHeader);
         
         // Try to submit with empty required fields
-        await _page.ClickAsync("button[type='submit']:has-text('Save')");
+        await _page.ClickAsync(TestHelpers.Selectors.SaveButton);
         
         // Assert - Should stay on the same page due to validation
-        await _page.WaitForTimeoutAsync(1000);
+        await _page.WaitForTimeoutAsync(TestHelpers.Timeouts.ShortWait);
         var currentUrl = _page.Url;
         Assert.Contains("/engagements/add", currentUrl);
         
         // Verify that required field indicators are present
-        await _page.WaitForSelectorAsync("text=*", new PageWaitForSelectorOptions { Timeout = 1000 });
+        await _page.WaitForSelectorAsync("text=*", new PageWaitForSelectorOptions { Timeout = TestHelpers.Timeouts.ShortWait });
     }
 }

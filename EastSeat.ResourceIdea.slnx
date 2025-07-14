@@ -16,5 +16,6 @@
     <Project Path="src/tests/EastSeat.ResourceIdea.DataStore.UnitTests/EastSeat.ResourceIdea.DataStore.UnitTests.csproj" />
     <Project Path="src/tests/EastSeat.ResourceIdea.Domain.UnitTests/EastSeat.ResourceIdea.Domain.UnitTests.csproj" />
     <Project Path="src/tests/EastSeat.ResourceIdea.Web.UnitTests/EastSeat.ResourceIdea.Web.UnitTests.csproj" />
+    <Project Path="src/tests/EastSeat.ResourceIdea.Web.E2ETests/EastSeat.ResourceIdea.Web.E2ETests.csproj" />
   </Folder>
 </Solution>

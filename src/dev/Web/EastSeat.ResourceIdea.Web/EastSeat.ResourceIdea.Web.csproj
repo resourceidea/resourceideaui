@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="EastSeat.ResourceIdea.Web.E2ETests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Core\EastSeat.ResourceIdea.Domain\EastSeat.ResourceIdea.Domain.csproj" />
     <ProjectReference Include="..\..\Infrastructure\EastSeat.ResourceIdea.DataStore\EastSeat.ResourceIdea.DataStore.csproj" />
   </ItemGroup>

@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using EastSeat.ResourceIdea.Web.E2ETests.Helpers;
 
 namespace EastSeat.ResourceIdea.Web.E2ETests;
 
@@ -17,24 +18,16 @@ public class ClientManagementTests : BaseE2ETest
         await NavigateToAsync("/clients/add");
         
         // Wait for page to load
-        await _page!.WaitForSelectorAsync("h1:has-text('Add New Client')");
+        await _page!.WaitForSelectorAsync(TestHelpers.Selectors.AddClientHeader);
         
-        // Fill in client details
-        await _page.FillAsync("input[id='firstname']", "Test Client Company");
-        await _page.FillAsync("input[id='City']", "Test City");
-        await _page.FillAsync("input[id='Street']", "123 Test Street");
-        await _page.FillAsync("input[id='Building']", "Building A");
+        // Fill in client details using helper
+        await TestHelpers.FillClientFormAsync(_page);
         
         // Submit the form
-        await _page.ClickAsync("button[type='submit']:has-text('Save')");
+        await _page.ClickAsync(TestHelpers.Selectors.SaveButton);
         
-        // Assert - Check for success (this may need adjustment based on actual behavior)
-        // We might need to wait for navigation or success message
-        await _page.WaitForTimeoutAsync(2000); // Wait for form submission processing
-        
-        // Verify we're no longer on the add page or that success occurred
-        var currentUrl = _page.Url;
-        Assert.DoesNotContain("/clients/add", currentUrl);
+        // Assert - Check for successful navigation away from add page
+        await TestHelpers.WaitForFormSubmissionAsync(_page, "/clients/add");
     }
 
     [Fact]
@@ -47,16 +40,14 @@ public class ClientManagementTests : BaseE2ETest
         await NavigateToAsync("/clients/add");
         
         // Wait for page to load
-        await _page!.WaitForSelectorAsync("h1:has-text('Add New Client')");
+        await _page!.WaitForSelectorAsync(TestHelpers.Selectors.AddClientHeader);
         
         // Submit form without filling required fields
-        await _page.ClickAsync("button[type='submit']:has-text('Save')");
+        await _page.ClickAsync(TestHelpers.Selectors.SaveButton);
         
-        // Assert - Check that validation summary or errors are shown
-        // Note: This assumes the form has client-side validation
-        await _page.WaitForTimeoutAsync(1000);
+        // Assert - Check that we remain on the add page due to validation
+        await _page.WaitForTimeoutAsync(TestHelpers.Timeouts.ShortWait);
         
-        // Verify we're still on the add page
         var currentUrl = _page.Url;
         Assert.Contains("/clients/add", currentUrl);
     }
@@ -64,23 +55,20 @@ public class ClientManagementTests : BaseE2ETest
     [Fact]
     public async Task EditClient_WithValidData_ShouldSucceed()
     {
-        // Note: This test assumes there's already a client to edit
-        // In a real scenario, you might need to create a client first or use test data
-        
         // Arrange
         await InitializePlaywrightAsync();
         
-        // First, let's navigate to clients list to find a client to edit
+        // Navigate to clients list to find a client to edit
         await NavigateToAsync("/clients");
         
         // Wait for the clients page to load
         await _page!.WaitForSelectorAsync("h1, h2, h3", new PageWaitForSelectorOptions 
         { 
-            Timeout = 5000 
+            Timeout = TestHelpers.Timeouts.PageLoad 
         });
         
-        // Look for an edit link/button - this may need adjustment based on actual UI
-        var editLinks = await _page.QuerySelectorAllAsync("a[href*='/clients/edit/']");
+        // Look for an edit link
+        var editLinks = await _page.QuerySelectorAllAsync(TestHelpers.Selectors.EditClientLink);
         
         if (editLinks.Count > 0)
         {
@@ -88,24 +76,22 @@ public class ClientManagementTests : BaseE2ETest
             await editLinks[0].ClickAsync();
             
             // Wait for edit page to load
-            await _page.WaitForSelectorAsync("h1:has-text('Edit Client'), h2:has-text('Edit Client'), h3:has-text('Edit Client')", new PageWaitForSelectorOptions 
+            await _page.WaitForSelectorAsync(TestHelpers.Selectors.EditClientHeader, new PageWaitForSelectorOptions 
             { 
-                Timeout = 5000 
+                Timeout = TestHelpers.Timeouts.PageLoad 
             });
             
-            // Modify client details
-            await _page.FillAsync("input[id='name']", "Updated Client Name");
-            await _page.FillAsync("input[id='City']", "Updated City");
+            // Modify client details using helper
+            await TestHelpers.FillClientFormAsync(_page, 
+                name: TestHelpers.Client.UpdatedName,
+                city: TestHelpers.Client.UpdatedCity,
+                isEditForm: true);
             
             // Submit the form
-            await _page.ClickAsync("button[type='submit']:has-text('Save')");
+            await _page.ClickAsync(TestHelpers.Selectors.SaveButton);
             
             // Assert - Wait for save operation to complete
-            await _page.WaitForTimeoutAsync(2000);
-            
-            // Verify we're no longer on the edit page
-            var currentUrl = _page.Url;
-            Assert.DoesNotContain("/clients/edit/", currentUrl);
+            await TestHelpers.WaitForFormSubmissionAsync(_page, "/clients/edit/");
         }
         else
         {
@@ -123,17 +109,14 @@ public class ClientManagementTests : BaseE2ETest
         // Act
         await NavigateToAsync("/clients/add");
         
-        // Assert - Verify the form elements are present
-        await _page!.WaitForSelectorAsync("h1:has-text('Add New Client')");
-        
-        // Check that required form fields are present
-        await _page.WaitForSelectorAsync("input[id='firstname']");
-        await _page.WaitForSelectorAsync("input[id='City']");
-        await _page.WaitForSelectorAsync("input[id='Street']");
-        await _page.WaitForSelectorAsync("input[id='Building']");
-        await _page.WaitForSelectorAsync("button[type='submit']:has-text('Save')");
-        
-        // Verify back link is present
-        await _page.WaitForSelectorAsync("a[href='/clients']:has-text('Back')");
+        // Assert - Verify the form elements are present using helper
+        await TestHelpers.VerifyFormElementsAsync(_page!,
+            TestHelpers.Selectors.AddClientHeader,
+            TestHelpers.Selectors.ClientNameField,
+            TestHelpers.Selectors.ClientCityField,
+            TestHelpers.Selectors.ClientStreetField,
+            TestHelpers.Selectors.ClientBuildingField,
+            TestHelpers.Selectors.SaveButton,
+            "a[href='/clients']:has-text('Back')");
     }
 }
