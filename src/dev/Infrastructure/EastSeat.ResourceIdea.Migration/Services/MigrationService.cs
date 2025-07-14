@@ -16,6 +16,9 @@ public class MigrationService
     {
         var tableName = $"{tableDefinition.Schema}.{tableDefinition.Table}";
         Console.Write($" - Migrating [{tableDefinition.Schema}].[{tableDefinition.Table}]...");
+
+        // Enhanced logging for migration start
+        MigrationLogger.LogTableMigrationStart(tableDefinition);
         MigrationLogger.LogInfo($"Starting migration for table: {tableName}");
 
         try
@@ -73,6 +76,12 @@ public class MigrationService
         using var connection = new SqlConnection(connectionString);
         connection.Open();
 
+        // Special handling for Job table - needs to JOIN with Project table
+        if (tableDefinition.Schema == "dbo" && tableDefinition.Table == "Job")
+        {
+            return GetJobProjectCombinedData(tableDefinition, connection);
+        }
+
         // Build projection list from source columns
         string projectionList = string.Join(", ", tableDefinition.Columns.Select(c => $"[{c.Name}]"));
         var command = new SqlCommand($"SELECT {projectionList} FROM [{tableDefinition.Schema}].[{tableDefinition.Table}]", connection);
@@ -91,6 +100,54 @@ public class MigrationService
                 var value = reader.IsDBNull(i) ? null : reader.GetValue(i);
                 sourceData.SetValue(columnName, value);
             }
+
+            data.Add(sourceData);
+        }
+
+        return data;
+    }
+
+    /// <summary>
+    /// Gets combined Job and Project data for migration to Engagements table.
+    /// </summary>
+    /// <param name="tableDefinition">The Job table definition.</param>
+    /// <param name="connection">The database connection.</param>
+    /// <returns>A collection of combined Job-Project data.</returns>
+    private static HashSet<MigrationSourceData> GetJobProjectCombinedData(TableDefinition tableDefinition, SqlConnection connection)
+    {
+        // Build the JOIN query to combine Job and Project data
+        var joinQuery = @"
+            SELECT 
+                j.[JobId],
+                j.[Description],
+                j.[ProjectId],
+                j.[Color],
+                j.[Status],
+                j.[Manager],
+                j.[Partner],
+                p.[Name] as ProjectName,
+                p.[ClientId] as ProjectClientId
+            FROM [dbo].[Job] j
+            INNER JOIN [dbo].[Project] p ON j.[ProjectId] = p.[ProjectId]";
+
+        var command = new SqlCommand(joinQuery, connection);
+        using var reader = command.ExecuteReader();
+        var data = new HashSet<MigrationSourceData>();
+
+        while (reader.Read())
+        {
+            var sourceData = new MigrationSourceData();
+
+            // Map all the combined columns using ordinals for performance
+            sourceData.SetValue("JobId", reader.IsDBNull(0) ? null : reader.GetValue(0));
+            sourceData.SetValue("Description", reader.IsDBNull(1) ? null : reader.GetValue(1));
+            sourceData.SetValue("ProjectId", reader.IsDBNull(2) ? null : reader.GetValue(2));
+            sourceData.SetValue("Color", reader.IsDBNull(3) ? null : reader.GetValue(3));
+            sourceData.SetValue("Status", reader.IsDBNull(4) ? null : reader.GetValue(4));
+            sourceData.SetValue("Manager", reader.IsDBNull(5) ? null : reader.GetValue(5));
+            sourceData.SetValue("Partner", reader.IsDBNull(6) ? null : reader.GetValue(6));
+            sourceData.SetValue("ProjectName", reader.IsDBNull(7) ? null : reader.GetValue(7));
+            sourceData.SetValue("ProjectClientId", reader.IsDBNull(8) ? null : reader.GetValue(8));
 
             data.Add(sourceData);
         }
@@ -267,7 +324,7 @@ public class MigrationService
         }
 
         // Fallback to common identifier column names
-        var identifierNames = new[] { "Id", "MigrationClientId", "MigrationCompanyCode" };
+        var identifierNames = new[] { "Id", "MigrationClientId", "MigrationCompanyCode", "MigrationJobId", "MigrationProjectId" };
         return tableDefinition.Destination.Columns.Where(c => identifierNames.Contains(c.Name)).ToList();
     }
 
@@ -290,13 +347,22 @@ public class MigrationService
         // Handle transform columns
         if (!string.IsNullOrEmpty(column.Transform) && !string.IsNullOrEmpty(column.SourceColumn))
         {
-            return ApplyTransform(column, sourceData);
+            return ApplyTransform(column, sourceData, connection);
         }
 
         // Handle migrable columns
         if (column.IsMigratable && !string.IsNullOrEmpty(column.SourceColumn))
         {
-            return sourceData.GetValue(column.SourceColumn);
+            var value = sourceData.GetValue(column.SourceColumn);
+
+            // Log important field mappings (like Industry → MigrationIndustry)
+            if (column.SourceColumn.Equals("Industry", StringComparison.OrdinalIgnoreCase) ||
+                column.Name.Equals("MigrationIndustry", StringComparison.OrdinalIgnoreCase))
+            {
+                MigrationLogger.LogFieldMapping("Client", column.SourceColumn, column.Name, value);
+            }
+
+            return value;
         }
 
         // Handle non-migrable columns with default values
@@ -338,8 +404,9 @@ public class MigrationService
     /// </summary>
     /// <param name="column">The column definition with transform configuration.</param>
     /// <param name="sourceData">The source data.</param>
+    /// <param name="connection">The database connection for lookups.</param>
     /// <returns>The transformed value.</returns>
-    private static object? ApplyTransform(DestinationColumnDefinition column, MigrationSourceData sourceData)
+    private static object? ApplyTransform(DestinationColumnDefinition column, MigrationSourceData sourceData, SqlConnection connection)
     {
         var sourceValue = sourceData.GetValue(column.SourceColumn!);
 
@@ -439,15 +506,22 @@ public class MigrationService
             "id" => "NEWID()",
             "tenantid" => "NEWID()",
             "created" => "SYSDATETIMEOFFSET()",
-            "createdby" => "'MIGRATION'",
+            "createdby" => "MIGRATION",
             "lastmodified" => "SYSDATETIMEOFFSET()",
-            "lastmodifiedby" => "'MIGRATION'",
+            "lastmodifiedby" => "MIGRATION",
             "isdeleted" => "0",
             "deleted" => "NULL",
             "deletedby" => "NULL",
-            "address_building" => "''",
-            "address_street" => "''",
-            "address_city" => "''",
+            "address_building" => " ",
+            "address_street" => " ",
+            "address_city" => " ",
+            "engagementstatus" => "Active",
+            "startdate" => "SYSDATETIMEOFFSET()",
+            "enddate" => "NULL",
+            "managerid" => "NULL",
+            "partnerid" => "NULL",
+            "title" => "NULL",
+            "description" => "NULL",
             _ when column.Type.Contains("bit") => "0",
             _ when column.Type.Contains("datetime") => "NULL",
             _ when column.Type.Contains("datetimeoffset") => "NULL",

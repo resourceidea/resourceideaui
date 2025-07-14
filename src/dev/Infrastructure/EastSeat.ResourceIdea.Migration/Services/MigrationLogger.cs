@@ -114,6 +114,74 @@ public static class MigrationLogger
     }
 
     /// <summary>
+    /// Logs the start of a table migration with detailed configuration.
+    /// </summary>
+    /// <param name="tableDefinition">The table definition being migrated.</param>
+    public static void LogTableMigrationStart(TableDefinition tableDefinition)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine($"Starting migration for table: [{tableDefinition.Schema}].[{tableDefinition.Table}]");
+        sb.AppendLine($"  Migration Order: {tableDefinition.MigrationOrder}");
+        sb.AppendLine($"  Destination: [{tableDefinition.Destination.Schema}].[{tableDefinition.Destination.Table}]");
+        sb.AppendLine($"  Source Columns: {tableDefinition.Columns.Count}");
+        sb.AppendLine($"  Destination Columns: {tableDefinition.Destination.Columns.Count}");
+
+        // Log migrable columns for tracking
+        var migrableColumns = tableDefinition.Destination.Columns.Where(c => c.IsMigratable).ToList();
+        if (migrableColumns.Count > 0)
+        {
+            sb.AppendLine($"  Migrable Field Mappings:");
+            foreach (var column in migrableColumns)
+            {
+                sb.AppendLine($"    - {column.SourceColumn} → {column.Name} ({column.Type})");
+            }
+        }
+
+        // Log lookup columns
+        var lookupColumns = tableDefinition.Destination.Columns.Where(c => !string.IsNullOrEmpty(c.LookupTable)).ToList();
+        if (lookupColumns.Count > 0)
+        {
+            sb.AppendLine($"  Lookup Columns:");
+            foreach (var column in lookupColumns)
+            {
+                sb.AppendLine($"    - {column.Name}: {column.LookupSource} → {column.LookupTable}.{column.LookupColumn}");
+            }
+        }
+
+        // Log transform columns
+        var transformColumns = tableDefinition.Destination.Columns.Where(c => !string.IsNullOrEmpty(c.Transform)).ToList();
+        if (transformColumns.Count > 0)
+        {
+            sb.AppendLine($"  Transform Columns:");
+            foreach (var column in transformColumns)
+            {
+                sb.AppendLine($"    - {column.Name}: {column.SourceColumn} → Transform({column.Transform})");
+            }
+        }
+
+        LogInfo(sb.ToString());
+    }
+
+    /// <summary>
+    /// Logs detailed information about a successful field mapping during migration.
+    /// </summary>
+    /// <param name="tableName">The name of the table being migrated.</param>
+    /// <param name="sourceColumn">The source column name.</param>
+    /// <param name="destinationColumn">The destination column name.</param>
+    /// <param name="value">The value being migrated.</param>
+    public static void LogFieldMapping(string tableName, string sourceColumn, string destinationColumn, object? value)
+    {
+        var displayValue = value?.ToString() ?? "NULL";
+        // Truncate long values for logging
+        if (displayValue.Length > 100)
+        {
+            displayValue = displayValue.Substring(0, 97) + "...";
+        }
+
+        LogInfo($"Field mapping for {tableName}: {sourceColumn} → {destinationColumn} = '{displayValue}'");
+    }
+
+    /// <summary>
     /// Gets the current log file path.
     /// </summary>
     /// <returns>The full path to the log file.</returns>

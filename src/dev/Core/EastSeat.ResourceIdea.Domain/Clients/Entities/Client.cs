@@ -29,12 +29,6 @@ public class Client : BaseEntity
     public required string Name { get; set; }
 
     /// <summary>
-    /// Checks if the instance of <see cref="Client"/> is empty.
-    /// </summary>
-    /// <returns>True if instance is empty; Otherwise, False.</returns>
-    public bool IsEmpty() => this == EmptyClient.Instance;
-
-    /// <summary>
     /// Client ID of the migrated client, if applicable.
     /// </summary>
     public string? MigrationClientId { get; set; }
@@ -43,6 +37,17 @@ public class Client : BaseEntity
     /// Company code of the migrated client, if applicable.
     /// </summary>
     public string? MigrationCompanyCode { get; set; }
+
+    /// <summary>
+    /// Industry of the client, if applicable.
+    /// </summary>
+    public string? MigrationIndustry { get; set; }
+
+    /// <summary>
+    /// Checks if the instance of <see cref="Client"/> is empty.
+    /// </summary>
+    /// <returns>True if instance is empty; Otherwise, False.</returns>
+    public bool IsEmpty() => this == EmptyClient.Instance;
 
     public override TModel ToModel<TModel>() where TModel : class =>
         typeof(TModel) switch

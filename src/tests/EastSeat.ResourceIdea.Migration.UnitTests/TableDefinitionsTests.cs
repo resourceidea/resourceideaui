@@ -16,7 +16,7 @@ public class TableDefinitionsTests
         var tables = TableDefinitions.TablesToMigrate;
 
         // Assert
-        Assert.Equal(2, tables.Count); // Company and Client tables
+        Assert.Equal(3, tables.Count); // Company, Client, and Job tables
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public class TableDefinitionsTests
         // Arrange
         var expectedTableNames = new[]
         {
-            "Company", "Client"
+            "Company", "Client", "Job"
         };
 
         // Act
@@ -217,7 +217,7 @@ public class TableDefinitionsTests
         var tables = TableDefinitions.TablesToMigrate;
 
         // Assert
-        Assert.Equal(2, tables.Count);
+        Assert.Equal(3, tables.Count);
 
         // Company should be first (migration order 1)
         Assert.Equal("Company", tables[0].Table);
@@ -226,5 +226,9 @@ public class TableDefinitionsTests
         // Client should be second (migration order 2)
         Assert.Equal("Client", tables[1].Table);
         Assert.Equal(2, tables[1].MigrationOrder);
+
+        // Job should be third (migration order 3)
+        Assert.Equal("Job", tables[2].Table);
+        Assert.Equal(3, tables[2].MigrationOrder);
     }
 }
