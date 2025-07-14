@@ -115,6 +115,12 @@
             "sourceColumn": "CompanyCode"
           },
           {
+            "name": "MigrationIndustry",
+            "type": "nvarchar(100)",
+            "isMigratable": true,
+            "sourceColumn": "Industry"
+          },
+          {
             "name": "TenantId",
             "type": "nvarchar(max)",
             "isMigratable": false,
@@ -163,6 +169,156 @@
             "name": "LastModifiedBy",
             "type": "nvarchar(100)",
             "isMigratable": false
+          }
+        ]
+      }
+    },
+    {
+      "schema": "dbo",
+      "table": "Job",
+      "migrationOrder": 3,
+      "columns": [
+        { "name": "JobId", "type": "varchar(40)" },
+        { "name": "Description", "type": "varchar(200)" },
+        { "name": "ProjectId", "type": "varchar(40)" },
+        { "name": "Color", "type": "varchar(10)" },
+        { "name": "Status", "type": "varchar(20)" },
+        { "name": "Manager", "type": "varchar(40)" },
+        { "name": "Partner", "type": "varchar(40)" },
+        { "name": "ProjectName", "type": "varchar(100)" },
+        { "name": "ProjectClientId", "type": "varchar(40)" }
+      ],
+      "destination": {
+        "schema": "dbo",
+        "table": "Engagements",
+        "columns": [
+          { "name": "Id", "type": "nvarchar(450)", "isMigratable": false },
+          {
+            "name": "Description",
+            "type": "nvarchar(200)",
+            "isMigratable": true,
+            "sourceColumn": "Description"
+          },
+          {
+            "name": "ClientId",
+            "type": "nvarchar(450)",
+            "isMigratable": false,
+            "lookupTable": "Clients",
+            "lookupColumn": "Id",
+            "lookupCondition": "MigrationClientId",
+            "lookupSource": "ProjectClientId"
+          },
+          {
+            "name": "EndDate",
+            "type": "datetimeoffset(7)",
+            "isMigratable": false
+          },
+          {
+            "name": "StartDate",
+            "type": "datetimeoffset(7)",
+            "isMigratable": false
+          },
+          {
+            "name": "EngagementStatus",
+            "type": "nvarchar(50)",
+            "isMigratable": true,
+            "sourceColumn": "Status"
+          },
+          {
+            "name": "TenantId",
+            "type": "nvarchar(max)",
+            "isMigratable": false,
+            "lookupTable": "Clients",
+            "lookupColumn": "TenantId",
+            "lookupCondition": "MigrationClientId",
+            "lookupSource": "ProjectClientId"
+          },
+          {
+            "name": "Created",
+            "type": "datetimeoffset(7)",
+            "isMigratable": false
+          },
+          {
+            "name": "CreatedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
+          {
+            "name": "LastModified",
+            "type": "datetimeoffset(7)",
+            "isMigratable": false
+          },
+          {
+            "name": "LastModifiedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
+          {
+            "name": "IsDeleted",
+            "type": "bit",
+            "isMigratable": false
+          },
+          {
+            "name": "Deleted",
+            "type": "datetimeoffset(7)",
+            "isMigratable": false
+          },
+          {
+            "name": "DeletedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
+          {
+            "name": "ManagerId",
+            "type": "nvarchar(max)",
+            "isMigratable": false
+          },
+          {
+            "name": "PartnerId",
+            "type": "nvarchar(max)",
+            "isMigratable": false
+          },
+          {
+            "name": "Title",
+            "type": "nvarchar(100)",
+            "isMigratable": true,
+            "sourceColumn": "ProjectName"
+          },
+          {
+            "name": "Color",
+            "type": "nvarchar(10)",
+            "isMigratable": true,
+            "sourceColumn": "Color"
+          },
+          {
+            "name": "MigrationClientId",
+            "type": "nvarchar(100)",
+            "isMigratable": true,
+            "sourceColumn": "ProjectClientId"
+          },
+          {
+            "name": "MigrationJobId",
+            "type": "nvarchar(100)",
+            "isMigratable": true,
+            "sourceColumn": "JobId"
+          },
+          {
+            "name": "MigrationProjectId",
+            "type": "nvarchar(100)",
+            "isMigratable": true,
+            "sourceColumn": "ProjectId"
+          },
+          {
+            "name": "MigrationManager",
+            "type": "nvarchar(40)",
+            "isMigratable": true,
+            "sourceColumn": "Manager"
+          },
+          {
+            "name": "MigrationPartner",
+            "type": "nvarchar(40)",
+            "isMigratable": true,
+            "sourceColumn": "Partner"
           }
         ]
       }

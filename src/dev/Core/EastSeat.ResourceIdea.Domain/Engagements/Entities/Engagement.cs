@@ -58,6 +58,33 @@ public class Engagement : BaseEntity
     /// </summary>
     public EmployeeId? PartnerId { get; set; }
 
+    public string? Color { get; set; }
+
+    /// <summary>
+    /// Migration project id for the engagement, if applicable.
+    /// </summary>
+    public string? MigrationProjectId { get; set; }
+
+    /// <summary>
+    /// Migration client id for the engagement, if applicable.
+    /// </summary>
+    public string? MigrationClientId { get; set; }
+
+    /// <summary>
+    /// Migration job id for the engagement, if applicable.
+    /// </summary>
+    public string? MigrationJobId { get; set; }
+
+    /// <summary>
+    /// Migration manager for the engagement, if applicable.
+    /// </summary>
+    public string? MigrationManager { get; set; }
+
+    /// <summary>
+    /// Migration partner for the engagement, if applicable.
+    /// </summary>
+    public string? MigrationPartner { get; set; }
+
     /// <summary>Client associated with the engagement.</summary>
     public Client? Client { get; set; }
     public override TModel ToModel<TModel>()

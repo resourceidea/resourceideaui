@@ -37,5 +37,8 @@ public class ClientConfiguration : BaseEntityConfiguration<Client>
         builder.Property(client => client.MigrationCompanyCode)
                 .HasMaxLength(50)
                 .IsRequired(false);
+        builder.Property(client => client.MigrationIndustry)
+                .HasMaxLength(100)
+                .IsRequired(false);
     }
 }
