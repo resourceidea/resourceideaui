@@ -1,0 +1,69 @@
+name: Deploy to Azure App Service
+
+on:
+  # Run after both .NET and CodeQL workflows complete successfully on main
+  workflow_run:
+    workflows: [".NET", "CodeQL"]
+    types:
+      - completed
+    branches:
+      - main
+
+  # Scheduled deployment every Wednesday at 3PM East African Time (12:00 UTC)
+  schedule:
+    - cron: '0 12 * * 3'
+
+  # Allow manual triggering for patches and fixes
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: deploy-to-azure
+    runs-on: ubuntu-latest
+    # Only run if the triggering workflow succeeded (for workflow_run events)
+    # or for scheduled/manual events
+    if: |
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success') ||
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ./EastSeat.ResourceIdea.slnx
+
+      - name: Build for Release
+        run: >
+          dotnet build ./EastSeat.ResourceIdea.slnx
+          --configuration Release --no-restore --framework net9.0
+
+      - name: Run database migrations
+        run: >
+          dotnet run
+          --project ./src/dev/Infrastructure/EastSeat.ResourceIdea.Migration/
+          EastSeat.ResourceIdea.Migration.csproj
+          --configuration Release
+        env:
+          RESOURCEIDEA_MIGRATION_CONNECTION_STRING: >
+            ${{ secrets.AZURE_DATABASE_CONNECTION_STRING }}
+
+      - name: Publish web application
+        run: >
+          dotnet publish
+          ./src/dev/Web/EastSeat.ResourceIdea.Web/
+          EastSeat.ResourceIdea.Web.csproj
+          --configuration Release --no-build --output ./publish
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish
