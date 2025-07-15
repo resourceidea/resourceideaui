@@ -39,6 +39,12 @@ public class JobPosition : BaseEntity
     /// </summary>
     public DepartmentId DepartmentId { get; set; }
 
+    public string? MigrationJobPositionId { get; set; }
+
+    public string? MigrationJobLevel { get; set; }
+
+    public string? MigrationCompanyCode { get; set; }
+
     /// <summary>
     /// Job position department.
     /// </summary>

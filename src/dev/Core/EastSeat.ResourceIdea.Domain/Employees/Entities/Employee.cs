@@ -29,9 +29,25 @@ public class Employee : BaseEntity
 
     public string? EmployeeNumber { get; set; }
 
-    public EmployeeId ManagerId { get; set; }
+    public EmployeeId ReportsTo { get; set; }
 
     public JobPosition? JobPosition { get; set; }
+
+    public DateTimeOffset? HireDate { get; set; }
+
+    public DateTimeOffset? EndDate { get; set; }
+
+    public string? MigrationUserId { get; set; }
+
+    public string? MigrationResourceId { get; set; }
+
+    public string? MigrationFullname { get; set; }
+
+    public string? MigrationCompanyCode { get; set; }
+
+    public string? MigrationJobPositionId { get; set; }
+
+    public string? MigrationJobsManagedColor { get; set; }
 
     [NotMapped]
     public string FirstName { get; set; } = string.Empty;
@@ -70,7 +86,7 @@ public class Employee : BaseEntity
         JobPositionId = JobPositionId,
         ApplicationUserId = ApplicationUserId,
         EmployeeNumber = EmployeeNumber ?? string.Empty,
-        ManagerId = ManagerId,
+        ManagerId = ReportsTo,
         FirstName = FirstName,
         LastName = LastName,
         Email = Email,
