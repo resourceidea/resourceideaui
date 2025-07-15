@@ -275,6 +275,11 @@ public enum ErrorCode
     DeleteApplicationUserFailure,
 
     /// <summary>
+    /// Represents a failure that occurred while attempting to update an application user.
+    /// </summary>
+    UpdateApplicationUserFailure,
+
+    /// <summary>
     /// Indicates that the operation is not supported.
     /// </summary>
     UnSupportedOperation,

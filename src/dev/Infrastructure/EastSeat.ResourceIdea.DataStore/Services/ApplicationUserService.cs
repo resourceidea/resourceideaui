@@ -12,13 +12,14 @@ using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.Users.Entities;
 using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace EastSeat.ResourceIdea.DataStore.Services;
 
 /// <summary>
 /// Handles operations managing the application users.
 /// </summary>
-public class ApplicationUserService(UserManager<ApplicationUser> userManager) : IApplicationUserService
+public class ApplicationUserService(UserManager<ApplicationUser> userManager, ResourceIdeaDBContext dbContext) : IApplicationUserService
 {
     /// <inheritdoc/>
     public async Task<ResourceIdeaResponse<IApplicationUser>> AddApplicationUserAsync(
@@ -45,6 +46,60 @@ public class ApplicationUserService(UserManager<ApplicationUser> userManager) : 
         }
 
         return ResourceIdeaResponse<IApplicationUser>.Success(Optional<IApplicationUser>.Some(newApplicationUser));
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResourceIdeaResponse<IApplicationUser>> UpdateApplicationUserAsync(
+        ApplicationUserId applicationUserId,
+        string firstName,
+        string lastName)
+    {
+        using var transaction = await dbContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            ApplicationUser? applicationUser = await userManager.FindByIdAsync(applicationUserId.ToString());
+            if (applicationUser == null)
+            {
+                await transaction.RollbackAsync();
+                return ResourceIdeaResponse<IApplicationUser>.Failure(ErrorCode.ApplicationUserNotFound);
+            }
+
+            applicationUser.FirstName = firstName;
+            applicationUser.LastName = lastName;
+
+            IdentityResult result = await userManager.UpdateAsync(applicationUser);
+            if (!result.Succeeded)
+            {
+                await transaction.RollbackAsync();
+                return ResourceIdeaResponse<IApplicationUser>.Failure(ErrorCode.UpdateApplicationUserFailure);
+            }
+
+            // Update corresponding Employee record to keep names in sync
+            var employee = await dbContext.Employees
+                .FirstOrDefaultAsync(e => e.ApplicationUserId == applicationUserId);
+            if (employee != null)
+            {
+                employee.FirstName = firstName;
+                employee.LastName = lastName;
+                dbContext.Employees.Update(employee);
+                
+                int changes = await dbContext.SaveChangesAsync();
+                if (changes < 1)
+                {
+                    await transaction.RollbackAsync();
+                    return ResourceIdeaResponse<IApplicationUser>.Failure(ErrorCode.DbUpdateFailureOnUpdateEmployee);
+                }
+            }
+
+            await transaction.CommitAsync();
+            return ResourceIdeaResponse<IApplicationUser>.Success(Optional<IApplicationUser>.Some(applicationUser));
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            return ResourceIdeaResponse<IApplicationUser>.Failure(ErrorCode.UpdateApplicationUserFailure);
+        }
     }
 
     /// <inheritdoc/>

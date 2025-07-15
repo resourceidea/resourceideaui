@@ -30,6 +30,18 @@ public interface IApplicationUserService
         TenantId tenantId);
 
     /// <summary>
+    /// Update application user.
+    /// </summary>
+    /// <param name="applicationUserId"></param>
+    /// <param name="firstName"></param>
+    /// <param name="lastName"></param>
+    /// <returns><see cref="ResourceIdeaResponse{IApplicationUser}"/></returns>
+    Task<ResourceIdeaResponse<IApplicationUser>> UpdateApplicationUserAsync(
+        ApplicationUserId applicationUserId,
+        string firstName,
+        string lastName);
+
+    /// <summary>
     /// Delete application user.
     /// </summary>
     /// <param name="applicationUserId"></param>
