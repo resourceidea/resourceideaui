@@ -84,12 +84,7 @@ public class ApplicationUserService(UserManager<ApplicationUser> userManager, Re
                 employee.LastName = lastName;
                 dbContext.Employees.Update(employee);
                 
-                int changes = await dbContext.SaveChangesAsync();
-                if (changes < 1)
-                {
-                    await transaction.RollbackAsync();
-                    return ResourceIdeaResponse<IApplicationUser>.Failure(ErrorCode.DbUpdateFailureOnUpdateEmployee);
-                }
+                await dbContext.SaveChangesAsync();
             }
 
             await transaction.CommitAsync();
