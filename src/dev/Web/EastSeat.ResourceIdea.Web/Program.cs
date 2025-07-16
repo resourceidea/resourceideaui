@@ -2,6 +2,7 @@ using EastSeat.ResourceIdea.Web.Components;
 using EastSeat.ResourceIdea.Web;
 using EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.DataStore;
 using Microsoft.AspNetCore.Identity;
@@ -16,7 +17,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddResourceIdeaTelemetry(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IResourceIdeaRequestContext, ResourceIdeaRequestContext>();
+builder.Services.AddScoped<ResourceIdeaRequestContext>();
+builder.Services.AddScoped<IResourceIdeaRequestContext>(provider => provider.GetRequiredService<ResourceIdeaRequestContext>());
+builder.Services.AddScoped<IAuthenticationContext>(provider => provider.GetRequiredService<ResourceIdeaRequestContext>());
 
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 

@@ -4,7 +4,9 @@
 @using EastSeat.ResourceIdea.DataStore.Identity.Entities
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager Navigation
 @inject ProtectedSessionStorage ProtectedSessionStore
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -224,6 +226,23 @@
 
             if (result.Succeeded)
             {
+                // Get the user to add custom claims
+                var user = await UserManager.FindByEmailAsync(Input.Email);
+                if (user != null)
+                {
+                    // Add custom claims for ApplicationUserId and TenantId
+                    var claims = new List<Claim>
+                    {
+                        new("ApplicationUserId", user.ApplicationUserId.ToString()),
+                        new("TenantId", user.TenantId.ToString())
+                    };
+
+                    await UserManager.AddClaimsAsync(user, claims);
+
+                    // Sign in again to get the updated claims
+                    await SignInManager.RefreshSignInAsync(user);
+                }
+
                 Navigation.NavigateTo(ReturnUrl ?? "/employees", true);
             }
             else if (result.IsLockedOut)
