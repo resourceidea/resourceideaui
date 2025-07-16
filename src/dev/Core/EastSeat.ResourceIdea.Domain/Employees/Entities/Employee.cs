@@ -41,8 +41,6 @@ public class Employee : BaseEntity
 
     public string? MigrationUserId { get; set; }
 
-    public string? MigrationResourceId { get; set; }
-
     public string? MigrationFullname { get; set; }
 
     public string? MigrationCompanyCode { get; set; }
