@@ -31,6 +31,8 @@ public class Employee : BaseEntity
 
     public EmployeeId ManagerId { get; set; }
 
+    public string? MigrationResourceId { get; set; }
+
     public JobPosition? JobPosition { get; set; }
 
     [NotMapped]

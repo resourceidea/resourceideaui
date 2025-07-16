@@ -280,7 +280,7 @@ public class WorkItemsServiceTests : IDisposable
             Description = "Test description",
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             TenantId = tenantId ?? TenantId.Create(Guid.NewGuid()),
-            StartDate = DateTimeOffset.UtcNow.AddDays(1),
+            PlannedStartDate = DateTimeOffset.UtcNow.AddDays(1),
             Status = WorkItemStatus.NotStarted,
             Priority = Priority.Medium
         };

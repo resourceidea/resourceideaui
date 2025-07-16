@@ -60,6 +60,10 @@ public sealed class EmployeeConfiguration : BaseEntityConfiguration<Employee>
                 value => EmployeeId.Create(value))
             .HasMaxLength(450);
 
+        builder.Property(employee => employee.MigrationResourceId)
+            .IsRequired(false)
+            .HasMaxLength(100);
+
         builder.HasOne(employee => employee.JobPosition)
             .WithMany(jobPosition => jobPosition.Employees)
             .HasForeignKey(employee => employee.JobPositionId);

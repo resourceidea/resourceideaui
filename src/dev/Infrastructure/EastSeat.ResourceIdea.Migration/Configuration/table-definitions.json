@@ -322,6 +322,144 @@
           }
         ]
       }
+    },
+    {
+      "schema": "dbo",
+      "table": "JobResource",
+      "migrationOrder": 4,
+      "columns": [
+        { "name": "Id", "type": "int" },
+        { "name": "JobId", "type": "int" },
+        { "name": "ResourceId", "type": "varchar(40)" },
+        { "name": "StartDateTime", "type": "datetime" },
+        { "name": "EndDateTime", "type": "datetime" },
+        { "name": "Details", "type": "varchar(100)" }
+      ],
+      "destination": {
+        "schema": "dbo",
+        "table": "WorkItems",
+        "columns": [
+          { "name": "Id", "type": "nvarchar(450)", "isMigratable": false },
+          {
+            "name": "Title",
+            "type": "nvarchar(100)",
+            "isMigratable": true,
+            "sourceColumn": "Details"
+          },
+          {
+            "name": "Description",
+            "type": "nvarchar(500)",
+            "isMigratable": false
+          },
+          {
+            "name": "EngagementId",
+            "type": "nvarchar(450)",
+            "isMigratable": false,
+            "lookupTable": "Engagements",
+            "lookupColumn": "Id",
+            "lookupCondition": "MigrationJobId",
+            "lookupSource": "JobId"
+          },
+          {
+            "name": "PlannedStartDate",
+            "type": "datetimeoffset(7)",
+            "isMigratable": true,
+            "sourceColumn": "StartDateTime"
+          },
+          {
+            "name": "CompletedDate",
+            "type": "datetimeoffset(7)",
+            "isMigratable": false
+          },
+          {
+            "name": "PlannedEndDate",
+            "type": "datetimeoffset(7)",
+            "isMigratable": true,
+            "sourceColumn": "EndDateTime"
+          },
+          {
+            "name": "Status",
+            "type": "nvarchar(50)",
+            "isMigratable": false
+          },
+          {
+            "name": "Priority",
+            "type": "int",
+            "isMigratable": false
+          },
+          {
+            "name": "AssignedToId",
+            "type": "nvarchar(450)",
+            "isMigratable": false,
+            "lookupTable": "Employees",
+            "lookupColumn": "EmployeeId",
+            "lookupCondition": "MigrationResourceId",
+            "lookupSource": "ResourceId"
+          },
+          {
+            "name": "TenantId",
+            "type": "nvarchar(max)",
+            "isMigratable": false,
+            "lookupTable": "Engagements",
+            "lookupColumn": "TenantId",
+            "lookupCondition": "MigrationJobId",
+            "lookupSource": "JobId"
+          },
+          {
+            "name": "Created",
+            "type": "datetimeoffset(7)",
+            "isMigratable": false
+          },
+          {
+            "name": "CreatedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
+          {
+            "name": "LastModified",
+            "type": "datetimeoffset(7)",
+            "isMigratable": false
+          },
+          {
+            "name": "LastModifiedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
+          {
+            "name": "IsDeleted",
+            "type": "bit",
+            "isMigratable": false
+          },
+          {
+            "name": "Deleted",
+            "type": "datetimeoffset(7)",
+            "isMigratable": false
+          },
+          {
+            "name": "DeletedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
+          {
+            "name": "MigrationJobId",
+            "type": "nvarchar(100)",
+            "isMigratable": true,
+            "sourceColumn": "JobId"
+          },
+          {
+            "name": "MigrationJobResourceId",
+            "type": "nvarchar(100)",
+            "isMigratable": true,
+            "sourceColumn": "Id"
+          },
+          {
+            "name": "MigrationResourceId",
+            "type": "nvarchar(100)",
+            "isMigratable": true,
+            "sourceColumn": "ResourceId"
+          }
+        ]
+      }
     }
   ]
 }
