@@ -46,20 +46,38 @@ public sealed class ResourceIdeaRequestContext(IHttpContextAccessor httpContextA
 
     private ApplicationUser? GetCurrentApplicationUser()
     {
-        var claimsIdentity = _httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity;
-        if (claimsIdentity?.IsAuthenticated != true)
+        try
         {
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext == null)
+            {
+                return null;
+            }
+
+            var claimsIdentity = httpContext.User?.Identity as ClaimsIdentity;
+            if (claimsIdentity?.IsAuthenticated != true)
+            {
+                return null;
+            }
+
+            var userName = claimsIdentity.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                return null;
+            }
+
+            // Note: This is a synchronous call, which is not ideal, but necessary for this pattern
+            // In a real application, you might want to cache this or use a different approach
+            var user = _userManager.FindByNameAsync(userName).GetAwaiter().GetResult();
+            
+            // Additional safety check: if user lookup fails, treat as unauthenticated
+            return user;
+        }
+        catch (Exception)
+        {
+            // If any exception occurs during user lookup (e.g., database issues),
+            // treat as unauthenticated for safety
             return null;
         }
-
-        var userName = claimsIdentity.Name;
-        if (string.IsNullOrEmpty(userName))
-        {
-            return null;
-        }
-
-        // Note: This is a synchronous call, which is not ideal, but necessary for this pattern
-        // In a real application, you might want to cache this or use a different approach
-        return _userManager.FindByNameAsync(userName).GetAwaiter().GetResult();
     }
 }
