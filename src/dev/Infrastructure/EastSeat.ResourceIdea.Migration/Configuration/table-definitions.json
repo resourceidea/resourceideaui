@@ -325,8 +325,389 @@
     },
     {
       "schema": "dbo",
-      "table": "JobResource",
+      "table": "JobPosition",
       "migrationOrder": 4,
+      "columns": [
+        { "name": "JobPositionId", "type": "int" },
+        { "name": "PositionTitle", "type": "varchar(50)" },
+        { "name": "JobLevel", "type": "int" },
+        { "name": "CompanyCode", "type": "varchar(50)" }
+      ],
+      "destination": {
+        "schema": "dbo",
+        "table": "JobPositions",
+        "columns": [
+          { "name": "Id", "type": "nvarchar(450)", "isMigratable": false },
+          {
+            "name": "Title",
+            "type": "nvarchar(250)",
+            "isMigratable": true,
+            "sourceColumn": "PositionTitle"
+          },
+          {
+            "name": "Description",
+            "type": "nvarchar(500)",
+            "isMigratable": false
+          },
+          {
+            "name": "DepartmentId",
+            "type": "nvarchar(450)",
+            "isMigratable": false,
+            "transform": "EnsureStaffDepartment",
+            "sourceColumn": "CompanyCode"
+          },
+          {
+            "name": "TenantId",
+            "type": "nvarchar(max)",
+            "isMigratable": false,
+            "lookupTable": "Tenants",
+            "lookupColumn": "TenantId",
+            "lookupCondition": "MigrationCompanyCode",
+            "lookupSource": "CompanyCode"
+          },
+          {
+            "name": "Created",
+            "type": "datetimeoffset(7)",
+            "isMigratable": false
+          },
+          {
+            "name": "CreatedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
+          {
+            "name": "LastModified",
+            "type": "datetimeoffset(7)",
+            "isMigratable": false
+          },
+          {
+            "name": "LastModifiedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
+          {
+            "name": "IsDeleted",
+            "type": "bit",
+            "isMigratable": false
+          },
+          {
+            "name": "Deleted",
+            "type": "datetimeoffset(7)",
+            "isMigratable": false
+          },
+          {
+            "name": "DeletedBy",
+            "type": "nvarchar(100)",
+            "isMigratable": false
+          },
+          {
+            "name": "MigrationCompanyCode",
+            "type": "nvarchar(50)",
+            "isMigratable": true,
+            "sourceColumn": "CompanyCode"
+          },
+          {
+            "name": "MigrationJobLevel",
+            "type": "nvarchar(50)",
+            "isMigratable": true,
+            "sourceColumn": "JobLevel"
+          },
+          {
+            "name": "MigrationJobPositionId",
+            "type": "nvarchar(50)",
+            "isMigratable": true,
+            "sourceColumn": "JobPositionId"
+          }
+        ]
+      }
+    },
+    {
+      "schema": "dbo",
+      "table": "AspNetUsers_Resource",
+      "migrationOrder": 5,
+      "isJoinedTable": true,
+      "joinType": "ResourceAspNetUsers",
+      "columns": [
+        { "name": "ResourceId", "type": "varchar(40)" },
+        { "name": "Fullname", "type": "varchar(50)" },
+        { "name": "Email", "type": "varchar(50)" },
+        { "name": "CompanyCode", "type": "varchar(50)" },
+        { "name": "JoinDate", "type": "date" },
+        { "name": "TerminationDate", "type": "date" },
+        { "name": "JobPositionId", "type": "int" },
+        { "name": "JobsManagedColor", "type": "varchar(10)" },
+        { "name": "Id", "type": "nvarchar(128)" },
+        { "name": "EmailConfirmed", "type": "bit" },
+        { "name": "PasswordHash", "type": "nvarchar(max)" },
+        { "name": "SecurityStamp", "type": "nvarchar(max)" },
+        { "name": "PhoneNumber", "type": "nvarchar(max)" },
+        { "name": "PhoneNumberConfirmed", "type": "bit" },
+        { "name": "TwoFactorEnabled", "type": "bit" },
+        { "name": "LockoutEndDateUtc", "type": "datetime" },
+        { "name": "LockoutEnabled", "type": "bit" },
+        { "name": "AccessFailedCount", "type": "int" },
+        { "name": "UserName", "type": "nvarchar(256)" }
+      ],
+      "destination": {
+        "schema": "identity",
+        "table": "ApplicationUsers",
+        "destinationTables": [
+          {
+            "schema": "identity",
+            "table": "ApplicationUsers",
+            "columns": [
+              { "name": "Id", "type": "nvarchar(450)", "isMigratable": false },
+              {
+                "name": "ApplicationUserId",
+                "type": "nvarchar(max)",
+                "isMigratable": false
+              },
+              {
+                "name": "TenantId",
+                "type": "nvarchar(max)",
+                "isMigratable": false,
+                "lookupTable": "Tenants",
+                "lookupColumn": "TenantId",
+                "lookupCondition": "MigrationCompanyCode",
+                "lookupSource": "CompanyCode"
+              },
+              {
+                "name": "FirstName",
+                "type": "nvarchar(100)",
+                "isMigratable": false,
+                "transform": "SplitFullnameFirst",
+                "sourceColumn": "Fullname"
+              },
+              {
+                "name": "LastName",
+                "type": "nvarchar(100)",
+                "isMigratable": false,
+                "transform": "SplitFullnameLast",
+                "sourceColumn": "Fullname"
+              },
+              {
+                "name": "UserName",
+                "type": "nvarchar(256)",
+                "isMigratable": true,
+                "sourceColumn": "UserName"
+              },
+              {
+                "name": "NormalizedUserName",
+                "type": "nvarchar(256)",
+                "isMigratable": false,
+                "transform": "Uppercase",
+                "sourceColumn": "UserName"
+              },
+              {
+                "name": "Email",
+                "type": "nvarchar(256)",
+                "isMigratable": true,
+                "sourceColumn": "Email"
+              },
+              {
+                "name": "NormalizedEmail",
+                "type": "nvarchar(256)",
+                "isMigratable": false,
+                "transform": "Uppercase",
+                "sourceColumn": "Email"
+              },
+              {
+                "name": "EmailConfirmed",
+                "type": "bit",
+                "isMigratable": true,
+                "sourceColumn": "EmailConfirmed"
+              },
+              {
+                "name": "PasswordHash",
+                "type": "nvarchar(max)",
+                "isMigratable": true,
+                "sourceColumn": "PasswordHash"
+              },
+              {
+                "name": "SecurityStamp",
+                "type": "nvarchar(max)",
+                "isMigratable": true,
+                "sourceColumn": "SecurityStamp"
+              },
+              {
+                "name": "ConcurrencyStamp",
+                "type": "nvarchar(max)",
+                "isMigratable": false
+              },
+              {
+                "name": "PhoneNumber",
+                "type": "nvarchar(max)",
+                "isMigratable": true,
+                "sourceColumn": "PhoneNumber"
+              },
+              {
+                "name": "PhoneNumberConfirmed",
+                "type": "bit",
+                "isMigratable": true,
+                "sourceColumn": "PhoneNumberConfirmed"
+              },
+              {
+                "name": "TwoFactorEnabled",
+                "type": "bit",
+                "isMigratable": true,
+                "sourceColumn": "TwoFactorEnabled"
+              },
+              {
+                "name": "LockoutEnd",
+                "type": "datetimeoffset(7)",
+                "isMigratable": true,
+                "sourceColumn": "LockoutEndDateUtc"
+              },
+              {
+                "name": "LockoutEnabled",
+                "type": "bit",
+                "isMigratable": true,
+                "sourceColumn": "LockoutEnabled"
+              },
+              {
+                "name": "AccessFailedCount",
+                "type": "int",
+                "isMigratable": true,
+                "sourceColumn": "AccessFailedCount"
+              }
+            ]
+          },
+          {
+            "schema": "dbo",
+            "table": "Employees",
+            "columns": [
+              {
+                "name": "EmployeeId",
+                "type": "nvarchar(450)",
+                "isMigratable": false
+              },
+              {
+                "name": "JobPositionId",
+                "type": "nvarchar(450)",
+                "isMigratable": false,
+                "lookupTable": "JobPositions",
+                "lookupColumn": "Id",
+                "lookupCondition": "MigrationJobPositionId",
+                "lookupSource": "JobPositionId"
+              },
+              {
+                "name": "ApplicationUserId",
+                "type": "nvarchar(450)",
+                "isMigratable": false,
+                "linkedTable": "ApplicationUsers",
+                "linkedColumn": "Id"
+              },
+              {
+                "name": "EmployeeNumber",
+                "type": "nvarchar(50)",
+                "isMigratable": false
+              },
+              {
+                "name": "ReportsTo",
+                "type": "nvarchar(450)",
+                "isMigratable": false
+              },
+              {
+                "name": "TenantId",
+                "type": "nvarchar(450)",
+                "isMigratable": false,
+                "lookupTable": "Tenants",
+                "lookupColumn": "TenantId",
+                "lookupCondition": "MigrationCompanyCode",
+                "lookupSource": "CompanyCode"
+              },
+              {
+                "name": "Created",
+                "type": "datetimeoffset(7)",
+                "isMigratable": false
+              },
+              {
+                "name": "CreatedBy",
+                "type": "nvarchar(100)",
+                "isMigratable": false
+              },
+              {
+                "name": "LastModified",
+                "type": "datetimeoffset(7)",
+                "isMigratable": false
+              },
+              {
+                "name": "LastModifiedBy",
+                "type": "nvarchar(100)",
+                "isMigratable": false
+              },
+              {
+                "name": "IsDeleted",
+                "type": "bit",
+                "isMigratable": false
+              },
+              {
+                "name": "Deleted",
+                "type": "datetimeoffset(7)",
+                "isMigratable": false
+              },
+              {
+                "name": "DeletedBy",
+                "type": "nvarchar(100)",
+                "isMigratable": false
+              },
+              {
+                "name": "EndDate",
+                "type": "datetimeoffset(7)",
+                "isMigratable": true,
+                "sourceColumn": "TerminationDate"
+              },
+              {
+                "name": "HireDate",
+                "type": "datetimeoffset(7)",
+                "isMigratable": true,
+                "sourceColumn": "JoinDate"
+              },
+              {
+                "name": "MigrationCompanyCode",
+                "type": "nvarchar(50)",
+                "isMigratable": true,
+                "sourceColumn": "CompanyCode"
+              },
+              {
+                "name": "MigrationFullname",
+                "type": "nvarchar(100)",
+                "isMigratable": true,
+                "sourceColumn": "Fullname"
+              },
+              {
+                "name": "MigrationJobPositionId",
+                "type": "nvarchar(50)",
+                "isMigratable": true,
+                "sourceColumn": "JobPositionId"
+              },
+              {
+                "name": "MigrationJobsManagedColor",
+                "type": "nvarchar(10)",
+                "isMigratable": true,
+                "sourceColumn": "JobsManagedColor"
+              },
+              {
+                "name": "MigrationResourceId",
+                "type": "nvarchar(100)",
+                "isMigratable": true,
+                "sourceColumn": "ResourceId"
+              },
+              {
+                "name": "MigrationUserId",
+                "type": "nvarchar(450)",
+                "isMigratable": true,
+                "sourceColumn": "Id"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "schema": "dbo",
+      "table": "JobResource",
+      "migrationOrder": 6,
       "columns": [
         { "name": "Id", "type": "int" },
         { "name": "JobId", "type": "int" },

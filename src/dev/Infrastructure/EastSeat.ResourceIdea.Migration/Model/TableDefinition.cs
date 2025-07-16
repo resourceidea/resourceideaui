@@ -32,6 +32,16 @@ public sealed class TableDefinition
     public int MigrationOrder { get; set; } = 0;
 
     /// <summary>
+    /// Gets or sets whether this table definition represents a joined table migration.
+    /// </summary>
+    public bool IsJoinedTable { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets the type of join for joined table migrations.
+    /// </summary>
+    public string? JoinType { get; set; }
+
+    /// <summary>
     /// Gets or sets the collection of source column definitions for this table.
     /// </summary>
     public List<SourceColumnDefinition> Columns { get; set; } = [];
@@ -93,6 +103,11 @@ public sealed class DestinationTableDefinition
     /// Gets or sets the collection of destination column definitions.
     /// </summary>
     public List<DestinationColumnDefinition> Columns { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the collection of destination tables for multi-table migrations.
+    /// </summary>
+    public List<DestinationTableDefinition>? DestinationTables { get; set; }
 }
 
 /// <summary>
@@ -144,4 +159,14 @@ public sealed class DestinationColumnDefinition
     /// Gets or sets the transformation type to apply to the source value.
     /// </summary>
     public string? Transform { get; set; }
+
+    /// <summary>
+    /// Gets or sets the linked table name for multi-table migrations (references another destination table).
+    /// </summary>
+    public string? LinkedTable { get; set; }
+
+    /// <summary>
+    /// Gets or sets the linked column name for multi-table migrations.
+    /// </summary>
+    public string? LinkedColumn { get; set; }
 }

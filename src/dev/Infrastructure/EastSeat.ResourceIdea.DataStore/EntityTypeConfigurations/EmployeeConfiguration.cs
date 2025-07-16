@@ -54,7 +54,7 @@ public sealed class EmployeeConfiguration : BaseEntityConfiguration<Employee>
             .IsRequired(false)
             .HasMaxLength(50);
 
-        builder.Property(employee => employee.ManagerId)
+        builder.Property(employee => employee.ReportsTo)
             .HasConversion(
                 managerId => managerId.Value.ToString(),
                 value => EmployeeId.Create(value))
@@ -67,5 +67,35 @@ public sealed class EmployeeConfiguration : BaseEntityConfiguration<Employee>
         builder.HasOne(employee => employee.JobPosition)
             .WithMany(jobPosition => jobPosition.Employees)
             .HasForeignKey(employee => employee.JobPositionId);
+
+        builder.Property(employee => employee.HireDate)
+            .IsRequired(false);
+
+        builder.Property(employee => employee.EndDate)
+            .IsRequired(false);
+
+        builder.Property(employee => employee.MigrationUserId)
+            .IsRequired(false)
+            .HasMaxLength(450);
+
+        builder.Property(employee => employee.MigrationResourceId)
+            .IsRequired(false)
+            .HasMaxLength(100);
+
+        builder.Property(employee => employee.MigrationFullname)
+            .IsRequired(false)
+            .HasMaxLength(100);
+
+        builder.Property(employee => employee.MigrationCompanyCode)
+            .IsRequired(false)
+            .HasMaxLength(50);
+
+        builder.Property(employee => employee.MigrationJobPositionId)
+            .IsRequired(false)
+            .HasMaxLength(50);
+
+        builder.Property(employee => employee.MigrationJobsManagedColor)
+            .IsRequired(false)
+            .HasMaxLength(10);
     }
 }
