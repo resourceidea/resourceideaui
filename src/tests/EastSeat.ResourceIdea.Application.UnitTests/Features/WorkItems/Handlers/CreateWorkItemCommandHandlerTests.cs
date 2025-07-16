@@ -140,7 +140,7 @@ public class CreateWorkItemCommandHandlerTests
                 w.Description == command.Description &&
                 w.EngagementId == command.EngagementId &&
                 w.TenantId == command.TenantId &&
-                w.StartDate == command.StartDate &&
+                w.PlannedStartDate == command.StartDate &&
                 w.Priority == command.Priority &&
                 w.Status == WorkItemStatus.NotStarted),
             It.IsAny<CancellationToken>()), Times.Once);

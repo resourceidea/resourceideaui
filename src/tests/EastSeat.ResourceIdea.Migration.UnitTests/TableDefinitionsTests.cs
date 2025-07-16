@@ -16,7 +16,7 @@ public class TableDefinitionsTests
         var tables = TableDefinitions.TablesToMigrate;
 
         // Assert
-        Assert.Equal(3, tables.Count); // Company, Client, and Job tables
+        Assert.Equal(6, tables.Count); // Company, Client, Job, JobPosition, AspNetUsers_Resource, and JobResource tables
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public class TableDefinitionsTests
         // Arrange
         var expectedTableNames = new[]
         {
-            "Company", "Client", "Job"
+            "Company", "Client", "Job", "JobPosition", "AspNetUsers_Resource", "JobResource"
         };
 
         // Act
@@ -211,13 +211,129 @@ public class TableDefinitionsTests
     }
 
     [Fact]
+    public void TablesToMigrate_JobResourceTable_ShouldHaveCorrectStructure()
+    {
+        // Act
+        var tables = TableDefinitions.TablesToMigrate;
+        var jobResourceTable = tables.FirstOrDefault(t => t.Table == "JobResource");
+
+        // Assert
+        Assert.NotNull(jobResourceTable);
+        Assert.Equal("dbo", jobResourceTable.Schema);
+        Assert.Equal(6, jobResourceTable.Columns.Count);
+
+        // Verify source columns
+        var expectedSourceColumns = new[]
+        {
+            ("Id", "int"),
+            ("JobId", "int"),
+            ("ResourceId", "varchar(40)"),
+            ("StartDateTime", "datetime"),
+            ("EndDateTime", "datetime"),
+            ("Details", "varchar(100)")
+        };
+
+        foreach (var (name, type) in expectedSourceColumns)
+        {
+            var column = jobResourceTable.Columns.FirstOrDefault(c => c.Name == name);
+            Assert.NotNull(column);
+            Assert.Equal(type, column.Type);
+        }
+
+        // Verify destination mapping
+        Assert.Equal("dbo", jobResourceTable.Destination.Schema);
+        Assert.Equal("WorkItems", jobResourceTable.Destination.Table);
+        Assert.Equal(21, jobResourceTable.Destination.Columns.Count);
+    }
+
+    [Fact]
+    public void TablesToMigrate_JobResourceTable_ShouldHaveCorrectMappings()
+    {
+        // Act
+        var tables = TableDefinitions.TablesToMigrate;
+        var jobResourceTable = tables.FirstOrDefault(t => t.Table == "JobResource");
+
+        // Assert
+        Assert.NotNull(jobResourceTable);
+
+        // Verify specific field mappings
+        var title = jobResourceTable.Destination.Columns.FirstOrDefault(c => c.Name == "Title");
+        Assert.NotNull(title);
+        Assert.True(title.IsMigratable);
+        Assert.Equal("Details", title.SourceColumn);
+
+        var plannedStartDate = jobResourceTable.Destination.Columns.FirstOrDefault(c => c.Name == "PlannedStartDate");
+        Assert.NotNull(plannedStartDate);
+        Assert.True(plannedStartDate.IsMigratable);
+        Assert.Equal("StartDateTime", plannedStartDate.SourceColumn);
+
+        var plannedEndDate = jobResourceTable.Destination.Columns.FirstOrDefault(c => c.Name == "PlannedEndDate");
+        Assert.NotNull(plannedEndDate);
+        Assert.True(plannedEndDate.IsMigratable);
+        Assert.Equal("EndDateTime", plannedEndDate.SourceColumn);
+
+        var migrationJobId = jobResourceTable.Destination.Columns.FirstOrDefault(c => c.Name == "MigrationJobId");
+        Assert.NotNull(migrationJobId);
+        Assert.True(migrationJobId.IsMigratable);
+        Assert.Equal("JobId", migrationJobId.SourceColumn);
+
+        var migrationJobResourceId = jobResourceTable.Destination.Columns.FirstOrDefault(c => c.Name == "MigrationJobResourceId");
+        Assert.NotNull(migrationJobResourceId);
+        Assert.True(migrationJobResourceId.IsMigratable);
+        Assert.Equal("Id", migrationJobResourceId.SourceColumn);
+
+        var migrationResourceId = jobResourceTable.Destination.Columns.FirstOrDefault(c => c.Name == "MigrationResourceId");
+        Assert.NotNull(migrationResourceId);
+        Assert.True(migrationResourceId.IsMigratable);
+        Assert.Equal("ResourceId", migrationResourceId.SourceColumn);
+    }
+
+    [Fact]
+    public void TablesToMigrate_JobResourceTable_ShouldHaveLookupConfiguration()
+    {
+        // Act
+        var tables = TableDefinitions.TablesToMigrate;
+        var jobResourceTable = tables.FirstOrDefault(t => t.Table == "JobResource");
+
+        // Assert
+        Assert.NotNull(jobResourceTable);
+
+        // Verify EngagementId lookup
+        var engagementId = jobResourceTable.Destination.Columns.FirstOrDefault(c => c.Name == "EngagementId");
+        Assert.NotNull(engagementId);
+        Assert.False(engagementId.IsMigratable);
+        Assert.Equal("Engagements", engagementId.LookupTable);
+        Assert.Equal("Id", engagementId.LookupColumn);
+        Assert.Equal("MigrationJobId", engagementId.LookupCondition);
+        Assert.Equal("JobId", engagementId.LookupSource);
+
+        // Verify AssignedToId lookup
+        var assignedToId = jobResourceTable.Destination.Columns.FirstOrDefault(c => c.Name == "AssignedToId");
+        Assert.NotNull(assignedToId);
+        Assert.False(assignedToId.IsMigratable);
+        Assert.Equal("Employees", assignedToId.LookupTable);
+        Assert.Equal("EmployeeId", assignedToId.LookupColumn);
+        Assert.Equal("MigrationResourceId", assignedToId.LookupCondition);
+        Assert.Equal("ResourceId", assignedToId.LookupSource);
+
+        // Verify TenantId lookup
+        var tenantId = jobResourceTable.Destination.Columns.FirstOrDefault(c => c.Name == "TenantId");
+        Assert.NotNull(tenantId);
+        Assert.False(tenantId.IsMigratable);
+        Assert.Equal("Engagements", tenantId.LookupTable);
+        Assert.Equal("TenantId", tenantId.LookupColumn);
+        Assert.Equal("MigrationJobId", tenantId.LookupCondition);
+        Assert.Equal("JobId", tenantId.LookupSource);
+    }
+
+    [Fact]
     public void TablesToMigrate_ShouldBeInCorrectMigrationOrder()
     {
         // Act
         var tables = TableDefinitions.TablesToMigrate;
 
         // Assert
-        Assert.Equal(3, tables.Count);
+        Assert.Equal(6, tables.Count);
 
         // Company should be first (migration order 1)
         Assert.Equal("Company", tables[0].Table);
@@ -230,5 +346,17 @@ public class TableDefinitionsTests
         // Job should be third (migration order 3)
         Assert.Equal("Job", tables[2].Table);
         Assert.Equal(3, tables[2].MigrationOrder);
+
+        // JobPosition should be fourth (migration order 4)
+        Assert.Equal("JobPosition", tables[3].Table);
+        Assert.Equal(4, tables[3].MigrationOrder);
+
+        // AspNetUsers_Resource should be fifth (migration order 5)
+        Assert.Equal("AspNetUsers_Resource", tables[4].Table);
+        Assert.Equal(5, tables[4].MigrationOrder);
+
+        // JobResource should be sixth (migration order 6)
+        Assert.Equal("JobResource", tables[5].Table);
+        Assert.Equal(6, tables[5].MigrationOrder);
     }
 }

@@ -26,7 +26,7 @@ namespace EastSeat.ResourceIdea.Application.UnitTests.Mappers
                 Description = "Test description",
                 EngagementId = EngagementId.Create(Guid.NewGuid()),
                 TenantId = TenantId.Create(Guid.NewGuid()),
-                StartDate = DateTimeOffset.UtcNow.AddDays(-5),
+                PlannedStartDate = DateTimeOffset.UtcNow.AddDays(-5),
                 CompletedDate = DateTimeOffset.UtcNow,
                 Status = WorkItemStatus.Completed,
                 Priority = Priority.Critical,
@@ -43,7 +43,7 @@ namespace EastSeat.ResourceIdea.Application.UnitTests.Mappers
             Assert.Equal(workItem.Description, model.Description);
             Assert.Equal(workItem.EngagementId, model.EngagementId);
             Assert.Equal(workItem.TenantId, model.TenantId);
-            Assert.Equal(workItem.StartDate, model.StartDate);
+            Assert.Equal(workItem.PlannedStartDate, model.StartDate);
             Assert.Equal(workItem.CompletedDate, model.CompletedDate);
             Assert.Equal(workItem.Status, model.Status);
             Assert.Equal(workItem.Priority, model.Priority);
@@ -148,7 +148,7 @@ namespace EastSeat.ResourceIdea.Application.UnitTests.Mappers
             Assert.Equal(model.Description, entity.Description);
             Assert.Equal(model.EngagementId, entity.EngagementId);
             Assert.Equal(model.TenantId, entity.TenantId);
-            Assert.Equal(model.StartDate, entity.StartDate);
+            Assert.Equal(model.StartDate, entity.PlannedStartDate);
             Assert.Equal(model.CompletedDate, entity.CompletedDate);
             Assert.Equal(model.Status, entity.Status);
             Assert.Equal(model.Priority, entity.Priority);

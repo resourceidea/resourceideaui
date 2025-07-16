@@ -31,6 +31,8 @@ public class Employee : BaseEntity
 
     public EmployeeId ReportsTo { get; set; }
 
+    public string? MigrationResourceId { get; set; }
+
     public JobPosition? JobPosition { get; set; }
 
     public DateTimeOffset? HireDate { get; set; }
@@ -38,8 +40,6 @@ public class Employee : BaseEntity
     public DateTimeOffset? EndDate { get; set; }
 
     public string? MigrationUserId { get; set; }
-
-    public string? MigrationResourceId { get; set; }
 
     public string? MigrationFullname { get; set; }
 

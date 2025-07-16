@@ -762,6 +762,12 @@ public class MigrationService
                 MigrationLogger.LogFieldMapping("Client", column.SourceColumn, column.Name, value);
             }
 
+            // If the source value is null and this is the Title column, provide a default value
+            if (value == null && column.Name.Equals("Title", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Work Item";
+            }
+
             return value;
         }
 
@@ -1036,7 +1042,7 @@ public class MigrationService
             "enddate" => "NULL",
             "managerid" => "NULL",
             "partnerid" => "NULL",
-            "title" => "NULL",
+            "title" => "'Work Item'",
             "description" => "NULL",
             "employeenumber" => "NULL",
             "reportsto" => "NEWID()",
@@ -1048,6 +1054,8 @@ public class MigrationService
             "lockoutend" => "NULL",
             "lockoutenabled" => "0",
             "accessfailedcount" => "0",
+            "status" => "NotStarted",
+            "priority" => "2",
             _ when column.Type.Contains("bit") => "0",
             _ when column.Type.Contains("datetime") => "NULL",
             _ when column.Type.Contains("datetimeoffset") => "NULL",

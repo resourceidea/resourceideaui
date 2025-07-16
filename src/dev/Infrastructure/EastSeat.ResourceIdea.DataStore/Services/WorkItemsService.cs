@@ -182,7 +182,7 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
             existingWorkItem.Description = entity.Description;
             existingWorkItem.Status = entity.Status;
             existingWorkItem.Priority = entity.Priority;
-            existingWorkItem.StartDate = entity.StartDate;
+            existingWorkItem.PlannedStartDate = entity.PlannedStartDate;
             existingWorkItem.CompletedDate = entity.CompletedDate;
 
             _dbContext.WorkItems.Update(existingWorkItem);

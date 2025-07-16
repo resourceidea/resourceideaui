@@ -75,7 +75,7 @@ public sealed class UpdateWorkItemCommand : BaseRequest<WorkItemModel>
             Description = Description,
             EngagementId = EngagementId,
             TenantId = TenantId,
-            StartDate = StartDate,
+            PlannedStartDate = StartDate,
             CompletedDate = CompletedDate,
             Status = Status,
             Priority = Priority,
