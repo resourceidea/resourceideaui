@@ -1,13 +1,16 @@
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
+using EastSeat.ResourceIdea.DataStore.Identity.Entities;
+using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 namespace EastSeat.ResourceIdea.Web.RequestContext;
 
-public sealed class ResourceIdeaRequestContext(IHttpContextAccessor httpContextAccessor) : IResourceIdeaRequestContext, IAuthenticationContext
+public sealed class ResourceIdeaRequestContext(IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager) : IResourceIdeaRequestContext, IAuthenticationContext
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
     public TenantId Tenant => GetTenantId();
 
@@ -19,31 +22,44 @@ public sealed class ResourceIdeaRequestContext(IHttpContextAccessor httpContextA
 
     private TenantId GetTenantId()
     {
-        string? tenantIdStr = _httpContextAccessor.HttpContext?.User?.FindFirst("TenantId")?.Value?.Trim();
-        if (string.IsNullOrEmpty(tenantIdStr))
+        var user = GetCurrentApplicationUser();
+        if (user != null)
         {
-            // Fallback to hardcoded value for development - TODO: Remove in production
-            return TenantId.Create("841C6122-59E8-4294-93B8-D21C0BEB6724");
+            return user.TenantId;
         }
 
-        return TenantId.Create(tenantIdStr);
+        // Fallback to hardcoded value for development - TODO: Remove in production
+        return TenantId.Create("841C6122-59E8-4294-93B8-D21C0BEB6724");
     }
 
     private ApplicationUserId GetApplicationUserId()
     {
-        string? applicationUserIdStr = _httpContextAccessor.HttpContext?.User?.FindFirst("ApplicationUserId")?.Value?.Trim();
-        if (string.IsNullOrEmpty(applicationUserIdStr))
+        var user = GetCurrentApplicationUser();
+        if (user != null)
         {
-            // Try to get from sub claim as fallback
-            applicationUserIdStr = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value?.Trim();
+            return user.ApplicationUserId;
         }
 
-        if (string.IsNullOrEmpty(applicationUserIdStr))
+        // Return empty if no authenticated user context
+        return ApplicationUserId.Empty;
+    }
+
+    private ApplicationUser? GetCurrentApplicationUser()
+    {
+        var claimsIdentity = _httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity;
+        if (claimsIdentity?.IsAuthenticated != true)
         {
-            // Return empty if no authenticated user context
-            return ApplicationUserId.Empty;
+            return null;
         }
 
-        return ApplicationUserId.Create(applicationUserIdStr);
+        var userName = claimsIdentity.Name;
+        if (string.IsNullOrEmpty(userName))
+        {
+            return null;
+        }
+
+        // Note: This is a synchronous call, which is not ideal, but necessary for this pattern
+        // In a real application, you might want to cache this or use a different approach
+        return _userManager.FindByNameAsync(userName).GetAwaiter().GetResult();
     }
 }
