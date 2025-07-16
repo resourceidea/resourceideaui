@@ -103,7 +103,7 @@ public class EmployeeModel
             JobPositionId = JobPositionId,
             ApplicationUserId = ApplicationUserId,
             EmployeeNumber = EmployeeNumber,
-            ManagerId = ManagerId
+            ReportsTo = ManagerId
         };
     }
 
