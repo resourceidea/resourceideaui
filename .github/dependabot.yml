@@ -9,3 +9,8 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    ignore:
+      # Ignore MediatR updates to prevent licensing issues with v13.x+
+      - dependency-name: "MediatR"
+      - dependency-name: "MediatR.*"
+      - dependency-name: "MediatR.Extensions.Microsoft.DependencyInjection"
