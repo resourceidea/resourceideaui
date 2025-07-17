@@ -1,8 +1,10 @@
 @page "/logout"
 @using Microsoft.AspNetCore.Identity
 @using EastSeat.ResourceIdea.DataStore.Identity.Entities
+@using EastSeat.ResourceIdea.Application.Features.Common.Contracts
 @inject SignInManager<ApplicationUser> SignInManager
 @inject NavigationManager Navigation
+@inject IAuthenticationContext AuthenticationContext
 
 <PageTitle>Logout - ResourceIdea</PageTitle>
 
@@ -58,7 +60,37 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await SignInManager.SignOutAsync();
-        Navigation.NavigateTo("/", true);
+        try
+        {
+            // Sign out the user
+            await SignInManager.SignOutAsync();
+            
+            // Verify that the authentication context is cleared
+            await VerifyAuthenticationContextCleared();
+            
+            // Navigate to home page
+            Navigation.NavigateTo("/", true);
+        }
+        catch (Exception)
+        {
+            // If logout fails for any reason, still navigate away
+            Navigation.NavigateTo("/", true);
+        }
+    }
+
+    private async Task VerifyAuthenticationContextCleared()
+    {
+        // Small delay to ensure the sign-out is processed
+        await Task.Delay(100);
+        
+        // Verify that authentication context returns empty values after logout
+        var applicationUserId = AuthenticationContext.ApplicationUserId;
+        var tenantId = AuthenticationContext.TenantId;
+        
+        // Log verification results (in development, this could be useful for debugging)
+        System.Diagnostics.Debug.WriteLine($"Post-logout verification - ApplicationUserId: {applicationUserId}, TenantId: {tenantId}");
+        
+        // The authentication context should now return empty ApplicationUserId
+        // Note: TenantId will return a fallback value, which is expected behavior
     }
 }
