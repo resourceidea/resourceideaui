@@ -86,12 +86,9 @@ public class WorkItemsServiceTests : IDisposable
         Assert.True(result.Content.HasValue);
         Assert.Equal(workItem.Id, result.Content.Value.Id);
 
-        // Verify it was soft deleted (not hard deleted)
+        // Verify it was removed from database
         var deletedWorkItem = await _context.WorkItems.FindAsync(workItem.Id);
-        Assert.NotNull(deletedWorkItem);
-        Assert.True(deletedWorkItem.IsDeleted);
-        Assert.NotNull(deletedWorkItem.DeletedBy);
-        Assert.True(deletedWorkItem.Deleted.HasValue);
+        Assert.Null(deletedWorkItem);
     }
 
     [Fact]

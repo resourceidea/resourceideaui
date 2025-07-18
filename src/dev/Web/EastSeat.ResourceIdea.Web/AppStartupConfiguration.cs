@@ -27,10 +27,7 @@ namespace EastSeat.ResourceIdea.Web
         public static void AddResourceIdeaDbContext(this IServiceCollection services)
         {
             string sqlServerConnectionString = GetDbContextConnectionString();
-            services.AddDbContext<ResourceIdeaDBContext>((serviceProvider, options) => 
-            {
-                options.UseSqlServer(sqlServerConnectionString);
-            });
+            services.AddDbContext<ResourceIdeaDBContext>(options => options.UseSqlServer(sqlServerConnectionString));
         }
         public static void AddResourceIdeaServices(this IServiceCollection services)
         {

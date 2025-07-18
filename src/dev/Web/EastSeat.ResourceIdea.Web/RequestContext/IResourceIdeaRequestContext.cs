@@ -5,7 +5,6 @@
 // -------------------------------------------------------------------------------
 
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 
 namespace EastSeat.ResourceIdea.Web.RequestContext;
 
@@ -15,5 +14,4 @@ namespace EastSeat.ResourceIdea.Web.RequestContext;
 public interface IResourceIdeaRequestContext
 {
     TenantId Tenant { get; }
-    ApplicationUserId ApplicationUser { get; }
 }
