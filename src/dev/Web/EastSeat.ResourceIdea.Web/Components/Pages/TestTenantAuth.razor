@@ -1,0 +1,128 @@
+@page "/test-tenant-auth"
+@attribute [AllowAnonymous]
+@using EastSeat.ResourceIdea.Web.RequestContext
+@using System.Security.Claims
+@inject IResourceIdeaRequestContext RequestContext
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILogger<TestTenantAuth> Logger
+
+<PageTitle>Test Tenant Authentication</PageTitle>
+
+<div class="container mt-4">
+    <h2>Tenant Authentication Test</h2>
+    
+    <div class="card mt-3">
+        <div class="card-header">
+            <h5>Authentication State</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Is Authenticated:</strong> @isAuthenticated</p>
+            <p><strong>User Name:</strong> @userName</p>
+            <p><strong>User Email:</strong> @userEmail</p>
+        </div>
+    </div>
+
+    @if (isAuthenticated)
+    {
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5>User Claims</h5>
+            </div>
+            <div class="card-body">
+                @if (userClaims?.Any() == true)
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Claim Type</th>
+                                <th>Claim Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var claim in userClaims)
+                            {
+                                <tr>
+                                    <td>@claim.Type</td>
+                                    <td>@claim.Value</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>No claims found.</p>
+                }
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5>TenantId Test</h5>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-primary" @onclick="TestGetTenantId">Test GetTenantId()</button>
+                
+                @if (!string.IsNullOrEmpty(testResult))
+                {
+                    <div class="alert mt-3 @(hasError ? "alert-danger" : "alert-success")">
+                        @testResult
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info mt-3">
+            <p>You are not authenticated. <a href="/login">Click here to login</a></p>
+        </div>
+    }
+</div>
+
+@code {
+    private bool isAuthenticated;
+    private string userName = string.Empty;
+    private string userEmail = string.Empty;
+    private IEnumerable<Claim>? userClaims;
+    private string testResult = string.Empty;
+    private bool hasError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        
+        isAuthenticated = user.Identity?.IsAuthenticated == true;
+        
+        if (isAuthenticated)
+        {
+            userName = user.Identity?.Name ?? "Unknown";
+            userEmail = user.FindFirst(ClaimTypes.Email)?.Value ?? "Unknown";
+            userClaims = user.Claims;
+        }
+    }
+
+    private async Task TestGetTenantId()
+    {
+        try
+        {
+            testResult = string.Empty;
+            hasError = false;
+            
+            Logger.LogInformation("Testing GetTenantId() method...");
+            
+            var tenantId = await RequestContext.GetTenantId();
+            testResult = $"Success! TenantId: {tenantId.Value}";
+            hasError = false;
+            
+            Logger.LogInformation("GetTenantId() succeeded with value: {TenantId}", tenantId.Value);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error testing GetTenantId()");
+            testResult = $"Error: {ex.Message}";
+            hasError = true;
+        }
+    }
+}

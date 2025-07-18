@@ -1,4 +1,5 @@
 using EastSeat.ResourceIdea.Web.Services;
+using EastSeat.ResourceIdea.Web.Exceptions;
 using Microsoft.AspNetCore.Components;
 
 namespace EastSeat.ResourceIdea.Web.Components.Base;
@@ -9,6 +10,7 @@ namespace EastSeat.ResourceIdea.Web.Components.Base;
 public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
 {
     [Inject] protected IExceptionHandlingService ExceptionHandlingService { get; set; } = default!;
+    [Inject] protected NavigationManager Navigation { get; set; } = default!;
 
     /// <summary>
     /// Indicates if the component has an error state.
@@ -28,10 +30,10 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
     /// <summary>
     /// Indicates if the page is currently loading (alias for IsLoading for backward compatibility).
     /// </summary>
-    protected bool IsLoadingPage 
-    { 
-        get => IsLoading; 
-        set => IsLoading = value; 
+    protected bool IsLoadingPage
+    {
+        get => IsLoading;
+        set => IsLoading = value;
     }
 
     /// <summary>
@@ -53,11 +55,18 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
         try
         {
             ClearError();
-            
+
             var result = await ExceptionHandlingService.ExecuteAsync(operation, context);
-            
+
             if (!result.IsSuccess)
             {
+                // Handle tenant authentication exceptions by redirecting to login
+                if (result.Exception is TenantAuthenticationException)
+                {
+                    RedirectToLogin();
+                    return false;
+                }
+
                 SetError(result.ErrorMessage!);
                 return false;
             }
@@ -94,11 +103,18 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
         try
         {
             ClearError();
-            
+
             var result = await ExceptionHandlingService.ExecuteAsync(operation, context);
-            
+
             if (!result.IsSuccess)
             {
+                // Handle tenant authentication exceptions by redirecting to login
+                if (result.Exception is TenantAuthenticationException)
+                {
+                    RedirectToLogin();
+                    return default;
+                }
+
                 SetError(result.ErrorMessage!);
                 return default;
             }
@@ -113,6 +129,16 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
                 StateHasChanged();
             }
         }
+    }
+
+    /// <summary>
+    /// Redirects to the login page with the current URL as return URL.
+    /// </summary>
+    private void RedirectToLogin()
+    {
+        var returnUrl = Navigation.ToBaseRelativePath(Navigation.Uri);
+        var loginUrl = $"/login?returnUrl={Uri.EscapeDataString(returnUrl)}";
+        Navigation.NavigateTo(loginUrl, true);
     }
 
     /// <summary>
