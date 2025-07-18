@@ -1,0 +1,332 @@
+@* ----------------------------------------------------------------------------------
+    File: SystemHealth.razor
+    Path: src/Web/EastSeat.ResourceIdea.Web/Components/Pages/Backend/SystemHealth.razor
+    Description: Backend system health monitoring page
+   ---------------------------------------------------------------------------------- *@
+
+@page "/backend/health"
+@layout BackendLayout
+@attribute [BackendAccess]
+
+@using EastSeat.ResourceIdea.Web.Authorization
+@using EastSeat.ResourceIdea.Web.Components.Base
+
+@inherits ResourceIdeaComponentBase
+
+<ResourceIdeaPageTitle>System Health</ResourceIdeaPageTitle>
+
+<div class="system-health">
+    <div class="page-header">
+        <h1><i class="fas fa-heartbeat"></i> System Health Monitor</h1>
+        <p class="lead">Real-time system status and performance monitoring</p>
+    </div>
+
+    <div class="row">
+        <!-- Overall System Status -->
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-shield-alt"></i> Overall System Status</h5>
+                    <span class="badge @(overallStatus == "Healthy" ? "bg-success" : "bg-warning") fs-6">
+                        @overallStatus
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="health-metric">
+                                <div class="metric-icon text-success">
+                                    <i class="fas fa-server fa-2x"></i>
+                                </div>
+                                <div class="metric-info">
+                                    <h6>Database</h6>
+                                    <span class="badge bg-success">Online</span>
+                                    <small class="d-block text-muted">Latency: 15ms</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="health-metric">
+                                <div class="metric-icon text-success">
+                                    <i class="fas fa-cloud fa-2x"></i>
+                                </div>
+                                <div class="metric-info">
+                                    <h6>Web Server</h6>
+                                    <span class="badge bg-success">Healthy</span>
+                                    <small class="d-block text-muted">Uptime: 99.9%</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="health-metric">
+                                <div class="metric-icon text-warning">
+                                    <i class="fas fa-memory fa-2x"></i>
+                                </div>
+                                <div class="metric-info">
+                                    <h6>Memory</h6>
+                                    <span class="badge bg-warning">Moderate</span>
+                                    <small class="d-block text-muted">Usage: 72%</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="health-metric">
+                                <div class="metric-icon text-success">
+                                    <i class="fas fa-microchip fa-2x"></i>
+                                </div>
+                                <div class="metric-info">
+                                    <h6>CPU</h6>
+                                    <span class="badge bg-success">Normal</span>
+                                    <small class="d-block text-muted">Load: 23%</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Performance Metrics -->
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-line"></i> Performance Metrics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6>Response Time (Last 24h)</h6>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 85%"></div>
+                            </div>
+                            <small class="text-muted">Average: 245ms | Target: &lt;300ms</small>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Throughput</h6>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 92%"></div>
+                            </div>
+                            <small class="text-muted">1,247 req/min | Peak: 1,350 req/min</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Error Rate</h6>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 5%"></div>
+                            </div>
+                            <small class="text-muted">0.12% | Target: &lt;1%</small>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Availability</h6>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 99%"></div>
+                            </div>
+                            <small class="text-muted">99.95% | Target: &gt;99.9%</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Alerts -->
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-bell"></i> Active Alerts</h5>
+                </div>
+                <div class="card-body">
+                    @if (systemAlerts.Any())
+                    {
+                        @foreach (var alert in systemAlerts)
+                        {
+                            <div class="alert alert-@(alert.Level.ToLower()) alert-sm" role="alert">
+                                <strong>@alert.Level:</strong> @alert.Message
+                                <br><small class="text-muted">@alert.Timestamp.ToString("HH:mm")</small>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted">
+                            <i class="fas fa-check-circle fa-2x mb-2"></i>
+                            <p>No active alerts</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Service Dependencies -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-network-wired"></i> Service Dependencies</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Status</th>
+                                    <th>Response Time</th>
+                                    <th>Last Check</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var service in serviceDependencies)
+                                {
+                                    <tr>
+                                        <td>@service.Name</td>
+                                        <td>
+                                            <span class="badge @(service.IsHealthy ? "bg-success" : "bg-danger")">
+                                                @(service.IsHealthy ? "Online" : "Offline")
+                                            </span>
+                                        </td>
+                                        <td>@service.ResponseTime ms</td>
+                                        <td>@service.LastCheck.ToString("HH:mm:ss")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resource Usage -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-pie"></i> Resource Usage</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">CPU Usage</label>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 23%">23%</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Memory Usage</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 72%">72%</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Disk Usage</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 45%">45%</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Network I/O</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 15%">15%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string overallStatus = "Healthy";
+    private List<SystemAlert> systemAlerts = new();
+    private List<ServiceDependency> serviceDependencies = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ExecuteAsync(async () =>
+        {
+            await LoadSystemHealth();
+        }, "Loading system health data");
+    }
+
+    private async Task LoadSystemHealth()
+    {
+        // Simulate loading health data
+        await Task.Delay(200);
+
+        overallStatus = "Healthy";
+
+        // Sample alerts - normally would come from monitoring system
+        systemAlerts = new List<SystemAlert>
+        {
+            new() { Level = "Warning", Message = "Memory usage above 70%", Timestamp = DateTime.Now.AddMinutes(-15) }
+        };
+
+        // Sample service dependencies
+        serviceDependencies = new List<ServiceDependency>
+        {
+            new() { Name = "Database Server", IsHealthy = true, ResponseTime = 15, LastCheck = DateTime.Now.AddSeconds(-30) },
+            new() { Name = "Azure Active Directory", IsHealthy = true, ResponseTime = 45, LastCheck = DateTime.Now.AddSeconds(-25) },
+            new() { Name = "File Storage", IsHealthy = true, ResponseTime = 8, LastCheck = DateTime.Now.AddSeconds(-20) },
+            new() { Name = "Email Service", IsHealthy = true, ResponseTime = 120, LastCheck = DateTime.Now.AddSeconds(-35) },
+            new() { Name = "Backup Service", IsHealthy = false, ResponseTime = 0, LastCheck = DateTime.Now.AddMinutes(-5) }
+        };
+    }
+
+    private class SystemAlert
+    {
+        public string Level { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public DateTime Timestamp { get; set; }
+    }
+
+    private class ServiceDependency
+    {
+        public string Name { get; set; } = string.Empty;
+        public bool IsHealthy { get; set; }
+        public int ResponseTime { get; set; }
+        public DateTime LastCheck { get; set; }
+    }
+}
+
+<style>
+    .system-health {
+        padding: 20px;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 20px;
+    }
+
+    .page-header h1 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+
+    .health-metric {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+    }
+
+    .metric-icon {
+        flex-shrink: 0;
+    }
+
+    .metric-info h6 {
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    .alert-sm {
+        padding: 0.5rem 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress {
+        height: 1.2rem;
+    }
+</style>
