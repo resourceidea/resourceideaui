@@ -2,7 +2,6 @@ using EastSeat.ResourceIdea.Web.Components;
 using EastSeat.ResourceIdea.Web;
 using EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
 using EastSeat.ResourceIdea.Web.RequestContext;
-using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.DataStore;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +10,7 @@ using EastSeat.ResourceIdea.Web.Services;
 using EastSeat.ResourceIdea.Web.Middleware;
 using EastSeat.ResourceIdea.Web.Extensions;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,9 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddResourceIdeaTelemetry(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ResourceIdeaRequestContext>();
-builder.Services.AddScoped<IResourceIdeaRequestContext>(provider => provider.GetRequiredService<ResourceIdeaRequestContext>());
-builder.Services.AddScoped<IAuthenticationContext>(provider => provider.GetRequiredService<ResourceIdeaRequestContext>());
+builder.Services.AddScoped<IResourceIdeaRequestContext, ResourceIdeaRequestContext>();
 
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
@@ -50,6 +48,9 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 })
 .AddEntityFrameworkStores<ResourceIdeaDBContext>()
 .AddDefaultTokenProviders();
+
+// Add claims transformation to inject TenantId claim
+builder.Services.AddScoped<IClaimsTransformation, TenantClaimsTransformation>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

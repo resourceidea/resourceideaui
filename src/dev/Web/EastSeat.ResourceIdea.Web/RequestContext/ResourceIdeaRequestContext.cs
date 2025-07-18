@@ -1,83 +1,46 @@
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
-using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
-using EastSeat.ResourceIdea.DataStore.Identity.Entities;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
+using EastSeat.ResourceIdea.Web.Exceptions;
 
 namespace EastSeat.ResourceIdea.Web.RequestContext;
 
-public sealed class ResourceIdeaRequestContext(IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager) : IResourceIdeaRequestContext, IAuthenticationContext
+public sealed class ResourceIdeaRequestContext(IHttpContextAccessor httpContextAccessor) : IResourceIdeaRequestContext
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    public TenantId Tenant => GetTenantId();
+    public TenantId Tenant => GetTenantIdSync();
 
-    public ApplicationUserId ApplicationUser => GetApplicationUserId();
-
-    // Explicit interface implementation for IAuthenticationContext
-    TenantId IAuthenticationContext.TenantId => Tenant;
-    ApplicationUserId IAuthenticationContext.ApplicationUserId => ApplicationUser;
-
-    private TenantId GetTenantId()
+    /// <summary>
+    /// Gets the TenantId for the current user. If the user is not authenticated or
+    /// the TenantId claim is missing, throws a TenantAuthenticationException.
+    /// </summary>
+    /// <returns>The TenantId for the current user.</returns>
+    /// <exception cref="TenantAuthenticationException">
+    /// Thrown when the user is not authenticated or the TenantId claim is missing.
+    /// </exception>
+    public async Task<TenantId> GetTenantId()
     {
-        var user = GetCurrentApplicationUser();
-        if (user != null)
-        {
-            return user.TenantId;
-        }
-
-        // Fallback to hardcoded value for development - TODO: Remove in production
-        return TenantId.Create("841C6122-59E8-4294-93B8-D21C0BEB6724");
+        // For now, this is essentially the same as the synchronous version
+        // but we make it async for consistency with the interface
+        return await Task.FromResult(GetTenantIdSync());
     }
 
-    private ApplicationUserId GetApplicationUserId()
+    private TenantId GetTenantIdSync()
     {
-        var user = GetCurrentApplicationUser();
-        if (user != null)
+        var httpContext = _httpContextAccessor.HttpContext;
+
+        // Check if user is authenticated
+        if (httpContext?.User?.Identity?.IsAuthenticated != true)
         {
-            return user.ApplicationUserId;
+            throw new UnauthorizedAccessException("User is not authenticated. Please sign in to access this resource.");
         }
 
-        // Return empty if no authenticated user context
-        return ApplicationUserId.Empty;
-    }
-
-    private ApplicationUser? GetCurrentApplicationUser()
-    {
-        try
+        string? tenantIdStr = httpContext.User.FindFirst("TenantId")?.Value?.Trim();
+        if (string.IsNullOrEmpty(tenantIdStr))
         {
-            var httpContext = _httpContextAccessor.HttpContext;
-            if (httpContext == null)
-            {
-                return null;
-            }
-
-            var claimsIdentity = httpContext.User?.Identity as ClaimsIdentity;
-            if (claimsIdentity?.IsAuthenticated != true)
-            {
-                return null;
-            }
-
-            var userName = claimsIdentity.Name;
-            if (string.IsNullOrEmpty(userName))
-            {
-                return null;
-            }
-
-            // Note: This is a synchronous call, which is not ideal, but necessary for this pattern
-            // In a real application, you might want to cache this or use a different approach
-            var user = _userManager.FindByNameAsync(userName).GetAwaiter().GetResult();
-            
-            // Additional safety check: if user lookup fails, treat as unauthenticated
-            return user;
+            // TenantId claim is missing - this should trigger a redirect to login
+            throw new TenantAuthenticationException("Tenant information not found in your session. Please sign in again to access this resource.");
         }
-        catch (Exception)
-        {
-            // If any exception occurs during user lookup (e.g., database issues),
-            // treat as unauthenticated for safety
-            return null;
-        }
+
+        return TenantId.Create(tenantIdStr);
     }
 }

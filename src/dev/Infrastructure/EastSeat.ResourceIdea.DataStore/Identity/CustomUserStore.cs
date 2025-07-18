@@ -37,8 +37,7 @@ public class CustomUserStore(ResourceIdeaDBContext dbContext)
     public async Task<ApplicationUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        ApplicationUserId applicationUserId = ApplicationUserId.Create(userId);
-        return await _dbContext.Users!.FirstOrDefaultAsync(u => u.ApplicationUserId == applicationUserId, cancellationToken);
+        return await _dbContext.Users!.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
     }
 
     public async Task<ApplicationUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
