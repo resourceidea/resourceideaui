@@ -1,0 +1,289 @@
+@* ----------------------------------------------------------------------------------
+    File: Dashboard.razor
+    Path: src/Web/EastSeat.ResourceIdea.Web/Components/Pages/Backend/Dashboard.razor
+    Description: Backend dashboard for Developer/Support users
+   ---------------------------------------------------------------------------------- *@
+
+@page "/backend/dashboard"
+@page "/backend"
+@layout BackendLayout
+@attribute [BackendAccess]
+
+@using EastSeat.ResourceIdea.Web.Authorization
+@using EastSeat.ResourceIdea.Web.Components.Base
+
+@inherits ResourceIdeaComponentBase
+
+<ResourceIdeaPageTitle>Backend Dashboard</ResourceIdeaPageTitle>
+
+<div class="backend-dashboard">
+    <div class="dashboard-header">
+        <h1><i class="fas fa-tachometer-alt"></i> Backend Dashboard</h1>
+        <p class="lead">System overview and administrative tools for developers and support staff</p>
+    </div>
+
+    <div class="row">
+        <!-- System Status Cards -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="card-title h5">Total Users</div>
+                            <div class="display-6">@totalUsers</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="card-title h5">Total Tenants</div>
+                            <div class="display-6">@totalTenants</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-building fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="card-title h5">Active Engagements</div>
+                            <div class="display-6">@activeEngagements</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-handshake fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="card-title h5">System Health</div>
+                            <div class="display-6">@systemHealth</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-heartbeat fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Recent Activity -->
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-clock"></i> Recent System Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Event</th>
+                                    <th>User</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var activity in recentActivities)
+                                {
+                                    <tr>
+                                        <td>@activity.Timestamp.ToString("HH:mm")</td>
+                                        <td>@activity.Event</td>
+                                        <td>@activity.User</td>
+                                        <td>
+                                            <span class="badge @(activity.IsSuccess ? "bg-success" : "bg-danger")">
+                                                @(activity.IsSuccess ? "Success" : "Failed")
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/backend/users" class="btn btn-outline-primary">
+                            <i class="fas fa-users"></i> Manage Users
+                        </a>
+                        <a href="/backend/tenants" class="btn btn-outline-success">
+                            <i class="fas fa-building"></i> Manage Tenants
+                        </a>
+                        <a href="/backend/logs" class="btn btn-outline-warning">
+                            <i class="fas fa-file-alt"></i> View System Logs
+                        </a>
+                        <a href="/backend/health" class="btn btn-outline-info">
+                            <i class="fas fa-heartbeat"></i> System Health Check
+                        </a>
+                        <a href="/backend/settings" class="btn btn-outline-secondary">
+                            <i class="fas fa-cogs"></i> System Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Performance Metrics -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-line"></i> Performance Metrics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <div class="metric">
+                                <div class="metric-value">@avgResponseTime ms</div>
+                                <div class="metric-label">Avg Response Time</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="metric">
+                                <div class="metric-value">@dailyRequests</div>
+                                <div class="metric-label">Requests Today</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="metric">
+                                <div class="metric-value">@memoryUsage%</div>
+                                <div class="metric-label">Memory Usage</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="metric">
+                                <div class="metric-value">@cpuUsage%</div>
+                                <div class="metric-label">CPU Usage</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private int totalUsers = 0;
+    private int totalTenants = 0;
+    private int activeEngagements = 0;
+    private string systemHealth = "Good";
+    private int avgResponseTime = 250;
+    private int dailyRequests = 1247;
+    private int memoryUsage = 68;
+    private int cpuUsage = 23;
+
+    private List<ActivityItem> recentActivities = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ExecuteAsync(async () =>
+        {
+            // Simulate loading dashboard data
+            await Task.Delay(100); // Simulate API call
+
+            // Sample data - in real implementation, this would come from services
+            totalUsers = 156;
+            totalTenants = 23;
+            activeEngagements = 87;
+            systemHealth = "Excellent";
+
+            // Sample recent activities
+            recentActivities = new List<ActivityItem>
+            {
+                new() { Timestamp = DateTime.Now.AddMinutes(-5), Event = "User Login", User = "john.doe@example.com", IsSuccess = true },
+                new() { Timestamp = DateTime.Now.AddMinutes(-12), Event = "New Engagement Created", User = "jane.smith@example.com", IsSuccess = true },
+                new() { Timestamp = DateTime.Now.AddMinutes(-18), Event = "Password Reset", User = "bob.wilson@example.com", IsSuccess = true },
+                new() { Timestamp = DateTime.Now.AddMinutes(-25), Event = "Failed Login Attempt", User = "suspicious@example.com", IsSuccess = false },
+                new() { Timestamp = DateTime.Now.AddMinutes(-31), Event = "Data Export", User = "admin@example.com", IsSuccess = true }
+            };
+        }, "Loading dashboard data");
+    }
+
+    private class ActivityItem
+    {
+        public DateTime Timestamp { get; set; }
+        public string Event { get; set; } = string.Empty;
+        public string User { get; set; } = string.Empty;
+        public bool IsSuccess { get; set; }
+    }
+}
+
+<style>
+    .backend-dashboard {
+        padding: 20px;
+    }
+
+    .dashboard-header {
+        margin-bottom: 30px;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 20px;
+    }
+
+    .dashboard-header h1 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+
+    .metric {
+        padding: 20px 0;
+    }
+
+    .metric-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+
+    .metric-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .card {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        border: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+        font-weight: 600;
+    }
+</style>

@@ -9,8 +9,10 @@ using EastSeat.ResourceIdea.DataStore.Identity;
 using EastSeat.ResourceIdea.Web.Services;
 using EastSeat.ResourceIdea.Web.Middleware;
 using EastSeat.ResourceIdea.Web.Extensions;
+using EastSeat.ResourceIdea.Web.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,7 +51,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 .AddEntityFrameworkStores<ResourceIdeaDBContext>()
 .AddDefaultTokenProviders();
 
-// Add claims transformation to inject TenantId claim
+// Add claims transformation to inject TenantId and backend role claims
 builder.Services.AddScoped<IClaimsTransformation, TenantClaimsTransformation>();
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -61,13 +63,30 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
-// Add authorization services
+// Add authorization services with backend access policy
 builder.Services.AddAuthorizationCore(options =>
 {
     options.FallbackPolicy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
         .Build();
+
+    // Policy for backend access (Developer and Support roles)
+    options.AddPolicy("BackendAccess", policy =>
+        policy.Requirements.Add(new BackendAccessRequirement()));
+
+    // Policy for tenant access (regular tenant users)
+    options.AddPolicy("TenantAccess", policy =>
+        policy.RequireAuthenticatedUser()
+        .RequireAssertion(context => 
+        {
+            // Deny access if user has backend role
+            var isBackendRole = context.User.FindFirst("IsBackendRole")?.Value;
+            return !bool.TryParse(isBackendRole, out bool isBackend) || !isBackend;
+        }));
 });
+
+// Register authorization handlers
+builder.Services.AddScoped<IAuthorizationHandler, BackendAccessHandler>();
 
 // Add MediatR
 builder.Services.AddMediatR(typeof(CreateDepartmentCommandHandler).Assembly);

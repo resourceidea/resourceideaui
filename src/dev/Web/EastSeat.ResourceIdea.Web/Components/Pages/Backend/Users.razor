@@ -1,0 +1,346 @@
+@* ----------------------------------------------------------------------------------
+    File: Users.razor
+    Path: src/Web/EastSeat.ResourceIdea.Web/Components/Pages/Backend/Users.razor
+    Description: Backend user management page for Developer/Support users
+   ---------------------------------------------------------------------------------- *@
+
+@page "/backend/users"
+@layout BackendLayout
+@attribute [BackendAccess]
+
+@using EastSeat.ResourceIdea.Web.Authorization
+@using EastSeat.ResourceIdea.Web.Components.Base
+@using Microsoft.AspNetCore.Identity
+@using EastSeat.ResourceIdea.DataStore.Identity.Entities
+
+@inherits ResourceIdeaComponentBase
+
+@inject UserManager<ApplicationUser> UserManager
+@inject RoleManager<ApplicationRole> RoleManager
+
+<ResourceIdeaPageTitle>User Management</ResourceIdeaPageTitle>
+
+<div class="backend-users">
+    <div class="page-header">
+        <h1><i class="fas fa-users"></i> User Management</h1>
+        <p class="lead">Manage all system users across all tenants</p>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="search-box">
+                <input type="text" class="form-control" placeholder="Search users by email, name, or tenant..." 
+                       @bind="searchTerm" @onkeyup="FilterUsers" />
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-primary" @onclick="ShowCreateUserModal">
+                <i class="fas fa-plus"></i> Create User
+            </button>
+        </div>
+    </div>
+
+    @if (IsLoadingPage)
+    {
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading users...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Email</th>
+                                <th>Full Name</th>
+                                <th>Tenant</th>
+                                <th>Roles</th>
+                                <th>Last Login</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in filteredUsers)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="user-email">
+                                            @user.Email
+                                            @if (user.IsBackendUser)
+                                            {
+                                                <span class="badge bg-danger ms-2">Backend</span>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>@user.FullName</td>
+                                    <td>
+                                        @if (user.IsBackendUser)
+                                        {
+                                            <span class="text-muted">System-wide</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@user.TenantName</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var role in user.Roles)
+                                        {
+                                            <span class="badge @(user.IsBackendUser ? "bg-warning" : "bg-info") me-1">@role</span>
+                                        }
+                                    </td>
+                                    <td>@(user.LastLoginAt?.ToString("MMM dd, yyyy") ?? "Never")</td>
+                                    <td>
+                                        <span class="badge @(user.IsActive ? "bg-success" : "bg-secondary")">
+                                            @(user.IsActive ? "Active" : "Inactive")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" @onclick="() => ViewUser(user.Id)">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" @onclick="() => EditUser(user.Id)">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            @if (!user.IsBackendUser)
+                                            {
+                                                <button class="btn btn-outline-warning" @onclick="() => ImpersonateUser(user.Id)">
+                                                    <i class="fas fa-user-secret"></i>
+                                                </button>
+                                            }
+                                            <button class="btn btn-outline-danger" @onclick="() => ToggleUserStatus(user.Id)">
+                                                <i class="fas @(user.IsActive ? "fa-user-slash" : "fa-user-check")"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @if (!filteredUsers.Any())
+                {
+                    <div class="text-center py-5">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No users found</h5>
+                        <p class="text-muted">Try adjusting your search criteria or create a new user.</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="User pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
+                    <button class="page-link" @onclick="() => GoToPage(currentPage - 1)">Previous</button>
+                </li>
+                
+                @for (int i = Math.Max(1, currentPage - 2); i <= Math.Min(totalPages, currentPage + 2); i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <button class="page-link" @onclick="() => GoToPage(i)">@i</button>
+                    </li>
+                }
+                
+                <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
+                    <button class="page-link" @onclick="() => GoToPage(currentPage + 1)">Next</button>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+
+@code {
+    private List<UserListItem> allUsers = new();
+    private List<UserListItem> filteredUsers = new();
+    private string searchTerm = string.Empty;
+    private int currentPage = 1;
+    private int pageSize = 20;
+    private int totalPages = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ExecuteAsync(async () =>
+        {
+            await LoadUsers();
+        }, "Loading users");
+    }
+
+    private async Task LoadUsers()
+    {
+        // In a real implementation, this would come from a service
+        // For now, we'll simulate some user data
+        await Task.Delay(500); // Simulate API call
+
+        var users = UserManager.Users.ToList();
+        allUsers = users.Select(u => new UserListItem
+        {
+            Id = u.Id,
+            Email = u.Email ?? "",
+            FullName = $"{u.FirstName} {u.LastName}".Trim(),
+            TenantName = "Sample Tenant", // Would come from tenant service
+            IsBackendUser = false, // Would determine from roles
+            Roles = new List<string> { "General User" }, // Would come from UserManager.GetRolesAsync
+            LastLoginAt = DateTime.Now.AddDays(-Random.Shared.Next(0, 30)),
+            IsActive = true
+        }).ToList();
+
+        // Add some sample backend users
+        allUsers.AddRange(new[]
+        {
+            new UserListItem
+            {
+                Id = Guid.NewGuid().ToString(),
+                Email = "developer@eastseat.com",
+                FullName = "John Developer",
+                TenantName = "",
+                IsBackendUser = true,
+                Roles = new List<string> { "Developer" },
+                LastLoginAt = DateTime.Now.AddHours(-2),
+                IsActive = true
+            },
+            new UserListItem
+            {
+                Id = Guid.NewGuid().ToString(),
+                Email = "support@eastseat.com",
+                FullName = "Jane Support",
+                TenantName = "",
+                IsBackendUser = true,
+                Roles = new List<string> { "Support" },
+                LastLoginAt = DateTime.Now.AddMinutes(-30),
+                IsActive = true
+            }
+        });
+
+        FilterUsers();
+    }
+
+    private void FilterUsers()
+    {
+        filteredUsers = string.IsNullOrWhiteSpace(searchTerm)
+            ? allUsers
+            : allUsers.Where(u => 
+                u.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                u.FullName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                u.TenantName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+            ).ToList();
+
+        totalPages = (int)Math.Ceiling((double)filteredUsers.Count / pageSize);
+        currentPage = 1;
+        ApplyPagination();
+    }
+
+    private void ApplyPagination()
+    {
+        var startIndex = (currentPage - 1) * pageSize;
+        filteredUsers = filteredUsers.Skip(startIndex).Take(pageSize).ToList();
+    }
+
+    private void GoToPage(int page)
+    {
+        if (page >= 1 && page <= totalPages)
+        {
+            currentPage = page;
+            FilterUsers();
+        }
+    }
+
+    private void ShowCreateUserModal()
+    {
+        // Navigate to create user page or show modal
+        Navigation.NavigateTo("/backend/users/create");
+    }
+
+    private void ViewUser(string userId)
+    {
+        Navigation.NavigateTo($"/backend/users/{userId}");
+    }
+
+    private void EditUser(string userId)
+    {
+        Navigation.NavigateTo($"/backend/users/{userId}/edit");
+    }
+
+    private void ImpersonateUser(string userId)
+    {
+        // Implement user impersonation functionality
+        // This would allow backend users to temporarily act as tenant users for support
+    }
+
+    private async Task ToggleUserStatus(string userId)
+    {
+        await ExecuteAsync(async () =>
+        {
+            // Implement toggle user active/inactive status
+            await Task.Delay(100); // Simulate API call
+            await LoadUsers(); // Refresh the list
+        }, "Updating user status");
+    }
+
+    private class UserListItem
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
+        public string TenantName { get; set; } = string.Empty;
+        public bool IsBackendUser { get; set; }
+        public List<string> Roles { get; set; } = new();
+        public DateTime? LastLoginAt { get; set; }
+        public bool IsActive { get; set; }
+    }
+}
+
+<style>
+    .backend-users {
+        padding: 20px;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 20px;
+    }
+
+    .page-header h1 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+
+    .search-box {
+        position: relative;
+    }
+
+    .user-email {
+        display: flex;
+        align-items: center;
+    }
+
+    .table th {
+        border-top: none;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .btn-group-sm .btn {
+        padding: 0.25rem 0.5rem;
+    }
+
+    .pagination .page-link {
+        color: #2c3e50;
+        border-color: #dee2e6;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #2c3e50;
+        border-color: #2c3e50;
+    }
+</style>
