@@ -10,6 +10,7 @@ using EastSeat.ResourceIdea.Web.Services;
 using EastSeat.ResourceIdea.Web.Middleware;
 using EastSeat.ResourceIdea.Web.Extensions;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,9 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 })
 .AddEntityFrameworkStores<ResourceIdeaDBContext>()
 .AddDefaultTokenProviders();
+
+// Add claims transformation to inject TenantId claim
+builder.Services.AddScoped<IClaimsTransformation, TenantClaimsTransformation>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
