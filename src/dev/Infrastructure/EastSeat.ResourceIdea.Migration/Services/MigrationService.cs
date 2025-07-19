@@ -581,7 +581,9 @@ public class MigrationService
             return null;
         }
 
-        var lookupQuery = new SqlCommand($"SELECT [{column.LookupColumn}] FROM [{column.LookupTable}] WHERE [{column.LookupCondition}] = @lookupValue", connection, transaction);
+        // Handle schema-qualified table names properly
+        var lookupTableReference = FormatTableReference(column.LookupTable!);
+        var lookupQuery = new SqlCommand($"SELECT [{column.LookupColumn}] FROM {lookupTableReference} WHERE [{column.LookupCondition}] = @lookupValue", connection, transaction);
         lookupQuery.Parameters.AddWithValue("@lookupValue", lookupValue);
 
         using var reader = lookupQuery.ExecuteReader();
@@ -594,6 +596,26 @@ public class MigrationService
         reader.Close();
 
         return null;
+    }
+
+    /// <summary>
+    /// Formats a table reference with proper schema and table name escaping.
+    /// </summary>
+    /// <param name="tableReference">The table reference which may include schema (e.g. "identity.ApplicationUsers" or "Tenants").</param>
+    /// <returns>A properly formatted table reference for SQL queries.</returns>
+    private static string FormatTableReference(string tableReference)
+    {
+        if (tableReference.Contains('.'))
+        {
+            var parts = tableReference.Split('.');
+            if (parts.Length == 2)
+            {
+                return $"[{parts[0]}].[{parts[1]}]";
+            }
+        }
+
+        // If no schema, just escape the table name
+        return $"[{tableReference}]";
     }
 
     /// <summary>
@@ -1037,7 +1059,7 @@ public class MigrationService
             "address_building" => " ",
             "address_street" => " ",
             "address_city" => " ",
-            "engagementstatus" => "Active",
+            "engagementstatus" => "InProgress",
             "startdate" => "SYSDATETIMEOFFSET()",
             "enddate" => "NULL",
             "managerid" => "NULL",
@@ -1054,7 +1076,7 @@ public class MigrationService
             "lockoutend" => "NULL",
             "lockoutenabled" => "0",
             "accessfailedcount" => "0",
-            "status" => "NotStarted",
+            "status" => "InProgress",
             "priority" => "2",
             _ when column.Type.Contains("bit") => "0",
             _ when column.Type.Contains("datetime") => "NULL",
