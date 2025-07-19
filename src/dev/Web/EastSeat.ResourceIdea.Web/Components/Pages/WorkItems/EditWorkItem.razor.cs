@@ -27,7 +27,6 @@ public partial class EditWorkItem : ResourceIdeaComponentBase
     public Guid Id { get; set; }
 
     [Inject] public IMediator Mediator { get; set; } = default!;
-    [Inject] public NavigationManager Navigation { get; set; } = default!;
     [Inject] public IResourceIdeaRequestContext RequestContext { get; set; } = default!;
     [Inject] public NotificationService NotificationService { get; set; } = default!;
 

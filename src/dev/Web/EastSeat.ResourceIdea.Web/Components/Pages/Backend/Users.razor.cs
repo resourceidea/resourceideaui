@@ -126,7 +126,7 @@ public partial class Users : ResourceIdeaComponentBase
                 LastLoginAt = DateTime.Now.AddMinutes(-30),
                 IsActive = true
             }
-        };
+        }.ToList();
     }
 
     private void FilterUsers()

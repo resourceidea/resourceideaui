@@ -1,6 +1,7 @@
-using EastSeat.ResourceIdea.Web.Components.Common.Notification;
+using EastSeat.ResourceIdea.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace EastSeat.ResourceIdea.Web.Components.Layout;
 
