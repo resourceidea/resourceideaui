@@ -9,6 +9,8 @@ using EastSeat.ResourceIdea.DataStore.Identity;
 using EastSeat.ResourceIdea.Web.Services;
 using EastSeat.ResourceIdea.Web.Middleware;
 using EastSeat.ResourceIdea.Web.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,18 +36,21 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = false;
-    
+
     // Lockout settings
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.AllowedForNewUsers = true;
-    
+
     // User settings
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = true;
 })
 .AddEntityFrameworkStores<ResourceIdeaDBContext>()
 .AddDefaultTokenProviders();
+
+// Add claims transformation to inject TenantId claim
+builder.Services.AddScoped<IClaimsTransformation, TenantClaimsTransformation>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -65,7 +70,7 @@ builder.Services.AddAuthorizationCore(options =>
 });
 
 // Add MediatR
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateDepartmentCommandHandler).Assembly));
+builder.Services.AddMediatR(typeof(CreateDepartmentCommandHandler).Assembly);
 
 // Add centralized exception handling service
 builder.Services.AddScoped<IExceptionHandlingService, ExceptionHandlingService>();

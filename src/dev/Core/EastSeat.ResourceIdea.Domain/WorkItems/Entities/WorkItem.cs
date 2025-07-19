@@ -44,7 +44,7 @@ public class WorkItem : BaseEntity
     /// <summary>
     /// Date when the work item is to start.
     /// </summary>
-    public DateTimeOffset? StartDate { get; set; }
+    public DateTimeOffset? PlannedStartDate { get; set; }
 
     /// <summary>
     /// Date when the work item was completed.
@@ -65,6 +65,14 @@ public class WorkItem : BaseEntity
     /// ID of the employee assigned to this work item.
     /// </summary>
     public EmployeeId? AssignedToId { get; set; }
+
+    public DateTimeOffset? PlannedEndDate { get; set; }
+
+    public string? MigrationJobId { get; set; }
+
+    public string? MigrationJobResourceId { get; set; }
+
+    public string? MigrationResourceId { get; set; }
 
     /// <summary>
     /// Engagement associated with the work item.
@@ -90,7 +98,7 @@ public class WorkItem : BaseEntity
                 ClientId = Engagement?.ClientId,
                 ClientName = Engagement?.Client?.Name ?? string.Empty,
                 TenantId = TenantId,
-                StartDate = StartDate,
+                StartDate = PlannedStartDate,
                 CompletedDate = CompletedDate,
                 Status = Status,
                 Priority = Priority,

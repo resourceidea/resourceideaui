@@ -1,4 +1,5 @@
 using EastSeat.ResourceIdea.Domain.Exceptions;
+using EastSeat.ResourceIdea.Web.Exceptions;
 using Microsoft.AspNetCore.Components;
 
 namespace EastSeat.ResourceIdea.Web.Services;
@@ -25,7 +26,7 @@ public class ExceptionHandlingService : IExceptionHandlingService
     public async Task<string> HandleExceptionAsync(Exception exception, ComponentBase component, string? context = null)
     {
         var errorMessage = await HandleExceptionAsync(exception, context);
-        
+
         // Component state change is handled by the ResourceIdeaComponentBase
         return errorMessage;
     }
@@ -57,6 +58,11 @@ public class ExceptionHandlingService : IExceptionHandlingService
             var errorMessage = await HandleExceptionAsync(ex, context);
             return ExceptionHandlingResult.Failure(errorMessage, ex);
         }
+        catch (TenantAuthenticationException ex)
+        {
+            var errorMessage = await HandleExceptionAsync(ex, context);
+            return ExceptionHandlingResult.Failure(errorMessage, ex);
+        }
         catch (ResourceIdeaException ex)
         {
             var errorMessage = await HandleExceptionAsync(ex, context);
@@ -69,7 +75,7 @@ public class ExceptionHandlingService : IExceptionHandlingService
             {
                 throw;
             }
-            
+
             var errorMessage = await HandleExceptionAsync(ex, context);
             return ExceptionHandlingResult.Failure(errorMessage, ex);
         }
@@ -102,6 +108,11 @@ public class ExceptionHandlingService : IExceptionHandlingService
             var errorMessage = await HandleExceptionAsync(ex, context);
             return ExceptionHandlingResult<T>.Failure(errorMessage, ex);
         }
+        catch (TenantAuthenticationException ex)
+        {
+            var errorMessage = await HandleExceptionAsync(ex, context);
+            return ExceptionHandlingResult<T>.Failure(errorMessage, ex);
+        }
         catch (ResourceIdeaException ex)
         {
             var errorMessage = await HandleExceptionAsync(ex, context);
@@ -114,7 +125,7 @@ public class ExceptionHandlingService : IExceptionHandlingService
             {
                 throw;
             }
-            
+
             var errorMessage = await HandleExceptionAsync(ex, context);
             return ExceptionHandlingResult<T>.Failure(errorMessage, ex);
         }
@@ -130,6 +141,7 @@ public class ExceptionHandlingService : IExceptionHandlingService
             ArgumentException => "An error occurred due to invalid input. Please check your parameters.",
             InvalidOperationException => "An invalid operation occurred. Please try again.",
             UnauthorizedAccessException => "You don't have permission to perform this operation.",
+            TenantAuthenticationException => exception.Message, // Use the specific message for tenant auth issues
             ResourceIdeaException domain => GetDomainExceptionMessage(domain),
             HttpRequestException => "A network error occurred. Please check your connection and try again.",
             NotSupportedException => "This operation is not supported.",
@@ -152,27 +164,31 @@ public class ExceptionHandlingService : IExceptionHandlingService
     {
         // Log the exception details for debugging and monitoring
         var logContext = !string.IsNullOrEmpty(context) ? $" in context: {context}" : "";
-        
+
         switch (exception)
         {
             case TaskCanceledException:
             case TimeoutException:
                 _logger.LogWarning(exception, "Operation canceled or timed out{Context}", logContext);
                 break;
-            
+
             case ArgumentNullException:
             case ArgumentException:
                 _logger.LogWarning(exception, "Invalid argument provided{Context}", logContext);
                 break;
-            
+
             case UnauthorizedAccessException:
                 _logger.LogWarning(exception, "Unauthorized access attempt{Context}", logContext);
                 break;
-            
+
+            case TenantAuthenticationException:
+                _logger.LogWarning(exception, "Tenant authentication issue{Context}", logContext);
+                break;
+
             case ResourceIdeaException:
                 _logger.LogWarning(exception, "Domain exception occurred{Context}", logContext);
                 break;
-            
+
             default:
                 _logger.LogError(exception, "Unexpected exception occurred{Context}", logContext);
                 break;

@@ -45,5 +45,17 @@ public sealed class JobPositionConfiguration
 
         builder.Property(jobPosition => jobPosition.Description)
                .HasMaxLength(500);
+
+        builder.Property(jobPosition => jobPosition.MigrationJobPositionId)
+               .IsRequired(false)
+               .HasMaxLength(50);
+
+        builder.Property(jobPosition => jobPosition.MigrationJobLevel)
+                .IsRequired(false)
+                .HasMaxLength(50);
+
+        builder.Property(jobPosition => jobPosition.MigrationCompanyCode)
+                .IsRequired(false)
+                .HasMaxLength(50);
     }
 }

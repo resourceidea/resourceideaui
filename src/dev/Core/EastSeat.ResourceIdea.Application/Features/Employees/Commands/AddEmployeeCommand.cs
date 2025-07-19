@@ -40,7 +40,7 @@ public class AddEmployeeCommand : BaseRequest<EmployeeModel>
         JobPositionId = JobPositionId,
         TenantId = TenantId,
         EmployeeNumber = EmployeeNumber,
-        ManagerId = EmployeeId.Empty,
+        ReportsTo = EmployeeId.Empty,
         ApplicationUserId = ApplicationUserId.Create(Guid.NewGuid()),
         FirstName = FirstName,
         LastName = LastName,

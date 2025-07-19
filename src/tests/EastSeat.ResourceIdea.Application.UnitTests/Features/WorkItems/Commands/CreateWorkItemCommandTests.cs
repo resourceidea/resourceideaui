@@ -118,7 +118,7 @@ public class CreateWorkItemCommandTests
         Assert.Equal(command.Description, workItem.Description);
         Assert.Equal(command.EngagementId, workItem.EngagementId);
         Assert.Equal(command.TenantId, workItem.TenantId);
-        Assert.Equal(command.StartDate, workItem.StartDate);
+        Assert.Equal(command.StartDate, workItem.PlannedStartDate);
         Assert.Equal(command.Priority, workItem.Priority);
         Assert.Equal(WorkItemStatus.NotStarted, workItem.Status);
         Assert.False(workItem.Id.IsEmpty());

@@ -8,6 +8,7 @@ using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Employees.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Employees.Specifications;
+using EastSeat.ResourceIdea.DataStore.Extensions;
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
@@ -212,17 +213,17 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
         {
             return new TenantEmployeeModel
             {
-                EmployeeId = EmployeeId.Create(reader.GetString(reader.GetOrdinal("EmployeeId"))),
-                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                Email = reader.GetString(reader.GetOrdinal("Email")),
-                EmployeeNumber = reader.GetString(reader.GetOrdinal("EmployeeNumber")),
-                JobPositionId = JobPositionId.Create(reader.GetString(reader.GetOrdinal("JobPositionId"))),
-                JobPositionTitle = reader.GetString(reader.GetOrdinal("JobPositionTitle")),
-                DepartmentId = DepartmentId.Create(reader.GetString(reader.GetOrdinal("DepartmentId"))),
-                DepartmentName = reader.GetString(reader.GetOrdinal("DepartmentName")),
-                ApplicationUserId = ApplicationUserId.Create(reader.GetString(reader.GetOrdinal("ApplicationUserId"))),
-                TenantId = TenantId.Create(reader.GetString(reader.GetOrdinal("TenantId")))
+                EmployeeId = reader.GetEmployeeId("EmployeeId"),
+                FirstName = reader.GetNullableString("FirstName"),
+                LastName = reader.GetNullableString("LastName"),
+                Email = reader.GetNullableString("Email"),
+                EmployeeNumber = reader.GetNullableString("EmployeeNumber"),
+                JobPositionId = reader.GetJobPositionIdOrEmpty("JobPositionId"),
+                JobPositionTitle = reader.GetNullableString("JobPositionTitle"),
+                DepartmentId = reader.GetDepartmentIdOrEmpty("DepartmentId"),
+                DepartmentName = reader.GetNullableString("DepartmentName"),
+                ApplicationUserId = reader.GetApplicationUserId("ApplicationUserId"),
+                TenantId = reader.GetTenantId("TenantId")
             };
         }
 
@@ -245,7 +246,7 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
                               jp.Title as 'JobPositionTitle',
                               d.Id as 'DepartmentId', d.Name as 'DepartmentName'
                        FROM [dbo].[Employees] e
-                       JOIN [Identity].[ApplicationUsers] u ON e.ApplicationUserId = u.ApplicationUserId
+                       LEFT JOIN [Identity].[ApplicationUsers] u ON e.ApplicationUserId = u.ApplicationUserId
                        LEFT JOIN [dbo].[JobPositions] jp ON e.JobPositionId = jp.Id
                        LEFT JOIN [dbo].[Departments] d ON jp.DepartmentId = d.Id
                        WHERE e.TenantId = @TenantId
@@ -271,15 +272,15 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
         {
             var tenantEmployee = new TenantEmployeeModel
             {
-                EmployeeId = EmployeeId.Create(reader.GetString(reader.GetOrdinal("EmployeeId"))),
-                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                Email = reader.GetString(reader.GetOrdinal("Email")),
-                EmployeeNumber = reader.GetString(reader.GetOrdinal("EmployeeNumber")),
-                JobPositionId = JobPositionId.Create(reader.GetString(reader.GetOrdinal("JobPositionId"))),
-                JobPositionTitle = reader.GetString(reader.GetOrdinal("JobPositionTitle")),
-                DepartmentId = DepartmentId.Create(reader.GetString(reader.GetOrdinal("DepartmentId"))),
-                DepartmentName = reader.GetString(reader.GetOrdinal("DepartmentName"))
+                EmployeeId = reader.GetEmployeeId("EmployeeId"),
+                FirstName = reader.GetNullableString("FirstName"),
+                LastName = reader.GetNullableString("LastName"),
+                Email = reader.GetNullableString("Email"),
+                EmployeeNumber = reader.GetNullableString("EmployeeNumber"),
+                JobPositionId = reader.GetJobPositionIdOrEmpty("JobPositionId"),
+                JobPositionTitle = reader.GetNullableString("JobPositionTitle"),
+                DepartmentId = reader.GetDepartmentIdOrEmpty("DepartmentId"),
+                DepartmentName = reader.GetNullableString("DepartmentName")
             };
 
             queryResults.Add(tenantEmployee);
