@@ -1,6 +1,7 @@
 ﻿using Microsoft.Playwright;
 using Microsoft.AspNetCore.Mvc.Testing;
 using EastSeat.ResourceIdea.Web;
+using Xunit;
 
 namespace EastSeat.ResourceIdea.Web.E2ETests;
 
@@ -25,12 +26,20 @@ public class BaseE2ETest : IDisposable
 
     protected async Task InitializePlaywrightAsync()
     {
-        _playwright = await Playwright.CreateAsync();
-        _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        try
         {
-            Headless = true
-        });
-        _page = await _browser.NewPageAsync();
+            _playwright = await Playwright.CreateAsync();
+            _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+            {
+                Headless = true
+            });
+            _page = await _browser.NewPageAsync();
+        }
+        catch (PlaywrightException ex) when (ex.Message.Contains("Executable doesn't exist"))
+        {
+            // Browser not installed - re-throw to let test handle this
+            throw;
+        }
     }
 
     protected async Task NavigateToAsync(string path)

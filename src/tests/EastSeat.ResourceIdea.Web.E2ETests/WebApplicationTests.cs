@@ -18,7 +18,7 @@ public class WebApplicationTests : IDisposable
     }
 
     [Fact]
-    public async Task WebApplication_CanStart()
+    public void WebApplication_CanStart()
     {
         // This test verifies that the web application can be started
         Assert.NotNull(_factory);
