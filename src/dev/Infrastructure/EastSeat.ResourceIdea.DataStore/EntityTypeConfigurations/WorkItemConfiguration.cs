@@ -39,10 +39,13 @@ public class WorkItemConfiguration : BaseEntityConfiguration<WorkItem>
                 engagementId => engagementId.Value.ToString(),
                 value => EngagementId.Create(value));
 
-        builder.Property(workItem => workItem.StartDate)
+        builder.Property(workItem => workItem.PlannedStartDate)
             .IsRequired(false);
 
         builder.Property(workItem => workItem.CompletedDate)
+            .IsRequired(false);
+
+        builder.Property(workItem => workItem.PlannedEndDate)
             .IsRequired(false);
 
         builder.Property(workItem => workItem.Status)
@@ -58,5 +61,17 @@ public class WorkItemConfiguration : BaseEntityConfiguration<WorkItem>
             .HasConversion(
                 employeeId => employeeId == null ? null : employeeId.Value.ToString(),
                 value => string.IsNullOrEmpty(value) ? null : EmployeeId.Create(value));
+
+        builder.Property(workItem => workItem.MigrationJobId)
+            .IsRequired(false)
+            .HasMaxLength(100);
+
+        builder.Property(workItem => workItem.MigrationJobResourceId)
+            .IsRequired(false)
+            .HasMaxLength(100);
+        
+        builder.Property(workItem => workItem.MigrationResourceId)
+            .IsRequired(false)
+            .HasMaxLength(100);
     }
 }

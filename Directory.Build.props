@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <!-- Central package version management -->
+    <MediatRVersion>11.1.0</MediatRVersion>
+    <MediatRExtensionsVersion>11.1.0</MediatRExtensionsVersion>
+  </PropertyGroup>
+  
+  <!-- 
+    MediatR is pinned to version 11.1.0 to avoid licensing issues introduced in v13.x+
+    DO NOT UPGRADE without reviewing licensing implications.
+    See: https://github.com/jbogard/MediatR/issues/868
+  -->
+  
+</Project>

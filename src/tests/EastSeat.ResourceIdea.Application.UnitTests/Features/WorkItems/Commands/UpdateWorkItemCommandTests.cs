@@ -52,7 +52,7 @@ public class UpdateWorkItemCommandTests
         Assert.Equal(WorkItemStatus.InProgress, workItem.Status);
         Assert.Equal(Priority.High, workItem.Priority);
         Assert.Equal(assignedToId, workItem.AssignedToId);
-        Assert.Equal(startDate, workItem.StartDate);
+        Assert.Equal(startDate, workItem.PlannedStartDate);
         Assert.Equal(completedDate, workItem.CompletedDate);
     }
 
@@ -98,7 +98,7 @@ public class UpdateWorkItemCommandTests
         var workItem = command.ToEntity();
 
         // Assert
-        Assert.Null(workItem.StartDate);
+        Assert.Null(workItem.PlannedStartDate);
         Assert.Null(workItem.CompletedDate);
     }
 

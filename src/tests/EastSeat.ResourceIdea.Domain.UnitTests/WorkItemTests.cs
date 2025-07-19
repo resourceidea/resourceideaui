@@ -24,7 +24,7 @@ namespace EastSeat.ResourceIdea.Domain.UnitTests.WorkItems
                 Description = "Test work item description",
                 EngagementId = EngagementId.Create(Guid.NewGuid()),
                 TenantId = TenantId.Create(Guid.NewGuid()),
-                StartDate = DateTimeOffset.UtcNow.AddDays(-5),
+                PlannedStartDate = DateTimeOffset.UtcNow.AddDays(-5),
                 CompletedDate = DateTimeOffset.UtcNow,
                 Status = WorkItemStatus.Completed,
                 Priority = Priority.Critical,
@@ -41,7 +41,7 @@ namespace EastSeat.ResourceIdea.Domain.UnitTests.WorkItems
             Assert.Equal(workItem.Description, model.Description);
             Assert.Equal(workItem.EngagementId, model.EngagementId);
             Assert.Equal(workItem.TenantId, model.TenantId);
-            Assert.Equal(workItem.StartDate, model.StartDate);
+            Assert.Equal(workItem.PlannedStartDate, model.StartDate);
             Assert.Equal(workItem.CompletedDate, model.CompletedDate);
             Assert.Equal(workItem.Status, model.Status);
             Assert.Equal(workItem.Priority, model.Priority);

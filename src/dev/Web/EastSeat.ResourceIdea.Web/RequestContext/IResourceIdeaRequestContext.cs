@@ -14,4 +14,26 @@ namespace EastSeat.ResourceIdea.Web.RequestContext;
 public interface IResourceIdeaRequestContext
 {
     TenantId Tenant { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the current user is a backend user (Developer or Support).
+    /// </summary>
+    bool IsBackendUser { get; }
+
+    /// <summary>
+    /// Gets the TenantId for the current user. If the user is not authenticated or
+    /// the TenantId claim is missing, throws a TenantAuthenticationException.
+    /// </summary>
+    /// <returns>The TenantId for the current user.</returns>
+    /// <exception cref="EastSeat.ResourceIdea.Web.Exceptions.TenantAuthenticationException">
+    /// Thrown when the user is not authenticated or the TenantId claim is missing.
+    /// </exception>
+    Task<TenantId> GetTenantId();
+
+    /// <summary>
+    /// Gets a value indicating whether the current user has access to backend functionality.
+    /// Backend users (Developer/Support) should have access to all tenant data for support purposes.
+    /// </summary>
+    /// <returns>True if the user is a backend user, false otherwise.</returns>
+    bool HasBackendAccess();
 }

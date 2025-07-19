@@ -28,11 +28,11 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
                     value => TenantId.Create(value));
 
         builder.Property(applicationUser => applicationUser.FirstName)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(100);
 
         builder.Property(applicationUser => applicationUser.LastName)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(100);
     }
 }
