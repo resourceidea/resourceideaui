@@ -202,7 +202,7 @@
           {
             "name": "ClientId",
             "type": "nvarchar(450)",
-            "isMigratable": false,
+            "isMigratable": true,
             "lookupTable": "Clients",
             "lookupColumn": "Id",
             "lookupCondition": "MigrationClientId",
@@ -227,7 +227,7 @@
           {
             "name": "TenantId",
             "type": "nvarchar(max)",
-            "isMigratable": false,
+            "isMigratable": true,
             "lookupTable": "Clients",
             "lookupColumn": "TenantId",
             "lookupCondition": "MigrationClientId",
@@ -359,7 +359,7 @@
           {
             "name": "TenantId",
             "type": "nvarchar(max)",
-            "isMigratable": false,
+            "isMigratable": true,
             "lookupTable": "Tenants",
             "lookupColumn": "TenantId",
             "lookupCondition": "MigrationCompanyCode",
@@ -465,7 +465,7 @@
               {
                 "name": "TenantId",
                 "type": "nvarchar(max)",
-                "isMigratable": false,
+                "isMigratable": true,
                 "lookupTable": "Tenants",
                 "lookupColumn": "TenantId",
                 "lookupCondition": "MigrationCompanyCode",
@@ -474,14 +474,14 @@
               {
                 "name": "FirstName",
                 "type": "nvarchar(100)",
-                "isMigratable": false,
+                "isMigratable": true,
                 "transform": "SplitFullnameFirst",
                 "sourceColumn": "Fullname"
               },
               {
                 "name": "LastName",
                 "type": "nvarchar(100)",
-                "isMigratable": false,
+                "isMigratable": true,
                 "transform": "SplitFullnameLast",
                 "sourceColumn": "Fullname"
               },
@@ -584,7 +584,7 @@
               {
                 "name": "JobPositionId",
                 "type": "nvarchar(450)",
-                "isMigratable": false,
+                "isMigratable": true,
                 "lookupTable": "JobPositions",
                 "lookupColumn": "Id",
                 "lookupCondition": "MigrationJobPositionId",
@@ -593,9 +593,11 @@
               {
                 "name": "ApplicationUserId",
                 "type": "nvarchar(450)",
-                "isMigratable": false,
-                "linkedTable": "ApplicationUsers",
-                "linkedColumn": "Id"
+                "isMigratable": true,
+                "lookupTable": "identity.ApplicationUsers",
+                "lookupColumn": "ApplicationUserId",
+                "lookupCondition": "Email",
+                "lookupSource": "Email"
               },
               {
                 "name": "EmployeeNumber",
@@ -610,7 +612,7 @@
               {
                 "name": "TenantId",
                 "type": "nvarchar(450)",
-                "isMigratable": false,
+                "isMigratable": true,
                 "lookupTable": "Tenants",
                 "lookupColumn": "TenantId",
                 "lookupCondition": "MigrationCompanyCode",
@@ -771,7 +773,7 @@
           {
             "name": "AssignedToId",
             "type": "nvarchar(450)",
-            "isMigratable": false,
+            "isMigratable": true,
             "lookupTable": "Employees",
             "lookupColumn": "EmployeeId",
             "lookupCondition": "MigrationResourceId",
@@ -780,7 +782,7 @@
           {
             "name": "TenantId",
             "type": "nvarchar(max)",
-            "isMigratable": false,
+            "isMigratable": true,
             "lookupTable": "Engagements",
             "lookupColumn": "TenantId",
             "lookupCondition": "MigrationJobId",
