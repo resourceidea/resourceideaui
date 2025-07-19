@@ -24,6 +24,7 @@ public static class DataStoreSetup
     private const string CreateSystemRolesClaimsTaskType = "EastSeat.ResourceIdea.Web.StartupTasks.CreateSystemRolesClaims";
 
     private static readonly string[] _systemRoles = { "Owner", "Administrator", "General User" };
+    private static readonly string[] _backendRoles = { "Developer", "Support" };
 
     /// <summary>
     /// Add the ResourceIdeaDBContext to the service collection
