@@ -27,8 +27,6 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddResourceIdeaDbContext();
 builder.Services.AddResourceIdeaServices();
 
-builder.Services.AddScoped<IUserStore<ApplicationUser>, CustomUserStore>();
-
 // Configure Identity services with SignInManager
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
@@ -77,7 +75,7 @@ builder.Services.AddAuthorizationCore(options =>
     // Policy for tenant access (regular tenant users)
     options.AddPolicy("TenantAccess", policy =>
         policy.RequireAuthenticatedUser()
-        .RequireAssertion(context => 
+        .RequireAssertion(context =>
         {
             // Deny access if user has backend role
             var isBackendRole = context.User.FindFirst("IsBackendRole")?.Value;
