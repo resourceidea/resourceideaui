@@ -1,0 +1,257 @@
+@* ----------------------------------------------------------------------------------
+    File: BackendSidebarNavigation.razor
+    Path: src/Web/EastSeat.ResourceIdea.Web/Components/Shared/BackendSidebarNavigation.razor
+    Description: Backend sidebar navigation for Developer/Support users
+   ---------------------------------------------------------------------------------- *@
+
+<div class="sidebar backend-sidebar" id="backend-sidebar">
+    <!-- Brand Header -->
+    <div class="sidebar-header backend-sidebar-header">
+        <div class="brand">
+            <div class="brand-logo">
+                <img src="/images/resourceidea-logo.svg" alt="ResourceIdea Logo" style="height: 32px; width: auto;" />
+            </div>
+            <span class="brand-text">ResourceIdea</span>
+            <span class="backend-badge">Backend</span>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="sidebar-search">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search..." />
+        </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <div class="sidebar-menu">
+        <!-- Dashboard Section -->
+        <div class="menu-section">
+            <div class="menu-section-header" @onclick="ToggleDashboardSection">
+                <span class="menu-section-title">Dashboard</span>
+                <i class="fas fa-chevron-right section-toggle @(isDashboardExpanded ? "expanded" : "")"></i>
+            </div>
+            <div class="menu-section-content @(isDashboardExpanded ? "expanded" : "")">
+                <NavLink class="menu-item" href="/backend/dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>System Overview</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/backend/analytics">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analytics</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/backend/health">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>System Health</span>
+                </NavLink>
+            </div>
+        </div>
+
+        <!-- User Management Section -->
+        <div class="menu-section">
+            <div class="menu-section-header" @onclick="ToggleUserManagementSection">
+                <span class="menu-section-title">User Management</span>
+                <i class="fas fa-chevron-right section-toggle @(isUserManagementExpanded ? "expanded" : "")"></i>
+            </div>
+            <div class="menu-section-content @(isUserManagementExpanded ? "expanded" : "")">
+                <NavLink class="menu-item" href="/backend/users">
+                    <i class="fas fa-users"></i>
+                    <span>All Users</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/backend/tenants">
+                    <i class="fas fa-building"></i>
+                    <span>Tenant Management</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/backend/roles">
+                    <i class="fas fa-user-tag"></i>
+                    <span>Role Management</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/backend/permissions">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Permissions</span>
+                </NavLink>
+            </div>
+        </div>
+
+        <!-- Data Management Section -->
+        <div class="menu-section">
+            <div class="menu-section-header" @onclick="ToggleDataManagementSection">
+                <span class="menu-section-title">Data Management</span>
+                <i class="fas fa-chevron-right section-toggle @(isDataManagementExpanded ? "expanded" : "")"></i>
+            </div>
+            <div class="menu-section-content @(isDataManagementExpanded ? "expanded" : "")">
+                <NavLink class="menu-item" href="/backend/clients">
+                    <i class="fas fa-briefcase"></i>
+                    <span>All Clients</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/backend/employees">
+                    <i class="fas fa-id-card"></i>
+                    <span>All Employees</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/backend/engagements">
+                    <i class="fas fa-handshake"></i>
+                    <span>All Engagements</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/backend/work-items">
+                    <i class="fas fa-tasks"></i>
+                    <span>All Work Items</span>
+                </NavLink>
+            </div>
+        </div>
+
+        <!-- System Administration Section -->
+        <div class="menu-section">
+            <div class="menu-section-header" @onclick="ToggleSystemAdminSection">
+                <span class="menu-section-title">System Administration</span>
+                <i class="fas fa-chevron-right section-toggle @(isSystemAdminExpanded ? "expanded" : "")"></i>
+            </div>
+            <div class="menu-section-content @(isSystemAdminExpanded ? "expanded" : "")">
+                <NavLink class="menu-item" href="/backend/logs">
+                    <i class="fas fa-file-alt"></i>
+                    <span>System Logs</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/backend/settings">
+                    <i class="fas fa-cogs"></i>
+                    <span>System Settings</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/backend/maintenance">
+                    <i class="fas fa-tools"></i>
+                    <span>Maintenance</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/backend/backup">
+                    <i class="fas fa-database"></i>
+                    <span>Backup & Restore</span>
+                </NavLink>
+            </div>
+        </div>
+
+        <!-- Support Tools Section -->
+        <div class="menu-section">
+            <div class="menu-section-header" @onclick="ToggleSupportToolsSection">
+                <span class="menu-section-title">Support Tools</span>
+                <i class="fas fa-chevron-right section-toggle @(isSupportToolsExpanded ? "expanded" : "")"></i>
+            </div>
+            <div class="menu-section-content @(isSupportToolsExpanded ? "expanded" : "")">
+                <NavLink class="menu-item" href="/backend/impersonate">
+                    <i class="fas fa-user-secret"></i>
+                    <span>User Impersonation</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/backend/support-tickets">
+                    <i class="fas fa-ticket-alt"></i>
+                    <span>Support Tickets</span>
+                </NavLink>
+                <NavLink class="menu-item" href="/backend/audit-trail">
+                    <i class="fas fa-history"></i>
+                    <span>Audit Trail</span>
+                </NavLink>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private enum ExpandedSection
+    {
+        None,
+        Dashboard,
+        UserManagement,
+        DataManagement,
+        SystemAdmin,
+        SupportTools
+    }
+
+    private ExpandedSection currentExpandedSection = ExpandedSection.Dashboard;
+
+    private bool isDashboardExpanded => currentExpandedSection == ExpandedSection.Dashboard;
+    private bool isUserManagementExpanded => currentExpandedSection == ExpandedSection.UserManagement;
+    private bool isDataManagementExpanded => currentExpandedSection == ExpandedSection.DataManagement;
+    private bool isSystemAdminExpanded => currentExpandedSection == ExpandedSection.SystemAdmin;
+    private bool isSupportToolsExpanded => currentExpandedSection == ExpandedSection.SupportTools;
+
+    private void ToggleDashboardSection()
+    {
+        currentExpandedSection = isDashboardExpanded ? ExpandedSection.None : ExpandedSection.Dashboard;
+    }
+
+    private void ToggleUserManagementSection()
+    {
+        currentExpandedSection = isUserManagementExpanded ? ExpandedSection.None : ExpandedSection.UserManagement;
+    }
+
+    private void ToggleDataManagementSection()
+    {
+        currentExpandedSection = isDataManagementExpanded ? ExpandedSection.None : ExpandedSection.DataManagement;
+    }
+
+    private void ToggleSystemAdminSection()
+    {
+        currentExpandedSection = isSystemAdminExpanded ? ExpandedSection.None : ExpandedSection.SystemAdmin;
+    }
+
+    private void ToggleSupportToolsSection()
+    {
+        currentExpandedSection = isSupportToolsExpanded ? ExpandedSection.None : ExpandedSection.SupportTools;
+    }
+}
+
+<style>
+    .backend-sidebar {
+        background: linear-gradient(180deg, #2c3e50, #34495e);
+        border-right: 3px solid #e74c3c;
+    }
+
+    .backend-sidebar-header {
+        background: rgba(231, 76, 60, 0.1);
+        border-bottom: 1px solid #e74c3c;
+    }
+
+    .backend-badge {
+        background-color: #e74c3c;
+        color: white;
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 10px;
+        margin-left: 8px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .backend-sidebar .menu-section-title {
+        color: #ecf0f1;
+        font-weight: 600;
+    }
+
+    .backend-sidebar .menu-item {
+        color: #bdc3c7;
+        border-left: 3px solid transparent;
+    }
+
+    .backend-sidebar .menu-item:hover {
+        background-color: rgba(231, 76, 60, 0.1);
+        color: #ecf0f1;
+        border-left-color: #e74c3c;
+    }
+
+    .backend-sidebar .menu-item.active {
+        background-color: rgba(231, 76, 60, 0.2);
+        color: #ecf0f1;
+        border-left-color: #e74c3c;
+        font-weight: 600;
+    }
+
+    .backend-sidebar .search-input {
+        background-color: rgba(44, 62, 80, 0.8);
+        border: 1px solid #7f8c8d;
+        color: #ecf0f1;
+    }
+
+    .backend-sidebar .search-input::placeholder {
+        color: #95a5a6;
+    }
+
+    .backend-sidebar .search-icon {
+        color: #95a5a6;
+    }
+</style>
