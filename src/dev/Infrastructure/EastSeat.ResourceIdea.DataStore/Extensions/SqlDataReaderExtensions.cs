@@ -86,7 +86,8 @@ public static class SqlDataReaderExtensions
     /// <returns>The ApplicationUserId value.</returns>
     public static ApplicationUserId GetApplicationUserId(this SqlDataReader reader, string columnName)
     {
-        return ApplicationUserId.Create(reader.GetString(reader.GetOrdinal(columnName)));
+        string? value = reader.GetNullableString(columnName);
+        return value != null ? ApplicationUserId.Create(value) : ApplicationUserId.Empty;
     }
 
     /// <summary>
