@@ -1,0 +1,95 @@
+name: Deploy to Azure App Service
+
+on:
+  # Run after both .NET and CodeQL workflows complete successfully on main
+  workflow_run:
+    workflows: [".NET", "CodeQL"]
+    types:
+      - completed
+    branches:
+      - main
+
+  # Scheduled deployment every Wednesday at 3PM East African Time (12:00 UTC)
+  schedule:
+    - cron: '0 12 * * 3'
+
+  # Allow manual triggering for patches and fixes
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: deploy-to-azure
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # For workflow_run events, check that both workflows completed successfully
+      - name: Check workflow status
+        if: github.event_name == 'workflow_run'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: dotnetRuns } = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: '.github/workflows/dotnet.yml',
+              head_sha: context.sha,
+              per_page: 1
+            });
+            
+            const { data: codeqlRuns } = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: '.github/workflows/codeql.yml',
+              head_sha: context.sha,
+              per_page: 1
+            });
+            
+            const dotnetSuccess = dotnetRuns.workflow_runs[0]?.conclusion === 'success';
+            const codeqlSuccess = codeqlRuns.workflow_runs[0]?.conclusion === 'success';
+            
+            console.log(`DotNet workflow success: ${dotnetSuccess}`);
+            console.log(`CodeQL workflow success: ${codeqlSuccess}`);
+            
+            if (!dotnetSuccess || !codeqlSuccess) {
+              core.setFailed('Both .NET and CodeQL workflows must complete successfully before deployment');
+            }
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ./EastSeat.ResourceIdea.slnx
+
+      - name: Build for Release
+        run: >
+          dotnet build ./EastSeat.ResourceIdea.slnx
+          --configuration Release --no-restore --framework net9.0
+
+      - name: Install EF Core tools
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Run EF Core database migrations
+        run: >
+          dotnet ef database update
+          --project ./src/dev/Infrastructure/EastSeat.ResourceIdea.DataStore/
+          --startup-project ./src/dev/Web/EastSeat.ResourceIdea.Web/
+          --connection "${{ secrets.AZURE_DATABASE_CONNECTION_STRING }}"
+          --configuration Release
+
+      - name: Publish web application
+        run: >
+          dotnet publish
+          ./src/dev/Web/EastSeat.ResourceIdea.Web/
+          EastSeat.ResourceIdea.Web.csproj
+          --configuration Release --no-build --output ./publish
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish
