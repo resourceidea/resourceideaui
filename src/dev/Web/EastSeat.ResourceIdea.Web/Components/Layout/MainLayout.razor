@@ -1,6 +1,4 @@
 @inherits LayoutComponentBase
-@inject NotificationService NotificationService
-@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="app-container">
     <!-- Sidebar Navigation -->
@@ -37,6 +35,9 @@
 
         <!-- Page Content -->
         <main class="page-content">
+            <div class="notification-container">
+                <NotificationAlert Notification="@currentNotification" OnDismiss="ClearNotification" />
+            </div>
             @Body
         </main>
 
@@ -48,16 +49,3 @@
         </footer>
     </div>
 </div>
-
-@code {
-    private string currentUserName = "User";
-
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (authState.User.Identity?.IsAuthenticated == true)
-        {
-            currentUserName = authState.User.Identity.Name ?? "User";
-        }
-    }
-}
