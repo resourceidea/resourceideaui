@@ -6,8 +6,11 @@
 
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Commands;
 using EastSeat.ResourceIdea.Application.Features.JobPositions.Queries;
+using EastSeat.ResourceIdea.Application.Features.Employees.Queries;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Employees.Models;
+using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
@@ -29,10 +32,13 @@ public partial class JobPositionDetail : ResourceIdeaComponentBase
     private bool IsLoadingModelData = true;
 
     public JobPositionModel Model { get; set; } = new();
+    public PagedListResponse<TenantEmployeeModel>? PagedEmployeesList { get; set; }
+    private int currentEmployeePage = 1;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadJobPositionData();
+        await LoadEmployeesData();
     }
 
     private async Task LoadJobPositionData()
@@ -100,5 +106,37 @@ public partial class JobPositionDetail : ResourceIdeaComponentBase
                 isErrorMessage = true;
             }
         }, "Updating job position", manageLoadingState: false);
+    }
+
+    private async Task LoadEmployeesData()
+    {
+        await ExecuteAsync(async () =>
+        {
+            var jobPositionId = JobPositionId.Create(Id);
+            var query = new GetEmployeesByJobPositionIdQuery
+            {
+                JobPositionId = jobPositionId,
+                TenantId = ResourceIdeaRequestContext.Tenant,
+                PageNumber = currentEmployeePage,
+                PageSize = 10
+            };
+
+            var response = await Mediator.Send(query);
+
+            if (response.IsSuccess && response.Content.HasValue)
+            {
+                PagedEmployeesList = response.Content.Value;
+            }
+            else
+            {
+                PagedEmployeesList = null;
+            }
+        }, "Loading employees data", manageLoadingState: false);
+    }
+
+    private async Task OnEmployeePageChange(int pageNumber)
+    {
+        currentEmployeePage = pageNumber;
+        await LoadEmployeesData();
     }
 }
