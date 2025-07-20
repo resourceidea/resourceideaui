@@ -2,6 +2,9 @@ using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.DataStore;
 using EastSeat.ResourceIdea.DataStore.Services;
+using EastSeat.ResourceIdea.Domain.Clients.Entities;
+using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
+using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
@@ -112,7 +115,12 @@ public class WorkItemsServiceTests : IDisposable
     public async Task GetByIdAsync_WhenWorkItemExists_ShouldReturnSuccessResponse()
     {
         // Arrange
-        var workItem = CreateTestWorkItem();
+        var tenantId = TenantId.Create(Guid.NewGuid());
+        var engagement = CreateTestEngagement("Test Engagement", tenantId);
+        await _context.Engagements.AddAsync(engagement);
+        await _context.SaveChangesAsync();
+
+        var workItem = CreateTestWorkItem("Test Work Item", tenantId, engagement.Id);
         await _context.WorkItems.AddAsync(workItem);
         await _context.SaveChangesAsync();
 
@@ -166,11 +174,21 @@ public class WorkItemsServiceTests : IDisposable
     public async Task GetPagedListAsync_WhenWorkItemsExist_ShouldReturnPagedResponse()
     {
         // Arrange
+        var tenantId = TenantId.Create(Guid.NewGuid());
+        var engagements = new[]
+        {
+            CreateTestEngagement("Engagement 1", tenantId),
+            CreateTestEngagement("Engagement 2", tenantId)
+        };
+
+        await _context.Engagements.AddRangeAsync(engagements);
+        await _context.SaveChangesAsync();
+
         var workItems = new[]
         {
-            CreateTestWorkItem("Work Item 1"),
-            CreateTestWorkItem("Work Item 2"),
-            CreateTestWorkItem("Work Item 3")
+            CreateTestWorkItem("Work Item 1", tenantId, engagements[0].Id),
+            CreateTestWorkItem("Work Item 2", tenantId, engagements[1].Id),
+            CreateTestWorkItem("Work Item 3", tenantId, engagements[0].Id)
         };
 
         await _context.WorkItems.AddRangeAsync(workItems);
@@ -195,11 +213,23 @@ public class WorkItemsServiceTests : IDisposable
     {
         // Arrange
         var tenantId = TenantId.Create(Guid.NewGuid());
+        var otherTenantId = TenantId.Create(Guid.NewGuid());
+
+        var engagements = new[]
+        {
+            CreateTestEngagement("Engagement 1", tenantId),
+            CreateTestEngagement("Engagement 2", tenantId),
+            CreateTestEngagement("Engagement 3", otherTenantId)
+        };
+
+        await _context.Engagements.AddRangeAsync(engagements);
+        await _context.SaveChangesAsync();
+
         var workItems = new[]
         {
-            CreateTestWorkItem("Work Item 1", tenantId),
-            CreateTestWorkItem("Work Item 2", tenantId),
-            CreateTestWorkItem("Work Item 3", TenantId.Create(Guid.NewGuid())) // Different tenant
+            CreateTestWorkItem("Work Item 1", tenantId, engagements[0].Id),
+            CreateTestWorkItem("Work Item 2", tenantId, engagements[1].Id),
+            CreateTestWorkItem("Work Item 3", otherTenantId, engagements[2].Id) // Different tenant
         };
 
         await _context.WorkItems.AddRangeAsync(workItems);
@@ -271,18 +301,33 @@ public class WorkItemsServiceTests : IDisposable
         _context.Dispose();
     }
 
-    private static WorkItem CreateTestWorkItem(string title = "Test Work Item", TenantId? tenantId = null)
+    private static WorkItem CreateTestWorkItem(string title = "Test Work Item", TenantId? tenantId = null, EngagementId? engagementId = null)
     {
         return new WorkItem
         {
             Id = WorkItemId.NewId(),
             Title = title,
             Description = "Test description",
-            EngagementId = EngagementId.Create(Guid.NewGuid()),
+            EngagementId = engagementId ?? EngagementId.Create(Guid.NewGuid()),
             TenantId = tenantId ?? TenantId.Create(Guid.NewGuid()),
             PlannedStartDate = DateTimeOffset.UtcNow.AddDays(1),
             Status = WorkItemStatus.NotStarted,
             Priority = Priority.Medium
+        };
+    }
+
+    private static Engagement CreateTestEngagement(string title = "Test Engagement", TenantId? tenantId = null)
+    {
+        return new Engagement
+        {
+            Id = EngagementId.Create(Guid.NewGuid()),
+            Title = title,
+            Description = "Test engagement description",
+            ClientId = ClientId.Create(Guid.NewGuid()),
+            TenantId = tenantId ?? TenantId.Create(Guid.NewGuid()),
+            StartDate = DateTimeOffset.UtcNow,
+            EndDate = DateTimeOffset.UtcNow.AddDays(30),
+            EngagementStatus = EngagementStatus.InProgress
         };
     }
 

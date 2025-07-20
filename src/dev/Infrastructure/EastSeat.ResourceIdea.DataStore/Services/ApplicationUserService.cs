@@ -62,4 +62,31 @@ public class ApplicationUserService(UserManager<ApplicationUser> userManager) : 
 
         return ResourceIdeaResponse<IApplicationUser>.Success(Optional<IApplicationUser>.None);
     }
+
+    /// <inheritdoc/>
+    public async Task<ResourceIdeaResponse<string>> ResetPasswordAsync(string email)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return ResourceIdeaResponse<string>.Failure(ErrorCode.UserNotFound);
+        }
+
+        string temporaryPassword = $"Temp@{Guid.NewGuid().ToString("N")[..8]}";
+        
+        // Remove current password and set new one
+        var removePasswordResult = await userManager.RemovePasswordAsync(user);
+        if (!removePasswordResult.Succeeded)
+        {
+            return ResourceIdeaResponse<string>.Failure(ErrorCode.ResetPasswordFailure);
+        }
+
+        var addPasswordResult = await userManager.AddPasswordAsync(user, temporaryPassword);
+        if (!addPasswordResult.Succeeded)
+        {
+            return ResourceIdeaResponse<string>.Failure(ErrorCode.ResetPasswordFailure);
+        }
+
+        return ResourceIdeaResponse<string>.Success(Optional<string>.Some(temporaryPassword));
+    }
 }

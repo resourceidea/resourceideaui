@@ -1,235 +1,45 @@
 @page "/dev-tools"
-@attribute [AllowAnonymous]
-@using EastSeat.ResourceIdea.Application.Features.Employees.Contracts
-@using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects
-@using EastSeat.ResourceIdea.DataStore.Identity.Entities
-@using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.Forms
-@using System.ComponentModel.DataAnnotations
-@inject IApplicationUserService ApplicationUserService
-@inject UserManager<ApplicationUser> UserManager
-@inject ILogger<DevTools> Logger
+@using EastSeat.ResourceIdea.Web.Components.Base
+@inherits ResourceIdeaComponentBase
 
-<PageTitle>Development Tools</PageTitle>
+<PageTitle>Development Tools - Moved</PageTitle>
 
-<div class="container mt-4">
-    <h2>Development Tools</h2>
-    <p class="text-muted">This page is for development purposes only.</p>
-    
-    <div class="card mt-3">
-        <div class="card-header">
-            <h5>Create Test User</h5>
-        </div>
-        <div class="card-body">
-            <EditForm Model="createUserModel" OnValidSubmit="CreateTestUser">
-                <DataAnnotationsValidator />
-                
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">First Name</label>
-                            <InputText @bind-Value="createUserModel.FirstName" class="form-control" />
-                            <ValidationMessage For="() => createUserModel.FirstName" />
-                        </div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-shield-alt fa-3x text-warning mb-3"></i>
+                        <h3>Development Tools Moved</h3>
+                        <p class="text-muted">This page has been moved to a secure location requiring proper authorization.</p>
                     </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Last Name</label>
-                            <InputText @bind-Value="createUserModel.LastName" class="form-control" />
-                            <ValidationMessage For="() => createUserModel.LastName" />
-                        </div>
+                    
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Development tools are now protected and available only to authorized users with backend access.
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="/backend/dev-tools" class="btn btn-primary">
+                            <i class="fas fa-tools me-2"></i>
+                            Access Backend Development Tools
+                        </a>
+                        <a href="/" class="btn btn-outline-secondary">
+                            <i class="fas fa-home me-2"></i>
+                            Return to Home
+                        </a>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <small class="text-muted">
+                            <i class="fas fa-lock me-1"></i>
+                            Backend access requires Developer or Support role authorization
+                        </small>
                     </div>
                 </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <InputText @bind-Value="createUserModel.Email" class="form-control" />
-                    <ValidationMessage For="() => createUserModel.Email" />
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <InputText type="password" @bind-Value="createUserModel.Password" class="form-control" />
-                    <ValidationMessage For="() => createUserModel.Password" />
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Tenant ID</label>
-                    <InputText @bind-Value="createUserModel.TenantIdValue" class="form-control" placeholder="e.g., tenant-123" />
-                    <ValidationMessage For="() => createUserModel.TenantIdValue" />
-                </div>
-                
-                <button type="submit" class="btn btn-primary" disabled="@isCreating">
-                    @if (isCreating)
-                    {
-                        <span class="spinner-border spinner-border-sm me-2"></span>
-                    }
-                    Create User
-                </button>
-            </EditForm>
-            
-            @if (!string.IsNullOrEmpty(createMessage))
-            {
-                <div class="alert @(createError ? "alert-danger" : "alert-success") mt-3">
-                    @createMessage
-                </div>
-            }
-        </div>
-    </div>
-    
-    <div class="card mt-3">
-        <div class="card-header">
-            <h5>Existing Users</h5>
-        </div>
-        <div class="card-body">
-            <button class="btn btn-secondary" @onclick="LoadUsers">Refresh Users</button>
-            
-            @if (users?.Any() == true)
-            {
-                <div class="table-responsive mt-3">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Email</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Tenant ID</th>
-                                <th>Email Confirmed</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var user in users)
-                            {
-                                <tr>
-                                    <td>@user.Email</td>
-                                    <td>@user.FirstName</td>
-                                    <td>@user.LastName</td>
-                                    <td>@user.TenantId.Value</td>
-                                    <td>@user.EmailConfirmed</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
-            else
-            {
-                <p class="mt-3">No users found. <a href="#" @onclick="LoadUsers">Click to load users</a></p>
-            }
+            </div>
         </div>
     </div>
 </div>
-
-@code {
-    private CreateUserModel createUserModel = new();
-    private string createMessage = string.Empty;
-    private bool createError;
-    private bool isCreating;
-    private List<ApplicationUser>? users;
-    
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadUsers();
-    }
-    
-    private async Task CreateTestUser()
-    {
-        try
-        {
-            isCreating = true;
-            createMessage = string.Empty;
-            createError = false;
-            
-            // First, create the user using our service
-            var tenantId = TenantId.Create(createUserModel.TenantIdValue);
-            var result = await ApplicationUserService.AddApplicationUserAsync(
-                createUserModel.FirstName,
-                createUserModel.LastName,
-                createUserModel.Email,
-                tenantId);
-            
-            if (result.IsSuccess && result.Content.HasValue)
-            {
-                // The service creates a temporary password, but we want to set our own
-                var user = await UserManager.FindByEmailAsync(createUserModel.Email);
-                if (user != null)
-                {
-                    // Remove the temporary password and set our own
-                    await UserManager.RemovePasswordAsync(user);
-                    var passwordResult = await UserManager.AddPasswordAsync(user, createUserModel.Password);
-                    
-                    if (passwordResult.Succeeded)
-                    {
-                        // Confirm the email
-                        user.EmailConfirmed = true;
-                        await UserManager.UpdateAsync(user);
-                        
-                        createMessage = $"User '{createUserModel.Email}' created successfully with TenantId '{createUserModel.TenantIdValue}'!";
-                        createError = false;
-                        createUserModel = new CreateUserModel(); // Reset form
-                        await LoadUsers(); // Refresh the list
-                    }
-                    else
-                    {
-                        createMessage = $"User created but password setup failed: {string.Join(", ", passwordResult.Errors.Select(e => e.Description))}";
-                        createError = true;
-                    }
-                }
-                else
-                {
-                    createMessage = "User created but could not be found for password setup.";
-                    createError = true;
-                }
-            }
-            else
-            {
-                createMessage = "Failed to create user. Please check the inputs and try again.";
-                createError = true;
-            }
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "Error creating test user");
-            createMessage = $"Error: {ex.Message}";
-            createError = true;
-        }
-        finally
-        {
-            isCreating = false;
-        }
-    }
-    
-    private async Task LoadUsers()
-    {
-        try
-        {
-            // Get all users from the UserManager
-            users = UserManager.Users.ToList();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "Error loading users");
-        }
-    }
-    
-    private class CreateUserModel
-    {
-        [Required]
-        public string FirstName { get; set; } = string.Empty;
-        
-        [Required]
-        public string LastName { get; set; } = string.Empty;
-        
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; } = string.Empty;
-        
-        [Required]
-        [MinLength(6)]
-        public string Password { get; set; } = string.Empty;
-        
-        [Required]
-        public string TenantIdValue { get; set; } = string.Empty;
-    }
-}
