@@ -62,6 +62,11 @@ public class UpdateEmployeeCommand : BaseRequest<EmployeeModel>
     public string EmployeeNumber { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets the manager ID of the employee.
+    /// </summary>
+    public EmployeeId ManagerId { get; set; }
+
+    /// <summary>
     /// Maps the command to an Employee entity.
     /// </summary>
     /// <returns>An Employee entity populated with data from this command.</returns>
@@ -75,6 +80,7 @@ public class UpdateEmployeeCommand : BaseRequest<EmployeeModel>
         JobPositionId = JobPositionId,
         ApplicationUserId = ApplicationUserId,
         EmployeeNumber = EmployeeNumber,
+        ReportsTo = ManagerId,
     };
 
     /// <summary>

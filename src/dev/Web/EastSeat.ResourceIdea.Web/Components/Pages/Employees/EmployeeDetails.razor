@@ -98,6 +98,22 @@ else
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="managerId" class="form-label">Manager</label>
+                        <InputSelect id="managerId" @bind-Value="Command.ManagerId" class="form-select">
+                            <option value="">-- No Manager --</option>
+                            @foreach (var manager in PotentialManagers)
+                            {
+                                <option value="@manager.EmployeeId.Value">@manager.FirstName @manager.LastName</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => Command.ManagerId)" />
+                    </div>
+                </div>
+            </div>
+
             <div class="mb-3 d-flex gap-2">
                 <button type="submit" class="btn btn-danger">Save Changes</button>
                 <button type="button" class="btn btn-warning" @onclick="ResetPassword">Reset Password</button>
