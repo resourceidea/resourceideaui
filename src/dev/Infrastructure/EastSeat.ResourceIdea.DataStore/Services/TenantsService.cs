@@ -72,7 +72,12 @@ public sealed class TenantsService : ITenantsService
     /// <inheritdoc/>
     public TenantId GetTenantIdFromLoginSession(CancellationToken cancellationToken)
     {
-        // TODO: Implement logic that will read the tenant ID from the login session.
-        return TenantId.Create("841C6122-59E8-4294-93B8-D21C0BEB6724");
+        // This method should not be used directly in production as it creates a dependency
+        // on authentication context within the data service layer.
+        // The calling code should obtain the tenant ID from the request context and 
+        // pass it explicitly to avoid architectural violations.
+        throw new NotSupportedException(
+            "GetTenantIdFromLoginSession is deprecated. " +
+            "Use IResourceIdeaRequestContext.Tenant in the application layer and pass the TenantId explicitly.");
     }
 }

@@ -3,7 +3,7 @@ using EastSeat.ResourceIdea.Application.Features.Departments.Commands;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Application.Features.Departments.Contracts;
-using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Departments.Validators;
 using FluentValidation.Results;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
@@ -14,11 +14,11 @@ namespace EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
 
 public class UpdateDepartmentCommandHandler(
     IDepartmentsService departmentsService,
-    ITenantsService tenantsService)
+    IAuthenticationContext authenticationContext)
     : IRequestHandler<UpdateDepartmentCommand, ResourceIdeaResponse<DepartmentModel>>
 {
     private readonly IDepartmentsService _departmentsService = departmentsService;
-    private readonly ITenantsService _tenantsService = tenantsService;
+    private readonly IAuthenticationContext _authenticationContext = authenticationContext;
 
     public async Task<ResourceIdeaResponse<DepartmentModel>> Handle(
         UpdateDepartmentCommand command,
@@ -32,7 +32,7 @@ public class UpdateDepartmentCommandHandler(
         }
 
         Department departmentToUpdate = command.ToEntity();
-        departmentToUpdate.TenantId = _tenantsService.GetTenantIdFromLoginSession(cancellationToken);
+        departmentToUpdate.TenantId = _authenticationContext.TenantId;
         ResourceIdeaResponse<Department> result = await _departmentsService.UpdateAsync(
             departmentToUpdate,
             cancellationToken);

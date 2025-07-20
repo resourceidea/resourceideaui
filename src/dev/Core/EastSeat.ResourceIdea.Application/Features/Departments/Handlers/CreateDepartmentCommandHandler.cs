@@ -1,7 +1,7 @@
 ﻿using EastSeat.ResourceIdea.Application.Features.Departments.Commands;
 using EastSeat.ResourceIdea.Application.Features.Departments.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Departments.Validators;
-using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Application.Mappers;
 using EastSeat.ResourceIdea.Domain.Departments.Entities;
 using EastSeat.ResourceIdea.Domain.Departments.Models;
@@ -18,11 +18,11 @@ namespace EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
 /// Handles the command to create a department.
 /// </summary>
 public sealed class CreateDepartmentCommandHandler(
-    ITenantsService tenantsService,
+    IAuthenticationContext authenticationContext,
     IDepartmentsService departmentsService)
     : IRequestHandler<CreateDepartmentCommand, ResourceIdeaResponse<DepartmentModel>>
 {
-    private readonly ITenantsService _tenantsService = tenantsService;
+    private readonly IAuthenticationContext _authenticationContext = authenticationContext;
     private readonly IDepartmentsService _departmentsService = departmentsService;
 
     public async Task<ResourceIdeaResponse<DepartmentModel>> Handle(CreateDepartmentCommand command, CancellationToken cancellationToken)
@@ -36,7 +36,7 @@ public sealed class CreateDepartmentCommandHandler(
         }
 
         Department departmentToCreate = command.ToEntity();
-        departmentToCreate.TenantId = _tenantsService.GetTenantIdFromLoginSession(cancellationToken);
+        departmentToCreate.TenantId = _authenticationContext.TenantId;
         ResourceIdeaResponse<Department> result = await _departmentsService.AddAsync(departmentToCreate, cancellationToken);
 
         if (result.IsFailure)

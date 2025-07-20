@@ -1,16 +1,20 @@
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Web.Exceptions;
+using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using System.Security.Claims;
 
 namespace EastSeat.ResourceIdea.Web.RequestContext;
 
-public sealed class ResourceIdeaRequestContext(IHttpContextAccessor httpContextAccessor) : IResourceIdeaRequestContext
+public sealed class ResourceIdeaRequestContext(IHttpContextAccessor httpContextAccessor) : IResourceIdeaRequestContext, IAuthenticationContext
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
     public TenantId Tenant => GetTenantIdSync();
 
     public bool IsBackendUser => HasBackendAccess();
+
+    // Explicit interface implementation for IAuthenticationContext
+    TenantId IAuthenticationContext.TenantId => Tenant;
 
     /// <summary>
     /// Gets the TenantId for the current user. If the user is not authenticated or
