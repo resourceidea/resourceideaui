@@ -35,4 +35,11 @@ public interface IApplicationUserService
     /// <param name="applicationUserId"></param>
     /// <returns><see cref="ResourceIdeaResponse{IApplicationUser}"/></returns>
     Task<ResourceIdeaResponse<IApplicationUser>> DeleteApplicationUserAsync(ApplicationUserId applicationUserId);
+
+    /// <summary>
+    /// Reset user password and return the new temporary password.
+    /// </summary>
+    /// <param name="email">User's email address</param>
+    /// <returns><see cref="ResourceIdeaResponse{string}"/> containing the new temporary password</returns>
+    Task<ResourceIdeaResponse<string>> ResetPasswordAsync(string email);
 }
