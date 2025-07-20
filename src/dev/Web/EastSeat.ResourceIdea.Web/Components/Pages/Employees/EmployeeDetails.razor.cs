@@ -6,6 +6,7 @@ using EastSeat.ResourceIdea.Domain.Departments.Models;
 using EastSeat.ResourceIdea.Domain.Departments.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.JobPositions.Models;
+using EastSeat.ResourceIdea.Domain.Employees.Models;
 using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
@@ -28,10 +29,12 @@ public partial class EmployeeDetails : ResourceIdeaComponentBase
     public UpdateEmployeeCommand Command { get; set; } = new();
     public List<DepartmentModel> Departments { get; private set; } = [];
     public List<JobPositionModel> JobPositions { get; private set; } = [];
+    public List<TenantEmployeeModel> PotentialManagers { get; private set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
         await LoadDepartments();
+        await LoadPotentialManagers();
         await LoadEmployeeData();
     }
 
@@ -59,6 +62,7 @@ public partial class EmployeeDetails : ResourceIdeaComponentBase
                 Command.JobPositionId = employee.JobPositionId;
                 Command.ApplicationUserId = employee.ApplicationUserId;
                 Command.EmployeeNumber = employee.EmployeeNumber;
+                Command.ManagerId = employee.ManagerId;
                 if (Command.DepartmentId != DepartmentId.Empty)
                 {
                     await LoadJobPositions();
@@ -130,6 +134,29 @@ public partial class EmployeeDetails : ResourceIdeaComponentBase
         }, "Loading job positions", manageLoadingState: false);
 
         StateHasChanged();
+    }
+
+    private async Task LoadPotentialManagers()
+    {
+        await ExecuteAsync(async () =>
+        {
+            var query = new GetPotentialManagersQuery
+            {
+                ExcludeEmployeeId = EmployeeId.Create(Id),
+                TenantId = ResourceIdeaRequestContext.Tenant,
+                PageSize = 100 // Get all potential managers for dropdown
+            };
+
+            var response = await Mediator.Send(query);
+            if (response.IsSuccess && response.Content.Value is not null)
+            {
+                PotentialManagers = [.. response.Content.Value.Items];
+            }
+            else
+            {
+                PotentialManagers.Clear();
+            }
+        }, "Loading potential managers", manageLoadingState: false);
     }
 
     private async Task HandleValidSubmit()

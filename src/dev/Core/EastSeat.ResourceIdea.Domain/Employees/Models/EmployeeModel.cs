@@ -77,7 +77,7 @@ public class EmployeeModel
             EmployeeId.ValidateRequired(),
             JobPositionId.ValidateRequired(),
             ApplicationUserId.ValidateRequired(),
-            ManagerId.ValidateRequired(),
+            // ManagerId is optional - not all employees have managers (e.g., CEO)
             EmployeeNumber.ValidateRequired(nameof(EmployeeNumber)),
             FirstName.ValidateRequired(nameof(FirstName)),
             LastName.ValidateRequired(nameof(LastName)),
