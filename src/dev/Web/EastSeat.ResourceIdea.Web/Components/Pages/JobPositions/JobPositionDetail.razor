@@ -77,4 +77,10 @@ else
             </div>
         </div>
     </EditForm>
+
+    @* Employees List Section *@
+    @if (!IsLoadingModelData)
+    {
+        <TenantEmployeesList PagedEmployeesList="@PagedEmployeesList" OnPageChange="OnEmployeePageChange" />
+    }
 }
