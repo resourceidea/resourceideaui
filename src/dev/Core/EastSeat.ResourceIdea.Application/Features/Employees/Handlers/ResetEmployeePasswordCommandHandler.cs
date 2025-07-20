@@ -7,6 +7,7 @@
 using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Application.Features.Employees.Commands;
 using EastSeat.ResourceIdea.Application.Features.Employees.Contracts;
+using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 using MediatR;
@@ -36,6 +37,8 @@ public class ResetEmployeePasswordCommandHandler(IApplicationUserService applica
         }
 
         // TODO: Send email notification with new password
+        // Future implementation could inject IEmailNotificationService and call:
+        // await _emailNotificationService.SendPasswordResetNotificationAsync(command.Email, resetPasswordResponse.Content.Value, cancellationToken);
         // For now, we'll just return the temporary password to display in UI
         
         return resetPasswordResponse;
