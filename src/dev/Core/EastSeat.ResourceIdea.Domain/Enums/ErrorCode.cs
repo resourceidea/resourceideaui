@@ -318,4 +318,9 @@ public enum ErrorCode
     /// Empty entity returned from repository on create work item.
     /// </summary>
     EmptyEntityOnCreateWorkItem,
+
+    /// <summary>
+    /// Password reset operation failed.
+    /// </summary>
+    ResetPasswordFailure,
 }
