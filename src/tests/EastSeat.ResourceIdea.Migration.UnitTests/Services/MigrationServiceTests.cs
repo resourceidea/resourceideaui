@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
+using System.Reflection;
 using EastSeat.ResourceIdea.Migration.Model;
 using EastSeat.ResourceIdea.Migration.Services;
 using Moq;
@@ -98,5 +99,109 @@ namespace EastSeat.ResourceIdea.Migration.UnitTests.Services
             Assert.Equal("C001", migrationResult.Skipped.First().Item1.GetValue("CompanyCode"));
             Assert.Equal("C002", migrationResult.Migrated.First().Item1.GetValue("CompanyCode"));
         }
+
+        #region MapJobStatusToEngagementStatus Tests
+
+        [Theory]
+        [InlineData("ACTIVE", 1)] // InProgress
+        [InlineData("CLOSED", 3)] // Completed
+        [InlineData("active", 1)] // Case insensitive - InProgress
+        [InlineData("closed", 3)] // Case insensitive - Completed
+        [InlineData("UNKNOWN", 1)] // Default to InProgress for unknown values
+        [InlineData("", 1)] // Empty string defaults to InProgress
+        [InlineData("INACTIVE", 1)] // Any other status defaults to InProgress
+        public void MapJobStatusToEngagementStatus_ReturnsCorrectEnumValue(string statusValue, int expectedValue)
+        {
+            // Arrange & Act
+            var result = InvokeMapJobStatusToEngagementStatus(statusValue);
+
+            // Assert
+            Assert.Equal(expectedValue, result);
+        }
+
+        [Fact]
+        public void MapJobStatusToEngagementStatus_WithNullValue_ReturnsNull()
+        {
+            // Arrange & Act
+            var result = InvokeMapJobStatusToEngagementStatus(null);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [InlineData("MapJobStatusToEngagement", "ACTIVE", 1)]
+        [InlineData("MapJobStatusToEngagement", "CLOSED", 3)]
+        [InlineData("MapJobStatusToEngagement", "UNKNOWN", 1)]
+        public void ApplyTransform_WithMapJobStatusToEngagement_ReturnsCorrectValue(string transformType, string sourceValue, int expectedValue)
+        {
+            // Arrange
+            var column = new DestinationColumnDefinition
+            {
+                Transform = transformType,
+                SourceColumn = "Status"
+            };
+
+            var sourceData = new MigrationSourceData();
+            sourceData.SetValue("Status", sourceValue);
+
+            // Act - Pass null for SqlConnection since our transform doesn't use it
+            var result = InvokeApplyTransform(column, sourceData, null);
+
+            // Assert
+            Assert.Equal(expectedValue, result);
+        }
+
+        [Fact]
+        public void ApplyTransform_WithMapJobStatusToEngagement_AndNullValue_ReturnsNull()
+        {
+            // Arrange
+            var column = new DestinationColumnDefinition
+            {
+                Transform = "MapJobStatusToEngagement",
+                SourceColumn = "Status"
+            };
+
+            var sourceData = new MigrationSourceData();
+            sourceData.SetValue("Status", null);
+
+            // Act - Pass null for SqlConnection since our transform doesn't use it
+            var result = InvokeApplyTransform(column, sourceData, null);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        #endregion
+
+        #region Helper Methods for Testing Private Methods
+
+        /// <summary>
+        /// Invokes the private MapJobStatusToEngagementStatus method using reflection.
+        /// </summary>
+        private static object? InvokeMapJobStatusToEngagementStatus(object? statusValue)
+        {
+            var method = typeof(MigrationService).GetMethod("MapJobStatusToEngagementStatus",
+                BindingFlags.NonPublic | BindingFlags.Static);
+
+            Assert.NotNull(method);
+
+            return method.Invoke(null, new[] { statusValue });
+        }
+
+        /// <summary>
+        /// Invokes the private ApplyTransform method using reflection.
+        /// </summary>
+        private static object? InvokeApplyTransform(DestinationColumnDefinition column, MigrationSourceData sourceData, SqlConnection? connection)
+        {
+            var method = typeof(MigrationService).GetMethod("ApplyTransform",
+                BindingFlags.NonPublic | BindingFlags.Static);
+
+            Assert.NotNull(method);
+
+            return method.Invoke(null, new object?[] { column, sourceData, connection });
+        }
+
+        #endregion
     }
 }

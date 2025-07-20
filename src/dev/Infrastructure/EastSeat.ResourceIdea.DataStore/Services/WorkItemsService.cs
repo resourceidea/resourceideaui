@@ -130,7 +130,7 @@ public sealed class WorkItemsService(ResourceIdeaDBContext dbContext) : IWorkIte
     {
         try
         {
-            var query = _dbContext.WorkItems.AsQueryable();
+            var query = _dbContext.WorkItems.Include(workItem => workItem.Engagement).AsQueryable();
 
             if (specification.HasValue)
             {
