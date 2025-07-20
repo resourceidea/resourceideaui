@@ -6,6 +6,7 @@ using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace EastSeat.ResourceIdea.Application.UnitTests.Features.Employees.Handlers;
@@ -16,12 +17,14 @@ namespace EastSeat.ResourceIdea.Application.UnitTests.Features.Employees.Handler
 public class ResetEmployeePasswordCommandHandlerTests
 {
     private readonly Mock<IApplicationUserService> _mockApplicationUserService;
+    private readonly Mock<ILogger<ResetEmployeePasswordCommandHandler>> _mockLogger;
     private readonly ResetEmployeePasswordCommandHandler _handler;
 
     public ResetEmployeePasswordCommandHandlerTests()
     {
         _mockApplicationUserService = new Mock<IApplicationUserService>();
-        _handler = new ResetEmployeePasswordCommandHandler(_mockApplicationUserService.Object);
+        _mockLogger = new Mock<ILogger<ResetEmployeePasswordCommandHandler>>();
+        _handler = new ResetEmployeePasswordCommandHandler(_mockApplicationUserService.Object, _mockLogger.Object);
     }
 
     [Fact]
@@ -94,6 +97,37 @@ public class ResetEmployeePasswordCommandHandlerTests
         // Assert
         Assert.True(result.IsFailure);
         Assert.Equal(ErrorCode.CommandValidationFailure, result.Error);
+        _mockApplicationUserService.Verify(s => s.ResetPasswordAsync(It.IsAny<string>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task Handle_WhenValidationFails_ShouldLogValidationFailure()
+    {
+        // Arrange
+        var command = new ResetEmployeePasswordCommand
+        {
+            EmployeeId = EmployeeId.Create(Guid.NewGuid()),
+            Email = string.Empty, // Invalid email - will trigger validation failure
+            TenantId = TenantId.Create(Guid.NewGuid())
+        };
+
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsFailure);
+        Assert.Equal(ErrorCode.CommandValidationFailure, result.Error);
+
+        // Verify that logging was called with the expected LogLevel and message content
+        _mockLogger.Verify(
+            x => x.Log(
+                LogLevel.Warning,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Reset employee password command validation failed")),
+                It.IsAny<Exception>(),
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+            Times.Once);
+
         _mockApplicationUserService.Verify(s => s.ResetPasswordAsync(It.IsAny<string>()), Times.Never);
     }
 }

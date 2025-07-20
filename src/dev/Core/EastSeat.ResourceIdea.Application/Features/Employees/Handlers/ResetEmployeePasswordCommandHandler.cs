@@ -11,13 +11,17 @@ using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace EastSeat.ResourceIdea.Application.Features.Employees.Handlers;
 
-public class ResetEmployeePasswordCommandHandler(IApplicationUserService applicationUserService)
+public class ResetEmployeePasswordCommandHandler(
+    IApplicationUserService applicationUserService,
+    ILogger<ResetEmployeePasswordCommandHandler> logger)
     : BaseHandler, IRequestHandler<ResetEmployeePasswordCommand, ResourceIdeaResponse<string>>
 {
     private readonly IApplicationUserService _applicationUserService = applicationUserService;
+    private readonly ILogger<ResetEmployeePasswordCommandHandler> _logger = logger;
 
     public async Task<ResourceIdeaResponse<string>> Handle(
         ResetEmployeePasswordCommand command,
@@ -26,7 +30,9 @@ public class ResetEmployeePasswordCommandHandler(IApplicationUserService applica
         ValidationResponse commandValidation = command.Validate();
         if (!commandValidation.IsValid && commandValidation.ValidationFailureMessages.Any())
         {
-            // TODO: Log validation failure.
+            _logger.LogWarning("Reset employee password command validation failed for email {Email}. Validation errors: {ValidationErrors}", 
+                command.Email, 
+                string.Join(", ", commandValidation.ValidationFailureMessages));
             return ResourceIdeaResponse<string>.Failure(ErrorCode.CommandValidationFailure);
         }
 
