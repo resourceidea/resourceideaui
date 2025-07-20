@@ -1,9 +1,9 @@
 name: Deploy to Azure App Service
 
 on:
-  # Run after both .NET and CodeQL workflows complete successfully on main
+  # Run after Build, Test, and CodeQL workflows complete successfully on main
   workflow_run:
-    workflows: [".NET", "CodeQL"]
+    workflows: ["Build", "Test", "CodeQL"]
     types:
       - completed
     branches:
