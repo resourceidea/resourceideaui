@@ -20,5 +20,6 @@ public class TenantEmployeesSpecification(TenantId tenantId) : BaseSpecification
     public TenantId TenantId => tenantId;
 
     public override Expression<Func<Employee, bool>> Criteria =>
-        employee => employee.TenantId == tenantId;
+        employee => employee.TenantId == tenantId && 
+                   (employee.EndDate == null || employee.EndDate > DateTimeOffset.Now);
 }
