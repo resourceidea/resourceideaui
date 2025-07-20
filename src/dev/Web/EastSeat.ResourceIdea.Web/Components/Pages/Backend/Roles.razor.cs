@@ -52,7 +52,7 @@ public partial class Roles : ResourceIdeaComponentBase
                 Id = role.Id,
                 Name = role.Name ?? "Unknown",
                 IsBackendRole = role.IsBackendRole,
-                TenantId = role.TenantId,
+                TenantId = role.TenantId == Domain.Tenants.ValueObjects.TenantId.Empty ? null : role.TenantId,
                 TenantName = role.TenantId != Domain.Tenants.ValueObjects.TenantId.Empty ? GetTenantName(role.TenantId) : null,
                 ClaimsCount = claims.Count,
                 HasUsers = usersInRole > 0
@@ -265,11 +265,11 @@ public partial class Roles : ResourceIdeaComponentBase
         public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public bool IsBackendRole { get; set; }
-        public Domain.Tenants.ValueObjects.TenantId TenantId { get; set; }
+        public Domain.Tenants.ValueObjects.TenantId? TenantId { get; set; }
         public string? TenantName { get; set; }
         public int ClaimsCount { get; set; }
         public bool HasUsers { get; set; }
-        public bool IsSystemRole => IsBackendRole && TenantId == Domain.Tenants.ValueObjects.TenantId.Empty;
+        public bool IsSystemRole => IsBackendRole && TenantId == null;
     }
 
     public class ClaimListItem
