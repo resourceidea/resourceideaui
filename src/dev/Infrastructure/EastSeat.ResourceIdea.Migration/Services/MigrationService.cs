@@ -639,6 +639,7 @@ public class MigrationService
             "SplitFullnameFirst" => SplitFullnameFirst(sourceValue),
             "SplitFullnameLast" => SplitFullnameLast(sourceValue),
             "Uppercase" => sourceValue?.ToString()?.ToUpperInvariant(),
+            "MapJobStatusToEngagement" => MapJobStatusToEngagementStatus(sourceValue),
             _ => sourceValue
         };
     }
@@ -847,6 +848,7 @@ public class MigrationService
             "SplitFullnameFirst" => SplitFullnameFirst(sourceValue),
             "SplitFullnameLast" => SplitFullnameLast(sourceValue),
             "Uppercase" => sourceValue?.ToString()?.ToUpperInvariant(),
+            "MapJobStatusToEngagement" => MapJobStatusToEngagementStatus(sourceValue),
             _ => sourceValue
         };
     }
@@ -1148,5 +1150,28 @@ public class MigrationService
             MigrationLogger.LogError($"Error getting default JobPositionId for CompanyCode: {sourceData.GetValue("CompanyCode")}", ex);
             return null;
         }
+    }
+
+    /// <summary>
+    /// Maps Job Status values to EngagementStatus enum values.
+    /// Maps "ACTIVE" to InProgress (1) and "CLOSED" to Completed (3).
+    /// </summary>
+    /// <param name="statusValue">The job status value from the source.</param>
+    /// <returns>The corresponding EngagementStatus enum value.</returns>
+    private static object? MapJobStatusToEngagementStatus(object? statusValue)
+    {
+        if (statusValue == null)
+        {
+            return null;
+        }
+
+        var status = statusValue.ToString()?.ToUpperInvariant();
+
+        return status switch
+        {
+            "ACTIVE" => 1, // InProgress
+            "CLOSED" => 3, // Completed
+            _ => 1 // Default to InProgress for unknown values
+        };
     }
 }
