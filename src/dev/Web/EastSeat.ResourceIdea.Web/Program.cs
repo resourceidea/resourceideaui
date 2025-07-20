@@ -92,6 +92,9 @@ builder.Services.AddMediatR(typeof(CreateDepartmentCommandHandler).Assembly);
 // Add centralized exception handling service
 builder.Services.AddScoped<IExceptionHandlingService, ExceptionHandlingService>();
 
+// Add notification service
+builder.Services.AddScoped<NotificationService>();
+
 var app = builder.Build();
 
 // Add global exception handling middleware

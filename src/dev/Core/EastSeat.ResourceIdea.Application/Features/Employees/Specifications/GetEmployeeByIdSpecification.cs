@@ -26,5 +26,6 @@ public class GetEmployeeIdBySpecification(EmployeeId employeeId, TenantId tenant
     /// </summary>
     public override Expression<Func<Employee, bool>> Criteria =>
         e => e.EmployeeId == EmployeeId
-          && e.TenantId == TenantId;
+          && e.TenantId == TenantId
+          && (e.EndDate == null || e.EndDate > DateTimeOffset.Now);
 }

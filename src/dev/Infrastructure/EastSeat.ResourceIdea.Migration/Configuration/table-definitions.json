@@ -222,6 +222,7 @@
             "name": "EngagementStatus",
             "type": "nvarchar(50)",
             "isMigratable": true,
+            "transform": "MapJobStatusToEngagement",
             "sourceColumn": "Status"
           },
           {

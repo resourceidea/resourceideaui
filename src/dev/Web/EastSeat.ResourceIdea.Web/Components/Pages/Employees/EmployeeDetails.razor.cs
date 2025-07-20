@@ -185,4 +185,40 @@ public partial class EmployeeDetails : ResourceIdeaComponentBase
         message = null;
         StateHasChanged();
     }
+
+    private async Task ResetPassword()
+    {
+        if (string.IsNullOrEmpty(Command.Email))
+        {
+            message = "Employee email is required to reset password";
+            isErrorMessage = true;
+            StateHasChanged();
+            return;
+        }
+
+        await ExecuteAsync(async () =>
+        {
+            var resetCommand = new ResetEmployeePasswordCommand
+            {
+                EmployeeId = Command.EmployeeId,
+                Email = Command.Email,
+                TenantId = ResourceIdeaRequestContext.Tenant
+            };
+
+            var response = await Mediator.Send(resetCommand);
+            if (response.IsSuccess && response.Content.Value is not null)
+            {
+                var temporaryPassword = response.Content.Value;
+                message = $"Password reset successfully. Temporary password: {temporaryPassword}. The user should change this password on next login.";
+                isErrorMessage = false;
+            }
+            else
+            {
+                message = "Failed to reset password. Please try again.";
+                isErrorMessage = true;
+            }
+        }, "Resetting password", manageLoadingState: false);
+
+        StateHasChanged();
+    }
 }
