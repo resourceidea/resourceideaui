@@ -31,8 +31,15 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore ./EastSeat.ResourceIdea.slnx
 
+      - name: Clean solution
+        run: dotnet clean ./EastSeat.ResourceIdea.slnx
+
+      - name: Remove bin and obj folders
+        run: |
+          find . -type d \( -name bin -o -name obj \) -exec rm -rf {} +
+
       - name: Build for migrations
-        run: dotnet build ./EastSeat.ResourceIdea.slnx --no-restore --framework net9.0
+        run: dotnet build ./EastSeat.ResourceIdea.slnx --no-restore --framework net9.0 -maxcpucount:1
 
       - name: Install EF Core tools
         run: dotnet tool install --global dotnet-ef
