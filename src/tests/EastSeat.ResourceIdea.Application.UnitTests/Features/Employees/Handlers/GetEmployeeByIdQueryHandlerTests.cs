@@ -51,7 +51,7 @@ public class GetEmployeeByIdQueryHandlerTests
             .Setup(x => x.GetByIdAsync(
                 It.IsAny<BaseSpecification<Employee>>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ResourceIdeaResponse<Employee>.Success(null));
+            .ReturnsAsync(ResourceIdeaResponse<Employee>.Success(null!));
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);

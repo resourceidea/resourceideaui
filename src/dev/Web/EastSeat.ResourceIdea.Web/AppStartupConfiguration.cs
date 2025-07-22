@@ -1,4 +1,5 @@
-﻿using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
+﻿using EastSeat.ResourceIdea.Application.Extensions;
+using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Departments.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Employees.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
@@ -46,47 +47,21 @@ namespace EastSeat.ResourceIdea.Web
             services.AddScoped<NotificationService>();
         }
 
-        private static string GetDbContextConnectionString()
-        {
-            string sqlServerConnectionString;
-
-            // TODO: Setup getting connection string from Azure App Configuration.
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-            {
-                var serverInstance = GetUserEnvironmentVariable("RESOURCEIDEA_DB_HOST");
-                var database = GetUserEnvironmentVariable("RESOURCEIDEA_DB_NAME");
-                var userId = GetUserEnvironmentVariable("RESOURCEIDEA_DB_USER");
-                var password = GetUserEnvironmentVariable("RESOURCEIDEA_DB_PASSWORD");
-
-                if (string.IsNullOrWhiteSpace(serverInstance) ||
-                    string.IsNullOrWhiteSpace(database) ||
-                    string.IsNullOrWhiteSpace(userId) ||
-                    string.IsNullOrWhiteSpace(password))
-                {
-                    throw new InvalidOperationException($"Invalid SQL Server connection string. -- instance: {serverInstance} database: {database} userId: {userId}");
-                }
-
-                sqlServerConnectionString = $"Server={serverInstance};Database={database};User Id={userId};Password={password};";
-            }
-            else
-            {
-                // TODO: Implement getting connection string from Azure App Configuration.
-                sqlServerConnectionString = string.Empty;
-            }
-
-            Debug.WriteLine($"ResourceIdea :: SQL Server Connection String: {sqlServerConnectionString}");
-            return sqlServerConnectionString;
-        }
+        private static string GetDbContextConnectionString() => GetUserEnvironmentVariable("RESOURCEIDEA_CONNECTION_STRING");
 
         private static string GetUserEnvironmentVariable(string environmentVariableKey)
         {
-            string? value = Environment.GetEnvironmentVariable(environmentVariableKey, EnvironmentVariableTarget.User);
-            if (string.IsNullOrWhiteSpace(value))
+            try
             {
-                throw new ResourceIdeaException($"Environment variable '{environmentVariableKey}' is not set.");
+                string? value = Environment.GetEnvironmentVariable(environmentVariableKey, EnvironmentVariableTarget.User);
+                string nonEmptyValue = value.ThrowIfNullOrEmptyOrWhiteSpace();
+                return nonEmptyValue;
             }
-
-            return value.Trim();
+            catch (ArgumentException ex)
+            {
+                Debug.WriteLine($"Error retrieving environment variable '{environmentVariableKey}': {ex.Message}");
+                throw new ResourceIdeaException($"Failed to retrieve environment variable '{environmentVariableKey}'.", ex);
+            }
         }
     }
 }

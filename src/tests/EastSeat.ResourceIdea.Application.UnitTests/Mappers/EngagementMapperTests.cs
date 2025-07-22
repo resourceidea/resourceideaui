@@ -91,7 +91,7 @@ namespace EastSeat.ResourceIdea.Application.UnitTests.Mappers
             {
                 ClientId = ClientId.Create(Guid.NewGuid()),
                 Title = "Test Title",
-                Description = null,
+                Description = null!,
                 TenantId = TenantId.Create(Guid.NewGuid())
             };
 

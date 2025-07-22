@@ -36,11 +36,14 @@ public static class StringExtensions
     /// Throws an exception if the string argument is null, empty, or consists only of white-space characters.
     /// </summary>
     /// <param name="argument">The string argument to validate.</param>
+    /// <returns>Value being checked</returns>
     /// <exception cref="ArgumentException">Thrown when the argument is null, empty, or white-space.</exception>
-    public static void ThrowIfNullOrEmptyOrWhiteSpace(this string argument)
+    public static string ThrowIfNullOrEmptyOrWhiteSpace(this string? argument)
     {
         ArgumentException.ThrowIfNullOrEmpty(argument);
         ArgumentException.ThrowIfNullOrWhiteSpace(argument);
+
+        return argument;
     }
 
     /// <summary>

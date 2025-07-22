@@ -43,7 +43,7 @@ public class CreateWorkItemCommandValidatorTests
         // Arrange
         var command = new CreateWorkItemCommand
         {
-            Title = null,
+            Title = null!,
             EngagementId = EngagementId.Create(Guid.NewGuid()),
             TenantId = TenantId.Create(Guid.NewGuid())
         };

@@ -125,7 +125,7 @@
     private bool isClientsExpanded => currentExpandedSection == ExpandedSection.Clients;
     private bool isAdministrationExpanded => currentExpandedSection == ExpandedSection.Administration;
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
         try
         {
@@ -137,6 +137,8 @@
             // If there's an error checking backend access, assume not a backend user
             isBackendUser = false;
         }
+
+        return Task.CompletedTask;
     }
 
     private void TogglePlannerSection()

@@ -95,7 +95,7 @@ public class CreateWorkItemCommandHandlerTests
             TenantId = TenantId.Create(Guid.NewGuid())
         };
 
-        var serviceResponse = ResourceIdeaResponse<WorkItem>.Success(default(WorkItem));
+        var serviceResponse = ResourceIdeaResponse<WorkItem>.Success(default(WorkItem)!);
 
         _mockWorkItemsService
             .Setup(s => s.AddAsync(It.IsAny<WorkItem>(), It.IsAny<CancellationToken>()))

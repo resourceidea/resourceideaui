@@ -18,7 +18,7 @@ public partial class DevTools : ResourceIdeaComponentBase
     private CreateUserModel createUserModel = new();
     private List<ApplicationUser>? users;
     private bool IsLoadingUsers { get; set; }
-    
+
     // Custom success message property
     private string? SuccessMessage { get; set; }
 
@@ -80,7 +80,7 @@ public partial class DevTools : ResourceIdeaComponentBase
         }, "Creating test user");
     }
 
-    private async Task LoadUsers()
+    private Task LoadUsers()
     {
         IsLoadingUsers = true;
         StateHasChanged();
@@ -100,6 +100,8 @@ public partial class DevTools : ResourceIdeaComponentBase
             IsLoadingUsers = false;
             StateHasChanged();
         }
+
+        return Task.CompletedTask;
     }
 
     private void ResetForm()
@@ -108,14 +110,14 @@ public partial class DevTools : ResourceIdeaComponentBase
         ClearError();
         ClearSuccessMessage();
     }
-    
+
     private void SetSuccessMessage(string message)
     {
         SuccessMessage = message;
-        ClearError(); // Clear any previous errors
+        ClearError();
         StateHasChanged();
     }
-    
+
     private void ClearSuccessMessage()
     {
         SuccessMessage = null;
