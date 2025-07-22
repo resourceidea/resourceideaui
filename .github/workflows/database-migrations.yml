@@ -38,9 +38,12 @@ jobs:
         run: dotnet tool install --global dotnet-ef
 
       - name: Run EF Core database migrations
+        env:
+          RESOURCEIDEA_CONNECTION_STRING: ${{ secrets.RESOURCEIDEA_CONNECTION_STRING }}
         run: >
           dotnet ef database update
           --project ./src/dev/Infrastructure/EastSeat.ResourceIdea.DataStore/
           --startup-project ./src/dev/Web/EastSeat.ResourceIdea.Web/
-          --connection "${{ env.RESOURCEIDEA_CONNECTION_STRING }}"
+          --connection "${{ secrets.RESOURCEIDEA_CONNECTION_STRING }}"
           --configuration Release
+          --no-build
