@@ -1,40 +1,42 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ main ]
+  workflow_run:
+    workflows: ["Create Issues from TODO Comments"]
+    types:
+      - completed
+    branches:
+      - main
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
 
 jobs:
   analyze:
     name: Analyze
     runs-on: windows-latest
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
-      with:
-        languages: csharp
-        queries: +security-and-quality
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: csharp
+          queries: +security-and-quality
 
-    - name: Install .NET 9 SDK
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '9.0.x'
+      - name: Install .NET 9 SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "9.0.x"
 
+      - name: Build solution
+        run: |
+          dotnet restore ./EastSeat.ResourceIdea.slnx
+          dotnet clean ./EastSeat.ResourceIdea.slnx
+          dotnet build ./EastSeat.ResourceIdea.slnx --no-restore --framework net9.0 -maxcpucount:1
 
-    - name: Build solution
-      run: |
-        dotnet restore ./EastSeat.ResourceIdea.slnx
-        dotnet clean ./EastSeat.ResourceIdea.slnx
-        dotnet build ./EastSeat.ResourceIdea.slnx --no-restore --framework net9.0 -maxcpucount:1
-
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3

@@ -1,7 +1,10 @@
-name: 'Create Issues from TODO Comments'
+name: "Create Issues from TODO Comments"
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Test"]
+    types:
+      - completed
     branches:
       - main
   workflow_dispatch:
@@ -9,13 +12,14 @@ on:
 jobs:
   todo-to-issue:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       issues: write
       contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Create issues from TODO comments
         uses: alstr/todo-to-issue-action@v4
         with:
@@ -39,4 +43,3 @@ jobs:
           AUTO_P: true
           AUTO_ASSIGN: true
           CLOSE_ISSUES: false
-          INCLUDE_PATTERN: "**/*.cs,**/*.razor,**/*.js,**/*.ts,**/*.md"

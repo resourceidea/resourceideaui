@@ -5,9 +5,10 @@ name: Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -15,18 +16,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-  
-    - name: Setup .NET 9
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '9.0.x'
+      - uses: actions/checkout@v3
 
-    - name: Restore dependencies
-      run:  dotnet restore ./EastSeat.ResourceIdea.slnx
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "9.0.x"
 
-    - name: Clean
-      run: dotnet clean ./EastSeat.ResourceIdea.slnx
+      - name: Restore dependencies
+        run: dotnet restore ./EastSeat.ResourceIdea.slnx
 
-    - name: Build  
-      run: dotnet build ./EastSeat.ResourceIdea.slnx -v detailed --no-restore --framework net9.0 -maxcpucount:1
+      - name: Clean
+        run: dotnet clean ./EastSeat.ResourceIdea.slnx
+
+      - name: Build
+        run: dotnet build ./EastSeat.ResourceIdea.slnx -v detailed --no-restore --framework net9.0 -maxcpucount:1
