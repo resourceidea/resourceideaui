@@ -1,172 +1,75 @@
 ﻿using EastSeat.ResourceIdea.DataStore.Configuration.DatabaseStartup;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
+using EastSeat.ResourceIdea.DataStore.Wrappers;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
 namespace EastSeat.ResourceIdea.DataStore.UnitTests;
 
 public class DataStoreSetupTests
 {
-    [Fact(Skip = "To be implemented")]
-    public async Task RunDatabaseStartupTasks_WithStartupTasksEnabled_RunsConfiguredTasks()
+    [Fact]
+    public void ConfigurationWrapper_GetDatabaseStartupTasksConfig_WithEnabledConfig_ReturnsCorrectConfig()
     {
         // Arrange
-        var appMock = new Mock<IApplicationBuilder>();
-        var serviceProviderMock = new Mock<IServiceProvider>();
-        var scopeFactoryMock = new Mock<IServiceScopeFactory>();
-        var serviceScopeMock = new Mock<IServiceScope>();
-        var scopedServiceProviderMock = new Mock<IServiceProvider>();
-        var dbContextMock = new Mock<ResourceIdeaDBContext>();
-        var configurationMock = new Mock<IConfiguration>();
-        var configurationSectionMock = new Mock<IConfigurationSection>();
-
-        var startupTasksConfig = new DatabaseStartupTasksConfig
+        var configData = new Dictionary<string, string?>
         {
-            Enabled = true,
-            Tasks =
-            [
-                new DatabaseStartupTask
-                {
-                    Enabled = true,
-                    Type = "EastSeat.ResourceIdea.Web.StartupTasks.ApplyMigrations"
-                }
-            ]
+            { "DatabaseStartupTasks:Enabled", "true" },
+            { "DatabaseStartupTasks:Tasks:0:Enabled", "true" },
+            { "DatabaseStartupTasks:Tasks:0:Type", "EastSeat.ResourceIdea.Web.StartupTasks.ApplyMigrations" }
         };
 
-        configurationSectionMock.Setup(c => c.Get<DatabaseStartupTasksConfig>())
-            .Returns(startupTasksConfig);
-        configurationMock.Setup(c => c.GetSection("DatabaseStartupTasks"))
-            .Returns(configurationSectionMock.Object);
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(configData)
+            .Build();
 
-        scopedServiceProviderMock.Setup(s => s.GetService(typeof(ResourceIdeaDBContext)))
-            .Returns(dbContextMock.Object);
-        scopedServiceProviderMock.Setup(s => s.GetService(typeof(IConfiguration)))
-            .Returns(configurationMock.Object);
-
-        serviceScopeMock.Setup(s => s.ServiceProvider)
-            .Returns(scopedServiceProviderMock.Object);
-        scopeFactoryMock.Setup(s => s.CreateScope())
-            .Returns(serviceScopeMock.Object);
-
-        serviceProviderMock.Setup(s => s.GetService(typeof(IServiceScopeFactory)))
-            .Returns(scopeFactoryMock.Object);
-
-        appMock.SetupGet(a => a.ApplicationServices)
-            .Returns(serviceProviderMock.Object);
-
-        dbContextMock.Setup(d => d.Database.MigrateAsync(default))
-            .Returns(Task.CompletedTask)
-            .Verifiable();
+        var wrapper = new ConfigurationWrapper(configuration);
 
         // Act
-        var result = await DataStoreSetup.RunDatabaseStartupTasks(appMock.Object);
+        var result = wrapper.GetDatabaseStartupTasksConfig();
 
         // Assert
-        Assert.Equal(appMock.Object, result);
-        dbContextMock.Verify();
+        Assert.NotNull(result);
+        Assert.True(result.Enabled);
+        Assert.Single(result.Tasks);
+        Assert.True(result.Tasks[0].Enabled);
+        Assert.Equal("EastSeat.ResourceIdea.Web.StartupTasks.ApplyMigrations", result.Tasks[0].Type);
     }
 
-    [Fact(Skip = "To be implemented")]
-    public async Task RunDatabaseStartupTasks_WithStartupTasksDisabled_DoesNotRunTasks()
+    [Fact]
+    public void ConfigurationWrapper_GetDatabaseStartupTasksConfig_WithDisabledConfig_ReturnsCorrectConfig()
     {
         // Arrange
-        var appMock = new Mock<IApplicationBuilder>();
-        var serviceProviderMock = new Mock<IServiceProvider>();
-        var scopeFactoryMock = new Mock<IServiceScopeFactory>();
-        var serviceScopeMock = new Mock<IServiceScope>();
-        var scopedServiceProviderMock = new Mock<IServiceProvider>();
-        var dbContextMock = new Mock<ResourceIdeaDBContext>();
-        var configurationMock = new Mock<IConfiguration>();
-        var configurationSectionMock = new Mock<IConfigurationSection>();
-
-        var startupTasksConfig = new DatabaseStartupTasksConfig
+        var configData = new Dictionary<string, string?>
         {
-            Enabled = false
+            { "DatabaseStartupTasks:Enabled", "false" }
         };
 
-        configurationSectionMock.Setup(c => c.Get<DatabaseStartupTasksConfig>())
-            .Returns(startupTasksConfig);
-        configurationMock.Setup(c => c.GetSection("DatabaseStartupTasks"))
-            .Returns(configurationSectionMock.Object);
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(configData)
+            .Build();
 
-        scopedServiceProviderMock.Setup(s => s.GetService(typeof(ResourceIdeaDBContext)))
-            .Returns(dbContextMock.Object);
-        scopedServiceProviderMock.Setup(s => s.GetService(typeof(IConfiguration)))
-            .Returns(configurationMock.Object);
-
-        serviceScopeMock.Setup(s => s.ServiceProvider)
-            .Returns(scopedServiceProviderMock.Object);
-        scopeFactoryMock.Setup(s => s.CreateScope())
-            .Returns(serviceScopeMock.Object);
-
-        serviceProviderMock.Setup(s => s.GetService(typeof(IServiceScopeFactory)))
-            .Returns(scopeFactoryMock.Object);
-
-        appMock.SetupGet(a => a.ApplicationServices)
-            .Returns(serviceProviderMock.Object);
+        var wrapper = new ConfigurationWrapper(configuration);
 
         // Act
-        var result = await DataStoreSetup.RunDatabaseStartupTasks(appMock.Object);
+        var result = wrapper.GetDatabaseStartupTasksConfig();
 
         // Assert
-        Assert.Equal(appMock.Object, result);
-        dbContextMock.Verify(d => d.Database.MigrateAsync(default), Times.Never);
+        Assert.NotNull(result);
+        Assert.False(result.Enabled);
     }
 
-    [Fact(Skip = "To be implemented")]
-    public async Task RunDatabaseStartupTasks_WithUnknownTaskType_LogsUnknownTask()
+    [Fact]
+    public void ConfigurationWrapper_GetDatabaseStartupTasksConfig_WithMissingConfig_ReturnsEmptyConfig()
     {
         // Arrange
-        var appMock = new Mock<IApplicationBuilder>();
-        var serviceProviderMock = new Mock<IServiceProvider>();
-        var scopeFactoryMock = new Mock<IServiceScopeFactory>();
-        var serviceScopeMock = new Mock<IServiceScope>();
-        var scopedServiceProviderMock = new Mock<IServiceProvider>();
-        var dbContextMock = new Mock<ResourceIdeaDBContext>();
-        var configurationMock = new Mock<IConfiguration>();
-        var configurationSectionMock = new Mock<IConfigurationSection>();
-
-        var startupTasksConfig = new DatabaseStartupTasksConfig
-        {
-            Enabled = true,
-            Tasks = new List<DatabaseStartupTask>
-            {
-                new DatabaseStartupTask
-                {
-                    Enabled = true,
-                    Type = "Unknown.Task.Type"
-                }
-            }
-        };
-
-        configurationSectionMock.Setup(c => c.Get<DatabaseStartupTasksConfig>())
-            .Returns(startupTasksConfig);
-        configurationMock.Setup(c => c.GetSection("DatabaseStartupTasks"))
-            .Returns(configurationSectionMock.Object);
-
-        scopedServiceProviderMock.Setup(s => s.GetService(typeof(ResourceIdeaDBContext)))
-            .Returns(dbContextMock.Object);
-        scopedServiceProviderMock.Setup(s => s.GetService(typeof(IConfiguration)))
-            .Returns(configurationMock.Object);
-
-        serviceScopeMock.Setup(s => s.ServiceProvider)
-            .Returns(scopedServiceProviderMock.Object);
-        scopeFactoryMock.Setup(s => s.CreateScope())
-            .Returns(serviceScopeMock.Object);
-
-        serviceProviderMock.Setup(s => s.GetService(typeof(IServiceScopeFactory)))
-            .Returns(scopeFactoryMock.Object);
-
-        appMock.SetupGet(a => a.ApplicationServices)
-            .Returns(serviceProviderMock.Object);
+        var configuration = new ConfigurationBuilder().Build();
+        var wrapper = new ConfigurationWrapper(configuration);
 
         // Act
-        var result = await DataStoreSetup.RunDatabaseStartupTasks(appMock.Object);
+        var result = wrapper.GetDatabaseStartupTasksConfig();
 
         // Assert
-        Assert.Equal(appMock.Object, result);
-        // Verify that LogUnknownStartupTaskType was called if possible
+        Assert.NotNull(result);
+        Assert.False(result.Enabled); // Default value
     }
 }

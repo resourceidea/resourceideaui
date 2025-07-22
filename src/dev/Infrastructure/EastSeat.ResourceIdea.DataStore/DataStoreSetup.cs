@@ -6,6 +6,7 @@ using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Contracts;
 using EastSeat.ResourceIdea.DataStore.Configuration.DatabaseStartup;
 using EastSeat.ResourceIdea.DataStore.Services;
+using EastSeat.ResourceIdea.DataStore.Wrappers;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 
@@ -39,6 +40,7 @@ public static class DataStoreSetup
         services.AddTransient<ISubscriptionServicesService, SubscriptionServicesService>();
         services.AddTransient<ITenantsService, TenantsService>();
         services.AddTransient<IWorkItemsService, WorkItemsService>();
+        services.AddTransient<IConfigurationWrapper, ConfigurationWrapper>();
 
         return services;
     }
@@ -52,8 +54,8 @@ public static class DataStoreSetup
         using var scope = app.ApplicationServices.CreateScope();
 
         var dbContext = scope.ServiceProvider.GetRequiredService<ResourceIdeaDBContext>();
-        var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-        var startupTasksConfig = configuration.GetSection("DatabaseStartupTasks").Get<DatabaseStartupTasksConfig>();
+        var configurationWrapper = scope.ServiceProvider.GetRequiredService<IConfigurationWrapper>();
+        var startupTasksConfig = configurationWrapper.GetDatabaseStartupTasksConfig();
 
         if (startupTasksConfig?.Enabled is true)
         {
