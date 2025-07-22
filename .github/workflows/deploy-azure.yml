@@ -60,17 +60,6 @@ jobs:
           dotnet build ./EastSeat.ResourceIdea.slnx
           --configuration Release --no-restore --framework net9.0
 
-      - name: Install EF Core tools
-        run: dotnet tool install --global dotnet-ef
-
-      - name: Run EF Core database migrations
-        run: >
-          dotnet ef database update
-          --project ./src/dev/Infrastructure/EastSeat.ResourceIdea.DataStore/
-          --startup-project ./src/dev/Web/EastSeat.ResourceIdea.Web/
-          --connection "${{ secrets.AZURE_DATABASE_CONNECTION_STRING }}"
-          --configuration Release
-
       - name: Publish web application
         run: >
           dotnet publish
