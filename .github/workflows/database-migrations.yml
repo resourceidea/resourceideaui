@@ -39,7 +39,7 @@ jobs:
         run: dotnet restore ./EastSeat.ResourceIdea.slnx
 
       - name: Build for migrations
-        run: dotnet build ./EastSeat.ResourceIdea.slnx --no-restore --framework net9.0 -maxcpucount:1
+        run: dotnet build ./EastSeat.ResourceIdea.slnx --configuration Release --no-restore --framework net9.0 -maxcpucount:1
 
       - name: Install EF Core tools
         run: dotnet tool install --global dotnet-ef
@@ -48,7 +48,6 @@ jobs:
         env:
           RESOURCEIDEA_CONNECTION_STRING: ${{ secrets.RESOURCEIDEA_CONNECTION_STRING }}
         run: >
-          dotnet ef database update
           dotnet ef database update
           --project ./src/dev/Infrastructure/EastSeat.ResourceIdea.DataStore/EastSeat.ResourceIdea.DataStore.csproj
           --startup-project ./src/dev/Web/EastSeat.ResourceIdea.Web/EastSeat.ResourceIdea.Web.csproj
