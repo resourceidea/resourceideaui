@@ -49,6 +49,8 @@ jobs:
           RESOURCEIDEA_CONNECTION_STRING: ${{ secrets.RESOURCEIDEA_CONNECTION_STRING }}
         run: >
           dotnet ef database update
-          --project ./src/dev/Infrastructure/EastSeat.ResourceIdea.DataStore/
+          dotnet ef database update
+          --project ./src/dev/Infrastructure/EastSeat.ResourceIdea.DataStore/EastSeat.ResourceIdea.DataStore.csproj
+          --startup-project ./src/dev/Web/EastSeat.ResourceIdea.Web/EastSeat.ResourceIdea.Web.csproj
           --configuration Release
           --no-build
