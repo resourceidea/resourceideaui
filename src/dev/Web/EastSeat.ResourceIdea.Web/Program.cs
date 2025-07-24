@@ -119,6 +119,9 @@ app.UseStaticFiles();
 app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
 
+// Run database startup tasks (migrations, seed data, etc.)
+await app.RunDatabaseStartupTasks();
+
 app.Run();
 
 // Make the implicit Program class public for testing
