@@ -10,6 +10,7 @@ using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Contracts;
 using EastSeat.ResourceIdea.DataStore;
 using EastSeat.ResourceIdea.DataStore.Services;
+using EastSeat.ResourceIdea.DataStore.Wrappers;
 using EastSeat.ResourceIdea.Domain.Exceptions;
 using EastSeat.ResourceIdea.Web.Services;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,7 @@ namespace EastSeat.ResourceIdea.Web
             services.AddScoped<IWorkItemsService, WorkItemsService>();
 
             services.AddScoped<NotificationService>();
+            services.AddScoped<IConfigurationWrapper, ConfigurationWrapper>();
         }
 
         private static string GetDbContextConnectionString() => GetUserEnvironmentVariable("RESOURCEIDEA_CONNECTION_STRING");
