@@ -12,6 +12,7 @@ using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.Employees;
 
@@ -39,7 +40,7 @@ public partial class EmployeesTimeline : ResourceIdeaComponentBase
         var today = DateTime.Today;
         StartMonth = today.Month;
         StartYear = today.Year;
-        
+
         var endDate = today.AddMonths(3);
         EndMonth = endDate.Month;
         EndYear = endDate.Year;
@@ -65,6 +66,32 @@ public partial class EmployeesTimeline : ResourceIdeaComponentBase
                 ? response.Content.Value
                 : null;
         }, "Loading employees timeline");
+    }
+
+    private async Task OnStartMonthChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var month))
+        {
+            StartMonth = month;
+            await LoadTimelineData();
+        }
+    }
+
+    private async Task OnEndMonthChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var month))
+        {
+            EndMonth = month;
+            await LoadTimelineData();
+        }
+    }
+
+    private async Task OnSearchKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await LoadTimelineData();
+        }
     }
 
     private void NavigateToWorkItem(Guid workItemId)
@@ -99,30 +126,30 @@ public partial class EmployeesTimeline : ResourceIdeaComponentBase
     private string GetWorkItemTooltip(Domain.WorkItems.Models.WorkItemModel workItem)
     {
         var tooltip = $"Title: {workItem.Title}";
-        
+
         if (!string.IsNullOrEmpty(workItem.Description))
         {
             tooltip += $"\nDescription: {workItem.Description}";
         }
-        
+
         if (!string.IsNullOrEmpty(workItem.ClientName))
         {
             tooltip += $"\nClient: {workItem.ClientName}";
         }
-        
+
         if (!string.IsNullOrEmpty(workItem.EngagementTitle))
         {
             tooltip += $"\nEngagement: {workItem.EngagementTitle}";
         }
-        
+
         tooltip += $"\nStatus: {workItem.Status}";
         tooltip += $"\nPriority: {workItem.Priority}";
-        
+
         if (workItem.StartDate.HasValue)
         {
             tooltip += $"\nStart Date: {workItem.StartDate.Value:MMM dd, yyyy}";
         }
-        
+
         if (workItem.CompletedDate.HasValue)
         {
             tooltip += $"\nCompleted Date: {workItem.CompletedDate.Value:MMM dd, yyyy}";
@@ -146,13 +173,13 @@ public partial class EmployeesTimeline : ResourceIdeaComponentBase
         if (!workItem.StartDate.HasValue) return "display: none;";
 
         var itemStartDate = DateOnly.FromDateTime(workItem.StartDate.Value.Date);
-        var itemEndDate = workItem.CompletedDate.HasValue 
-            ? DateOnly.FromDateTime(workItem.CompletedDate.Value.Date) 
+        var itemEndDate = workItem.CompletedDate.HasValue
+            ? DateOnly.FromDateTime(workItem.CompletedDate.Value.Date)
             : endDate;
-        
+
         if (itemStartDate < startDate) itemStartDate = startDate;
         if (itemEndDate > endDate) itemEndDate = endDate;
-        
+
         var totalDays = endDate.DayNumber - startDate.DayNumber + 1;
         var leftOffset = ((itemStartDate.DayNumber - startDate.DayNumber) / (double)totalDays) * 100;
         var width = ((itemEndDate.DayNumber - itemStartDate.DayNumber + 1) / (double)totalDays) * 100;
@@ -183,31 +210,31 @@ public partial class EmployeesTimeline : ResourceIdeaComponentBase
 
     private Domain.WorkItems.Models.WorkItemModel? GetWorkItemForDate(EmployeeTimelineModel employee, DateOnly date)
     {
-        return employee.WorkItems.FirstOrDefault(wi => 
-            wi.StartDate.HasValue && 
+        return employee.WorkItems.FirstOrDefault(wi =>
+            wi.StartDate.HasValue &&
             IsDateInWorkItemRange(wi, date));
     }
 
     private bool IsDateInWorkItemRange(Domain.WorkItems.Models.WorkItemModel workItem, DateOnly date)
     {
         if (!workItem.StartDate.HasValue) return false;
-        
+
         var startDate = DateOnly.FromDateTime(workItem.StartDate.Value.Date);
-        var endDate = workItem.CompletedDate.HasValue 
+        var endDate = workItem.CompletedDate.HasValue
             ? DateOnly.FromDateTime(workItem.CompletedDate.Value.Date)
             : DateOnly.FromDateTime(DateTime.Today.AddDays(365)); // Default to 1 year if no end date
-        
+
         return date >= startDate && date <= endDate;
     }
 
     private string GetWorkItemDisplayText(Domain.WorkItems.Models.WorkItemModel workItem)
     {
         var displayText = "";
-        
+
         if (!string.IsNullOrEmpty(workItem.ClientName))
         {
             displayText = workItem.ClientName;
-            
+
             if (!string.IsNullOrEmpty(workItem.EngagementTitle))
             {
                 displayText += $" - {workItem.EngagementTitle}";
@@ -231,11 +258,11 @@ public partial class EmployeesTimeline : ResourceIdeaComponentBase
         // Simple calculation based on work items assigned
         // In a real implementation, this would calculate based on hours or capacity
         var totalWorkItems = employee.WorkItems.Count;
-        var activeWorkItems = employee.WorkItems.Count(wi => 
+        var activeWorkItems = employee.WorkItems.Count(wi =>
             wi.Status == WorkItemStatus.InProgress || wi.Status == WorkItemStatus.Completed);
-        
+
         if (totalWorkItems == 0) return "0";
-        
+
         var utilization = (activeWorkItems * 100.0) / totalWorkItems;
         return utilization.ToString("F1");
     }

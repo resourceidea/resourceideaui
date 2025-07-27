@@ -63,13 +63,33 @@ public static class DataStoreSetup
                 .Where(task => task.Enabled)
                 .Select(task => task.Type switch
                 {
-                    ApplyMigrationTaskType => new Func<ResourceIdeaDBContext, Task>(context => context.Database.MigrateAsync()),
-                    CreateSubscriptionServicesTaskType => new Func<ResourceIdeaDBContext, Task>(CreateSubscriptionServicesAsync),
-                    // CreateSystemRolesTaskType => new Func<ResourceIdeaDBContext, Task>(CreateSystemRolesAsync),
-                    // CreateSystemRolesClaimsTaskType => new Func<ResourceIdeaDBContext, Task>(CreateSystemRolesClaimsAsync),
-                    _ => new Func<ResourceIdeaDBContext, Task>(LogUnknownStartupTaskType)
+                    ApplyMigrationTaskType => new Func<IServiceScope, Task>(async scope =>
+                    {
+                        var context = scope.ServiceProvider.GetRequiredService<ResourceIdeaDBContext>();
+                        await context.Database.MigrateAsync();
+                    }),
+                    CreateSubscriptionServicesTaskType => new Func<IServiceScope, Task>(async scope =>
+                    {
+                        var context = scope.ServiceProvider.GetRequiredService<ResourceIdeaDBContext>();
+                        await CreateSubscriptionServicesAsync(context);
+                    }),
+                    // CreateSystemRolesTaskType => new Func<IServiceScope, Task>(async scope =>
+                    // {
+                    //     var context = scope.ServiceProvider.GetRequiredService<ResourceIdeaDBContext>();
+                    //     await CreateSystemRolesAsync(context);
+                    // }),
+                    // CreateSystemRolesClaimsTaskType => new Func<IServiceScope, Task>(async scope =>
+                    // {
+                    //     var context = scope.ServiceProvider.GetRequiredService<ResourceIdeaDBContext>();
+                    //     await CreateSystemRolesClaimsAsync(context);
+                    // }),
+                    _ => new Func<IServiceScope, Task>(scope => LogUnknownStartupTaskType())
                 })
-                .Select(startupTask => startupTask(dbContext));
+                .Select(async startupTask =>
+                {
+                    using var taskScope = app.ApplicationServices.CreateScope();
+                    await startupTask(taskScope);
+                });
 
             await Task.WhenAll(tasks);
         }
@@ -77,7 +97,7 @@ public static class DataStoreSetup
         return app;
     }
 
-    private static Task LogUnknownStartupTaskType(ResourceIdeaDBContext _)
+    private static Task LogUnknownStartupTaskType()
     {
         // TODO: Log unknown startup task type.
         return Task.CompletedTask;

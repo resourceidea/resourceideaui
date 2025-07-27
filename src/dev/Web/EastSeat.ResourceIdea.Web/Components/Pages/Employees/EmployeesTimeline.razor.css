@@ -1,0 +1,10 @@
+/* Component-specific styles - basic fallback */
+.timeline-container {
+  width: calc(100vw - 280px - 40px);
+  max-width: 100%;
+  height: 70vh;
+  overflow-x: auto;
+  overflow-y: auto;
+  /* margin-left: 5.1em; */
+  padding: 0;
+}
