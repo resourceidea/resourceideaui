@@ -63,8 +63,7 @@ jobs:
       - name: Publish web application
         run: >
           dotnet publish
-          ./src/dev/Web/EastSeat.ResourceIdea.Web/
-          EastSeat.ResourceIdea.Web.csproj
+          ./src/dev/Web/EastSeat.ResourceIdea.Web/EastSeat.ResourceIdea.Web.csproj
           --configuration Release --no-build --output ./publish
 
       - name: Deploy to Azure Web App
