@@ -55,7 +55,15 @@ namespace EastSeat.ResourceIdea.Web
         {
             try
             {
-                string? value = Environment.GetEnvironmentVariable(environmentVariableKey, EnvironmentVariableTarget.User);
+                // Try to get from process environment variables first (Azure App Service, Docker, etc.)
+                string? value = Environment.GetEnvironmentVariable(environmentVariableKey);
+                
+                // If not found, try user environment variables (local development)
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    value = Environment.GetEnvironmentVariable(environmentVariableKey, EnvironmentVariableTarget.User);
+                }
+                
                 string nonEmptyValue = value.ThrowIfNullOrEmptyOrWhiteSpace();
                 return nonEmptyValue;
             }
