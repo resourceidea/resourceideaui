@@ -52,13 +52,17 @@ jobs:
         with:
           dotnet-version: "9.0.x"
 
+      - name: Clean build artifacts
+        run: |
+          find . -type d \( -name "bin" -o -name "obj" \) -exec rm -rf {} +
+
       - name: Restore dependencies
         run: dotnet restore ./EastSeat.ResourceIdea.slnx
 
       - name: Build for Release
         run: >
           dotnet build ./EastSeat.ResourceIdea.slnx
-          --configuration Release --no-restore --framework net9.0
+          --configuration Release --no-restore --framework net9.0 -m:1
 
       - name: Publish web application
         run: >
