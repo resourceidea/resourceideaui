@@ -13,6 +13,7 @@ using EastSeat.ResourceIdea.Web.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,6 +96,10 @@ builder.Services.AddScoped<IExceptionHandlingService, ExceptionHandlingService>(
 // Add notification service
 builder.Services.AddScoped<NotificationService>();
 
+// Add health checks for Azure App Service monitoring
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<ResourceIdeaDBContext>("database");
+
 var app = builder.Build();
 
 // Add global exception handling middleware
@@ -116,6 +121,10 @@ app.UseAuthorization();
 app.UseAntiforgery();
 
 app.UseStaticFiles();
+
+// Add health check endpoint for Azure App Service monitoring
+app.MapHealthChecks("/health");
+
 app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
 
