@@ -1,12 +1,10 @@
 name: "CodeQL"
 
 on:
-  workflow_run:
-    workflows: ["Create Issues from TODO Comments"]
-    types:
-      - completed
-    branches:
-      - main
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
   schedule:
     - cron: "0 0 * * 0"
   workflow_dispatch:
@@ -15,7 +13,7 @@ jobs:
   analyze:
     name: Analyze
     runs-on: windows-latest
-    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'pull_request' }}
 
     steps:
       - name: Checkout repository
