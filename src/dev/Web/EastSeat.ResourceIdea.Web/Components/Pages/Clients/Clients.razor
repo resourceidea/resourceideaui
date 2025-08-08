@@ -1,5 +1,6 @@
 ﻿@page "/clients"
 @page "/clients/index"
+@inherits ResourceIdeaComponentBase
 
 <ResourceIdeaPageTitle Title="Clients" />
 
@@ -11,7 +12,7 @@
     </NavLink>
 
     <div class="content-container">
-        @if (IsLoadingPage)
+        @if (IsLoading)
         {
             <div class="d-flex justify-content-center">
                 <div class="spinner-border" role="status">
@@ -19,11 +20,15 @@
                 </div>
             </div>
         }
+        else if (HasError)
+        {
+            <div class="alert alert-danger" role="alert">
+                @ErrorMessage
+            </div>
+        }
         else
         {
-            <TenantClientsList
-                PagedClientsList="@TenantClients"
-                OnClientsPageChange="HandlePageChangeAsync" />
+            <TenantClientsList PagedClientsList="@TenantClients" OnClientsPageChange="HandlePageChangeAsync" />
         }
     </div>
 </div>

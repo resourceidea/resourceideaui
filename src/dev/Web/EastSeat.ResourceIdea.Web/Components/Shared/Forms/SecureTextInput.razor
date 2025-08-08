@@ -1,0 +1,23 @@
+@inherits SecureInputBase<string>
+
+<input @attributes="AdditionalAttributes" class="@CssClass" type="@InputType" value="@CurrentValueAsString"
+    maxlength="@MaxLength"
+    @onchange="EventCallback.Factory.CreateBinder<string?>(this, __value => CurrentValueAsString = __value, CurrentValueAsString)"
+    @onchange:preventDefault="PreventDefault" />
+
+@code {
+    /// <summary>
+    /// Input type (text, email, password, etc.)
+    /// </summary>
+    [Parameter] public string InputType { get; set; } = "text";
+
+    /// <summary>
+    /// Whether to prevent the default change event behavior
+    /// </summary>
+    [Parameter] public bool PreventDefault { get; set; } = false;
+
+    protected override string FormatValueAsString(string? value)
+    {
+        return value ?? string.Empty;
+    }
+}

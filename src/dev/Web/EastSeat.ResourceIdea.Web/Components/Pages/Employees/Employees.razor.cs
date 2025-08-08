@@ -46,7 +46,7 @@ public partial class Employees : ResourceIdeaComponentBase
     /// <returns>A task representing the asynchronous operation.</returns>
     private async Task LoadEmployeesAsync(int page = 1)
     {
-        await ExecuteAsync(async () =>
+        var success = await ExecuteAsync(async () =>
         {
             var query = new TenantEmployeesQuery
             {
@@ -65,10 +65,15 @@ public partial class Employees : ResourceIdeaComponentBase
                 // Error handling is now managed by ExecuteAsync
                 TenantEmployees = null;
             }
-        }, $"Loading employees page {page}", manageLoadingState: false);
 
-        // Manual loading state management for backward compatibility
-        IsLoadingModelData = false;
-        StateHasChanged();
+            // Only set loading state after successful data load
+            IsLoadingModelData = false;
+        }, $"Loading employees page {page}");
+
+        // Only call StateHasChanged if the operation was successful
+        if (success)
+        {
+            SafeStateHasChanged();
+        }
     }
 }
