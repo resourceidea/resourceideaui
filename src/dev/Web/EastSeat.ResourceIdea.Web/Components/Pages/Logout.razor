@@ -1,8 +1,11 @@
 @page "/logout"
 @using Microsoft.AspNetCore.Identity
 @using EastSeat.ResourceIdea.DataStore.Identity.Entities
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject SignInManager<ApplicationUser> SignInManager
 @inject NavigationManager Navigation
+@inject ProtectedSessionStorage ProtectedSessionStore
+@inject ILogger<Logout> Logger
 
 <PageTitle>Logout - ResourceIdea</PageTitle>
 
@@ -58,7 +61,34 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await SignInManager.SignOutAsync();
-        Navigation.NavigateTo("/", true);
+        try
+        {
+            Logger.LogInformation("User logout initiated");
+
+            // Clear session storage first
+            try
+            {
+                await ProtectedSessionStore.DeleteAsync("UserSession");
+                await ProtectedSessionStore.DeleteAsync("TenantContext");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning(ex, "Error clearing session storage during logout");
+            }
+
+            // Sign out the user
+            await SignInManager.SignOutAsync();
+
+            Logger.LogInformation("User signed out successfully");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error during logout process");
+        }
+        finally
+        {
+            // Force navigation with forceLoad=true to ensure clean state
+            Navigation.NavigateTo("/", forceLoad: true);
+        }
     }
 }

@@ -51,13 +51,6 @@
                 <ValidationMessage For="() => Input.Password" class="text-danger" />
             </div>
 
-            <div class="form-check">
-                <InputCheckbox @bind-Value="Input.RememberMe" class="form-check-input" id="remember-me" />
-                <label class="form-check-label" for="remember-me">
-                    Remember me
-                </label>
-            </div>
-
             <button type="submit" class="btn btn-primary login-btn" disabled="@isLoading">
                 @if (isLoading)
                 {
@@ -135,6 +128,10 @@
         margin-bottom: 20px;
     }
 
+    .form-group:last-of-type {
+        margin-bottom: 25px;
+    }
+
     .form-label {
         color: #495057;
         font-weight: 500;
@@ -207,15 +204,43 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         if (authState.User.Identity?.IsAuthenticated == true)
         {
-            // Validate that the authenticated user has required claims
-            if (await ValidateUserClaimsAsync(authState.User))
+            // Check if this is a fresh session or persistent login
+            var sessionTime = authState.User.FindFirst("SessionStartTime");
+            var currentTime = DateTimeOffset.UtcNow;
+
+            // If no session time claim, this might be a stale session
+            if (sessionTime == null)
             {
+                Logger.LogWarning("User {UserName} has no session time claim. Forcing re-authentication.",
+                authState.User.Identity.Name);
+                await SignOutAndRedirectToLogin();
+                return;
+            }
+
+            // Check if session is older than 12 hours (force re-authentication)
+            if (DateTimeOffset.TryParse(sessionTime.Value, out var sessionStart))
+            {
+                if (currentTime.Subtract(sessionStart).TotalHours > 12)
+                {
+                    Logger.LogInformation("User {UserName} session expired. Forcing re-authentication.",
+                    authState.User.Identity.Name);
+                    await SignOutAndRedirectToLogin();
+                    return;
+                }
+            }
+
+            // Validate that the authenticated user has required claims
+            if (ValidateUserClaims(authState.User))
+            {
+                Logger.LogInformation("User {UserName} already authenticated with valid claims. Redirecting.",
+                authState.User.Identity.Name);
                 Navigation.NavigateTo(ReturnUrl ?? "/employees", true);
             }
             else
             {
                 // User is authenticated but missing required claims - force logout
-                Logger.LogWarning("User {UserName} is authenticated but missing required claims. Forcing logout.", authState.User.Identity.Name);
+                Logger.LogWarning("User {UserName} is authenticated but missing required claims. Forcing logout.",
+                authState.User.Identity.Name);
                 await SignOutAndRedirectToLogin();
             }
         }
@@ -231,29 +256,47 @@
             var result = await SignInManager.PasswordSignInAsync(
             Input.Email,
             Input.Password,
-            Input.RememberMe,
-            lockoutOnFailure: false);
+            isPersistent: false, // Force non-persistent login regardless of RememberMe
+            lockoutOnFailure: true);
 
             if (result.Succeeded)
             {
+                Logger.LogInformation("User {UserName} logged in successfully.", Input.Email);
+
+                // Clear any existing session storage
+                await ProtectedSessionStore.DeleteAsync("UserSession");
+
+                // Create new session data
+                var sessionData = new
+                {
+                    LoginTime = DateTimeOffset.UtcNow,
+                    UserEmail = Input.Email,
+                    SessionId = Guid.NewGuid().ToString()
+                };
+                await ProtectedSessionStore.SetAsync("UserSession", sessionData);
+
                 Navigation.NavigateTo(ReturnUrl ?? "/employees", true);
             }
             else if (result.IsLockedOut)
             {
                 errorMessage = "This account has been locked out. Please try again later.";
+                Logger.LogWarning("User {UserName} account is locked.", Input.Email);
             }
             else if (result.IsNotAllowed)
             {
                 errorMessage = "Sign in is not allowed for this account.";
+                Logger.LogWarning("Login not allowed for user {UserName}.", Input.Email);
             }
             else
             {
                 errorMessage = "Invalid email or password.";
+                Logger.LogWarning("Failed login attempt for user {UserName}.", Input.Email);
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             errorMessage = "An error occurred during sign in. Please try again.";
+            Logger.LogError(ex, "Error during login for user {UserName}.", Input.Email);
         }
         finally
         {
@@ -266,7 +309,7 @@
     /// </summary>
     /// <param name="user">The authenticated user's ClaimsPrincipal</param>
     /// <returns>True if the user has all required claims, false otherwise</returns>
-    private async Task<bool> ValidateUserClaimsAsync(ClaimsPrincipal user)
+    private bool ValidateUserClaims(ClaimsPrincipal user)
     {
         try
         {
@@ -293,8 +336,8 @@
                 return false;
             }
 
-            Logger.LogInformation("User {UserName} has valid claims. TenantId: {TenantId}, IsBackendRole: {IsBackendRole}", 
-                user.Identity?.Name, tenantIdClaim, isBackendRoleClaim);
+            Logger.LogInformation("User {UserName} has valid claims. TenantId: {TenantId}, IsBackendRole: {IsBackendRole}",
+            user.Identity?.Name, tenantIdClaim, isBackendRoleClaim);
             return true;
         }
         catch (Exception ex)
@@ -313,10 +356,10 @@
         {
             await SignInManager.SignOutAsync();
             Logger.LogInformation("User signed out due to invalid claims");
-            
+
             // Clear any session storage that might contain stale data
             await ProtectedSessionStore.DeleteAsync("UserSession");
-            
+
             // Redirect to login page with current return URL
             var loginUrl = $"/login{(string.IsNullOrEmpty(ReturnUrl) ? "" : $"?returnUrl={Uri.EscapeDataString(ReturnUrl)}")}";
             Navigation.NavigateTo(loginUrl, true);
@@ -338,7 +381,5 @@
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; } = string.Empty;
-
-        public bool RememberMe { get; set; }
     }
 }
