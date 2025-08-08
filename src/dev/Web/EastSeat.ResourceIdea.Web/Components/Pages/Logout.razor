@@ -1,64 +1,77 @@
 @page "/logout"
-@using Microsoft.AspNetCore.Identity
-@using EastSeat.ResourceIdea.DataStore.Identity.Entities
-@inject SignInManager<ApplicationUser> SignInManager
-@inject NavigationManager Navigation
+@inherits ResourceIdeaComponentBase
+@using EastSeat.ResourceIdea.Application.Features.Authentication.Commands
+@using EastSeat.ResourceIdea.Web.Components.Base
+@using MediatR
+@inject IMediator Mediator
 
 <PageTitle>Logout - ResourceIdea</PageTitle>
 
+<link href="~/css/components/logout.css" rel="stylesheet" />
+
 <div class="logout-container">
     <div class="logout-card">
-        <div class="logout-icon">
-            <i class="fas fa-sign-out-alt"></i>
-        </div>
-        <h2 class="logout-title">Signing out...</h2>
-        <p class="logout-message">Please wait while we sign you out.</p>
+        @if (IsLoading)
+        {
+            <div class="logout-spinner">
+                <i class="fas fa-spinner fa-spin fa-3x"></i>
+            </div>
+            <h2 class="logout-title">Signing out...</h2>
+            <p class="logout-message">Please wait while we sign you out.</p>
+        }
+        else if (HasError)
+        {
+            <div class="logout-icon logout-error">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 class="logout-title">Logout Error</h2>
+            <p class="logout-message">@ErrorMessage</p>
+        }
+        else
+        {
+            <div class="logout-icon logout-success">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="logout-title">Signed out successfully</h2>
+            <p class="logout-message">You have been successfully signed out.</p>
+        }
     </div>
 </div>
 
-<style>
-    .logout-container {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #00879c 0%, #006b7d 100%);
-        padding: 20px;
-    }
-
-    .logout-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-        padding: 40px;
-        text-align: center;
-        max-width: 400px;
-        width: 100%;
-    }
-
-    .logout-icon {
-        color: #00879c;
-        font-size: 4rem;
-        margin-bottom: 20px;
-    }
-
-    .logout-title {
-        color: #495057;
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-    }
-
-    .logout-message {
-        color: #6c757d;
-        font-size: 1rem;
-    }
-</style>
-
 @code {
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        await SignInManager.SignOutAsync();
-        Navigation.NavigateTo("/", true);
+        await ExecuteAsync(async () =>
+        {
+            var command = new LogoutCommand
+            {
+                ReturnUrl = ReturnUrl
+            };
+
+            var result = await Mediator.Send(command);
+
+            if (result.IsSuccess && result.Content.HasValue && result.Content.Value.IsSuccess)
+            {
+                // Wait a moment to show the success message
+                await Task.Delay(1500);
+                
+                // Navigate to the redirect URL or home page
+                var redirectUrl = result.Content.Value.RedirectUrl ?? "/";
+                Navigation.NavigateTo(redirectUrl, true);
+            }
+            else if (result.Content.HasValue)
+            {
+                // Logout failed with a specific error message
+                SetError(result.Content.Value.ErrorMessage ?? "Logout failed. Please try again.");
+            }
+            else
+            {
+                // Generic failure
+                SetError("An error occurred during sign out. Please try again.");
+            }
+        }, "Processing logout");
     }
 }
