@@ -93,11 +93,7 @@
             if (authState.User.Identity?.IsAuthenticated == true)
             {
                 // Validate that the authenticated user has required claims
-                var validationCommand = new LoginCommand
-                {
-                    Email = string.Empty, // Not needed for validation
-                    Password = string.Empty // Not needed for validation
-                };
+
 
                 // We can use the authentication service directly for validation
                 // For now, just navigate to the return URL or default page
