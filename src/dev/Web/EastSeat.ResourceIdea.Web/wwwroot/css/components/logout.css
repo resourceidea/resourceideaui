@@ -1,0 +1,99 @@
+/* =============================================================================
+   Logout Component Styles
+   Path: wwwroot/css/components/logout.css
+   ============================================================================= */
+
+.logout-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #00879c 0%, #006b7d 100%);
+    padding: 20px;
+}
+
+.logout-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    animation: fadeInScale 0.5s ease-in-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.logout-icon {
+    color: #00879c;
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.logout-title {
+    color: #212529; /* contrast: 18.35:1 */
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.logout-message {
+    color: #343a40; /* contrast: 13.23:1 */
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
+.logout-spinner {
+    color: #00879c;
+    margin-bottom: 20px;
+}
+
+.logout-success {
+    color: #28a745;
+}
+
+.logout-error {
+    color: #dc3545;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .logout-container {
+        padding: 15px;
+    }
+    
+    .logout-card {
+        padding: 30px 20px;
+    }
+    
+    .logout-icon {
+        font-size: 3rem;
+    }
+    
+    .logout-title {
+        font-size: 1.3rem;
+    }
+}

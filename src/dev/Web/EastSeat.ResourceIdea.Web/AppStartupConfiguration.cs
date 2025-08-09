@@ -1,4 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Application.Extensions;
+using EastSeat.ResourceIdea.Application.Features.Authentication.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Departments.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Employees.Contracts;
@@ -50,6 +51,7 @@ namespace EastSeat.ResourceIdea.Web
             services.AddScoped<IWorkItemsService, WorkItemsService>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
             services.AddScoped<IWorkItemsService, WorkItemsService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             services.AddScoped<NotificationService>();
             services.AddScoped<IConfigurationWrapper, ConfigurationWrapper>();
