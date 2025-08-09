@@ -8,24 +8,24 @@ using EastSeat.ResourceIdea.Application.Features.Clients.Queries;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.Clients;
 
-public partial class Clients : ComponentBase
+public partial class Clients : ResourceIdeaComponentBase
 {
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
     [Inject] private IMediator Mediator { get; set; } = null!;
-    private bool IsLoadingPage { get; set; } = true;
     private PagedListResponse<TenantClientModel>? TenantClients { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        IsLoadingPage = false;
-        await LoadTenantClients();
-        IsLoadingPage = false;
-        StateHasChanged();
+        await ExecuteAsync(async () =>
+        {
+            await LoadTenantClients();
+        }, "Loading clients");
     }
 
     private async Task LoadTenantClients()
@@ -44,8 +44,7 @@ public partial class Clients : ComponentBase
         }
         else
         {
-            // Handle error response
-            // For example, show a notification or log the error
+            SetError("Failed to load clients. Please try again.");
         }
     }
 

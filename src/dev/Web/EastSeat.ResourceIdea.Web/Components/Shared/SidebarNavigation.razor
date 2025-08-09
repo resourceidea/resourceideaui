@@ -20,7 +20,7 @@
     <!-- Search Bar -->
     <div class="sidebar-search">
         <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
+            <i class="fas fa-search search-icon"></i><span class="icon-fallback search-icon">🔍</span>
             <input type="text" class="search-input" placeholder="Search" />
         </div>
     </div>
@@ -33,7 +33,7 @@
             <div class="menu-section">
                 <div class="menu-section-content expanded">
                     <NavLink class="menu-item backend-access-link" href="/backend/dashboard">
-                        <i class="fas fa-tools"></i>
+                        <i class="fas fa-tools"></i><span class="icon-fallback">🔧</span>
                         <span>Backend Dashboard</span>
                         <span class="badge bg-danger ms-auto">Admin</span>
                     </NavLink>
@@ -48,11 +48,12 @@
             <div class="menu-section">
                 <div class="menu-section-header" @onclick="TogglePlannerSection">
                     <span class="menu-section-title">Planner</span>
-                    <i class="fas fa-chevron-right section-toggle @(isPlannerExpanded ? "expanded" : "")"></i>
+                    <i class="fas fa-chevron-right section-toggle @(isPlannerExpanded ? "expanded" : "")"></i><span
+                        class="icon-fallback section-toggle @(isPlannerExpanded ? "expanded" : "")">▶</span>
                 </div>
                 <div class="menu-section-content @(isPlannerExpanded ? "expanded" : "")">
                     <NavLink class="menu-item" href="/employees-timeline">
-                        <i class="fas fa-calendar-alt"></i>
+                        <i class="fas fa-calendar-alt"></i><span class="icon-fallback">📅</span>
                         <span>Employees Schedule</span>
                     </NavLink>
                 </div>
@@ -62,19 +63,20 @@
             <div class="menu-section">
                 <div class="menu-section-header" @onclick="ToggleClientsSection">
                     <span class="menu-section-title">Clients</span>
-                    <i class="fas fa-chevron-right section-toggle @(isClientsExpanded ? "expanded" : "")"></i>
+                    <i class="fas fa-chevron-right section-toggle @(isClientsExpanded ? "expanded" : "")"></i><span
+                        class="icon-fallback section-toggle @(isClientsExpanded ? "expanded" : "")">▶</span>
                 </div>
                 <div class="menu-section-content @(isClientsExpanded ? "expanded" : "")">
                     <NavLink class="menu-item" href="/clients">
-                        <i class="fas fa-building"></i>
+                        <i class="fas fa-building"></i><span class="icon-fallback">🏢</span>
                         <span>Client List</span>
                     </NavLink>
                     <NavLink class="menu-item" href="/engagements">
-                        <i class="fas fa-handshake"></i>
+                        <i class="fas fa-handshake"></i><span class="icon-fallback">🤝</span>
                         <span>Engagements</span>
                     </NavLink>
                     <NavLink class="menu-item" href="/workitems">
-                        <i class="fas fa-tasks"></i>
+                        <i class="fas fa-tasks"></i><span class="icon-fallback">📋</span>
                         <span>Work Items</span>
                     </NavLink>
                 </div>
@@ -84,23 +86,24 @@
             <div class="menu-section">
                 <div class="menu-section-header" @onclick="ToggleAdministrationSection">
                     <span class="menu-section-title">Administration</span>
-                    <i class="fas fa-chevron-right section-toggle @(isAdministrationExpanded ? "expanded" : "")"></i>
+                    <i class="fas fa-chevron-right section-toggle @(isAdministrationExpanded ? "expanded" : "")"></i><span
+                        class="icon-fallback section-toggle @(isAdministrationExpanded ? "expanded" : "")">▶</span>
                 </div>
                 <div class="menu-section-content @(isAdministrationExpanded ? "expanded" : "")">
                     <NavLink class="menu-item" href="/employees">
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-users"></i><span class="icon-fallback">👥</span>
                         <span>Employees</span>
                     </NavLink>
                     <NavLink class="menu-item" href="/departments">
-                        <i class="fas fa-sitemap"></i>
+                        <i class="fas fa-sitemap"></i><span class="icon-fallback">🏛️</span>
                         <span>Departments</span>
                     </NavLink>
                     <NavLink class="menu-item" href="/jobpositions">
-                        <i class="fas fa-briefcase"></i>
+                        <i class="fas fa-briefcase"></i><span class="icon-fallback">💼</span>
                         <span>Job Positions</span>
                     </NavLink>
                     <NavLink class="menu-item" href="/admin/subscription">
-                        <i class="fas fa-credit-card"></i>
+                        <i class="fas fa-credit-card"></i><span class="icon-fallback">💳</span>
                         <span>Subscription</span>
                     </NavLink>
                 </div>
@@ -175,5 +178,15 @@
 
     .backend-access-link .fas {
         color: #fff;
+    }
+
+    /* Fallback icon styling */
+    .icon-fallback.section-toggle.expanded {
+        transform: rotate(90deg);
+        transition: transform 0.2s ease;
+    }
+
+    .icon-fallback.section-toggle {
+        transition: transform 0.2s ease;
     }
 </style>
