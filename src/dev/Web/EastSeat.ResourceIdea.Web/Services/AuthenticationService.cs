@@ -55,31 +55,31 @@ public class AuthenticationService : IAuthenticationService
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("User {Email} logged in successfully", email);
+                _logger.LogInformation("A user logged in successfully.");
                 return ResourceIdeaResponse<LoginResultModel>.Success(LoginResultModel.Success());
             }
 
             if (result.IsLockedOut)
             {
-                _logger.LogWarning("User {Email} account is locked out", email);
+                _logger.LogWarning("A user account is locked out.");
                 return ResourceIdeaResponse<LoginResultModel>.Success(
                     LoginResultModel.Failure("This account has been locked out. Please try again later.", isLockedOut: true));
             }
 
             if (result.IsNotAllowed)
             {
-                _logger.LogWarning("User {Email} is not allowed to sign in", email);
+                _logger.LogWarning("A user is not allowed to sign in.");
                 return ResourceIdeaResponse<LoginResultModel>.Success(
                     LoginResultModel.Failure("Sign in is not allowed for this account.", isNotAllowed: true));
             }
 
-            _logger.LogWarning("Failed login attempt for user {Email}", email);
+            _logger.LogWarning("Failed login attempt for a user.");
             return ResourceIdeaResponse<LoginResultModel>.Success(
                 LoginResultModel.Failure("Invalid email or password."));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during login for user {Email}", email);
+            _logger.LogError(ex, "Error during login for a user.");
             return ResourceIdeaResponse<LoginResultModel>.Failure(ErrorCode.LoginFailed);
         }
     }
