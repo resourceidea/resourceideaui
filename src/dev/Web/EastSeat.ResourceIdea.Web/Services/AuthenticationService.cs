@@ -12,6 +12,7 @@ using EastSeat.ResourceIdea.Domain.Types;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Identity;
+using System.Diagnostics;
 using System.Security.Claims;
 
 namespace EastSeat.ResourceIdea.Web.Services;
@@ -32,10 +33,10 @@ public class AuthenticationService : IAuthenticationService
         ProtectedSessionStorage protectedSessionStore,
         ILogger<AuthenticationService> logger)
     {
-        _signInManager = signInManager;
-        _authenticationStateProvider = authenticationStateProvider;
-        _protectedSessionStore = protectedSessionStore;
-        _logger = logger;
+        _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+        _authenticationStateProvider = authenticationStateProvider ?? throw new ArgumentNullException(nameof(authenticationStateProvider));
+        _protectedSessionStore = protectedSessionStore ?? throw new ArgumentNullException(nameof(protectedSessionStore));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <inheritdoc />
@@ -45,6 +46,11 @@ public class AuthenticationService : IAuthenticationService
         bool rememberMe, 
         CancellationToken cancellationToken = default)
     {
+        using var activity = Activity.Current?.Source.StartActivity("AuthenticationService.LoginAsync");
+        activity?.SetTag("operation", "login");
+        activity?.SetTag("email", email);
+        activity?.SetTag("rememberMe", rememberMe.ToString());
+        
         try
         {
             var result = await _signInManager.PasswordSignInAsync(
@@ -55,31 +61,52 @@ public class AuthenticationService : IAuthenticationService
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("A user logged in successfully.");
+                _logger.LogInformation("User {Email} logged in successfully at {Timestamp}. RememberMe: {RememberMe}", 
+                    email, DateTime.UtcNow, rememberMe);
+                activity?.SetTag("result", "success");
                 return ResourceIdeaResponse<LoginResultModel>.Success(LoginResultModel.Success());
             }
 
             if (result.IsLockedOut)
             {
-                _logger.LogWarning("A user account is locked out.");
+                _logger.LogWarning("User {Email} account is locked out at {Timestamp}", email, DateTime.UtcNow);
+                activity?.SetTag("result", "locked_out");
                 return ResourceIdeaResponse<LoginResultModel>.Success(
                     LoginResultModel.Failure("This account has been locked out. Please try again later.", isLockedOut: true));
             }
 
             if (result.IsNotAllowed)
             {
-                _logger.LogWarning("A user is not allowed to sign in.");
+                _logger.LogWarning("User {Email} is not allowed to sign in at {Timestamp}", email, DateTime.UtcNow);
+                activity?.SetTag("result", "not_allowed");
                 return ResourceIdeaResponse<LoginResultModel>.Success(
                     LoginResultModel.Failure("Sign in is not allowed for this account.", isNotAllowed: true));
             }
 
-            _logger.LogWarning("Failed login attempt for a user.");
+            _logger.LogWarning("Failed login attempt for user {Email} at {Timestamp}", email, DateTime.UtcNow);
+            activity?.SetTag("result", "failed");
             return ResourceIdeaResponse<LoginResultModel>.Success(
                 LoginResultModel.Failure("Invalid email or password."));
         }
-        catch (Exception ex)
+        catch (InvalidOperationException ex)
         {
-            _logger.LogError(ex, "Error during login for a user.");
+            _logger.LogError(ex, "Invalid operation during login for user {Email} at {Timestamp}", email, DateTime.UtcNow);
+            activity?.SetTag("result", "error");
+            activity?.SetTag("error_type", "invalid_operation");
+            return ResourceIdeaResponse<LoginResultModel>.Failure(ErrorCode.LoginFailed);
+        }
+        catch (ArgumentException ex)
+        {
+            _logger.LogError(ex, "Invalid arguments during login for user {Email} at {Timestamp}", email, DateTime.UtcNow);
+            activity?.SetTag("result", "error");
+            activity?.SetTag("error_type", "invalid_arguments");
+            return ResourceIdeaResponse<LoginResultModel>.Failure(ErrorCode.LoginFailed);
+        }
+        catch (NotSupportedException ex)
+        {
+            _logger.LogError(ex, "Unsupported operation during login for user {Email} at {Timestamp}", email, DateTime.UtcNow);
+            activity?.SetTag("result", "error");
+            activity?.SetTag("error_type", "not_supported");
             return ResourceIdeaResponse<LoginResultModel>.Failure(ErrorCode.LoginFailed);
         }
     }
@@ -87,6 +114,9 @@ public class AuthenticationService : IAuthenticationService
     /// <inheritdoc />
     public async Task<ResourceIdeaResponse<LogoutResultModel>> LogoutAsync(CancellationToken cancellationToken = default)
     {
+        using var activity = Activity.Current?.Source.StartActivity("AuthenticationService.LogoutAsync");
+        activity?.SetTag("operation", "logout");
+        
         try
         {
             await _signInManager.SignOutAsync();
@@ -98,16 +128,26 @@ public class AuthenticationService : IAuthenticationService
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Error clearing session storage during logout");
+                _logger.LogWarning(ex, "Error clearing session storage during logout at {Timestamp}", DateTime.UtcNow);
                 // Continue with logout even if session storage clear fails
             }
 
-            _logger.LogInformation("User signed out successfully");
+            _logger.LogInformation("User signed out successfully at {Timestamp}", DateTime.UtcNow);
+            activity?.SetTag("result", "success");
             return ResourceIdeaResponse<LogoutResultModel>.Success(LogoutResultModel.Success());
         }
-        catch (Exception ex)
+        catch (InvalidOperationException ex)
         {
-            _logger.LogError(ex, "Error during logout");
+            _logger.LogError(ex, "Invalid operation during logout at {Timestamp}", DateTime.UtcNow);
+            activity?.SetTag("result", "error");
+            activity?.SetTag("error_type", "invalid_operation");
+            return ResourceIdeaResponse<LogoutResultModel>.Failure(ErrorCode.DataStoreCommandFailure);
+        }
+        catch (NotSupportedException ex)
+        {
+            _logger.LogError(ex, "Unsupported operation during logout at {Timestamp}", DateTime.UtcNow);
+            activity?.SetTag("result", "error");
+            activity?.SetTag("error_type", "not_supported");
             return ResourceIdeaResponse<LogoutResultModel>.Failure(ErrorCode.DataStoreCommandFailure);
         }
     }
@@ -115,6 +155,9 @@ public class AuthenticationService : IAuthenticationService
     /// <inheritdoc />
     public async Task<ResourceIdeaResponse<UserValidationResult>> ValidateUserClaimsAsync(CancellationToken cancellationToken = default)
     {
+        using var activity = Activity.Current?.Source.StartActivity("AuthenticationService.ValidateUserClaimsAsync");
+        activity?.SetTag("operation", "validate_user_claims");
+        
         try
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
@@ -122,6 +165,7 @@ public class AuthenticationService : IAuthenticationService
 
             if (user?.Identity?.IsAuthenticated != true)
             {
+                activity?.SetTag("result", "not_authenticated");
                 return ResourceIdeaResponse<UserValidationResult>.Success(UserValidationResult.Failure("User is not authenticated"));
             }
 
@@ -129,14 +173,16 @@ public class AuthenticationService : IAuthenticationService
             var tenantIdClaim = user.FindFirst("TenantId")?.Value?.Trim();
             if (string.IsNullOrEmpty(tenantIdClaim))
             {
-                _logger.LogWarning("User {UserName} is missing TenantId claim", user.Identity.Name);
+                _logger.LogWarning("User {UserName} is missing TenantId claim at {Timestamp}", user.Identity.Name, DateTime.UtcNow);
+                activity?.SetTag("result", "missing_tenant_claim");
                 return ResourceIdeaResponse<UserValidationResult>.Success(UserValidationResult.Failure("Missing TenantId claim"));
             }
 
             // Validate that TenantId is a valid GUID
             if (!Guid.TryParse(tenantIdClaim, out var tenantId) || tenantId == Guid.Empty)
             {
-                _logger.LogWarning("User {UserName} has invalid TenantId claim: {TenantId}", user.Identity.Name, tenantIdClaim);
+                _logger.LogWarning("User {UserName} has invalid TenantId claim: {TenantId} at {Timestamp}", user.Identity.Name, tenantIdClaim, DateTime.UtcNow);
+                activity?.SetTag("result", "invalid_tenant_claim");
                 return ResourceIdeaResponse<UserValidationResult>.Success(UserValidationResult.Failure("Invalid TenantId claim"));
             }
 
@@ -144,17 +190,37 @@ public class AuthenticationService : IAuthenticationService
             var isBackendRoleClaim = user.FindFirst("IsBackendRole")?.Value?.Trim();
             if (string.IsNullOrEmpty(isBackendRoleClaim))
             {
-                _logger.LogWarning("User {UserName} is missing IsBackendRole claim", user.Identity.Name);
+                _logger.LogWarning("User {UserName} is missing IsBackendRole claim at {Timestamp}", user.Identity.Name, DateTime.UtcNow);
+                activity?.SetTag("result", "missing_backend_role_claim");
                 return ResourceIdeaResponse<UserValidationResult>.Success(UserValidationResult.Failure("Missing IsBackendRole claim"));
             }
 
-            _logger.LogInformation("User {UserName} has valid claims. TenantId: {TenantId}, IsBackendRole: {IsBackendRole}", 
-                user.Identity.Name, tenantIdClaim, isBackendRoleClaim);
+            _logger.LogInformation("User {UserName} has valid claims at {Timestamp}. TenantId: {TenantId}, IsBackendRole: {IsBackendRole}", 
+                user.Identity.Name, DateTime.UtcNow, tenantIdClaim, isBackendRoleClaim);
+            activity?.SetTag("result", "success");
+            activity?.SetTag("tenant_id", tenantIdClaim);
+            activity?.SetTag("is_backend_role", isBackendRoleClaim);
             return ResourceIdeaResponse<UserValidationResult>.Success(UserValidationResult.Success());
         }
-        catch (Exception ex)
+        catch (InvalidOperationException ex)
         {
-            _logger.LogError(ex, "Error validating user claims");
+            _logger.LogError(ex, "Invalid operation during user claims validation at {Timestamp}", DateTime.UtcNow);
+            activity?.SetTag("result", "error");
+            activity?.SetTag("error_type", "invalid_operation");
+            return ResourceIdeaResponse<UserValidationResult>.Failure(ErrorCode.DataStoreQueryFailure);
+        }
+        catch (ArgumentException ex)
+        {
+            _logger.LogError(ex, "Invalid arguments during user claims validation at {Timestamp}", DateTime.UtcNow);
+            activity?.SetTag("result", "error");
+            activity?.SetTag("error_type", "invalid_arguments");
+            return ResourceIdeaResponse<UserValidationResult>.Failure(ErrorCode.DataStoreQueryFailure);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            _logger.LogError(ex, "Unauthorized access during user claims validation at {Timestamp}", DateTime.UtcNow);
+            activity?.SetTag("result", "error");
+            activity?.SetTag("error_type", "unauthorized");
             return ResourceIdeaResponse<UserValidationResult>.Failure(ErrorCode.DataStoreQueryFailure);
         }
     }

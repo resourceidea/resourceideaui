@@ -7,6 +7,7 @@
 using EastSeat.ResourceIdea.Application.Features.Authentication.Commands;
 using EastSeat.ResourceIdea.Application.Features.Authentication.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Authentication.Models;
+using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 using MediatR;
 
@@ -30,7 +31,7 @@ public sealed class LoginCommandHandler(IAuthenticationService authenticationSer
         if (!validationResult.IsValid)
         {
             var errorMessage = string.Join("; ", validationResult.ValidationFailureMessages);
-            return ResourceIdeaResponse<LoginResultModel>.Failure(errorMessage);
+            return ResourceIdeaResponse<LoginResultModel>.Failure(ErrorCode.LoginCommandValidationFailure);
         }
 
         // Attempt to authenticate the user
