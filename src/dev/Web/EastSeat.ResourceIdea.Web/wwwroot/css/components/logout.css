@@ -54,14 +54,14 @@
 }
 
 .logout-title {
-    color: #495057;
+    color: #212529; /* contrast: 18.35:1 */
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 15px;
 }
 
 .logout-message {
-    color: #6c757d;
+    color: #343a40; /* contrast: 13.23:1 */
     font-size: 1rem;
     margin-bottom: 0;
 }
