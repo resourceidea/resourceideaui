@@ -30,8 +30,7 @@ public sealed class LoginCommandHandler(IAuthenticationService authenticationSer
         if (!validationResult.IsValid)
         {
             var errorMessage = string.Join("; ", validationResult.ValidationFailureMessages);
-            var failureResult = LoginResultModel.Failure(errorMessage);
-            return ResourceIdeaResponse<LoginResultModel>.Success(failureResult);
+            return ResourceIdeaResponse<LoginResultModel>.Failure(errorMessage);
         }
 
         // Attempt to authenticate the user
