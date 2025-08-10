@@ -7,7 +7,6 @@
 using EastSeat.ResourceIdea.Application.Features.Employees.Queries;
 using EastSeat.ResourceIdea.Domain.Employees.Models;
 using EastSeat.ResourceIdea.Domain.Enums;
-using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;

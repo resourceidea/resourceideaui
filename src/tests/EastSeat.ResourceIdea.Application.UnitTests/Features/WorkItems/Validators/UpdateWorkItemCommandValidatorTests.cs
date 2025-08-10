@@ -1,11 +1,9 @@
-using System;
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Commands;
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Validators;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.WorkItems.ValueObjects;
-using Xunit;
 
 namespace EastSeat.ResourceIdea.Application.UnitTests.Features.WorkItems.Validators;
 

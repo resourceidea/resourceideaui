@@ -1,6 +1,3 @@
-using System.Data.SqlClient;
-using EastSeat.ResourceIdea.Migration.Model;
-
 namespace EastSeat.ResourceIdea.Migration.Services;
 
 /// <summary>

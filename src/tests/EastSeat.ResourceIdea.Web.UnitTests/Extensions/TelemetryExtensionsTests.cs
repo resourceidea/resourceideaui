@@ -7,7 +7,6 @@
 using EastSeat.ResourceIdea.Web.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics;
 using Xunit;
 
 namespace EastSeat.ResourceIdea.Web.UnitTests.Extensions;

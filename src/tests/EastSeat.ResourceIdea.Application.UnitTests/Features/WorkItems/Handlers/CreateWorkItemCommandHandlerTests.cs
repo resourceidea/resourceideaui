@@ -6,7 +6,6 @@ using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.WorkItems.Entities;
-using EastSeat.ResourceIdea.Domain.WorkItems.Models;
 
 using Moq;
 

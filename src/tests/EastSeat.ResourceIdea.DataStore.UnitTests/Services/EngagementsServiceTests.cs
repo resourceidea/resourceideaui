@@ -1,8 +1,4 @@
-using System;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.DataStore.Services;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
@@ -11,9 +7,7 @@ using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Types;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
 
 namespace EastSeat.ResourceIdea.DataStore.UnitTests.Services;
 

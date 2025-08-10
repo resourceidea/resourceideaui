@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using System.ComponentModel.DataAnnotations;
 
 namespace EastSeat.ResourceIdea.Web.Components.Shared.Forms;
 

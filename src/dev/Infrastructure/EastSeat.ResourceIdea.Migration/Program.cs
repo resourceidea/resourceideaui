@@ -1,6 +1,3 @@
-using EastSeat.ResourceIdea.Migration.Configuration;
-using EastSeat.ResourceIdea.Migration.Services;
-
 namespace EastSeat.ResourceIdea.Migration;
 
 /// <summary>

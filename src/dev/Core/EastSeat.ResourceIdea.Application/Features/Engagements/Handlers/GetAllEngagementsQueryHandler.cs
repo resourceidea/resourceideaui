@@ -1,11 +1,9 @@
 using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
-using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Queries;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Specifications;
 using EastSeat.ResourceIdea.Application.Mappers;
-using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.Models;
 using EastSeat.ResourceIdea.Domain.Types;
 

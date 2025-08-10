@@ -8,8 +8,6 @@ using EastSeat.ResourceIdea.Domain.WorkItems.Entities;
 using EastSeat.ResourceIdea.Domain.WorkItems.Models;
 using EastSeat.ResourceIdea.Domain.WorkItems.ValueObjects;
 
-using System.Linq;
-
 namespace EastSeat.ResourceIdea.Application.Features.WorkItems.Commands;
 
 /// <summary>

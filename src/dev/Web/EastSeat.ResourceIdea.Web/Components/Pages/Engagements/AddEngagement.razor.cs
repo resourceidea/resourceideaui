@@ -8,8 +8,6 @@ using EastSeat.ResourceIdea.Application.Features.Engagements.Commands;
 using EastSeat.ResourceIdea.Application.Features.Clients.Queries;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
-using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.Web.Services;

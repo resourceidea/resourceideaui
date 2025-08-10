@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-
 namespace EastSeat.ResourceIdea.Web.Middleware;
 
 /// <summary>

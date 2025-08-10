@@ -1,12 +1,9 @@
-using System;
 using EastSeat.ResourceIdea.Domain.Engagements.Entities;
 using EastSeat.ResourceIdea.Domain.Engagements.Models;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
-using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
-using Xunit;
 
 namespace EastSeat.ResourceIdea.Domain.UnitTests.Engagements
 {

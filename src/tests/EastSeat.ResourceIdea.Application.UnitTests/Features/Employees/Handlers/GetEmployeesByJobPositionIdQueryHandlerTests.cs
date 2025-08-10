@@ -10,13 +10,11 @@ using EastSeat.ResourceIdea.Application.Features.Employees.Handlers;
 using EastSeat.ResourceIdea.Application.Features.Employees.Queries;
 using EastSeat.ResourceIdea.Application.Features.Common.Specifications;
 using EastSeat.ResourceIdea.Domain.Employees.Entities;
-using EastSeat.ResourceIdea.Domain.Employees.Models;
 using EastSeat.ResourceIdea.Domain.JobPositions.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.Enums;
 using Moq;
-using Xunit;
 
 namespace EastSeat.ResourceIdea.Application.UnitTests.Features.Employees.Handlers;
 

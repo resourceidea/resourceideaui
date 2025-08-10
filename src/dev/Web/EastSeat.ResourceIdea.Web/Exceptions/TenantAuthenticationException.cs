@@ -1,5 +1,3 @@
-using System;
-
 namespace EastSeat.ResourceIdea.Web.Exceptions;
 
 /// <summary>

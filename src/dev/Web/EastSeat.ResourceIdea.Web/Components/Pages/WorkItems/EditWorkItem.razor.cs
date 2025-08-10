@@ -9,8 +9,6 @@ using EastSeat.ResourceIdea.Application.Features.WorkItems.Queries;
 using EastSeat.ResourceIdea.Application.Features.Engagements.Queries;
 using EastSeat.ResourceIdea.Application.Features.Clients.Queries;
 using EastSeat.ResourceIdea.Domain.WorkItems.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
-using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Web.Services;
 using EastSeat.ResourceIdea.Web.RequestContext;

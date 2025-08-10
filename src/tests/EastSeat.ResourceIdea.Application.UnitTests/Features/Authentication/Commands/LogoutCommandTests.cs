@@ -5,7 +5,6 @@
 // ----------------------------------------------------------------------------------
 
 using EastSeat.ResourceIdea.Application.Features.Authentication.Commands;
-using Xunit;
 
 namespace EastSeat.ResourceIdea.Application.UnitTests.Features.Authentication.Commands;
 

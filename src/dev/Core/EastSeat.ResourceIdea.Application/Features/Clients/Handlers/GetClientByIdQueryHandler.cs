@@ -4,7 +4,6 @@ using EastSeat.ResourceIdea.Application.Features.Clients.Specifications;
 using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Clients.Models;
-using EastSeat.ResourceIdea.Domain.Employees.Models;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 
