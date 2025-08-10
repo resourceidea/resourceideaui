@@ -31,8 +31,11 @@ namespace EastSeat.ResourceIdea.Web
             string sqlServerConnectionString = GetDbContextConnectionString();
 
             // Register both DbContext and DbContextFactory for better concurrency handling
+            // Important: use Singleton options lifetime so the singleton DbContextFactory can consume it
             services.AddDbContext<ResourceIdeaDBContext>(options =>
-                options.UseSqlServer(sqlServerConnectionString), ServiceLifetime.Scoped);
+                options.UseSqlServer(sqlServerConnectionString),
+                contextLifetime: ServiceLifetime.Scoped,
+                optionsLifetime: ServiceLifetime.Singleton);
 
             services.AddDbContextFactory<ResourceIdeaDBContext>(options =>
                 options.UseSqlServer(sqlServerConnectionString));

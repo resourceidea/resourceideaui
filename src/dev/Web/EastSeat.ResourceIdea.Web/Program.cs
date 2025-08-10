@@ -24,6 +24,7 @@ builder.Services.AddResourceIdeaTelemetry(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IResourceIdeaRequestContext, ResourceIdeaRequestContext>();
+builder.Services.AddMemoryCache();
 
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
