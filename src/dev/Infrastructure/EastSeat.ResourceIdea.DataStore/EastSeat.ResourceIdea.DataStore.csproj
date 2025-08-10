@@ -11,14 +11,14 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.7" />
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.7" />
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.7" />
-        <PackageReference Include="Microsoft.Identity.Client" Version="4.74.0" />
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.74.1" />
         <PackageReference Include="System.Formats.Asn1" Version="9.0.7" />
     </ItemGroup>
 
