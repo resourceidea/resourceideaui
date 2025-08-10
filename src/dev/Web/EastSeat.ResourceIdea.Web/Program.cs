@@ -1,4 +1,5 @@
 using EastSeat.ResourceIdea.Web;
+using EastSeat.ResourceIdea.Web.Components;
 using EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
 using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
