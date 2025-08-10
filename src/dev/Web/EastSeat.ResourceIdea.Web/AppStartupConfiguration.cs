@@ -32,8 +32,13 @@ namespace EastSeat.ResourceIdea.Web
             string sqlServerConnectionString = GetDbContextConnectionString();
 
             // Register both DbContext and DbContextFactory for better concurrency handling
+            // Important: EF Core requires the options lifetime to be Singleton when using AddDbContextFactory,
+            // otherwise dependency injection scope issues can occur. See:
+            // https://learn.microsoft.com/en-us/ef/core/dbcontext-configuration/#using-a-dbcontext-factory
             services.AddDbContext<ResourceIdeaDBContext>(options =>
-                options.UseSqlServer(sqlServerConnectionString), ServiceLifetime.Scoped);
+                options.UseSqlServer(sqlServerConnectionString),
+                contextLifetime: ServiceLifetime.Scoped,
+                optionsLifetime: ServiceLifetime.Singleton);
 
             services.AddDbContextFactory<ResourceIdeaDBContext>(options =>
                 options.UseSqlServer(sqlServerConnectionString));

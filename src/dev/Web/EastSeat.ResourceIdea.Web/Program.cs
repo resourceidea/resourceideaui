@@ -1,11 +1,10 @@
-using EastSeat.ResourceIdea.Web.Components;
 using EastSeat.ResourceIdea.Web;
+using EastSeat.ResourceIdea.Web.Components;
 using EastSeat.ResourceIdea.Application.Features.Departments.Handlers;
 using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using EastSeat.ResourceIdea.DataStore;
 using Microsoft.AspNetCore.Identity;
-using EastSeat.ResourceIdea.DataStore.Identity;
 using EastSeat.ResourceIdea.Web.Services;
 using EastSeat.ResourceIdea.Web.Middleware;
 using EastSeat.ResourceIdea.Web.Extensions;
@@ -13,8 +12,6 @@ using EastSeat.ResourceIdea.Web.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +21,7 @@ builder.Services.AddResourceIdeaTelemetry(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IResourceIdeaRequestContext, ResourceIdeaRequestContext>();
+builder.Services.AddMemoryCache();
 
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
@@ -58,7 +56,7 @@ builder.Services.AddScoped<IClaimsTransformation, TenantClaimsTransformation>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/login";
-    options.LogoutPath = "/logout";
+    options.LogoutPath = "/auth/signout";
     options.AccessDeniedPath = "/access-denied";
     options.ExpireTimeSpan = TimeSpan.FromHours(8); // Reduced from 24 to 8 hours
     options.SlidingExpiration = false; // Disable sliding expiration to prevent auto-renewal
@@ -187,7 +185,25 @@ app.UseStaticFiles();
 // Add health check endpoint for Azure App Service monitoring
 app.MapHealthChecks("/health");
 
-app.MapRazorComponents<App>()
+// Minimal API endpoint to sign out and redirect, using POST with antiforgery and local-only returnUrl
+app.MapPost("/auth/signout", async (HttpContext http, IServiceProvider serviceProvider, string? returnUrl) =>
+{
+    // Validate antiforgery token
+    var antiforgery = serviceProvider.GetRequiredService<Microsoft.AspNetCore.Antiforgery.IAntiforgery>();
+    await antiforgery.ValidateRequestAsync(http);
+
+    await http.SignOutAsync(IdentityConstants.ApplicationScheme);
+    var target = "/";
+    if (!string.IsNullOrWhiteSpace(returnUrl)
+        && returnUrl.StartsWith("/", StringComparison.Ordinal)
+        && !returnUrl.StartsWith("//", StringComparison.Ordinal))
+    {
+        target = returnUrl;
+    }
+    return Results.Redirect(target);
+});
+
+app.MapRazorComponents<EastSeat.ResourceIdea.Web.Components.App>()
    .AddInteractiveServerRenderMode();
 
 // Run database startup tasks (migrations, seed data, etc.)
