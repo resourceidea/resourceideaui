@@ -1,0 +1,162 @@
+@* ------------------------------------------------------------------------------
+    File: VirtualizedEmployeesList.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Shared/Lists
+    Description: Virtualized Employee List component for improved performance with large datasets
+   ------------------------------------------------------------------------------ *@
+
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+
+<div class="card mt-1">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Employees List (@TotalEmployeesCount employees)</span>
+        @if (IsLoading)
+        {
+            <div class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        }
+    </div>
+
+    @if (TotalEmployeesCount > 100)
+    {
+        <!-- Use virtualization for large lists -->
+        <div class="table-responsive">
+            <table class="table table-sm table-striped table-hover table-borderless">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Job Title</th>
+                        <th>Department</th>
+                        <th class="col-2">Actions</th>
+                    </tr>
+                </thead>
+            </table>
+            <div style="height: 400px; overflow-y: auto;">
+                <Virtualize ItemsProvider="@LoadEmployees" Context="employee" ItemSize="45">
+                    <ItemContent>
+                        <div class="d-flex border-bottom py-2" style="min-height: 45px;">
+                            <div class="flex-fill px-3">@($"{employee.FirstName} {employee.LastName}")</div>
+                            <div class="flex-fill px-3">@employee.Email</div>
+                            <div class="flex-fill px-3">@employee.JobPositionTitle</div>
+                            <div class="flex-fill px-3">@employee.DepartmentName</div>
+                            <div class="flex-fill px-3">
+                                <NavLink class="btn btn-outline-primary btn-sm" href=@($"/employees/{employee.EmployeeId}")>
+                                    View
+                                </NavLink>
+                            </div>
+                        </div>
+                    </ItemContent>
+                    <Placeholder>
+                        <div class="d-flex border-bottom py-2" style="min-height: 45px;">
+                            <div class="flex-fill px-3">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder col-6"></span>
+                                </div>
+                            </div>
+                            <div class="flex-fill px-3">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder col-8"></span>
+                                </div>
+                            </div>
+                            <div class="flex-fill px-3">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder col-7"></span>
+                                </div>
+                            </div>
+                            <div class="flex-fill px-3">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder col-5"></span>
+                                </div>
+                            </div>
+                            <div class="flex-fill px-3">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder col-4"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </Placeholder>
+                </Virtualize>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Use regular table for smaller lists -->
+        <table class="table table-sm table-striped table-hover table-borderless">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Job Title</th>
+                    <th>Department</th>
+                    <th class="col-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (SmallListEmployees != null && SmallListEmployees.Count > 0)
+                {
+                    @foreach (var employee in SmallListEmployees)
+                    {
+                        <tr>
+                            <td>@($"{employee.FirstName} {employee.LastName}")</td>
+                            <td>@employee.Email</td>
+                            <td>@employee.JobPositionTitle</td>
+                            <td>@employee.DepartmentName</td>
+                            <td class="col-2">
+                                <NavLink class="btn btn-outline-primary btn-sm" href=@($"/employees/{employee.EmployeeId}")>
+                                    View
+                                </NavLink>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center">No employees found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public Func<int, int, ValueTask<IEnumerable<TenantEmployeeModel>>>? EmployeeProvider { get; set; }
+
+    [Parameter]
+    public int TotalEmployeesCount { get; set; }
+
+    [Parameter]
+    public List<TenantEmployeeModel>? SmallListEmployees { get; set; }
+
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    private async ValueTask<ItemsProviderResult<TenantEmployeeModel>> LoadEmployees(ItemsProviderRequest request)
+    {
+        if (EmployeeProvider == null)
+        {
+            return new ItemsProviderResult<TenantEmployeeModel>(Array.Empty<TenantEmployeeModel>(), TotalEmployeesCount);
+        }
+
+        try
+        {
+            var employees = await EmployeeProvider(request.StartIndex, request.Count);
+            return new ItemsProviderResult<TenantEmployeeModel>(employees, TotalEmployeesCount);
+        }
+        catch
+        {
+            // Return empty result on error
+            return new ItemsProviderResult<TenantEmployeeModel>(Array.Empty<TenantEmployeeModel>(), 0);
+        }
+    }
+
+    protected override bool ShouldRender()
+    {
+        // Optimize rendering by checking if essential parameters have changed
+        return true; // Let the virtualize component handle its own optimization
+    }
+}

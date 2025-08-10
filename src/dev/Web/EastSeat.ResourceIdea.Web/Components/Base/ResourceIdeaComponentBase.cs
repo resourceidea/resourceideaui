@@ -13,6 +13,27 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
     [Inject] protected NavigationManager Navigation { get; set; } = default!;
 
     /// <summary>
+    /// Cancellation token source for component lifecycle management.
+    /// </summary>
+    private readonly CancellationTokenSource _cancellationTokenSource = new();
+    private bool _disposed = false;
+
+    /// <summary>
+    /// Cancellation token that is cancelled when the component is disposed.
+    /// </summary>
+    protected CancellationToken ComponentCancellationToken
+    {
+        get
+        {
+            if (_disposed)
+            {
+                return CancellationToken.None;
+            }
+            return _cancellationTokenSource.Token;
+        }
+    }
+
+    /// <summary>
     /// Indicates if the component has an error state.
     /// </summary>
     protected bool HasError { get; set; }
@@ -37,26 +58,46 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
     }
 
     /// <summary>
-    /// Executes an operation with centralized exception handling.
+    /// Executes an operation with centralized exception handling and cancellation token support.
     /// Automatically manages loading state and error handling.
     /// </summary>
     /// <param name="operation">The operation to execute</param>
     /// <param name="context">Context information about the operation</param>
     /// <param name="manageLoadingState">Whether to automatically manage loading state</param>
+    /// <param name="cancellationToken">Optional cancellation token (uses component token if not provided)</param>
     /// <returns>True if operation succeeded, false otherwise</returns>
-    protected async Task<bool> ExecuteAsync(Func<Task> operation, string context, bool manageLoadingState = true)
+    protected async Task<bool> ExecuteAsync(Func<CancellationToken, Task> operation, string context, bool manageLoadingState = true, CancellationToken cancellationToken = default)
     {
+        var effectiveToken = cancellationToken == default ? ComponentCancellationToken : cancellationToken;
+
         if (manageLoadingState)
         {
             IsLoading = true;
-            StateHasChanged();
+            SafeStateHasChanged();
         }
 
         try
         {
             ClearError();
 
-            var result = await ExceptionHandlingService.ExecuteAsync(operation, context);
+            await operation(effectiveToken);
+
+            // Check if operation was cancelled
+            if (effectiveToken.IsCancellationRequested)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        catch (OperationCanceledException)
+        {
+            // Operation was cancelled, this is expected behavior
+            return false;
+        }
+        catch (Exception ex)
+        {
+            var result = await ExceptionHandlingService.ExecuteAsync(() => throw ex, context);
 
             if (!result.IsSuccess)
             {
@@ -78,9 +119,21 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
             if (manageLoadingState)
             {
                 IsLoading = false;
-                StateHasChanged();
+                SafeStateHasChanged();
             }
         }
+    }
+
+    /// <summary>
+    /// Executes an operation with centralized exception handling (backward compatibility).
+    /// </summary>
+    /// <param name="operation">The operation to execute</param>
+    /// <param name="context">Context information about the operation</param>
+    /// <param name="manageLoadingState">Whether to automatically manage loading state</param>
+    /// <returns>True if operation succeeded, false otherwise</returns>
+    protected async Task<bool> ExecuteAsync(Func<Task> operation, string context, bool manageLoadingState = true)
+    {
+        return await ExecuteAsync(_ => operation(), context, manageLoadingState);
     }
 
     /// <summary>
@@ -91,20 +144,40 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
     /// <param name="operation">The operation to execute</param>
     /// <param name="context">Context information about the operation</param>
     /// <param name="manageLoadingState">Whether to automatically manage loading state</param>
+    /// <param name="cancellationToken">Optional cancellation token (uses component token if not provided)</param>
     /// <returns>The result of the operation, or default(T) if failed</returns>
-    protected async Task<T?> ExecuteAsync<T>(Func<Task<T>> operation, string context, bool manageLoadingState = true)
+    protected async Task<T?> ExecuteAsync<T>(Func<CancellationToken, Task<T>> operation, string context, bool manageLoadingState = true, CancellationToken cancellationToken = default)
     {
+        var effectiveToken = cancellationToken == default ? ComponentCancellationToken : cancellationToken;
+
         if (manageLoadingState)
         {
             IsLoading = true;
-            StateHasChanged();
+            SafeStateHasChanged();
         }
 
         try
         {
             ClearError();
 
-            var result = await ExceptionHandlingService.ExecuteAsync(operation, context);
+            var result = await operation(effectiveToken);
+
+            // Check if operation was cancelled
+            if (effectiveToken.IsCancellationRequested)
+            {
+                return default;
+            }
+
+            return result;
+        }
+        catch (OperationCanceledException)
+        {
+            // Operation was cancelled, this is expected behavior
+            return default;
+        }
+        catch (Exception ex)
+        {
+            var result = await ExceptionHandlingService.ExecuteAsync(() => throw ex, context);
 
             if (!result.IsSuccess)
             {
@@ -119,16 +192,29 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
                 return default;
             }
 
-            return result.Data;
+            return default;
         }
         finally
         {
             if (manageLoadingState)
             {
                 IsLoading = false;
-                StateHasChanged();
+                SafeStateHasChanged();
             }
         }
+    }
+
+    /// <summary>
+    /// Executes an operation with centralized exception handling and returns a result (backward compatibility).
+    /// </summary>
+    /// <typeparam name="T">The type of result returned by the operation</typeparam>
+    /// <param name="operation">The operation to execute</param>
+    /// <param name="context">Context information about the operation</param>
+    /// <param name="manageLoadingState">Whether to automatically manage loading state</param>
+    /// <returns>The result of the operation, or default(T) if failed</returns>
+    protected async Task<T?> ExecuteAsync<T>(Func<Task<T>> operation, string context, bool manageLoadingState = true)
+    {
+        return await ExecuteAsync(_ => operation(), context, manageLoadingState);
     }
 
     /// <summary>
@@ -149,7 +235,7 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
     {
         HasError = true;
         ErrorMessage = message;
-        StateHasChanged();
+        SafeStateHasChanged();
     }
 
     /// <summary>
@@ -159,6 +245,31 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
     {
         HasError = false;
         ErrorMessage = null;
+    }
+
+    /// <summary>
+    /// Helper method to minimize StateHasChanged calls for better performance.
+    /// Only calls StateHasChanged if the component hasn't been disposed.
+    /// </summary>
+    protected void SafeStateHasChanged()
+    {
+        if (!_disposed && !ComponentCancellationToken.IsCancellationRequested)
+        {
+            try
+            {
+                StateHasChanged();
+            }
+            catch (ObjectDisposedException)
+            {
+                // Component has been disposed
+                // This is safe to ignore
+            }
+            catch (InvalidOperationException)
+            {
+                // Component may have been disposed during rendering
+                // This is safe to ignore
+            }
+        }
     }
 
     /// <summary>
@@ -178,6 +289,20 @@ public abstract class ResourceIdeaComponentBase : ComponentBase, IDisposable
     /// </summary>
     public virtual void Dispose()
     {
-        // Base implementation - override in derived classes if needed
+        if (!_disposed)
+        {
+            _disposed = true;
+
+            // Cancel any ongoing operations
+            try
+            {
+                _cancellationTokenSource?.Cancel();
+                _cancellationTokenSource?.Dispose();
+            }
+            catch (ObjectDisposedException)
+            {
+                // Already disposed, ignore
+            }
+        }
     }
 }

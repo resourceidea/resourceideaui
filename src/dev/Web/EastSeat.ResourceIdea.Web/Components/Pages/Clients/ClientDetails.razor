@@ -5,6 +5,7 @@
    ------------------------------------------------------------------------------ *@
 
 @page "/clients/{Id:guid}"
+@inherits ResourceIdeaComponentBase
 @using EastSeat.ResourceIdea.Web.Components.Shared.Lists
 
 <ResourceIdeaPageTitle Title="Client Details" />
@@ -46,12 +47,13 @@
             </NavLink>
         </div>
 
-        <hr/>
+        <hr />
 
         <h5 class="mb-2">Engagements</h5>
 
         <div class="mb-1">
-            <NavLink class="btn btn-success btn-sm" href=@($"/engagements/add?clientid={Client.ClientId.Value}") ActiveClass="">
+            <NavLink class="btn btn-success btn-sm" href=@($"/engagements/add?clientid={Client.ClientId.Value}")
+                ActiveClass="">
                 <i class="fa-solid fa-plus"></i> Add Engagement
             </NavLink>
         </div>
@@ -67,11 +69,8 @@
         }
         else
         {
-            <ClientEngagementsList 
-                PagedEngagementsList="PagedEngagementsList"
-                OnEngagementsPageChange="OnEngagementsPageChange"
-                OnSearchTermChange="OnEngagementSearchTermChange"
-                OnSortChange="OnEngagementSortChange" />
+            <ClientEngagementsList PagedEngagementsList="PagedEngagementsList" OnEngagementsPageChange="OnEngagementsPageChange"
+                OnSearchTermChange="OnEngagementSearchTermChange" OnSortChange="OnEngagementSortChange" />
         }
     }
     else

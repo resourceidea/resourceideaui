@@ -14,6 +14,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,8 +60,24 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/login";
     options.LogoutPath = "/logout";
     options.AccessDeniedPath = "/access-denied";
-    options.ExpireTimeSpan = TimeSpan.FromHours(24);
-    options.SlidingExpiration = true;
+    options.ExpireTimeSpan = TimeSpan.FromHours(8); // Reduced from 24 to 8 hours
+    options.SlidingExpiration = false; // Disable sliding expiration to prevent auto-renewal
+    options.Cookie.IsEssential = true;
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+
+    // Force session-only cookies (not persistent)
+    options.Events.OnSigningIn = context =>
+    {
+        // Ensure cookies are session-only unless explicitly set as persistent
+        if (context.Properties.IsPersistent == false)
+        {
+            context.CookieOptions.Expires = null;
+            context.CookieOptions.MaxAge = null;
+        }
+        return Task.CompletedTask;
+    };
 });
 
 // Add authorization services with backend access policy
@@ -100,10 +118,52 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<ResourceIdeaDBContext>("database");
 
+// Add rate limiting for authentication endpoints
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+    {
+        // Apply stricter limits to authentication endpoints
+        var endpoint = context.Request.Path.Value?.ToLowerInvariant();
+        if (endpoint?.Contains("/login") == true || endpoint?.Contains("/logout") == true)
+        {
+            return RateLimitPartition.GetFixedWindowLimiter(
+                partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                factory: _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 5, // 5 attempts
+                    Window = TimeSpan.FromMinutes(1), // per minute
+                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                    QueueLimit = 2
+                });
+        }
+
+        // Default rate limit for other endpoints
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 100, // 100 requests
+                Window = TimeSpan.FromMinutes(1), // per minute
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 10
+            });
+    });
+
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = 429; // Too Many Requests
+        await context.HttpContext.Response.WriteAsync("Rate limit exceeded. Please try again later.", token);
+    };
+});
+
 var app = builder.Build();
 
 // Add global exception handling middleware
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+
+// Add security headers middleware
+app.UseMiddleware<SecurityHeadersMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -114,6 +174,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();

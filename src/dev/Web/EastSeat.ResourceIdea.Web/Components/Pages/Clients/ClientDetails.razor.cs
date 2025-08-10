@@ -12,29 +12,26 @@ using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Engagements.Models;
 using EastSeat.ResourceIdea.Web.RequestContext;
 using EastSeat.ResourceIdea.Web.Services;
+using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.Clients;
 
-public partial class ClientDetails : ComponentBase
+public partial class ClientDetails : ResourceIdeaComponentBase
 {
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
     [Inject] private IMediator Mediator { get; set; } = null!;
-    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private NotificationService NotificationService { get; set; } = null!;
 
     [Parameter]
     public Guid Id { get; set; }
 
-    private bool IsLoading { get; set; } = true;
-    private bool HasError { get; set; }
-    private string ErrorMessage { get; set; } = string.Empty;
     private ClientModel? Client { get; set; }
 
     // Engagement list properties
     private PagedListResponse<EngagementModel>? PagedEngagementsList { get; set; }
-    private bool IsLoadingEngagements { get; set; } = true;
+    private bool IsLoadingEngagements { get; set; } = false;
     private string EngagementSearchTerm { get; set; } = string.Empty;
     private string EngagementSortField { get; set; } = string.Empty;
     private string EngagementSortDirection { get; set; } = "asc";
@@ -43,23 +40,19 @@ public partial class ClientDetails : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadClientAsync();
+        await ExecuteAsync(LoadClientAsync, "Loading client details");
     }
 
     protected override async Task OnParametersSetAsync()
     {
         if (Id != Guid.Empty)
         {
-            await LoadClientAsync();
+            await ExecuteAsync(LoadClientAsync, "Loading client details");
         }
     }
 
     private async Task LoadClientAsync()
     {
-        IsLoading = true;
-        HasError = false;
-        StateHasChanged();
-
         var query = new GetClientByIdQuery
         {
             ClientId = ClientId.Create(Id),
@@ -76,12 +69,8 @@ public partial class ClientDetails : ComponentBase
         }
         else
         {
-            HasError = true;
-            ErrorMessage = "Failed to load client details. Please try again later.";
+            throw new InvalidOperationException("Failed to load client details.");
         }
-
-        IsLoading = false;
-        StateHasChanged();
     }
 
     private void HandleEditClick()
@@ -97,23 +86,32 @@ public partial class ClientDetails : ComponentBase
         IsLoadingEngagements = true;
         StateHasChanged();
 
-        var query = new GetEngagementsByClientQuery(CurrentEngagementsPage, EngagementsPageSize)
+        try
         {
-            ClientId = Client.ClientId,
-            SearchTerm = string.IsNullOrWhiteSpace(EngagementSearchTerm) ? null : EngagementSearchTerm,
-            SortField = string.IsNullOrWhiteSpace(EngagementSortField) ? null : EngagementSortField,
-            SortDirection = string.IsNullOrWhiteSpace(EngagementSortDirection) ? null : EngagementSortDirection,
-            TenantId = ResourceIdeaRequestContext.Tenant
-        };
+            var query = new GetEngagementsByClientQuery(CurrentEngagementsPage, EngagementsPageSize)
+            {
+                ClientId = Client.ClientId,
+                SearchTerm = string.IsNullOrWhiteSpace(EngagementSearchTerm) ? null : EngagementSearchTerm,
+                SortField = string.IsNullOrWhiteSpace(EngagementSortField) ? null : EngagementSortField,
+                SortDirection = string.IsNullOrWhiteSpace(EngagementSortDirection) ? null : EngagementSortDirection,
+                TenantId = ResourceIdeaRequestContext.Tenant
+            };
 
-        var response = await Mediator.Send(query);
+            var response = await Mediator.Send(query);
 
-        PagedEngagementsList = (response is not null && response.IsSuccess && response.Content.HasValue)
-            ? response.Content.Value
-            : null;
-
-        IsLoadingEngagements = false;
-        StateHasChanged();
+            PagedEngagementsList = (response is not null && response.IsSuccess && response.Content.HasValue)
+                ? response.Content.Value
+                : null;
+        }
+        catch (Exception ex)
+        {
+            await HandleExceptionAsync(ex, "Loading engagements");
+        }
+        finally
+        {
+            IsLoadingEngagements = false;
+            StateHasChanged();
+        }
     }
 
     private async Task OnEngagementsPageChange(int page)

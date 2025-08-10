@@ -38,7 +38,20 @@
             <div class="notification-container">
                 <NotificationAlert Notification="@currentNotification" OnDismiss="ClearNotification" />
             </div>
-            @Body
+            <ErrorBoundary>
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent>
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">Something went wrong!</h4>
+                        <p>An unexpected error occurred while rendering this page. Please refresh the page or try again
+                            later.</p>
+                        <hr>
+                        <p class="mb-0">If the problem persists, please contact support.</p>
+                    </div>
+                </ErrorContent>
+            </ErrorBoundary>
         </main>
 
         <!-- Footer -->

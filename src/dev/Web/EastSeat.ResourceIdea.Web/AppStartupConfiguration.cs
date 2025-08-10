@@ -1,4 +1,5 @@
 ﻿using EastSeat.ResourceIdea.Application.Extensions;
+using EastSeat.ResourceIdea.Application.Features.Authentication.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Clients.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Departments.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Employees.Contracts;
@@ -29,7 +30,13 @@ namespace EastSeat.ResourceIdea.Web
         public static void AddResourceIdeaDbContext(this IServiceCollection services)
         {
             string sqlServerConnectionString = GetDbContextConnectionString();
-            services.AddDbContext<ResourceIdeaDBContext>(options => options.UseSqlServer(sqlServerConnectionString));
+
+            // Register both DbContext and DbContextFactory for better concurrency handling
+            services.AddDbContext<ResourceIdeaDBContext>(options =>
+                options.UseSqlServer(sqlServerConnectionString), ServiceLifetime.Scoped);
+
+            services.AddDbContextFactory<ResourceIdeaDBContext>(options =>
+                options.UseSqlServer(sqlServerConnectionString));
         }
         public static void AddResourceIdeaServices(this IServiceCollection services)
         {
@@ -44,6 +51,7 @@ namespace EastSeat.ResourceIdea.Web
             services.AddScoped<IWorkItemsService, WorkItemsService>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
             services.AddScoped<IWorkItemsService, WorkItemsService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             services.AddScoped<NotificationService>();
             services.AddScoped<IConfigurationWrapper, ConfigurationWrapper>();
@@ -57,13 +65,13 @@ namespace EastSeat.ResourceIdea.Web
             {
                 // Try to get from process environment variables first (Azure App Service, Docker, etc.)
                 string? value = Environment.GetEnvironmentVariable(environmentVariableKey);
-                
+
                 // If not found, try user environment variables (local development)
                 if (string.IsNullOrWhiteSpace(value))
                 {
                     value = Environment.GetEnvironmentVariable(environmentVariableKey, EnvironmentVariableTarget.User);
                 }
-                
+
                 string nonEmptyValue = value.ThrowIfNullOrEmptyOrWhiteSpace();
                 return nonEmptyValue;
             }

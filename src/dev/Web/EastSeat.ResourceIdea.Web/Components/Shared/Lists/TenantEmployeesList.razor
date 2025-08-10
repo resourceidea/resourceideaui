@@ -74,6 +74,21 @@
     [Parameter]
     public EventCallback<int> OnPageChange { get; set; }
 
+    private PagedListResponse<TenantEmployeeModel>? _previousPagedEmployeesList;
+
+    protected override bool ShouldRender()
+    {
+        // Only render if the actual data has changed
+        var shouldRender = !ReferenceEquals(PagedEmployeesList, _previousPagedEmployeesList);
+
+        if (shouldRender)
+        {
+            _previousPagedEmployeesList = PagedEmployeesList;
+        }
+
+        return shouldRender;
+    }
+
     private async Task GoToPreviousPage()
     {
         if (PagedEmployeesList != null && PagedEmployeesList.CurrentPage > 1)
