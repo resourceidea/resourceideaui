@@ -48,7 +48,6 @@ public class AuthenticationService : IAuthenticationService
     {
         using var activity = Activity.Current?.Source.StartActivity("AuthenticationService.LoginAsync");
         activity?.SetTag("operation", "login");
-        activity?.SetTag("email", email);
         activity?.SetTag("rememberMe", rememberMe.ToString());
         
         try
@@ -57,19 +56,19 @@ public class AuthenticationService : IAuthenticationService
                 email,
                 password,
                 rememberMe,
-                lockoutOnFailure: false);
+                lockoutOnFailure: true);
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("User {Email} logged in successfully at {Timestamp}. RememberMe: {RememberMe}", 
-                    email, DateTime.UtcNow, rememberMe);
+                _logger.LogInformation("User logged in successfully at {Timestamp}. RememberMe: {RememberMe}", 
+                    DateTime.UtcNow, rememberMe);
                 activity?.SetTag("result", "success");
                 return ResourceIdeaResponse<LoginResultModel>.Success(LoginResultModel.Success());
             }
 
             if (result.IsLockedOut)
             {
-                _logger.LogWarning("User {Email} account is locked out at {Timestamp}", email, DateTime.UtcNow);
+                _logger.LogWarning("User account is locked out at {Timestamp}", DateTime.UtcNow);
                 activity?.SetTag("result", "locked_out");
                 return ResourceIdeaResponse<LoginResultModel>.Success(
                     LoginResultModel.Failure("This account has been locked out. Please try again later.", isLockedOut: true));
@@ -77,34 +76,34 @@ public class AuthenticationService : IAuthenticationService
 
             if (result.IsNotAllowed)
             {
-                _logger.LogWarning("User {Email} is not allowed to sign in at {Timestamp}", email, DateTime.UtcNow);
+                _logger.LogWarning("User is not allowed to sign in at {Timestamp}", DateTime.UtcNow);
                 activity?.SetTag("result", "not_allowed");
                 return ResourceIdeaResponse<LoginResultModel>.Success(
                     LoginResultModel.Failure("Sign in is not allowed for this account.", isNotAllowed: true));
             }
 
-            _logger.LogWarning("Failed login attempt for user {Email} at {Timestamp}", email, DateTime.UtcNow);
+            _logger.LogWarning("Failed login attempt at {Timestamp}", DateTime.UtcNow);
             activity?.SetTag("result", "failed");
             return ResourceIdeaResponse<LoginResultModel>.Success(
                 LoginResultModel.Failure("Invalid email or password."));
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogError(ex, "Invalid operation during login for user {Email} at {Timestamp}", email, DateTime.UtcNow);
+            _logger.LogError(ex, "Invalid operation during login at {Timestamp}", DateTime.UtcNow);
             activity?.SetTag("result", "error");
             activity?.SetTag("error_type", "invalid_operation");
             return ResourceIdeaResponse<LoginResultModel>.Failure(ErrorCode.LoginFailed);
         }
         catch (ArgumentException ex)
         {
-            _logger.LogError(ex, "Invalid arguments during login for user {Email} at {Timestamp}", email, DateTime.UtcNow);
+            _logger.LogError(ex, "Invalid arguments during login at {Timestamp}", DateTime.UtcNow);
             activity?.SetTag("result", "error");
             activity?.SetTag("error_type", "invalid_arguments");
             return ResourceIdeaResponse<LoginResultModel>.Failure(ErrorCode.LoginFailed);
         }
         catch (NotSupportedException ex)
         {
-            _logger.LogError(ex, "Unsupported operation during login for user {Email} at {Timestamp}", email, DateTime.UtcNow);
+            _logger.LogError(ex, "Unsupported operation during login at {Timestamp}", DateTime.UtcNow);
             activity?.SetTag("result", "error");
             activity?.SetTag("error_type", "not_supported");
             return ResourceIdeaResponse<LoginResultModel>.Failure(ErrorCode.LoginFailed);
@@ -173,7 +172,7 @@ public class AuthenticationService : IAuthenticationService
             var tenantIdClaim = user.FindFirst("TenantId")?.Value?.Trim();
             if (string.IsNullOrEmpty(tenantIdClaim))
             {
-                _logger.LogWarning("User {UserName} is missing TenantId claim at {Timestamp}", user.Identity.Name, DateTime.UtcNow);
+                _logger.LogWarning("User is missing TenantId claim at {Timestamp}", DateTime.UtcNow);
                 activity?.SetTag("result", "missing_tenant_claim");
                 return ResourceIdeaResponse<UserValidationResult>.Success(UserValidationResult.Failure("Missing TenantId claim"));
             }
@@ -181,7 +180,7 @@ public class AuthenticationService : IAuthenticationService
             // Validate that TenantId is a valid GUID
             if (!Guid.TryParse(tenantIdClaim, out var tenantId) || tenantId == Guid.Empty)
             {
-                _logger.LogWarning("User {UserName} has invalid TenantId claim: {TenantId} at {Timestamp}", user.Identity.Name, tenantIdClaim, DateTime.UtcNow);
+                _logger.LogWarning("User has invalid TenantId claim at {Timestamp}", DateTime.UtcNow);
                 activity?.SetTag("result", "invalid_tenant_claim");
                 return ResourceIdeaResponse<UserValidationResult>.Success(UserValidationResult.Failure("Invalid TenantId claim"));
             }
@@ -190,16 +189,13 @@ public class AuthenticationService : IAuthenticationService
             var isBackendRoleClaim = user.FindFirst("IsBackendRole")?.Value?.Trim();
             if (string.IsNullOrEmpty(isBackendRoleClaim))
             {
-                _logger.LogWarning("User {UserName} is missing IsBackendRole claim at {Timestamp}", user.Identity.Name, DateTime.UtcNow);
+                _logger.LogWarning("User is missing IsBackendRole claim at {Timestamp}", DateTime.UtcNow);
                 activity?.SetTag("result", "missing_backend_role_claim");
                 return ResourceIdeaResponse<UserValidationResult>.Success(UserValidationResult.Failure("Missing IsBackendRole claim"));
             }
 
-            _logger.LogInformation("User {UserName} has valid claims at {Timestamp}. TenantId: {TenantId}, IsBackendRole: {IsBackendRole}", 
-                user.Identity.Name, DateTime.UtcNow, tenantIdClaim, isBackendRoleClaim);
+            _logger.LogInformation("User has valid claims at {Timestamp}", DateTime.UtcNow);
             activity?.SetTag("result", "success");
-            activity?.SetTag("tenant_id", tenantIdClaim);
-            activity?.SetTag("is_backend_role", isBackendRoleClaim);
             return ResourceIdeaResponse<UserValidationResult>.Success(UserValidationResult.Success());
         }
         catch (InvalidOperationException ex)

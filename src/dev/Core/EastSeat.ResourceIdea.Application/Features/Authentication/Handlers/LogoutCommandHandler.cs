@@ -7,6 +7,7 @@
 using EastSeat.ResourceIdea.Application.Features.Authentication.Commands;
 using EastSeat.ResourceIdea.Application.Features.Authentication.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Authentication.Models;
+using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 using MediatR;
 
@@ -30,8 +31,7 @@ public sealed class LogoutCommandHandler(IAuthenticationService authenticationSe
         if (!validationResult.IsValid)
         {
             var errorMessage = string.Join("; ", validationResult.ValidationFailureMessages);
-            var failureResult = LogoutResultModel.Failure(errorMessage);
-            return ResourceIdeaResponse<LogoutResultModel>.Success(failureResult);
+            return ResourceIdeaResponse<LogoutResultModel>.Failure(ErrorCode.CommandValidationFailure);
         }
 
         // Perform the logout
@@ -45,9 +45,30 @@ public sealed class LogoutCommandHandler(IAuthenticationService authenticationSe
         // Set the redirect URL
         if (logoutResult.Content.HasValue && logoutResult.Content.Value.IsSuccess)
         {
-            logoutResult.Content.Value.RedirectUrl = request.ReturnUrl ?? "/";
+            logoutResult.Content.Value.RedirectUrl = GetSafeReturnUrl(request.ReturnUrl);
         }
 
         return logoutResult;
+    }
+
+    /// <summary>
+    /// Gets a safe return URL, ensuring it's a valid local path.
+    /// </summary>
+    /// <param name="returnUrl">The requested return URL</param>
+    /// <returns>A safe return URL</returns>
+    private static string GetSafeReturnUrl(string? returnUrl)
+    {
+        // Only allow app-local absolute paths like "/employees"
+        if (string.IsNullOrWhiteSpace(returnUrl))
+            return "/";
+
+        if (Uri.TryCreate(returnUrl, UriKind.Relative, out _)
+            && returnUrl.StartsWith("/", StringComparison.Ordinal)
+            && !returnUrl.StartsWith("//", StringComparison.Ordinal))
+        {
+            return returnUrl;
+        }
+
+        return "/";
     }
 }

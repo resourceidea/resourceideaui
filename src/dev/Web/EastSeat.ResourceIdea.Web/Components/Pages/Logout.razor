@@ -3,6 +3,7 @@
 @inherits ResourceIdeaComponentBase
 @using EastSeat.ResourceIdea.Application.Features.Authentication.Commands
 @using EastSeat.ResourceIdea.Web.Components.Base
+@using EastSeat.ResourceIdea.Domain.Enums
 @using MediatR
 @inject IMediator Mediator
 
@@ -62,6 +63,11 @@
                 // Navigate to the redirect URL or home page
                 var redirectUrl = result.Content.Value.RedirectUrl ?? "/";
                 Navigation.NavigateTo(redirectUrl, true);
+            }
+            else if (result.IsFailure)
+            {
+                // Transport/technical failure
+                SetError(result.Error != ErrorCode.None ? result.Error.ToString() : "Logout failed. Please try again.");
             }
             else if (result.Content.HasValue)
             {

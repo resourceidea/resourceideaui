@@ -26,7 +26,32 @@ public sealed class LogoutCommand : BaseRequest<LogoutResultModel>
     /// <returns><see cref="ValidationResponse"/></returns>
     public override ValidationResponse Validate()
     {
-        // Logout command doesn't require validation - it should always be allowed
-        return new ValidationResponse(true, []);
+        var validationFailureMessages = new List<string>();
+
+        // Validate return URL if provided
+        if (!string.IsNullOrEmpty(ReturnUrl))
+        {
+            if (!IsValidReturnUrl(ReturnUrl))
+            {
+                validationFailureMessages.Add("Return URL must be a valid local path starting with '/'.");
+            }
+        }
+
+        return validationFailureMessages.Any()
+            ? new ValidationResponse(false, validationFailureMessages)
+            : new ValidationResponse(true, []);
+    }
+
+    /// <summary>
+    /// Validates that the return URL is a safe local path.
+    /// </summary>
+    /// <param name="returnUrl">The return URL to validate</param>
+    /// <returns>True if valid, false otherwise</returns>
+    private static bool IsValidReturnUrl(string returnUrl)
+    {
+        // Only allow app-local absolute paths like "/employees"
+        return Uri.TryCreate(returnUrl, UriKind.Relative, out _)
+            && returnUrl.StartsWith("/", StringComparison.Ordinal)
+            && !returnUrl.StartsWith("//", StringComparison.Ordinal);
     }
 }
