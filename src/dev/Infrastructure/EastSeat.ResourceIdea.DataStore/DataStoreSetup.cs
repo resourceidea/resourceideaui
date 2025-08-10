@@ -4,7 +4,6 @@ using EastSeat.ResourceIdea.Application.Features.Subscriptions.Contracts;
 using EastSeat.ResourceIdea.Application.Features.SubscriptionServices.Contracts;
 using EastSeat.ResourceIdea.Application.Features.Tenants.Contracts;
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Contracts;
-using EastSeat.ResourceIdea.DataStore.Configuration.DatabaseStartup;
 using EastSeat.ResourceIdea.DataStore.Services;
 using EastSeat.ResourceIdea.DataStore.Wrappers;
 using EastSeat.ResourceIdea.Domain.SubscriptionServices.Entities;
@@ -12,7 +11,6 @@ using EastSeat.ResourceIdea.Domain.SubscriptionServices.ValueObjects;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EastSeat.ResourceIdea.DataStore;

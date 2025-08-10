@@ -8,7 +8,6 @@ using EastSeat.ResourceIdea.Application.Features.Employees.Specifications;
 using EastSeat.ResourceIdea.Domain.Employees.Entities;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
-using Xunit;
 
 namespace EastSeat.ResourceIdea.Application.UnitTests.Features.Employees.Specifications;
 

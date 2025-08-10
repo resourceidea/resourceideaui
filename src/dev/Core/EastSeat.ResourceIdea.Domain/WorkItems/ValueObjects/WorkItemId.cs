@@ -4,7 +4,6 @@
 // Description: Work Item ID value object.
 // ----------------------------------------------------------------------------------
 
-using System;
 using System.ComponentModel;
 using EastSeat.ResourceIdea.Domain.TypeConverters;
 

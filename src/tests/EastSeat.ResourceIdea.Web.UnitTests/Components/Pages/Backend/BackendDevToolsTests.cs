@@ -8,7 +8,6 @@ using EastSeat.ResourceIdea.Web.Authorization;
 using EastSeat.ResourceIdea.Web.Components.Pages.Backend;
 using Microsoft.AspNetCore.Authorization;
 using Xunit;
-using System.Reflection;
 
 namespace EastSeat.ResourceIdea.Web.UnitTests.Components.Pages.Backend;
 

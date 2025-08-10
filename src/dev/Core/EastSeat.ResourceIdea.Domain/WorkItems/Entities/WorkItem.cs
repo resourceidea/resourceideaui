@@ -4,7 +4,6 @@
 // Description: WorkItem entity.
 // ====================================================================================
 
-using System;
 using EastSeat.ResourceIdea.Domain.Common.Entities;
 using EastSeat.ResourceIdea.Domain.Employees.Entities;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;

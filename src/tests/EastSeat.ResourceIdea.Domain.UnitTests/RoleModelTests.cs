@@ -1,6 +1,5 @@
 using EastSeat.ResourceIdea.Domain.Roles.Models;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
-using Xunit;
 
 namespace EastSeat.ResourceIdea.Domain.UnitTests.Roles
 {

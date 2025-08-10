@@ -1,14 +1,5 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using Moq;
 using System.Security.Claims;
 using Xunit;
-using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 
 namespace EastSeat.ResourceIdea.Web.UnitTests.Components.Pages;
 

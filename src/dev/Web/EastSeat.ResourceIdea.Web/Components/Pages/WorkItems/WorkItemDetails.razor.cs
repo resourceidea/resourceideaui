@@ -1,6 +1,5 @@
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Queries;
 using EastSeat.ResourceIdea.Domain.Enums;
-using EastSeat.ResourceIdea.Domain.Types;
 using EastSeat.ResourceIdea.Domain.WorkItems.Models;
 using EastSeat.ResourceIdea.Domain.WorkItems.ValueObjects;
 using EastSeat.ResourceIdea.Web.RequestContext;

@@ -7,7 +7,6 @@
 using EastSeat.ResourceIdea.Application.Features.Common.Handlers;
 using EastSeat.ResourceIdea.Application.Features.Employees.Commands;
 using EastSeat.ResourceIdea.Application.Features.Employees.Contracts;
-using EastSeat.ResourceIdea.Application.Features.Common.Contracts;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Types;
 using MediatR;

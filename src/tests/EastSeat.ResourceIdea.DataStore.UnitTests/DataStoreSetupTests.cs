@@ -1,7 +1,5 @@
-﻿using EastSeat.ResourceIdea.DataStore.Configuration.DatabaseStartup;
-using EastSeat.ResourceIdea.DataStore.Wrappers;
+﻿using EastSeat.ResourceIdea.DataStore.Wrappers;
 using Microsoft.Extensions.Configuration;
-using Moq;
 
 namespace EastSeat.ResourceIdea.DataStore.UnitTests;
 

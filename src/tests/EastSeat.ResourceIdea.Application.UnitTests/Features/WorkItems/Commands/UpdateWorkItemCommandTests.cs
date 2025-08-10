@@ -1,12 +1,9 @@
-using System;
 using EastSeat.ResourceIdea.Application.Features.WorkItems.Commands;
-using EastSeat.ResourceIdea.Application.Mappers;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Engagements.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.WorkItems.ValueObjects;
-using Xunit;
 
 namespace EastSeat.ResourceIdea.Application.UnitTests.Features.WorkItems.Commands;
 

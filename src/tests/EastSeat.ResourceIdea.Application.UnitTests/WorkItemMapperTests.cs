@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Application.Mappers;
 using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
@@ -9,7 +7,6 @@ using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.WorkItems.Entities;
 using EastSeat.ResourceIdea.Domain.WorkItems.Models;
 using EastSeat.ResourceIdea.Domain.WorkItems.ValueObjects;
-using Xunit;
 
 namespace EastSeat.ResourceIdea.Application.UnitTests.Mappers
 {

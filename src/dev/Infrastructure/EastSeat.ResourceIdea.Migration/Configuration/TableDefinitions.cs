@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Text.Json;
-using EastSeat.ResourceIdea.Migration.Model;
 
 namespace EastSeat.ResourceIdea.Migration.Configuration;
 

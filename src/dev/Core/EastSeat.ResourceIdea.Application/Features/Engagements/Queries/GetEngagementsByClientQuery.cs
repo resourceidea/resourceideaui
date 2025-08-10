@@ -4,10 +4,6 @@ using EastSeat.ResourceIdea.Domain.Clients.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Engagements.Models;
 using EastSeat.ResourceIdea.Domain.Types;
 
-using MediatR;
-
-using System.Linq;
-
 namespace EastSeat.ResourceIdea.Application.Features.Engagements.Queries;
 
 /// <summary>

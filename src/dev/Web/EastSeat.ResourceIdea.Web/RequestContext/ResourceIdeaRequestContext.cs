@@ -1,6 +1,5 @@
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Web.Exceptions;
-using System.Security.Claims;
 
 namespace EastSeat.ResourceIdea.Web.RequestContext;
 

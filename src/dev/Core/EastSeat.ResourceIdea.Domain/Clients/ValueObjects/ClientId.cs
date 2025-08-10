@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using EastSeat.ResourceIdea.Domain.Clients.Entities;
 using EastSeat.ResourceIdea.Domain.Exceptions;
 using EastSeat.ResourceIdea.Domain.TypeConverters;
 
