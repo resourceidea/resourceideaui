@@ -149,11 +149,21 @@ public class AuthenticationService : IAuthenticationService
         {
             await _protectedSessionStore.DeleteAsync("UserSession");
         }
-        catch (Exception ex)
+        catch (InvalidOperationException ex)
         {
             // Continue with logout even if session storage clear fails
-            _logger.LogWarning(ex, "Error clearing session storage during logout at {Timestamp}", DateTime.UtcNow);
+            _logger.LogWarning(ex, "Invalid operation clearing session storage during logout at {Timestamp}", DateTime.UtcNow);
         }
+        catch (NotSupportedException ex)
+        {
+            // Continue with logout even if session storage clear fails
+            _logger.LogWarning(ex, "Unsupported operation clearing session storage during logout at {Timestamp}", DateTime.UtcNow);
+        }
+        // If you want to ensure all exceptions are logged but not interrupt logout, you may add:
+        // catch (Exception ex)
+        // {
+        //     _logger.LogWarning(ex, "Unexpected error clearing session storage during logout at {Timestamp}", DateTime.UtcNow);
+        // }
     }
 
     /// <inheritdoc />
