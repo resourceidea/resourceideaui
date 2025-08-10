@@ -41,15 +41,15 @@ public class AuthenticationService : IAuthenticationService
 
     /// <inheritdoc />
     public async Task<ResourceIdeaResponse<LoginResultModel>> LoginAsync(
-        string email, 
-        string password, 
-        bool rememberMe, 
+        string email,
+        string password,
+        bool rememberMe,
         CancellationToken cancellationToken = default)
     {
         using var activity = Activity.Current?.Source.StartActivity("AuthenticationService.LoginAsync");
         activity?.SetTag("operation", "login");
         activity?.SetTag("rememberMe", rememberMe.ToString());
-        
+
         try
         {
             var result = await _signInManager.PasswordSignInAsync(
@@ -60,7 +60,7 @@ public class AuthenticationService : IAuthenticationService
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("User logged in successfully at {Timestamp}. RememberMe: {RememberMe}", 
+                _logger.LogInformation("User logged in successfully at {Timestamp}. RememberMe: {RememberMe}",
                     DateTime.UtcNow, rememberMe);
                 activity?.SetTag("result", "success");
                 return ResourceIdeaResponse<LoginResultModel>.Success(LoginResultModel.Success());
@@ -115,21 +115,13 @@ public class AuthenticationService : IAuthenticationService
     {
         using var activity = Activity.Current?.Source.StartActivity("AuthenticationService.LogoutAsync");
         activity?.SetTag("operation", "logout");
-        
+
         try
         {
             await _signInManager.SignOutAsync();
-            
-            // Clear any session storage that might contain stale data
-            try
-            {
-                await _protectedSessionStore.DeleteAsync("UserSession");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "Error clearing session storage during logout at {Timestamp}", DateTime.UtcNow);
-                // Continue with logout even if session storage clear fails
-            }
+
+            // Best-effort clear any session storage that might contain stale data
+            await TryClearUserSessionAsync();
 
             _logger.LogInformation("User signed out successfully at {Timestamp}", DateTime.UtcNow);
             activity?.SetTag("result", "success");
@@ -151,12 +143,25 @@ public class AuthenticationService : IAuthenticationService
         }
     }
 
+    private async Task TryClearUserSessionAsync()
+    {
+        try
+        {
+            await _protectedSessionStore.DeleteAsync("UserSession");
+        }
+        catch (Exception ex)
+        {
+            // Continue with logout even if session storage clear fails
+            _logger.LogWarning(ex, "Error clearing session storage during logout at {Timestamp}", DateTime.UtcNow);
+        }
+    }
+
     /// <inheritdoc />
     public async Task<ResourceIdeaResponse<UserValidationResult>> ValidateUserClaimsAsync(CancellationToken cancellationToken = default)
     {
         using var activity = Activity.Current?.Source.StartActivity("AuthenticationService.ValidateUserClaimsAsync");
         activity?.SetTag("operation", "validate_user_claims");
-        
+
         try
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();

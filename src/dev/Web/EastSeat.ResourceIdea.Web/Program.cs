@@ -59,7 +59,7 @@ builder.Services.AddScoped<IClaimsTransformation, TenantClaimsTransformation>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/login";
-    options.LogoutPath = "/logout";
+    options.LogoutPath = "/auth/signout";
     options.AccessDeniedPath = "/access-denied";
     options.ExpireTimeSpan = TimeSpan.FromHours(8); // Reduced from 24 to 8 hours
     options.SlidingExpiration = false; // Disable sliding expiration to prevent auto-renewal
@@ -187,6 +187,14 @@ app.UseStaticFiles();
 
 // Add health check endpoint for Azure App Service monitoring
 app.MapHealthChecks("/health");
+
+// Minimal API endpoint to sign out and redirect, avoiding SignInManager context constraints
+app.MapGet("/auth/signout", async (HttpContext http, string? returnUrl) =>
+{
+    await http.SignOutAsync(IdentityConstants.ApplicationScheme);
+    var target = string.IsNullOrWhiteSpace(returnUrl) ? "/" : returnUrl;
+    return Results.Redirect(target);
+});
 
 app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
