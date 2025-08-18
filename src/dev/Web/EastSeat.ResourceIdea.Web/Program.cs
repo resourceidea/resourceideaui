@@ -167,7 +167,6 @@ app.UseMiddleware<SecurityHeadersMiddleware>();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -184,6 +183,47 @@ app.UseStaticFiles();
 
 // Add health check endpoint for Azure App Service monitoring
 app.MapHealthChecks("/health");
+
+// GET fallback for signout: renders an auto-submitting form that POSTs with antiforgery token
+// This supports redirects like "/auth/signout?returnUrl=%2F" by immediately posting to the
+// POST endpoint below while preserving CSRF protection.
+app.MapGet("/auth/signout", (HttpContext http, IServiceProvider serviceProvider, string? returnUrl) =>
+{
+    var antiforgery = serviceProvider.GetRequiredService<Microsoft.AspNetCore.Antiforgery.IAntiforgery>();
+    var tokens = antiforgery.GetAndStoreTokens(http);
+
+    // Ensure local-only returnUrl
+    var target = "/";
+    if (!string.IsNullOrWhiteSpace(returnUrl)
+            && returnUrl.StartsWith("/", StringComparison.Ordinal)
+            && !returnUrl.StartsWith("//", StringComparison.Ordinal))
+    {
+        target = returnUrl;
+    }
+
+    var html = "<!doctype html>\n" +
+               "<html>\n" +
+               "  <head>\n" +
+               "    <meta charset=\"utf-8\" />\n" +
+               "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n" +
+               "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n" +
+               "    <title>Signing out…</title>\n" +
+               "  </head>\n" +
+               "  <body>\n" +
+               $"    <form id=\"f\" method=\"post\" action=\"/auth/signout\">\n" +
+               $"      <input type=\"hidden\" name=\"{tokens.FormFieldName}\" value=\"{tokens.RequestToken}\" />\n" +
+               $"      <input type=\"hidden\" name=\"returnUrl\" value=\"{System.Net.WebUtility.HtmlEncode(target)}\" />\n" +
+               "      <noscript>\n" +
+               "        <p>JavaScript is required to complete sign out. Click the button below.</p>\n" +
+               "        <button type=\"submit\">Sign out</button>\n" +
+               "      </noscript>\n" +
+               "    </form>\n" +
+               "    <script>document.getElementById('f').submit();</script>\n" +
+               "  </body>\n" +
+               "</html>";
+
+    return Results.Content(html, "text/html; charset=utf-8");
+});
 
 // Minimal API endpoint to sign out and redirect, using POST with antiforgery and local-only returnUrl
 app.MapPost("/auth/signout", async (HttpContext http, IServiceProvider serviceProvider, string? returnUrl) =>
