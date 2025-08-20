@@ -66,9 +66,9 @@ public sealed class LoginCommandHandler(IAuthenticationService authenticationSer
     /// <returns>A safe return URL</returns>
     private static string GetSafeReturnUrl(string? returnUrl)
     {
-        // Only allow app-local absolute paths like "/employees"
+        // Only allow app-local absolute paths like "/profile"
         if (string.IsNullOrWhiteSpace(returnUrl))
-            return "/employees";
+            return "/profile";
 
         if (Uri.TryCreate(returnUrl, UriKind.Relative, out _)
             && returnUrl.StartsWith("/", StringComparison.Ordinal)
@@ -77,7 +77,7 @@ public sealed class LoginCommandHandler(IAuthenticationService authenticationSer
             return returnUrl;
         }
 
-        return "/employees";
+        return "/profile";
     }
 
     /// <summary>
