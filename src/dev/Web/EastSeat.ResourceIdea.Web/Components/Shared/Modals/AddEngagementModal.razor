@@ -1,0 +1,148 @@
+@* ------------------------------------------------------------------------------
+    File: AddEngagementModal.razor
+    Path: src/dev/Web/EastSeat.ResourceIdea.Web/Components/Shared/Modals/AddEngagementModal.razor
+    Description: Modal dialog for adding new engagements
+   ------------------------------------------------------------------------------ *@
+
+@inherits ResourceIdeaComponentBase
+@using EastSeat.ResourceIdea.Domain.Enums
+@using EastSeat.ResourceIdea.Web.Components.Base
+
+@if (IsVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-handshake"></i> New Client Engagement
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                
+                @if (IsLoading)
+                {
+                    <div class="modal-body">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else if (HasError)
+                {
+                    <div class="modal-body">
+                        <div class="alert alert-danger">
+                            @ErrorMessage
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <EditForm Model="@Command" OnValidSubmit="HandleValidSubmit">
+                        <div class="modal-body">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+                            
+                            <p class="text-muted mb-3">Create a new engagement record for client resource planning.</p>
+                            
+                            <!-- Client Selection -->
+                            <div class="mb-3">
+                                <label for="client" class="form-label">
+                                    <i class="fas fa-user"></i> Client
+                                </label>
+                                @if (IsClientPreSelected)
+                                {
+                                    <input type="text" class="form-control" value="@PreSelectedClientName" readonly />
+                                    <input type="hidden" @bind="SelectedClientId" />
+                                }
+                                else
+                                {
+                                    <select id="client" class="form-control" @bind="SelectedClientId">
+                                        <option value="">-- Select a Client --</option>
+                                        @if (Clients != null)
+                                        {
+                                            @foreach (var client in Clients.Items)
+                                            {
+                                                <option value="@client.ClientId.Value">@client.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                    @if (!HasAnyClients)
+                                    {
+                                        <div class="form-text text-danger">
+                                            No clients available. Please add a client first.
+                                        </div>
+                                    }
+                                }
+                            </div>
+
+                            <!-- Engagement Title -->
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Engagement Title</label>
+                                <InputText id="title" class="form-control" @bind-Value="Command.Title" placeholder="Enter engagement title" />
+                            </div>
+
+                            <!-- Due Date -->
+                            <div class="mb-3">
+                                <label for="dueDate" class="form-label">Due Date</label>
+                                <InputDate id="dueDate" class="form-control" @bind-Value="Command.DueDate" />
+                            </div>
+
+                            <!-- Engagement Details -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Engagement Details</label>
+                                <InputTextArea id="description" class="form-control" @bind-Value="Command.Description" 
+                                             rows="4" placeholder="Describe the engagement details, scope, and requirements..." />
+                            </div>
+
+                            <!-- Work Items Section -->
+                            <div class="mb-3">
+                                <label class="form-label">Work Items</label>
+                                <div class="d-flex align-items-center mb-2">
+                                    <input type="text" class="form-control me-2" @bind="NewWorkItemDescription" 
+                                           placeholder="Enter work item description..." @onkeypress="OnWorkItemKeyPress" />
+                                    <button type="button" class="btn btn-secondary" @onclick="AddWorkItem">
+                                        <i class="fas fa-plus"></i> Add
+                                    </button>
+                                </div>
+                                
+                                @if (WorkItems.Any())
+                                {
+                                    <div class="work-items-list">
+                                        @for (int i = 0; i < WorkItems.Count; i++)
+                                        {
+                                            var index = i; // Capture for closure
+                                            <div class="work-item d-flex align-items-center justify-content-between mb-1 p-2 border rounded">
+                                                <span>@WorkItems[index]</span>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" @onclick="() => RemoveWorkItem(index)">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="text-center text-muted py-3">
+                                        <p class="mb-1">No work items added yet</p>
+                                        <small>Add work items to break down this engagement into manageable tasks</small>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" @onclick="ClearForm">Clear</button>
+                            <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
+                            <button type="submit" class="btn btn-dark" disabled="@(!CanSubmit)">
+                                Create Engagement
+                            </button>
+                        </div>
+                    </EditForm>
+                }
+            </div>
+        </div>
+    </div>
+}
