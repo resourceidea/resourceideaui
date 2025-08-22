@@ -14,7 +14,7 @@
 
 @if (!string.IsNullOrEmpty(message))
 {
-    <div class="alert @(isErrorMessage ? "alert-danger" : "alert-success") alert-dismissible fade show" role="alert">
+    <div class="alert @(isErrorMessage ? "alert-danger" : "alert-success") alert-dismissible fade show mt-3" role="alert">
         @message
         <button type="button" class="btn-close" @onclick="ClearMessage" aria-label="Close"></button>
     </div>
