@@ -18,6 +18,8 @@ using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EastSeat.ResourceIdea.Web.Components.Shared.Modals;
 
@@ -129,19 +131,19 @@ public partial class AddEngagementModal : ResourceIdeaComponentBase
                 var engagement = engagementResponse.Content.Value;
                 var engagementId = EngagementId.Create(engagement.Id.Value);
 
-                foreach (var workItemDescription in WorkItems)
+                var workItemCommands = WorkItems.Select(workItemDescription => new CreateWorkItemCommand
                 {
-                    var workItemCommand = new CreateWorkItemCommand
-                    {
-                        Title = workItemDescription,
-                        Description = workItemDescription,
-                        EngagementId = engagementId,
-                        TenantId = ResourceIdeaRequestContext.Tenant,
-                        Priority = Priority.Medium
-                    };
+                    Title = workItemDescription,
+                    Description = workItemDescription,
+                    EngagementId = engagementId,
+                    TenantId = ResourceIdeaRequestContext.Tenant,
+                    Priority = Priority.Medium
+                });
 
-                    await Mediator.Send(workItemCommand, cancellationToken);
-                }
+                var workItemTasks = workItemCommands
+                    .Select(workItemCommand => Mediator.Send(workItemCommand, cancellationToken));
+
+                await Task.WhenAll(workItemTasks);
             }
 
             NotificationService.ShowSuccessNotification("Engagement added successfully.");
