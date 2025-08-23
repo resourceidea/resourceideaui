@@ -11,10 +11,12 @@ using EastSeat.ResourceIdea.Domain.Employees.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 using EastSeat.ResourceIdea.Web.Components.Base;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.DataStore.Identity.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages;
@@ -25,6 +27,7 @@ public partial class Profile : ResourceIdeaComponentBase
     [Inject] private IMediator Mediator { get; set; } = null!;
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
     [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+    [Inject] private UserManager<ApplicationUser> UserManager { get; set; } = null!;
 
     private string? message;
     private bool isErrorMessage;
@@ -43,7 +46,7 @@ public partial class Profile : ResourceIdeaComponentBase
     {
         await ExecuteAsync(async () =>
         {
-            // Get the current user's ApplicationUserId from authentication claims
+            // Get the current user's Identity ID from authentication claims
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var userIdClaim = authState.User.FindFirst(ClaimTypes.NameIdentifier);
             
@@ -54,12 +57,19 @@ public partial class Profile : ResourceIdeaComponentBase
                 return;
             }
 
-            var applicationUserId = ApplicationUserId.Create(userIdClaim.Value);
-            
-            // Get current user's profile
+            // Find the ApplicationUser by Identity ID to get the ApplicationUserId
+            var applicationUser = await UserManager.FindByIdAsync(userIdClaim.Value);
+            if (applicationUser == null)
+            {
+                message = "Unable to find user information. Please contact your administrator.";
+                isErrorMessage = true;
+                return;
+            }
+
+            // Get current user's profile using the ApplicationUserId
             var query = new GetCurrentUserProfileQuery
             {
-                ApplicationUserId = applicationUserId,
+                ApplicationUserId = applicationUser.ApplicationUserId,
                 TenantId = ResourceIdeaRequestContext.Tenant
             };
 
