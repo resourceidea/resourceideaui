@@ -140,10 +140,11 @@ public partial class AddEngagementModal : ResourceIdeaComponentBase
                     Priority = Priority.Medium
                 });
 
-                var workItemTasks = workItemCommands
-                    .Select(workItemCommand => Mediator.Send(workItemCommand, cancellationToken));
-
-                await Task.WhenAll(workItemTasks);
+                // Create work items sequentially to avoid DbContext concurrency issues
+                foreach (var workItemCommand in workItemCommands)
+                {
+                    await Mediator.Send(workItemCommand, cancellationToken);
+                }
             }
 
             NotificationService.ShowSuccessNotification("Engagement added successfully.");
