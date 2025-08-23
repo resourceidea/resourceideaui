@@ -138,7 +138,8 @@ public partial class AddEngagementModal : ResourceIdeaComponentBase
                     Description = workItemDescription,
                     EngagementId = engagementId,
                     TenantId = ResourceIdeaRequestContext.Tenant,
-                    Priority = Priority.Medium
+                    Priority = Priority.Medium,
+                    AssignedToId = null  // Explicitly set to null to avoid database issues
                 });
 
                 // Create work items sequentially to avoid DbContext concurrency issues
