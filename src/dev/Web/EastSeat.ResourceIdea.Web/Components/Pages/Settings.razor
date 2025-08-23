@@ -1,0 +1,184 @@
+@page "/settings"
+@using EastSeat.ResourceIdea.Web.Components.Base
+@inherits ResourceIdeaComponentBase
+
+<PageTitle>Settings - ResourceIdea</PageTitle>
+
+<div class="settings-container">
+    <div class="settings-card">
+        <div class="settings-icon">
+            <i class="fas fa-cog"></i>
+        </div>
+        <h1 class="settings-title">Settings</h1>
+        <p class="settings-message">
+            Settings functionality is currently under construction and will be made available soon.
+            We're working hard to bring you comprehensive configuration options.
+        </p>
+        <div class="construction-notice">
+            <div class="notice-header">
+                <i class="fas fa-tools"></i>
+                <span>Under Construction</span>
+            </div>
+            <p class="notice-description">
+                Our development team is actively working on implementing user preferences, 
+                notification settings, and system configurations. Stay tuned for updates!
+            </p>
+        </div>
+        <div class="settings-actions">
+            <button class="btn btn-primary" @onclick="GoBack">
+                <i class="fas fa-arrow-left"></i> Go Back
+            </button>
+            <a href="/" class="btn btn-outline-secondary">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .settings-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #00879c 0%, #006b7d 100%);
+        padding: 20px;
+    }
+
+    .settings-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        padding: 40px;
+        text-align: center;
+        max-width: 600px;
+        width: 100%;
+    }
+
+    .settings-icon {
+        color: #00879c;
+        font-size: 4rem;
+        margin-bottom: 25px;
+        animation: rotate 10s linear infinite;
+    }
+
+    @@keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .settings-title {
+        color: #495057;
+        font-size: 2.2rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        line-height: 1.3;
+    }
+
+    .settings-message {
+        color: #6c757d;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+    .construction-notice {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: left;
+        margin-bottom: 30px;
+    }
+
+    .notice-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        color: #856404;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+    }
+
+    .notice-description {
+        color: #856404;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .settings-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.15s ease-in-out;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background-color: #00879c;
+        border-color: #00879c;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #006b7d;
+        border-color: #006b7d;
+        transform: translateY(-1px);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-outline-secondary {
+        border: 2px solid #6c757d;
+        color: #6c757d;
+        background: transparent;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: white;
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+
+    @@media (max-width: 768px) {
+        .settings-card {
+            padding: 30px 20px;
+        }
+
+        .settings-title {
+            font-size: 1.8rem;
+        }
+
+        .settings-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btn {
+            width: 100%;
+            max-width: 200px;
+            justify-content: center;
+        }
+    }
+</style>
+
+@code {
+    private void GoBack()
+    {
+        Navigation.NavigateTo("javascript:history.back()", false);
+    }
+}
