@@ -8,33 +8,32 @@ using EastSeat.ResourceIdea.Application.Features.Engagements.Queries;
 using EastSeat.ResourceIdea.Application.Features.Common.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Engagements.Models;
 using EastSeat.ResourceIdea.Web.RequestContext;
+using EastSeat.ResourceIdea.Web.Components.Base;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 
 namespace EastSeat.ResourceIdea.Web.Components.Pages.Engagements;
 
-public partial class Engagements : ComponentBase
+public partial class Engagements : ResourceIdeaComponentBase
 {
     [Inject] private IResourceIdeaRequestContext ResourceIdeaRequestContext { get; set; } = null!;
     [Inject] private IMediator Mediator { get; set; } = null!;
 
-    private bool IsLoadingPage { get; set; } = true;
     private PagedListResponse<EngagementModel>? TenantEngagements { get; set; }
     private int CurrentPage { get; set; } = 1;
     private const int PageSize = 10;
+    private bool showAddEngagementModal = false;
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadTenantEngagements();
-        IsLoadingPage = false;
-        StateHasChanged();
+        await ExecuteAsync(async (cancellationToken) =>
+        {
+            await LoadTenantEngagements();
+        }, "Loading engagements");
     }
 
     private async Task LoadTenantEngagements()
     {
-        IsLoadingPage = true;
-        StateHasChanged();
-
         GetAllEngagementsQuery query = new(CurrentPage, PageSize)
         {
             TenantId = ResourceIdeaRequestContext.Tenant
@@ -45,14 +44,28 @@ public partial class Engagements : ComponentBase
         TenantEngagements = response.IsSuccess && response.Content.HasValue
             ? response.Content.Value
             : null;
-
-        IsLoadingPage = false;
-        StateHasChanged();
     }
 
     protected async Task HandlePageChangeAsync(int page)
     {
         CurrentPage = page;
-        await LoadTenantEngagements();
+        await ExecuteAsync(async (cancellationToken) =>
+        {
+            await LoadTenantEngagements();
+        }, "Loading page");
+    }
+
+    private void ShowAddEngagementModal()
+    {
+        showAddEngagementModal = true;
+    }
+
+    private async Task OnEngagementCreated()
+    {
+        // Refresh the engagements list
+        await ExecuteAsync(async (cancellationToken) =>
+        {
+            await LoadTenantEngagements();
+        }, "Refreshing engagements list");
     }
 }

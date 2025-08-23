@@ -37,6 +37,7 @@ public partial class ClientDetails : ResourceIdeaComponentBase
     private string EngagementSortDirection { get; set; } = "asc";
     private int CurrentEngagementsPage { get; set; } = 1;
     private const int EngagementsPageSize = 10;
+    private bool showAddEngagementModal = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -133,5 +134,16 @@ public partial class ClientDetails : ResourceIdeaComponentBase
         EngagementSortDirection = sortInfo.direction;
         CurrentEngagementsPage = 1; // Reset to first page when sorting
         await LoadEngagementsAsync();
+    }
+
+    private void ShowAddEngagementModal()
+    {
+        showAddEngagementModal = true;
+    }
+
+    private async Task OnEngagementCreated()
+    {
+        // Refresh the engagements list
+        await ExecuteAsync(LoadEngagementsAsync, "Refreshing engagements list");
     }
 }
