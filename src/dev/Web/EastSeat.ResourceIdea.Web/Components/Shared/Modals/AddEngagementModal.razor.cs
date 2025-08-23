@@ -60,12 +60,13 @@ public partial class AddEngagementModal : ResourceIdeaComponentBase
         }, "Loading modal data");
     }
 
-    protected override async Task OnParametersSetAsync()
+    protected override Task OnParametersSetAsync()
     {
         if (IsVisible && IsClientPreSelected && PreSelectedClientId.HasValue)
         {
             SelectedClientId = PreSelectedClientId.Value.ToString();
         }
+        return Task.CompletedTask;
     }
 
     private async Task LoadClients()
@@ -196,7 +197,7 @@ public partial class AddEngagementModal : ResourceIdeaComponentBase
         }
     }
 
-    private async Task OnWorkItemKeyPress(KeyboardEventArgs e)
+    private void OnWorkItemKeyPress(KeyboardEventArgs e)
     {
         if (e.Key == "Enter")
         {
