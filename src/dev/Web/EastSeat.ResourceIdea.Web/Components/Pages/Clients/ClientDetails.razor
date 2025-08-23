@@ -86,6 +86,6 @@
 {
     <AddEngagementModal @bind-IsVisible="showAddEngagementModal" 
                         OnEngagementCreated="OnEngagementCreated"
-                        PreSelectedClientId="@Client.ClientId.Value"
-                        PreSelectedClientName="@Client.Name" />
+                        PreSelectedClientId="@(Client.ClientId.Value)"
+                        PreSelectedClientName="@(Client.Name)" />
 }
