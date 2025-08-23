@@ -18,6 +18,7 @@ using EastSeat.ResourceIdea.Domain.Enums;
 using EastSeat.ResourceIdea.Domain.JobPositions.Entities;
 using EastSeat.ResourceIdea.Domain.Tenants.ValueObjects;
 using EastSeat.ResourceIdea.Domain.Types;
+using EastSeat.ResourceIdea.Domain.Users.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -80,14 +81,25 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
         BaseSpecification<Employee> specification,
         CancellationToken cancellationToken)
     {
-        if (specification is not GetEmployeeIdBySpecification employeeIdSpecification)
-        {
-            return ResourceIdeaResponse<Employee>.Failure(ErrorCode.FailureOnTenantEmployeesQuery);
-        }
         try
         {
-            TenantEmployeeModel tenantEmployee = await GetTenantEmployeeByIdAsync(
-                employeeIdSpecification.EmployeeId, employeeIdSpecification.TenantId, cancellationToken);
+            TenantEmployeeModel tenantEmployee;
+
+            switch (specification)
+            {
+                case GetEmployeeIdBySpecification employeeIdSpecification:
+                    tenantEmployee = await GetTenantEmployeeByIdAsync(
+                        employeeIdSpecification.EmployeeId, employeeIdSpecification.TenantId, cancellationToken);
+                    break;
+
+                case GetCurrentUserProfileSpecification profileSpecification:
+                    tenantEmployee = await GetTenantEmployeeByApplicationUserIdAsync(
+                        profileSpecification.ApplicationUserId, profileSpecification.TenantId, cancellationToken);
+                    break;
+
+                default:
+                    return ResourceIdeaResponse<Employee>.Failure(ErrorCode.FailureOnTenantEmployeesQuery);
+            }
 
             if (tenantEmployee.IsEmpty)
             {
@@ -203,6 +215,50 @@ public class EmployeesService(ResourceIdeaDBContext dbContext, UserManager<Appli
 
         using var command = new SqlCommand(sql, connection);
         command.Parameters.Add(new SqlParameter("@EmployeeId", employeeId.Value));
+        command.Parameters.Add(new SqlParameter("@TenantId", tenantId.Value));
+
+        using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        if (await reader.ReadAsync(cancellationToken))
+        {
+            return new TenantEmployeeModel
+            {
+                EmployeeId = reader.GetEmployeeId("EmployeeId"),
+                FirstName = reader.GetNullableString("FirstName"),
+                LastName = reader.GetNullableString("LastName"),
+                Email = reader.GetNullableString("Email"),
+                EmployeeNumber = reader.GetNullableString("EmployeeNumber"),
+                JobPositionId = reader.GetJobPositionIdOrEmpty("JobPositionId"),
+                JobPositionTitle = reader.GetNullableString("JobPositionTitle"),
+                DepartmentId = reader.GetDepartmentIdOrEmpty("DepartmentId"),
+                DepartmentName = reader.GetNullableString("DepartmentName"),
+                ApplicationUserId = reader.GetApplicationUserId("ApplicationUserId"),
+                TenantId = reader.GetTenantId("TenantId")
+            };
+        }
+
+        return TenantEmployeeModel.Empty;
+    }
+
+    private async Task<TenantEmployeeModel> GetTenantEmployeeByApplicationUserIdAsync(
+        ApplicationUserId applicationUserId,
+        TenantId tenantId,
+        CancellationToken cancellationToken)
+    {
+        using var connection = new SqlConnection(_dbContext.Database.GetConnectionString());
+        await connection.OpenAsync(cancellationToken);
+
+        string sql = @"SELECT TOP 1 e.EmployeeId, e.JobPositionId, e.EmployeeNumber, e.ApplicationUserId, e.TenantId,
+                          u.FirstName, u.LastName, u.Email,
+                          jp.Title as 'JobPositionTitle',
+                          d.Id as 'DepartmentId', d.Name as 'DepartmentName'
+                   FROM [dbo].[Employees] e
+                   JOIN [Identity].[ApplicationUsers] u ON e.ApplicationUserId = u.ApplicationUserId
+                   LEFT JOIN [dbo].[JobPositions] jp ON e.JobPositionId = jp.Id
+                   LEFT JOIN [dbo].[Departments] d ON jp.DepartmentId = d.Id
+                   WHERE e.TenantId = @TenantId AND e.ApplicationUserId = @ApplicationUserId";
+
+        using var command = new SqlCommand(sql, connection);
+        command.Parameters.Add(new SqlParameter("@ApplicationUserId", applicationUserId.Value));
         command.Parameters.Add(new SqlParameter("@TenantId", tenantId.Value));
 
         using var reader = await command.ExecuteReaderAsync(cancellationToken);
