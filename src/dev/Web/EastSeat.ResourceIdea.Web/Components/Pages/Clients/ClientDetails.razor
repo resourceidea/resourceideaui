@@ -7,6 +7,7 @@
 @page "/clients/{Id:guid}"
 @inherits ResourceIdeaComponentBase
 @using EastSeat.ResourceIdea.Web.Components.Shared.Lists
+@using EastSeat.ResourceIdea.Web.Components.Shared.Modals
 
 <ResourceIdeaPageTitle Title="Client Details" />
 
@@ -52,10 +53,9 @@
         <h5 class="mb-2">Engagements</h5>
 
         <div class="mb-1">
-            <NavLink class="btn btn-success btn-sm" href=@($"/engagements/add?clientid={Client.ClientId.Value}")
-                ActiveClass="">
+            <button type="button" class="btn btn-success btn-sm" @onclick="ShowAddEngagementModal">
                 <i class="fa-solid fa-plus"></i> Add Engagement
-            </NavLink>
+            </button>
         </div>
 
         @if (IsLoadingEngagements)
@@ -80,3 +80,12 @@
         </div>
     }
 </div>
+
+<!-- Add Engagement Modal -->
+@if (Client != null)
+{
+    <AddEngagementModal @bind-IsVisible="showAddEngagementModal" 
+                        OnEngagementCreated="OnEngagementCreated"
+                        PreSelectedClientId="@(Client.ClientId.Value)"
+                        PreSelectedClientName="@(Client.Name)" />
+}

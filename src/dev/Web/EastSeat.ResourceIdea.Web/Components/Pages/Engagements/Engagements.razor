@@ -1,14 +1,17 @@
 @page "/engagements"
 @page "/engagements/index"
+@inherits ResourceIdeaComponentBase
+@using EastSeat.ResourceIdea.Web.Components.Base
+@using EastSeat.ResourceIdea.Web.Components.Shared.Modals
 
 <ResourceIdeaPageTitle Title="Engagements" />
 
 <div class="page-container">
     <PageHeader Text="Engagements" />
 
-    <NavLink class="btn btn-outline-dark btn-sm mt-2 mb-2" href="/engagements/add" ActiveClass="">
+    <button type="button" class="btn btn-outline-dark btn-sm mt-2 mb-2" @onclick="ShowAddEngagementModal">
         <i class="fa-solid fa-plus"></i> Add Engagement
-    </NavLink>
+    </button>
 
     <div class="content-container">
         @if (IsLoadingPage)
@@ -27,3 +30,7 @@
         }
     </div>
 </div>
+
+<!-- Add Engagement Modal -->
+<AddEngagementModal @bind-IsVisible="showAddEngagementModal" 
+                    OnEngagementCreated="OnEngagementCreated" />
