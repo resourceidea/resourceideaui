@@ -100,7 +100,12 @@ public class Employee : BaseEntity
         FirstName = FirstName,
         LastName = LastName,
         Email = Email,
+        EmployeeNumber = EmployeeNumber ?? string.Empty,
+        JobPositionId = JobPositionId,
         JobPositionTitle = JobPosition?.Title ?? string.Empty,
+        DepartmentId = JobPosition?.Department?.Id ?? DepartmentId.Empty,
         DepartmentName = JobPosition?.Department?.Name ?? string.Empty,
+        ApplicationUserId = ApplicationUserId,
+        TenantId = TenantId,
     };
 }

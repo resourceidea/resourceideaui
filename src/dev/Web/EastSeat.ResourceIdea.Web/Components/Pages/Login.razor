@@ -97,7 +97,7 @@
 
                 // We can use the authentication service directly for validation
                 // For now, just navigate to the return URL or default page
-                Navigation.NavigateTo(ReturnUrl ?? "/employees", true);
+                Navigation.NavigateTo(ReturnUrl ?? "/profile", true);
             }
         }, "Checking authentication status");
     }
@@ -119,7 +119,7 @@
             if (result.IsSuccess && result.Content.HasValue && result.Content.Value.IsSuccess)
             {
                 // Successful login - navigate to return URL or default page
-                var redirectUrl = result.Content.Value.RedirectUrl ?? "/employees";
+                var redirectUrl = result.Content.Value.RedirectUrl ?? "/profile";
                 Navigation.NavigateTo(redirectUrl, true);
             }
             else if (result.Content.HasValue)
