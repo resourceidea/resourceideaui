@@ -1,0 +1,18 @@
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+COPY EastSeat.ResourceIdea.slnx ./
+COPY Directory.Build.props ./
+COPY src/Shared/EastSeat.ResourceIdea.Shared.csproj src/Shared/
+COPY src/Server/EastSeat.ResourceIdea.Server.csproj src/Server/
+RUN dotnet restore src/Server/EastSeat.ResourceIdea.Server.csproj --disable-parallel
+COPY . .
+RUN dotnet publish src/Server/EastSeat.ResourceIdea.Server.csproj -c Release -o /app/publish
+
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+ENV ASPNETCORE_URLS=http://0.0.0.0:5001
+EXPOSE 5001
+ENTRYPOINT ["dotnet", "EastSeat.ResourceIdea.Server.dll"]

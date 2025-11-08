@@ -1,0 +1,15 @@
+# Build Blazor WASM
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+COPY EastSeat.ResourceIdea.slnx ./
+COPY Directory.Build.props ./
+COPY src/Shared/EastSeat.ResourceIdea.Shared.csproj src/Shared/
+COPY src/Client/EastSeat.ResourceIdea.Client.csproj src/Client/
+RUN dotnet restore src/Client/EastSeat.ResourceIdea.Client.csproj --disable-parallel
+COPY . .
+RUN dotnet publish src/Client/EastSeat.ResourceIdea.Client.csproj -c Release -o /app/publish
+
+# Serve with nginx
+FROM nginx:1.27-alpine AS final
+COPY --from=build /app/publish/wwwroot /usr/share/nginx/html
+EXPOSE 80
