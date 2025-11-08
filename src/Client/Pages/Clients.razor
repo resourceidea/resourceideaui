@@ -1,0 +1,60 @@
+@page "/clients"
+@inject HttpClient Http
+
+<h5>Clients</h5>
+<a class="btn btn-primary mb-3" href="/clients/new">New Client</a>
+
+@if (_loading)
+{
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else if (_clients == null)
+{
+    <div class="alert alert-danger">Failed to load clients.</div>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in _clients)
+            {
+                <tr>
+                    <td>@client.Name</td>
+                    <td>@client.Code</td>
+                    <td>@client.Status</td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" href="@($"/clients/edit/{client.Id}")">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private bool _loading = true;
+    private List<Client>? _clients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _clients = await Http.GetFromJsonAsync<List<Client>>("api/clients");
+        }
+        catch
+        {
+            _clients = null;
+        }
+        _loading = false;
+    }
+}

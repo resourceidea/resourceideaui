@@ -1,0 +1,54 @@
+@page "/login"
+@inject AuthService Auth
+@inject NavigationManager Nav
+
+<div class="card shadow-sm p-4 mx-auto" style="max-width: 400px;">
+    <h5 class="mb-3">Login</h5>
+    <EditForm Model="_model" OnValidSubmit="LoginAsync">
+        <DataAnnotationsValidator />
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <InputText id="email" class="form-control" @bind-Value="_model.Email" required />
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <InputText id="password" type="password" class="form-control" @bind-Value="_model.Password" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100" disabled="@_busy">Login</button>
+        @if (_busy)
+        {
+            <div class="progress mt-2" style="height:4px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:100%"></div>
+            </div>
+        }
+        <div class="mt-2 text-end">
+            <a href="/forgot-password">Forgot password?</a>
+        </div>
+    </EditForm>
+    @if (!string.IsNullOrEmpty(_error))
+    {
+        <div class="alert alert-danger mt-3 p-2">@_error</div>
+    }
+</div>
+
+@code {
+    private LoginRequest _model = new();
+    private bool _busy;
+    private string? _error;
+
+    private async Task LoginAsync()
+    {
+        _busy = true;
+        _error = null;
+        var result = await Auth.LoginAsync(_model);
+        if (result == null)
+        {
+            _error = "Invalid credentials";
+        }
+        else
+        {
+            Nav.NavigateTo("/");
+        }
+        _busy = false;
+    }
+}

@@ -1,0 +1,59 @@
+@page "/register"
+@inject AuthService Auth
+@inject NavigationManager Nav
+
+<div class="card shadow-sm p-4 mx-auto" style="max-width: 400px;">
+    <h5 class="mb-3">Register</h5>
+    <EditForm Model="_model" OnValidSubmit="RegisterAsync">
+        <DataAnnotationsValidator />
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <InputText id="email" class="form-control" @bind-Value="_model.Email" required />
+        </div>
+        <div class="mb-3">
+            <label for="givenName" class="form-label">First Name</label>
+            <InputText id="givenName" class="form-control" @bind-Value="_model.GivenName" required />
+        </div>
+        <div class="mb-3">
+            <label for="surname" class="form-label">Surname</label>
+            <InputText id="surname" class="form-control" @bind-Value="_model.Surname" required />
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <InputText id="password" type="password" class="form-control" @bind-Value="_model.Password" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100" disabled="@_busy">Register</button>
+        @if (_busy)
+        {
+            <div class="progress mt-2" style="height:4px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:100%"></div>
+            </div>
+        }
+    </EditForm>
+    @if (!string.IsNullOrEmpty(_error))
+    {
+        <div class="alert alert-danger mt-3 p-2">@_error</div>
+    }
+</div>
+
+@code {
+    private RegisterRequest _model = new();
+    private bool _busy;
+    private string? _error;
+
+    private async Task RegisterAsync()
+    {
+        _busy = true;
+        _error = null;
+        var ok = await Auth.RegisterAsync(_model);
+        if (!ok)
+        {
+            _error = "Registration failed";
+        }
+        else
+        {
+            Nav.NavigateTo("/login");
+        }
+        _busy = false;
+    }
+}

@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Configuration>Debug|Any CPU</Configuration>
+    <Configuration>Release|Any CPU</Configuration>
+  </Configurations>
+  <Project Path="src\Server\EastSeat.ResourceIdea.Server.csproj" />
+  <Project Path="src\Client\EastSeat.ResourceIdea.Client.csproj" />
+  <Project Path="src\Shared\EastSeat.ResourceIdea.Shared.csproj" />
+  <Project Path="tests\ServerTests\EastSeat.ServerTests.csproj" />
+</Solution>

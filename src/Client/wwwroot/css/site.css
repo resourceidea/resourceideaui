@@ -1,0 +1,25 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+  background-color: #f7f9fc;
+}
+
+.landing-wrapper {
+  max-width: 960px;
+  margin: 40px auto;
+}
+.landing-actions .mud-button + .mud-button {
+  margin-left: 12px;
+}
+.mud-paper {
+  border-radius: 12px;
+}
+@media (min-width: 900px) {
+  .landing-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 32px;
+  }
+}

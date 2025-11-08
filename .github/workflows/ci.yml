@@ -1,0 +1,33 @@
+name: CI
+on:
+    push:
+        branches: [main, joeseggie/ver2]
+    pull_request:
+        branches: [main]
+
+jobs:
+    build-test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: "9.0.x"
+                  include-prerelease: true
+            - name: Restore
+              run: dotnet restore ResourceIdea.slnx
+            - name: Build
+              run: dotnet build ResourceIdea.slnx --configuration Release --no-restore
+            - name: Test
+              run: dotnet test ResourceIdea.slnx --no-build --verbosity minimal
+
+    docker-images:
+        runs-on: ubuntu-latest
+        needs: build-test
+        steps:
+            - uses: actions/checkout@v4
+            - name: Build server image
+              run: docker build -f docker/Dockerfile.server -t resourceidea/server:ci .
+            - name: Build client image
+              run: docker build -f docker/Dockerfile.client -t resourceidea/client:ci .

@@ -26,15 +26,15 @@ jobs:
           queries: +security-and-quality
 
       - name: Install .NET 9 SDK
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "9.0.x"
 
       - name: Build solution
         run: |
-          dotnet restore ./EastSeat.ResourceIdea.slnx
-          dotnet clean ./EastSeat.ResourceIdea.slnx
-          dotnet build ./EastSeat.ResourceIdea.slnx --no-restore --framework net9.0 -maxcpucount:1
+          dotnet restore ./ResourceIdea.slnx
+          dotnet clean ./ResourceIdea.slnx
+          dotnet build ./ResourceIdea.slnx --no-restore --configuration Release --framework net9.0 -maxcpucount:1
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3

@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <!-- Target net9.0 (remove net10.0 until preview SDK available locally/CI) -->
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+</Project>

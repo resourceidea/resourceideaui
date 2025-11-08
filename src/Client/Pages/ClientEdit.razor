@@ -1,0 +1,102 @@
+@page "/clients/new"
+@page "/clients/edit/{Id:guid}"
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<div class="card shadow-sm p-4 mx-auto" style="max-width: 600px;">
+    <h5 class="mb-3">@(_isNew ? "New Client" : "Edit Client")</h5>
+    <EditForm Model="_model" OnValidSubmit="SaveAsync">
+        <DataAnnotationsValidator />
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <InputText id="name" class="form-control" @bind-Value="_model.Name" required />
+        </div>
+        <div class="mb-3">
+            <label for="code" class="form-label">Code</label>
+            <InputText id="code" class="form-control" @bind-Value="_model.Code" required />
+        </div>
+        @if (!_isNew)
+        {
+            <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <InputSelect id="status" class="form-select" @bind-Value="_model.Status">
+                    <option value="@ClientStatus.Active">Active</option>
+                    <option value="@ClientStatus.Inactive">Inactive</option>
+                </InputSelect>
+            </div>
+        }
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary" disabled="@_busy">Save</button>
+            <button type="button" class="btn btn-outline-secondary" disabled="@_busy" @onclick="@(() => Nav.NavigateTo("/clients"))">Cancel</button>
+        </div>
+        @if (_busy)
+        {
+            <div class="progress mt-2" style="height:4px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:100%"></div>
+            </div>
+        }
+    </EditForm>
+    @if (!string.IsNullOrEmpty(_error))
+    {
+        <div class="alert alert-danger mt-3 p-2">@_error</div>
+    }
+</div>
+
+@code {
+    [Parameter] public Guid? Id { get; set; }
+    private bool _isNew => !Id.HasValue;
+    private ClientUpdateDto _model = new();
+    private bool _busy;
+    private string? _error;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (_isNew)
+        {
+            _model = new ClientUpdateDto
+            {
+                Id = Guid.NewGuid(),
+                Name = string.Empty,
+                Code = string.Empty,
+                Status = ClientStatus.Active
+            };
+        }
+        else
+        {
+            try
+            {
+                var entity = await Http.GetFromJsonAsync<Client>($"api/clients/{Id}");
+                if (entity != null)
+                {
+                    _model = new ClientUpdateDto { Id = entity.Id, Name = entity.Name, Code = entity.Code, Status = entity.Status };
+                }
+            }
+            catch { _error = "Failed to load"; }
+        }
+    }
+
+    private async Task SaveAsync()
+    {
+        _busy = true;
+        _error = null;
+        HttpResponseMessage? resp;
+        if (_isNew)
+        {
+            var createDto = new ClientCreateDto { Name = _model.Name, Code = _model.Code };
+            resp = await Http.PostAsJsonAsync("api/clients", createDto);
+        }
+        else
+        {
+            resp = await Http.PutAsJsonAsync($"api/clients/{_model.Id}", _model);
+        }
+        if (!resp.IsSuccessStatusCode)
+        {
+            _error = "Save failed";
+        }
+        else
+        {
+            Nav.NavigateTo("/clients");
+        }
+        _busy = false;
+    }
+}

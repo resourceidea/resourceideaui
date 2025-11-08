@@ -1,0 +1,21 @@
+@page "/profile"
+@inject TokenStorage Storage
+
+<h5>Profile</h5>
+@if (_token == null)
+{
+    <div class="alert alert-info">Not logged in.</div>
+}
+else
+{
+    <div class="alert alert-success">You are logged in. (Token truncated)</div>
+    <div class="mt-2"><code>@_token[..Math.Min(_token.Length, 60)]...</code></div>
+}
+
+@code {
+    private string? _token;
+    protected override async Task OnInitializedAsync()
+    {
+        _token = await Storage.GetTokenAsync();
+    }
+}

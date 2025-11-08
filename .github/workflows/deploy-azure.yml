@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup .NET 9
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "9.0.x"
 
@@ -27,17 +27,17 @@ jobs:
           find . -type d \( -name "bin" -o -name "obj" \) -exec rm -rf {} +
 
       - name: Restore dependencies
-        run: dotnet restore ./EastSeat.ResourceIdea.slnx
+        run: dotnet restore ./ResourceIdea.slnx
 
       - name: Build for Release
         run: >
-          dotnet build ./EastSeat.ResourceIdea.slnx
+          dotnet build ./ResourceIdea.slnx
           --configuration Release --no-restore --framework net9.0 -m:1
 
-      - name: Publish web application
+      - name: Publish server application
         run: >
           dotnet publish
-          ./src/dev/Web/EastSeat.ResourceIdea.Web/EastSeat.ResourceIdea.Web.csproj
+          ./src/Server/ResourceIdea.Server.csproj
           --configuration Release --no-build --output ./publish
 
       - name: Deploy to Azure Web App

@@ -2,43 +2,39 @@
 
 ## Architecture Overview
 
-ResourceIdea is a Blazor Server application for employee resource management with Clean Architecture. The solution consists of:
+ResourceIdea (first release) is a Blazor WebAssembly (client) + ASP.NET Core minimal API (server) application for employee resource management. This initial version focuses on authentication, password reset, and CRUD for Clients. A fuller Clean Architecture (Domain/Application layers with MediatR & CQRS) will be introduced in later iterations.
 
-- **Domain Layer** (`Domain/`): Entities, value objects, models with business logic validation
-- **Application Layer** (`Application/`): CQRS with MediatR, command/query handlers, mappers
-- **Infrastructure Layer** (`DataStore/`, `Migration/`): EF Core data access, migration services
-- **Web Layer** (`Web/`): Blazor Server components with centralized exception handling
+Current high-level structure:
+
+- **Shared** (`src/Shared/`): Simple POCO models & DTOs (e.g., `Client`, auth requests) with data annotations validation.
+- **Server** (`src/Server/`): ASP.NET Core minimal APIs, Identity + PostgreSQL via EF Core, JWT auth, environment-variable driven user/role seeding (no hard-coded accounts).
+- **Client** (`src/Client/`): Blazor WASM UI using MudBlazor components for navigation, forms, tables.
+- **Tests** (`tests/ServerTests/`): Early unit tests (CRUD and seeding) using EF Core InMemory provider.
+- **Docker** (`docker/`): Dockerfiles + `docker-compose.yml` for Postgres + Server + Client (nginx) using Linux images.
+- **Config & Seeds** (`config/seeds/`): JSON file for user seeding consumed at runtime only when `RESOURCEIDEA_RUN_SEED=true`.
 
 ## Key Development Patterns
 
-### Exception Handling - Use Centralized System
+### Exception Handling
 
-- **ALWAYS** inherit from `ResourceIdeaComponentBase` instead of `ComponentBase` for Blazor components
-- Use `ExecuteAsync(() => { /* operation */ }, "context description")` instead of try-catch blocks
-- Leverage automatic loading state and error message management
-- See `docs/CentralizedExceptionHandling.md` for migration patterns
+Minimal APIs currently surface standard problem responses. Centralized component base logic from the legacy Blazor Server app is NOT yet ported. When adding client-side operations, prefer:
 
 ```csharp
-// Correct pattern
-public partial class MyComponent : ResourceIdeaComponentBase
+try
 {
-    private async Task LoadData()
-    {
-        await ExecuteAsync(async () =>
-        {
-            var result = await Mediator.Send(query);
-            // Process result
-        }, "Loading data");
-    }
+    // transient call
+}
+catch (HttpRequestException ex)
+{
+    // TODO: unify handling in future ResourceIdeaClientBase
 }
 ```
 
-### CQRS Commands & Queries
+Planned migration: introduce a shared service & base component for consistent loading/error UX in subsequent iterations.
 
-- All operations use MediatR with handlers in `Application/Features/{Entity}/Handlers/`
-- Commands inherit from `BaseRequest<TModel>` and implement `Validate()` method
-- Handlers inherit from `BaseHandler` and return `ResourceIdeaResponse<T>`
-- Use existing command/query patterns: `Get{Entity}ByIdQuery`, `Update{Entity}Command`, etc.
+### Future CQRS / MediatR (Roadmap)
+
+Not implemented in first release. Keep domain logic light. Introduce handlers once complexity (engagement allocation rules, scheduling) grows. Do not add MediatR now without explicit iteration goal.
 
 ### Domain Entity Mapping
 
@@ -46,12 +42,11 @@ public partial class MyComponent : ResourceIdeaComponentBase
 - Use extension methods in `Application/Mappers/` for complex mappings
 - Value objects like `ClientId`, `EmployeeId` follow pattern: `{Type}Id.Create(Guid.NewGuid())`
 
-### Blazor Component Structure
+### Blazor Component Structure (WASM)
 
-- Components use `@page` directive with proper routing (`/entity/{id:guid}`)
-- Inject `IMediator`, `IResourceIdeaRequestContext`, `NavigationManager` as needed
-- Use parameter validation: `[Parameter] public Guid Id { get; set; }`
-- Follow navigation patterns: back buttons with `GetBackNavigationUrl()` methods
+- Pages under `src/Client/Pages/` use `@page` and MudBlazor components.
+- Keep logic small & inline for v1; extract to partial class or service only when reused.
+- Avoid complex cascading parameters until layout service abstraction introduced.
 
 ### Data Validation
 
@@ -61,15 +56,15 @@ public partial class MyComponent : ResourceIdeaComponentBase
 
 ### Testing Requirements
 
-- Unit tests for all handlers in `Tests/{Layer}.UnitTests/`
-- Test command validation, entity mapping, and business logic
-- Use existing test patterns with Moq for service dependencies
+- Maintain tests in `tests/ServerTests/` (expand later to Client + Integration).
+- Cover: EF CRUD, seeding logic, auth edge cases (add later).
+- Prefer in-memory provider for fast unit tests; use Testcontainers/PostgreSQL for integration in future.
 
 ### Development Workflow
 
-- Use VS Code tasks: `Build` (builds solution), `watch` (runs with hot reload)
-- Migration service in `Infrastructure/Migration/` for data migration scenarios
-- Follow existing file organization and naming conventions
+- VS Code tasks: `Build` (solution), will add `test` task later.
+- Migrations: run `dotnet ef migrations add Initial` then `dotnet ef database update` (not auto-created in repo).
+- Seeding: controlled via environment variables (`RESOURCEIDEA_RUN_SEED`, `RESOURCEIDEA_SEED_USERS_FILE`, `RESOURCEIDEA_DEFAULT_PASSWORD`). Never commit passwords.
 
 ### UI/UX Patterns
 
@@ -80,9 +75,12 @@ public partial class MyComponent : ResourceIdeaComponentBase
 
 ### Key Files for Reference
 
-- `src/dev/Web/EastSeat.ResourceIdea.Web/Components/Base/ResourceIdeaComponentBase.cs` - Base component pattern
-- `src/dev/Core/EastSeat.ResourceIdea.Application/Features/Common/Handlers/BaseHandler.cs` - Handler base
-- `docs/CentralizedExceptionHandling.md` - Exception handling migration guide
+- `src/Server/Program.cs` - minimal API + auth endpoints
+- `src/Server/Infrastructure/UserSeeder.cs` - environment-driven user & role seeding
+- `src/Client/Shared/MainLayout.razor` - navigation & layout
+- `docker/docker-compose.yml` - container orchestration (Postgres + Server + Client)
+- `.env.example` - baseline environment variables (copy to `.env`)
+- `config/seeds/sample-users.json` - sample users (never include passwords)
 
 ## Legacy Rules (Maintained for Compatibility)
 
@@ -94,6 +92,8 @@ public partial class MyComponent : ResourceIdeaComponentBase
 - @style Rule - Avoid logic in .razor markup: Push all logic to the code-behind files or components. Razor markup should primarily focus on rendering UI elements and binding data, while the logic should be encapsulated in C# code.
 - @performance Rule - Optimize for Performance: When generating code, consider performance implications. Avoid unnecessary computations, reduce memory usage, and ensure that the code is efficient, especially in high-load scenarios.
 - @documentation Rule - Document Code Changes: Provide clear and concise documentation for any new features, functions, or significant changes made to the codebase. This includes updating README files, inline comments, and any relevant API documentation. Ensure every file ends with a single trailing newline.
-- @framework Rule - Use .NET 9.0: When generating .NET code, creating new projects, or making framework-related recommendations, always target .NET 9.0. Ensure that project files use `<TargetFramework>net9.0</TargetFramework>` and leverage .NET 9.0 features and best practices where applicable.
+- @framework Rule - Multi-target .NET 9.0 & 10.0: For new libraries/projects keep `<TargetFrameworks>net9.0;net10.0</TargetFrameworks>` (10.0 is future-proof). If build agents lack .NET 10 preview, ensure code still compiles under net9.0.
+- @seeding Rule - Use environment-driven seeding: Implement user & role seeding only through configuration (`RESOURCEIDEA_RUN_SEED=true`) + JSON file path. Do not hard-code account data into source code.
+- @security Rule - Never commit real secrets: Example JWT key and passwords in `.env.example` must be replaced in real deployments. Encourage rotation.
 - @exception-handling Rule - Use Centralized Exception Handling: When generating code, use the centralized exception handling system instead of adding try-catch statements. Inherit from `ResourceIdeaComponentBase` instead of `ComponentBase` and use the `ExecuteAsync` methods for operations that may throw exceptions. Remove existing scattered try-catch blocks and replace them with `ExecuteAsync` calls. Follow the migration patterns documented in `docs/CentralizedExceptionHandling.md` - wrap operations in `ExecuteAsync(() => { /* operation */ }, "context description")` instead of manual try-catch-finally blocks.
 ```

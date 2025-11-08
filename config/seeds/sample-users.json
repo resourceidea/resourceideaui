@@ -1,0 +1,26 @@
+[
+  {
+    "email": "admin@example.com",
+    "roles": ["Admin"],
+    "givenName": "System",
+    "surname": "Administrator"
+  },
+  {
+    "email": "manager@example.com",
+    "roles": ["Manager"],
+    "givenName": "Regional",
+    "surname": "Manager"
+  },
+  {
+    "email": "staff1@example.com",
+    "roles": ["Staff"],
+    "givenName": "Jane",
+    "surname": "Staff"
+  },
+  {
+    "email": "staff2@example.com",
+    "roles": ["Staff"],
+    "givenName": "John",
+    "surname": "Staff"
+  }
+]
