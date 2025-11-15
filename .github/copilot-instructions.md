@@ -167,6 +167,14 @@ Fork/branch -> changes -> ensure tests -> update docs if needed -> PR with check
 - Do not rely on reflection-based magic to wire logic.
 - Do not embed business logic in Razor markup directly; keep it in services.
 
+### 24. Maintenance & Evolution
+- Regularly review dependencies for updates/security.
+- Archive stale branches after merge.
+- Update this guide as architecture evolves; keep it relevant.
+- Update `AppStartup.md` with any changes to startup/run instructions.
+- Update `README.md` with any new environment variables or configuration changes.
+- Update `ONBOARDING.md` when changes are made that affect new developer setup.
+
 ---
 
 This document evolves; propose edits via PR when architecture or constraints change.
