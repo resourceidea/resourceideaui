@@ -2,9 +2,7 @@
 
 <PageTitle>Dashboard - ResourceIdea</PageTitle>
 
-<MudBreadcrumbs Class="mb-4">
-    <MudBreadcrumbItem Href="/" Icon="@Icons.Material.Filled.Dashboard" Text="Dashboard" />
-</MudBreadcrumbs>
+<MudBreadcrumbs Class="mb-4" Items="_breadcrumbs"></MudBreadcrumbs>
 
 <MudText Typo="Typo.h4" Class="font-weight-bold mb-1">Welcome back</MudText>
 <MudText Typo="Typo.subtitle1" Class="mb-6 text-secondary">Resource planning overview for Audit & Tax Advisory</MudText>
@@ -56,3 +54,10 @@
 <MudPaper Elevation="0" Class="pa-2 mt-n4 mb-4">
     <MudText Typo="Typo.caption" Class="text-secondary">Data is static for UI preview – integrate service calls next.</MudText>
 </MudPaper>
+
+@code {
+    private List<BreadcrumbItem> _breadcrumbs =
+    [
+        new BreadcrumbItem("Dashboard", href: "/", icon: Icons.Material.Filled.Dashboard, disabled: true)
+    ];
+}
