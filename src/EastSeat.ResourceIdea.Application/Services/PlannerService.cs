@@ -1,6 +1,5 @@
 using EastSeat.ResourceIdea.Application.Common;
 using EastSeat.ResourceIdea.Application.DTOs;
-using EastSeat.ResourceIdea.Domain.Services;
 using Microsoft.Extensions.Logging;
 
 namespace EastSeat.ResourceIdea.Application.Services;

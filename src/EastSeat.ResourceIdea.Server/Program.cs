@@ -2,7 +2,6 @@ using EastSeat.ResourceIdea.Application.Common;
 using EastSeat.ResourceIdea.Application.Services;
 using EastSeat.ResourceIdea.Infrastructure.Data;
 using EastSeat.ResourceIdea.Infrastructure.Identity;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;

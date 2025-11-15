@@ -1,5 +1,4 @@
 using EastSeat.ResourceIdea.Domain.Entities;
-using EastSeat.ResourceIdea.Domain.Enums;
 using Xunit;
 
 namespace EastSeat.ResourceIdea.Domain.Tests.Entities;

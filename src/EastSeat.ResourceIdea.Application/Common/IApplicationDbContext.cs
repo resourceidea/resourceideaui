@@ -1,5 +1,3 @@
-using EastSeat.ResourceIdea.Domain.Entities;
-
 namespace EastSeat.ResourceIdea.Application.Common;
 
 /// <summary>

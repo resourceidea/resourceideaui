@@ -1,5 +1,4 @@
 using EastSeat.ResourceIdea.Domain.Common;
-using EastSeat.ResourceIdea.Domain.Enums;
 
 namespace EastSeat.ResourceIdea.Domain.Entities;
 
