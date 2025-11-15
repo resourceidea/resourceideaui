@@ -4,7 +4,8 @@
 
 ## 1. Prerequisites
 
-- .NET 9 SDK installed (verify with `dotnet --version`).
+- .NET 10 SDK installed (verify with `dotnet --version`).
+   - Rationale: All projects target `net10.0` (see `Directory.Build.props` and `EastSeat.ResourceIdea.Server.csproj`). Using an earlier SDK will cause restore/build failures.
 - PostgreSQL instance reachable (local container via `docker-compose up -d` or external server).
 - A valid connection string named `DefaultConnection` in `appsettings.Development.json` or user secrets / environment.
 - (Optional) Node/npm NOT required – Blazor Server renders on the server.
@@ -130,25 +131,25 @@ dotnet run --project src/EastSeat.ResourceIdea.Server/EastSeat.ResourceIdea.Serv
 
 ```mermaid
 flowchart TD
-    A[Developer invokes build or watch] --> B[dotnet SDK evaluates EastSeat.ResourceIdea.slnx]
-    B --> C[Compile Domain layer]
-    B --> D[Compile Application layer]
-    B --> E[Compile Infrastructure layer]
-    B --> F[Compile Server (Blazor) host]
-    F --> G[Program.cs executes]
-    G --> G1[Register Services (MudBlazor, Razor Components, DbContext)]
-    G --> G2[Configure Identity & Cookie Auth]
-    G --> G3[Add Authorization Policies]
-    G --> G4[Conditional Migrations (RunMigrationsOnStartup)]
-    G --> G5[Conditional Data Seeding (SEED_ADMIN_USER)]
-    G --> H[HTTP Pipeline: HTTPS, Static Files, Antiforgery, AuthZ]
-    H --> I[Map Razor Components (App)]
-    I --> J[Blazor Circuit Established]
-    J --> K[User Interacts with UI]
-    K --> L[Application Services (e.g., PlannerService)]
-    L --> M[DbContext / PostgreSQL]
-    M --> L
-    L --> K
+   A[Build or Watch Invoked] --> B[Evaluate Solution]
+   B --> C[Compile Domain]
+   B --> D[Compile Application]
+   B --> E[Compile Infrastructure]
+   B --> F[Compile Server Host]
+   F --> G[Run Program.cs]
+   G --> G1[Register Services]
+   G --> G2[Configure Identity & Auth Cookies]
+   G --> G3[Add Authorization Policies]
+   G --> G4[Run Conditional Migrations]
+   G --> G5[Run Conditional Seeding]
+   G --> H[Configure HTTP Pipeline]
+   H --> I[Map Root Razor Components]
+   I --> J[Blazor Circuit Established]
+   J --> K[User UI Interaction]
+   K --> L[Call Application Services]
+   L --> M[EF Core DbContext]
+   M --> L
+   L --> K
 ```
 
 ## 11. Troubleshooting Quick Tips
