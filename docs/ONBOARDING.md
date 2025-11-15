@@ -21,9 +21,10 @@ Before you begin, ensure you have the following installed on your machine:
 
 ### Required Software
 
-1. **.NET 9 SDK**
-   - Download: [https://dotnet.microsoft.com/download/dotnet/9.0](https://dotnet.microsoft.com/download/dotnet/9.0)
-   - Verify installation: `dotnet --version` (should show 9.0.x)
+1. **.NET 10 SDK**
+   - Download: [https://dotnet.microsoft.com/download/dotnet/10.0](https://dotnet.microsoft.com/download/dotnet/10.0)
+   - Verify installation: `dotnet --version` (should show 10.0.x)
+   - Rationale: The solution targets `net10.0` (see `Directory.Build.props`); earlier SDK versions will fail to build.
 
 2. **Git**
    - Download: [https://git-scm.com/downloads](https://git-scm.com/downloads)
@@ -31,7 +32,7 @@ Before you begin, ensure you have the following installed on your machine:
 
 3. **Code Editor**
    - Recommended: [Visual Studio Code](https://code.visualstudio.com/) with C# Dev Kit extension
-   - Alternative: Visual Studio 2022 (17.8+), JetBrains Rider
+   - Alternative: Visual Studio 2022 (latest) or JetBrains Rider (ensure it supports .NET 10)
 
 4. **PostgreSQL 16+** (Choose one option)
    - **Option A (Recommended)**: Docker Desktop for containerized PostgreSQL
@@ -97,6 +98,7 @@ You can set up the application using one of two methods:
 #### **Method A: Automated Setup Script (Recommended for Beginners)**
 
 This is the fastest way to get started. The script will:
+
 - Check prerequisites
 - Start PostgreSQL via Docker (optional)
 - Restore NuGet packages
@@ -106,22 +108,25 @@ This is the fastest way to get started. The script will:
 - Start the application
 
 **On Windows (PowerShell):**
+
 ```powershell
-.\setup.ps1
+./setup.ps1
 ```
 
 **On Linux/macOS (Bash):**
+
 ```bash
 chmod +x setup.sh
 ./setup.sh
 ```
 
 **Script Options:**
-- Skip Docker if you have PostgreSQL installed: `.\setup.ps1 -SkipDocker`
-- Skip migrations: `.\setup.ps1 -SkipMigrations`
-- Production build: `.\setup.ps1 -Production`
 
-After successful execution, the application will be running at **https://localhost:5001**
+- Skip Docker if you have PostgreSQL installed: `./setup.ps1 -SkipDocker`
+- Skip migrations: `./setup.ps1 -SkipMigrations`
+- Production build: `./setup.ps1 -Production`
+
+After successful execution, the application will be running at **[https://localhost:5001](https://localhost:5001)**.
 
 Skip to [Step 5: Access the Application](#step-5-access-the-application) if using the automated script.
 
@@ -139,15 +144,18 @@ docker-compose up -d
 ```
 
 This starts:
+
 - PostgreSQL 16 on port 5432
-- pgAdmin 4 on port 5050 (http://localhost:5050)
+- pgAdmin 4 on port 5050 ([http://localhost:5050](http://localhost:5050))
 
 Verify PostgreSQL is ready:
+
 ```bash
 docker-compose ps
 ```
 
 **If using native PostgreSQL:**
+
 - Ensure PostgreSQL service is running
 - Create database: `createdb resourceidea_dev -U postgres`
 
@@ -197,14 +205,16 @@ dotnet test --no-build --verbosity normal
 ### Step 5: Access the Application
 
 Open your browser and navigate to:
-- **Application**: https://localhost:5001 or http://localhost:5000
-- **pgAdmin** (if using Docker): http://localhost:5050
+
+- **Application**: [https://localhost:5001](https://localhost:5001) or [http://localhost:5000](http://localhost:5000)
+- **pgAdmin** (if using Docker): [http://localhost:5050](http://localhost:5050)
   - Email: `admin@admin.com`
   - Password: `admin`
 
 ### Step 6: Login with Admin Account
 
 Use the credentials from your `.env` file:
+
 - **Email**: admin@eastseat.com (or your custom value)
 - **Password**: Admin@123 (or your custom value)
 
@@ -217,11 +227,13 @@ Use the credentials from your `.env` file:
 For active development with automatic recompilation on file changes:
 
 **PowerShell:**
+
 ```powershell
-.\scripts\dev-watch.ps1
+./scripts/dev-watch.ps1
 ```
 
 **Bash:**
+
 ```bash
 ./scripts/dev-watch.sh
 ```
@@ -246,6 +258,7 @@ docker-compose down
 ```
 
 To remove volumes (database data):
+
 ```bash
 docker-compose down -v
 ```
@@ -495,7 +508,7 @@ dotnet add package PackageName
 
 ### "dotnet: command not found"
 
-**Solution**: Install .NET 9 SDK from [https://dotnet.microsoft.com/download](https://dotnet.microsoft.com/download)
+**Solution**: Install .NET 10 SDK from [https://dotnet.microsoft.com/download](https://dotnet.microsoft.com/download)
 
 ### "docker: command not found"
 
@@ -637,7 +650,7 @@ Access pgAdmin at http://localhost:5050:
 
 Before starting development, ensure:
 
-- [ ] .NET 9 SDK installed (`dotnet --version` shows 9.0.x)
+- [ ] .NET 10 SDK installed (`dotnet --version` shows 10.0.x)
 - [ ] Git installed and repository cloned
 - [ ] Code editor set up (VS Code with C# Dev Kit recommended)
 - [ ] PostgreSQL running (Docker or native)
@@ -660,7 +673,7 @@ If all checked, you're ready to contribute! 🚀
 A: We prefer simplicity and maintainability. Application services with method-per-use-case provide clear boundaries without additional abstraction layers.
 
 **Q: Can I use Visual Studio instead of VS Code?**  
-A: Yes! Visual Studio 2022 (17.8+) fully supports .NET 9 and Blazor Server.
+A: Yes! Visual Studio 2022 (latest) fully supports .NET 10 and Blazor Server.
 
 **Q: How do I reset the database?**  
 A: Run `docker-compose down -v` (removes volumes), then `.\setup.ps1` to recreate.
