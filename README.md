@@ -1,6 +1,6 @@
 # EastSeat.ResourceIdea
 
-A comprehensive resource planning SaaS application for audit and tax advisory firms in Uganda, built with ASP.NET Blazor Server.
+A comprehensive resource planning SaaS application for audit and tax advisory firms in Uganda, built with ASP.NET Blazor Server targeting **.NET 10**.
 
 ## Overview
 
@@ -50,17 +50,17 @@ EastSeat.ResourceIdea/
 
 ## Technology Stack
 
-- **.NET 9** - Latest LTS framework
-- **ASP.NET Blazor Server** - Interactive server-side rendering
-- **Entity Framework Core 9** - ORM with PostgreSQL provider
-- **ASP.NET Identity** - Authentication and authorization
-- **MudBlazor** - UI component library
-- **xUnit** - Testing framework
-- **PostgreSQL** - Database (via Npgsql)
+- **.NET 10** – Target framework (`net10.0`)
+- **ASP.NET Blazor Server** – Interactive server-side rendering
+- **Entity Framework Core 9** – ORM with PostgreSQL provider (packages v9.x)
+- **ASP.NET Identity** – Authentication and authorization
+- **MudBlazor** – UI component library
+- **xUnit** – Testing framework
+- **PostgreSQL** – Database (via Npgsql)
 
 ## Prerequisites
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (earlier versions will fail to build `net10.0` projects)
 - [PostgreSQL 16+](https://www.postgresql.org/download/)
 - [Docker](https://www.docker.com/get-started) (optional, for local database)
 
@@ -71,7 +71,7 @@ EastSeat.ResourceIdea/
 
 For detailed step-by-step instructions, see the **[Developer Onboarding Guide](docs/ONBOARDING.md)**.
 
-**Prerequisites**: .NET 9 SDK, Git, Docker (or PostgreSQL 16+)
+**Prerequisites**: .NET 10 SDK, Git, Docker (or PostgreSQL 16+)
 
 1. **Clone the repository**
 
@@ -305,7 +305,7 @@ Blazor Server UI:
 ```powershell
 az group create --name rg-resourceidea --location eastus
 az postgres flexible-server create --resource-group rg-resourceidea --name resourceidea-db --location eastus
-az webapp create --resource-group rg-resourceidea --plan asp-resourceidea --name resourceidea-app --runtime "DOTNETCORE:9.0"
+az webapp create --resource-group rg-resourceidea --plan asp-resourceidea --name resourceidea-app --runtime "DOTNETCORE:10.0"
 ```
 
 2. **Configure Connection String**
@@ -336,7 +336,8 @@ Run tests with coverage:
 dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 ```
 
-## Key Features
+## Test Coverage
+
 Run tests with coverage using the helper script:
 
 ```bash
@@ -360,6 +361,7 @@ dotnet test --collect:"XPlat Code Coverage" --results-directory:"./coverage"
 ### Resource Planner
 
 Year-long timeline view showing:
+
 - Employee assignments to engagements (color-coded)
 - Leave periods (sick, PTO, maternity, etc.)
 - Weekends (gray background)
@@ -371,6 +373,7 @@ Navigation by year with horizontal scrolling through months.
 ### Year Rollover
 
 Administrators can rollover engagements and assignments:
+
 - Dry-run preview showing what will be copied
 - Excludes terminated employees
 - Handles leap-year adjustments (Feb 29 → Feb 28)
@@ -380,6 +383,7 @@ Administrators can rollover engagements and assignments:
 ### Leave Management
 
 Employees request leave; managers approve:
+
 - Multiple leave types (PTO, sick, maternity, study, etc.)
 - Automatic working-day calculation
 - Integrates with resource planner (blocks assignment allocation)
@@ -394,6 +398,7 @@ Employees request leave; managers approve:
 5. Open a Pull Request
 
 Follow the [Contribution Guidelines](.github/copilot-instructions.md).
+
 ### For New Contributors
 
 1. Read the **[Developer Onboarding Guide](docs/ONBOARDING.md)** for complete setup instructions
@@ -430,19 +435,22 @@ See [Contribution Guidelines](.github/copilot-instructions.md) for complete deta
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support
+## Support & Help
+
 ## Documentation
 
-- **[Developer Onboarding Guide](docs/ONBOARDING.md)** - Complete setup guide from zero to running application
-- **[Architecture Guidelines](.github/copilot-instructions.md)** - Coding conventions and contribution rules
-- **[README](README.md)** - This file (project overview)
+- **[Developer Onboarding Guide](docs/ONBOARDING.md)** – Complete setup guide from zero to running application
+- **[Startup & Runtime Guide](docs/AppStartup.md)** – Build & run details and runtime composition
+- **[Architecture Guidelines](.github/copilot-instructions.md)** – Coding conventions and contribution rules
+- **[README](README.md)** – This file (project overview)
 
 ## Support
 
 For issues and questions:
+
 - **New Developers**: Start with the [Onboarding Guide](docs/ONBOARDING.md)
 - GitHub Issues: [https://github.com/resourceidea/resourceideaui/issues](https://github.com/resourceidea/resourceideaui/issues)
-- Email: admin@eastseat.com
+- Email: [admin@eastseat.com](mailto:admin@eastseat.com)
 
 ## Roadmap
 
