@@ -1,0 +1,58 @@
+@page "/"
+
+<PageTitle>Dashboard - ResourceIdea</PageTitle>
+
+<MudBreadcrumbs Class="mb-4">
+    <MudBreadcrumbItem Href="/" Icon="@Icons.Material.Filled.Dashboard" Text="Dashboard" />
+</MudBreadcrumbs>
+
+<MudText Typo="Typo.h4" Class="font-weight-bold mb-1">Welcome back</MudText>
+<MudText Typo="Typo.subtitle1" Class="mb-6 text-secondary">Resource planning overview for Audit & Tax Advisory</MudText>
+
+<MudGrid Class="mb-6">
+    <MudItem xs="12" sm="6" md="3">
+        <StatCard Title="Active Engagements" Value="12" Icon="@Icons.Material.Filled.Work" BorderColor="#1976d2" />
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <StatCard Title="Employees" Value="45" Icon="@Icons.Material.Filled.Badge" BorderColor="#512da8" />
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <StatCard Title="Pending Leave" Value="8" Subtitle="Awaiting approval" Icon="@Icons.Material.Filled.RequestPage" BorderColor="#f57c00" />
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <StatCard Title="Capacity Utilization" Value="85%" Subtitle="Across all staff" Icon="@Icons.Material.Filled.Speed" BorderColor="#388e3c" />
+    </MudItem>
+</MudGrid>
+
+<MudGrid>
+    <MudItem xs="12" md="8">
+        <MudPaper Elevation="2" Class="pa-4 mb-6">
+            <MudText Typo="Typo.h6" Class="font-weight-bold mb-3">Quick Actions</MudText>
+            <div class="d-flex flex-wrap gap-3">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Href="/engagements/new">
+                    New Engagement
+                </MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.CalendarMonth" Href="/planner">
+                    View Planner
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.RequestPage" Href="/leave/requests">
+                    Request Leave
+                </MudButton>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" md="4">
+        <MudPaper Elevation="2" Class="pa-4 mb-6">
+            <MudText Typo="Typo.h6" Class="font-weight-bold mb-3">Upcoming Dates</MudText>
+            <MudList T="string" Dense="true">
+                <MudListItem T="string">Public Holiday: Independence Day – Nov 20</MudListItem>
+                <MudListItem T="string">Quarter End Review – Dec 31</MudListItem>
+                <MudListItem T="string">Tax Advisory Workshop – Jan 15</MudListItem>
+            </MudList>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+<MudPaper Elevation="0" Class="pa-2 mt-n4 mb-4">
+    <MudText Typo="Typo.caption" Class="text-secondary">Data is static for UI preview – integrate service calls next.</MudText>
+</MudPaper>

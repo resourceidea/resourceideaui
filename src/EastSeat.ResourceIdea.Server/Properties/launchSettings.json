@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "EastSeat.ResourceIdea.Server": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:53421;http://localhost:53422"
+    }
+  }
+}

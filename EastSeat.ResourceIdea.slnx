@@ -1,0 +1,34 @@
+
+<!--
+  XML Solution Manifest (custom) for EastSeat.ResourceIdea
+  This is NOT a native Visual Studio .sln; a generator script will emit a standard .sln file from this.
+  Rationale: Human + tool friendly structured format while retaining canonical GUIDs & project metadata.
+  To regenerate the working solution file run:  pwsh ./tools/Generate-Solution.ps1
+-->
+<Solution name="EastSeat.ResourceIdea" visualStudioMajor="17" formatVersion="12.00" minimumVisualStudioVersion="10.0.40219.1" visualStudioVersion="17.2.32505.173">
+  <Folders>
+    <Folder name="src" guid="{827E0CD3-B72D-47B6-A68D-7590B98EB39B}" />
+    <Folder name="tests" guid="{0AB3BF05-4346-4AA6-1389-037BE0695223}" />
+  </Folders>
+  <Projects>
+    <Project name="EastSeat.ResourceIdea.Domain" path="src/EastSeat.ResourceIdea.Domain/EastSeat.ResourceIdea.Domain.csproj" guid="{7C226525-F19E-4AD6-B091-7C8DA3B2B179}" typeGuid="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" folderGuid="{827E0CD3-B72D-47B6-A68D-7590B98EB39B}" />
+    <Project name="EastSeat.ResourceIdea.Application" path="src/EastSeat.ResourceIdea.Application/EastSeat.ResourceIdea.Application.csproj" guid="{72EA6BA2-E489-4057-A070-A9F441065239}" typeGuid="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" folderGuid="{827E0CD3-B72D-47B6-A68D-7590B98EB39B}" />
+    <Project name="EastSeat.ResourceIdea.Infrastructure" path="src/EastSeat.ResourceIdea.Infrastructure/EastSeat.ResourceIdea.Infrastructure.csproj" guid="{A10E3904-A31B-4494-B9D2-8FF2471E9741}" typeGuid="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" folderGuid="{827E0CD3-B72D-47B6-A68D-7590B98EB39B}" />
+    <Project name="EastSeat.ResourceIdea.Server" path="src/EastSeat.ResourceIdea.Server/EastSeat.ResourceIdea.Server.csproj" guid="{B6275356-02D9-49CF-81B3-6BEDA65B61E2}" typeGuid="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" folderGuid="{827E0CD3-B72D-47B6-A68D-7590B98EB39B}" />
+    <Project name="EastSeat.ResourceIdea.Domain.Tests" path="tests/EastSeat.ResourceIdea.Domain.Tests/EastSeat.ResourceIdea.Domain.Tests.csproj" guid="{962EF598-9E0D-40FA-A2FF-4F927DFADA63}" typeGuid="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" folderGuid="{0AB3BF05-4346-4AA6-1389-037BE0695223}" />
+    <Project name="EastSeat.ResourceIdea.Application.Tests" path="tests/EastSeat.ResourceIdea.Application.Tests/EastSeat.ResourceIdea.Application.Tests.csproj" guid="{9E3ADFF0-10A1-46B3-B5B1-5052BBDC803B}" typeGuid="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" folderGuid="{0AB3BF05-4346-4AA6-1389-037BE0695223}" />
+    <Project name="EastSeat.ResourceIdea.Integration.Tests" path="tests/EastSeat.ResourceIdea.Integration.Tests/EastSeat.ResourceIdea.Integration.Tests.csproj" guid="{1E7EE3BB-BC62-4568-9F0A-7F18825F20DD}" typeGuid="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" folderGuid="{0AB3BF05-4346-4AA6-1389-037BE0695223}" />
+  </Projects>
+  <GeneratedProperties hideSolutionNode="FALSE" />
+  <Folder Name="/src/">
+    <Project Path="src/EastSeat.ResourceIdea.Application/EastSeat.ResourceIdea.Application.csproj" />
+    <Project Path="src/EastSeat.ResourceIdea.Domain/EastSeat.ResourceIdea.Domain.csproj" />
+    <Project Path="src/EastSeat.ResourceIdea.Infrastructure/EastSeat.ResourceIdea.Infrastructure.csproj" />
+    <Project Path="src/EastSeat.ResourceIdea.Server/EastSeat.ResourceIdea.Server.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/EastSeat.ResourceIdea.Application.Tests/EastSeat.ResourceIdea.Application.Tests.csproj" />
+    <Project Path="tests/EastSeat.ResourceIdea.Domain.Tests/EastSeat.ResourceIdea.Domain.Tests.csproj" />
+    <Project Path="tests/EastSeat.ResourceIdea.Integration.Tests/EastSeat.ResourceIdea.Integration.Tests.csproj" />
+  </Folder>
+</Solution>

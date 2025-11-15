@@ -9,11 +9,26 @@ reviews:
     - "!**/.xml"
   path_instructions:
     - path: "**/*.cs"
-      instructions: "Review the C# code."
+      instructions: |
+        Review C# source ensuring:
+        - No usage of MediatR or prohibited frameworks.
+        - Application services pattern (method-per-use-case) maintained.
+        - Nullable warnings addressed; prefer guard clauses.
+        - LINQ remains readable; avoid excessive chaining complexity.
+        - Domain invariants enforced in entity Create methods/static factories.
     - path: "tests/**/*"
       instructions: |
-        "Assess the unit test code employing the xunit testing framework. Confirm that:
-        - The tests adhere to XUnit's established best practices."
+        Assess xUnit tests:
+        - Follow Arrange/Act/Assert pattern.
+        - Deterministic (no reliance on real clock without abstraction).
+        - Meaningful assertions (not solely non-null checks).
+        - Coverage of edge cases (overlapping assignments, leap-year rollover, leave spanning weekends).
+    - path: "**/*.razor"
+      instructions: |
+        Blazor components:
+        - Keep business logic minimal; delegate to services.
+        - Use MudBlazor components consistently; no inline JS unless essential.
+        - Parameter naming clear; avoid ambiguous abbreviations.
   auto_review:
     enabled: true
     ignore_title_keywords:

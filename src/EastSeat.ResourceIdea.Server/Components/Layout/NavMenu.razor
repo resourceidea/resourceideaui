@@ -1,0 +1,18 @@
+<MudNavMenu>
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+    <MudNavLink Href="/planner" Icon="@Icons.Material.Filled.CalendarMonth">Resource Planner</MudNavLink>
+    <MudNavGroup Title="Management" Icon="@Icons.Material.Filled.Business" Expanded="false">
+        <MudNavLink Href="/clients" Icon="@Icons.Material.Filled.People">Clients</MudNavLink>
+        <MudNavLink Href="/engagements" Icon="@Icons.Material.Filled.Work">Engagements</MudNavLink>
+        <MudNavLink Href="/employees" Icon="@Icons.Material.Filled.Badge">Employees</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Title="Leave Management" Icon="@Icons.Material.Filled.BeachAccess" Expanded="false">
+        <MudNavLink Href="/leave/requests" Icon="@Icons.Material.Filled.RequestPage">My Requests</MudNavLink>
+        <MudNavLink Href="/leave/approve" Icon="@Icons.Material.Filled.Approval">Approve Requests</MudNavLink>
+        <MudNavLink Href="/leave/calendar" Icon="@Icons.Material.Filled.Event">Leave Calendar</MudNavLink>
+    </MudNavGroup>
+    <MudNavLink Href="/holidays" Icon="@Icons.Material.Filled.EventNote">Public Holidays</MudNavLink>
+    <MudDivider Class="my-2" />
+    <MudNavLink Href="/account/profile" Icon="@Icons.Material.Filled.Person">Profile</MudNavLink>
+    <MudNavLink Href="/account/logout" Icon="@Icons.Material.Filled.Logout">Logout</MudNavLink>
+</MudNavMenu>

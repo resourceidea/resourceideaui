@@ -408,3 +408,21 @@ ASALocalRun/
 .env
 .vscode/
 .vs/
+!.env.sample
+
+# Solution file should be tracked
+!EastSeat.ResourceIdea.sln
+
+# Test & coverage artifacts
+coverage/
+TestResults/
+**/TestResults/
+*.snap
+
+# Docker & local infra
+docker/
+postgres-data/
+
+# Snapshot testing directory (bUnit / HTML snapshots)
+snapshots/
+

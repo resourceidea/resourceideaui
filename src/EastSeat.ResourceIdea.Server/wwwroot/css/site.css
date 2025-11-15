@@ -1,0 +1,46 @@
+/* Custom UI enhancements for ResourceIdea */
+body {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+.stat-card .mud-paper {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #ffffff, #f3f6fa);
+}
+.stat-card .mud-paper:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.mud-appbar {
+    backdrop-filter: saturate(180%) blur(12px);
+}
+
+.mud-drawer-header {
+    background: linear-gradient(135deg, #1976d2, #512da8);
+    color: #fff;
+}
+
+.mud-drawer-header .mud-typography {
+    color: #fff !important;
+}
+
+.mud-container {
+    animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tracking-wide {
+    letter-spacing: 0.05em;
+}

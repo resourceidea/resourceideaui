@@ -12,12 +12,20 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: windows-latest
-    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'pull_request' }}
-
+    runs-on: ubuntu-latest
+    env:
+      SOLUTION_FILE: EastSeat.ResourceIdea.slnx
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
@@ -25,16 +33,16 @@ jobs:
           languages: csharp
           queries: +security-and-quality
 
-      - name: Install .NET 9 SDK
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET 9 SDK
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "9.0.x"
 
-      - name: Build solution
+      - name: Generate and build solution
         run: |
-          dotnet restore ./EastSeat.ResourceIdea.slnx
-          dotnet clean ./EastSeat.ResourceIdea.slnx
-          dotnet build ./EastSeat.ResourceIdea.slnx --no-restore --framework net9.0 -maxcpucount:1
+          pwsh -NoLogo -NoProfile -File ./tools/Generate-Solution.ps1 -XmlManifest ${{ env.SOLUTION_FILE }} -OutputSln EastSeat.ResourceIdea.sln
+          dotnet restore ./EastSeat.ResourceIdea.sln
+          dotnet build ./EastSeat.ResourceIdea.sln --no-restore --framework net9.0 -maxcpucount:1
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3

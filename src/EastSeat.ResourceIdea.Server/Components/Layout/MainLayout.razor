@@ -1,0 +1,67 @@
+@inherits LayoutComponentBase
+
+@using MudBlazor
+<MudThemeProvider Theme="_theme" IsDarkMode="_isDarkMode" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="2" Color="Color.Primary">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="ToggleDrawer" />
+        <MudText Typo="Typo.h5" Class="ml-3 font-weight-bold">ResourceIdea</MudText>
+        <MudSpacer />
+        <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)" Color="Color.Inherit" OnClick="ToggleDarkMode" />
+        <MudIconButton Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit" />
+        <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" />
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="2" Variant="DrawerVariant.Responsive" ClipMode="DrawerClipMode.Never">
+        <MudDrawerHeader Class="pa-4">
+            <MudText Typo="Typo.h6" Class="font-weight-bold">Navigation</MudText>
+        </MudDrawerHeader>
+        <NavMenu />
+        <div class="mt-auto pa-4">
+            <MudDivider Class="mb-2" />
+            <MudText Typo="Typo.caption" Class="text-secondary">© @DateTime.UtcNow.Year EastSeat</MudText>
+        </div>
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-6 mb-8">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private bool _drawerOpen = true;
+    private bool _isDarkMode = false;
+
+    private MudTheme _theme = new()
+    {
+        PaletteLight = new PaletteLight
+        {
+            Primary = Colors.Blue.Darken2,
+            Secondary = Colors.DeepPurple.Default,
+            Info = Colors.Blue.Lighten1,
+            Success = Colors.Green.Darken1,
+            Warning = Colors.Orange.Darken2,
+            Error = Colors.Red.Darken2,
+            Background = "#f5f7fb"
+        },
+        PaletteDark = new PaletteDark
+        {
+            Primary = Colors.Blue.Lighten1,
+            Secondary = Colors.DeepPurple.Lighten1,
+            Background = "#1c2430",
+            Surface = "#222b37"
+        },
+        LayoutProperties = new LayoutProperties
+        {
+            AppbarHeight = "60px"
+        },
+        // Typography customization removed for compatibility; can be re-added with concrete variant types if needed.
+    };
+
+    private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
+    private void ToggleDarkMode() => _isDarkMode = !_isDarkMode;
+}

@@ -15,21 +15,31 @@ jobs:
     name: test
     runs-on: ubuntu-latest
     env:
+      SOLUTION_FILE: EastSeat.ResourceIdea.slnx
       RESOURCEIDEA_CONNECTION_STRING: ${{ secrets.RESOURCEIDEA_CONNECTION_STRING }}
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
       - name: Setup .NET 9
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "9.0.x"
 
+      - name: Generate .sln from XML manifest
+        run: pwsh -NoLogo -NoProfile -File ./tools/Generate-Solution.ps1 -XmlManifest ${{ env.SOLUTION_FILE }} -OutputSln EastSeat.ResourceIdea.sln
       - name: Restore dependencies
-        run: dotnet restore ./EastSeat.ResourceIdea.slnx
+        run: dotnet restore ./EastSeat.ResourceIdea.sln
 
       - name: Build
-        run: dotnet build ./EastSeat.ResourceIdea.slnx --no-restore --framework net9.0 -maxcpucount:1
+        run: dotnet build ./EastSeat.ResourceIdea.sln --no-restore --framework net9.0 -maxcpucount:1
 
-      - name: Run tests
-        run: dotnet test ./EastSeat.ResourceIdea.slnx --no-build --verbosity normal
+      - name: Run tests (Verbose)
+        run: dotnet test ./EastSeat.ResourceIdea.sln --no-build --framework net9.0 --verbosity normal --collect:"XPlat Code Coverage"

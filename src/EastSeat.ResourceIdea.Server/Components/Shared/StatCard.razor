@@ -1,0 +1,24 @@
+@using MudBlazor
+
+<div class="stat-card">
+    <MudPaper Elevation="3" Class="pa-4 d-flex flex-column justify-space-between"
+        Style="@($"border-top:4px solid {BorderColor}")">
+        <div class="d-flex align-center mb-2">
+            <MudIcon Color="Color.Primary" Icon="@Icon" Size="Size.Medium" Class="mr-2" />
+            <MudText Typo="Typo.subtitle2" Class="text-uppercase tracking-wide">@Title</MudText>
+        </div>
+        <MudText Typo="Typo.h4" Class="font-weight-bold mb-1">@Value</MudText>
+        @if (!string.IsNullOrWhiteSpace(Subtitle))
+        {
+            <MudText Typo="Typo.caption" Class="text-secondary">@Subtitle</MudText>
+        }
+    </MudPaper>
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public string? Subtitle { get; set; }
+    [Parameter] public string Value { get; set; } = string.Empty;
+    [Parameter] public string Icon { get; set; } = Icons.Material.Filled.Dashboard;
+    [Parameter] public string BorderColor { get; set; } = "#1976d2"; // default primary
+}
